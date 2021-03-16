@@ -1,0 +1,17 @@
+/*!
+ * \file
+ * \author Pavel Lakiza
+ * \date March 2021
+ * \brief The startup function
+ */
+
+#include <QApplication>
+#include "mainWindow.h"
+
+int main(int argc, char *argv[])
+{
+    QApplication app(argc, argv);
+    MainWindow window;
+    window.showMaximized();
+    return app.exec();
+}
