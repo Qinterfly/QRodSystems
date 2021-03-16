@@ -23,14 +23,14 @@ MainWindow::~MainWindow()
      delete mpUi;
 }
 
-//! Create all the widgets inside
+//! Create all the widgets and corresponding actions
 void MainWindow::createContent()
 {
     // Toolbars
     createManagersToolBar();
 }
 
-//! Create the toolbar consisted of the object designers
+//! Create a toolbar consisted of object designers
 void MainWindow::createManagersToolBar()
 {
     QHBoxLayout *pLayout = new QHBoxLayout();
