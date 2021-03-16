@@ -22,9 +22,11 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-    void initialize();
+private:
+    void createContent();
+    void createManagersToolBar();
 
 private:
-    Ui::MainWindow *mUi;
+    Ui::MainWindow *mpUi;
 };
 #endif // MAINWINDOW_H

@@ -59,5 +59,6 @@
         <file>icons/View-Rotate-Right.svg</file>
         <file>icons/View-Top.svg</file>
         <file>icons/Window-New.svg</file>
+        <file>icons/Edit-Table.svg</file>
     </qresource>
 </RCC>
