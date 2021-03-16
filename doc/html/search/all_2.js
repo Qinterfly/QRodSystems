@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['ui_2',['Ui',['../namespace_ui.html',1,'']]]
+  ['specifymenuconnections_7',['specifyMenuConnections',['../class_main_window.html#a2d5354fec33f23a8181700c2869a9b5b',1,'MainWindow']]]
 ];

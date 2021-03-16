@@ -24,8 +24,14 @@ public:
     ~MainWindow();
 
 private:
+    // Content
     void createContent();
     void createManagersToolBar();
+    // Signals&Slots
+    void specifyMenuConnections();
+
+private slots:
+    void createObjectManager();
 
 private:
     Ui::MainWindow *mpUi;

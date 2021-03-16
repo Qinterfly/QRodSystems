@@ -81,6 +81,11 @@
         <string>Analysis</string>
        </attribute>
       </widget>
+      <widget class="QWidget" name="tabPlot">
+       <attribute name="title">
+        <string>Plot</string>
+       </attribute>
+      </widget>
       <widget class="QWidget" name="tabView">
        <attribute name="title">
         <string>View</string>
@@ -213,6 +218,10 @@
    </property>
   </action>
   <action name="actionSaveAs">
+   <property name="icon">
+    <iconset resource="../../resources/images.qrc">
+     <normaloff>:/icons/Document-SaveAs.svg</normaloff>:/icons/Document-SaveAs.svg</iconset>
+   </property>
    <property name="text">
     <string>Save &amp;As...</string>
    </property>

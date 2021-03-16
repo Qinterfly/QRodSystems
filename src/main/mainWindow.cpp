@@ -16,11 +16,12 @@ MainWindow::MainWindow(QWidget *parent)
 {
     mpUi->setupUi(this);
     createContent();
+    specifyMenuConnections();
 }
 
 MainWindow::~MainWindow()
 {
-     delete mpUi;
+    delete mpUi;
 }
 
 //! Create all the widgets and corresponding actions
@@ -37,10 +38,34 @@ void MainWindow::createManagersToolBar()
     pLayout->setContentsMargins(3, 0, 3, 0);
     QToolBar *pToolBar = new QToolBar();
     pToolBar->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
-    QAction *pAction = pToolBar->addAction("Object Creator");
+    // Object manager
+    QAction *pAction = pToolBar->addAction("Object Manager");
     pAction->setIcon(QIcon(":/icons/Edit-Table.svg"));
+    connect(pAction, &QAction::triggered, this, &MainWindow::createObjectManager);
+    pToolBar->addSeparator();
+    // Rod Data
+    pAction = pToolBar->addAction("Rod Data");
+    pAction->setIcon(QIcon(":/icons/Data-Binary.svg"));
+    // Rod Contructor
+    pAction = pToolBar->addAction("Rod Constructor");
+    pAction->setIcon(QIcon(":/icons/Std-Placement.svg"));
+    pToolBar->addSeparator();
+    // Adding the layout to the tab
     pLayout->setMenuBar(pToolBar);
     mpUi->tabManagers->setLayout(pLayout);
 }
 
+//! Set signals and slots for menu actions
+void MainWindow::specifyMenuConnections()
+{
+    // File
+    connect(mpUi->actionExit, &QAction::triggered, this, &QMainWindow::close);
+    // Help
+    connect(mpUi->actionAboutQt, &QAction::triggered, qApp, &QApplication::aboutQt);
+}
 
+//! Show an object manager
+void MainWindow::createObjectManager()
+{
+    // TODO
+}
