@@ -8,14 +8,14 @@
 #ifndef LOGWIDGET_H
 #define LOGWIDGET_H
 
-#include <QTextEdit>
+#include <QTableWidget>
 
-class LogWidget : public QTextEdit
+class LogWidget : public QTableWidget
 {
 public:
     explicit LogWidget(QWidget* parent = nullptr);
     ~LogWidget() = default;
-    void log(QtMsgType type, const QString &msg);
+    void log(QtMsgType messageType, const QString& message);
 };
 
 #endif // LOGWIDGET_H

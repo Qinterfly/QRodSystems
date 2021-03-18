@@ -28,8 +28,9 @@ using ads::CDockWidget;
 using ads::CDockAreaWidget;
 
 const static QString kFileNameViewSettings = "ViewSettings.ini";
+LogWidget* MainWindow::pLogger = nullptr;
 
-MainWindow::MainWindow(QWidget *parent)
+MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent)
     , mpUi(new Ui::MainWindow)
 {
@@ -84,6 +85,7 @@ void MainWindow::createContent()
     mpUi->menuWindow->addSeparator();
     mpUi->menuWindow->addAction("&Save View Settings", this, &MainWindow::saveViewSettings);
     mpUi->menuWindow->addAction("&Restore View Settings", this, &MainWindow::restoreViewSettings);
+    qInfo() << "Application successfully started";
 }
 
 //! Create a widget to represent a project hierarchy
@@ -113,10 +115,9 @@ CDockWidget* MainWindow::createGLWindow()
 //! Create a window for logging
 CDockWidget* MainWindow::createLogWindow()
 {
-    LogWidget* pWidget = new LogWidget();
-    pWidget->setReadOnly(true);
+    pLogger = new LogWidget();
     CDockWidget* pDockWidget = new CDockWidget(tr("Logging"));
-    pDockWidget->setWidget(pWidget);
+    pDockWidget->setWidget(pLogger);
     mpUi->menuWindow->addAction(pDockWidget->toggleViewAction());
     return pDockWidget;
 }
@@ -150,15 +151,21 @@ void MainWindow::saveViewSettings()
     settings.setValue("mainWindow/Geometry", saveGeometry());
     settings.setValue("mainWindow/State", saveState());
     settings.setValue("mainWindow/DockingState", mpDockManager->saveState());
+    if (settings.status() == QSettings::NoError)
+        qInfo() << "View settings were written to the file" << kFileNameViewSettings;
 }
 
 //! Restore a view state from a file
 void MainWindow::restoreViewSettings()
 {
     QSettings settings(kFileNameViewSettings, QSettings::IniFormat);
-    restoreGeometry(settings.value("mainWindow/Geometry").toByteArray());
-    restoreState(settings.value("mainWindow/State").toByteArray());
-    mpDockManager->restoreState(settings.value("mainWindow/DockingState").toByteArray());
+    bool isOk = restoreGeometry(settings.value("mainWindow/Geometry").toByteArray())
+                && restoreState(settings.value("mainWindow/State").toByteArray())
+                && mpDockManager->restoreState(settings.value("mainWindow/DockingState").toByteArray());
+    if (isOk)
+        qInfo() << "View settings were restored from the file" << kFileNameViewSettings;
+    else
+        qWarning() << "An error occured while reading view settings from the file" << kFileNameViewSettings;;
 }
 
 //! Show a manager for designing data objects

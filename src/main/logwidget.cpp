@@ -5,33 +5,63 @@
  * \brief Implementation of LogWidget class
  */
 
+#include <QHeaderView>
+#include <QTime>
+#include <QTimer>
 #include "logwidget.h"
 
-LogWidget::LogWidget(QWidget* parent)
-    : QTextEdit(parent)
+enum ColumnType
 {
+    kTime,
+    kType,
+    kMessage
+};
 
+LogWidget::LogWidget(QWidget* parent)
+    : QTableWidget(parent)
+{
+    setColumnCount(3);
+    setSortingEnabled(false);
+    horizontalHeader()->setStretchLastSection(true);
+    setSizeAdjustPolicy(AdjustToContents);
+    setHorizontalHeaderLabels({"Time", "Type", "Message"});
 }
 
 //! Represent a message sent
-void LogWidget::log(QtMsgType type, const QString &msg)
+void LogWidget::log(QtMsgType messageType, const QString& message)
 {
-    switch (type)
+    static const int kWaitToScroll = 10;
+    int iRow = rowCount();
+    insertRow(iRow);
+    QString type = "Unknown";
+    QIcon icon = QIcon::fromTheme("dialog-question");
+    switch (messageType)
     {
     case QtDebugMsg:
-        append("Debug: %s)\n" + msg);
+        type = "Debug";
+        icon = QIcon();
         break;
     case QtInfoMsg:
-        append("Info: %s)\n" + msg);
+        type = "Info";
+        icon = QIcon::fromTheme("dialog-information");
         break;
     case QtWarningMsg:
-        append("Warning: %s)\n" + msg);
+        type = "Warning";
+        icon = QIcon::fromTheme("dialog-warning");
         break;
     case QtCriticalMsg:
-        append("Critical: %s)\n" + msg);
+        type = "Critical";
+        icon = QIcon::fromTheme("dialog-error");
         break;
     case QtFatalMsg:
-        append("Fatal: %s)\n" + msg);
-        abort();
+        type = "Fatal";
+        icon = QIcon::fromTheme("dialog-error");
+        break;
     }
+    QString time = QTime::currentTime().toString();
+    setItem(iRow, ColumnType::kTime, new QTableWidgetItem(time));
+    setItem(iRow, ColumnType::kType, new QTableWidgetItem(icon, type));
+    setItem(iRow, ColumnType::kMessage, new QTableWidgetItem(message));
+    resizeColumnsToContents();
+    QTimer::singleShot(kWaitToScroll, this, &QTableWidget::scrollToBottom);
 }

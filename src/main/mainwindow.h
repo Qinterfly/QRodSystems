@@ -9,7 +9,6 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <QTextStream>
 #include "logwidget.h"
 
 namespace ads
@@ -49,11 +48,11 @@ private slots:
     void saveViewSettings();
     void restoreViewSettings();
 
+public:
+    static LogWidget* pLogger;
+
 private:
     Ui::MainWindow* mpUi;
     ads::CDockManager* mpDockManager;
-
-public:
-    static LogWidget* mpLogger;
 };
 #endif // MAINWINDOW_H
