@@ -1,9 +1,9 @@
 var indexSectionsWithContent =
 {
-  0: "cimpsv",
-  1: "mv",
-  2: "cmv",
-  3: "cimps"
+  0: "cilmprsv",
+  1: "lmv",
+  2: "clmv",
+  3: "cilmprs"
 };
 
 var indexSectionNames =

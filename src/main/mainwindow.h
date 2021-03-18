@@ -9,19 +9,21 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QTextStream>
+#include "logwidget.h"
 
 namespace ads
 {
 class CDockManager;
 class CDockWidget;
 }
-
 QT_BEGIN_NAMESPACE
 namespace Ui
 {
 class MainWindow;
 }
 QT_END_NAMESPACE
+
 
 //! The main window of the program
 class MainWindow : public QMainWindow
@@ -44,9 +46,14 @@ private:
 
 private slots:
     void createDataObjectsManager();
+    void saveViewSettings();
+    void restoreViewSettings();
 
 private:
     Ui::MainWindow* mpUi;
     ads::CDockManager* mpDockManager;
+
+public:
+    static LogWidget* mpLogger;
 };
 #endif // MAINWINDOW_H

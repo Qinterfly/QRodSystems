@@ -12,12 +12,14 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     main/controltabs.cpp \
+    main/logwidget.cpp \
     main/main.cpp \
     main/mainwindow.cpp \
     main/view3dwidget.cpp
 
 HEADERS += \
     main/controltabs.h \
+    main/logwidget.h \
     main/mainwindow.h \
     main/view3dwidget.h
 

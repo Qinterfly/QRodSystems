@@ -1,6 +1,4 @@
 var searchData=
 [
-  ['view3dwidget_16',['View3DWidget',['../class_view3_d_widget.html',1,'']]],
-  ['view3dwidget_2ecpp_17',['view3dwidget.cpp',['../view3dwidget_8cpp.html',1,'']]],
-  ['view3dwidget_2eh_18',['view3dwidget.h',['../view3dwidget_8h.html',1,'']]]
+  ['restoreviewsettings_19',['restoreViewSettings',['../class_main_window.html#a096b60c12788b52a249df0568c6c018d',1,'MainWindow']]]
 ];

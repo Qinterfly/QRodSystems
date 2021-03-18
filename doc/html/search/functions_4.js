@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['specifymenuconnections_38',['specifyMenuConnections',['../class_main_window.html#a2d5354fec33f23a8181700c2869a9b5b',1,'MainWindow']]]
+  ['paintgl_47',['paintGL',['../class_view3_d_widget.html#a71f273d668f848f95a795970406c8572',1,'View3DWidget']]]
 ];
