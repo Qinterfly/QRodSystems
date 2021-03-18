@@ -29,6 +29,9 @@
     </font>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout_2">
+    <property name="spacing">
+     <number>0</number>
+    </property>
     <property name="leftMargin">
      <number>0</number>
     </property>
@@ -41,56 +44,45 @@
     <property name="bottomMargin">
      <number>0</number>
     </property>
-    <item alignment="Qt::AlignTop">
-     <widget class="QTabWidget" name="tabToolBars">
+    <item>
+     <widget class="QTabWidget" name="tabControlWidget">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
       <property name="minimumSize">
        <size>
         <width>0</width>
-        <height>80</height>
+        <height>90</height>
        </size>
       </property>
       <property name="maximumSize">
        <size>
         <width>16777215</width>
-        <height>100</height>
+        <height>128</height>
+       </size>
+      </property>
+      <property name="baseSize">
+       <size>
+        <width>0</width>
+        <height>0</height>
        </size>
       </property>
       <property name="tabPosition">
-       <enum>QTabWidget::South</enum>
+       <enum>QTabWidget::North</enum>
       </property>
-      <property name="currentIndex">
-       <number>0</number>
+     </widget>
+    </item>
+    <item>
+     <widget class="QWidget" name="dockHolderWidget" native="true">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
       </property>
-      <widget class="QWidget" name="tabManagers">
-       <attribute name="title">
-        <string>Managers</string>
-       </attribute>
-      </widget>
-      <widget class="QWidget" name="tabModel">
-       <attribute name="title">
-        <string>Model</string>
-       </attribute>
-      </widget>
-      <widget class="QWidget" name="tabMesh">
-       <attribute name="title">
-        <string>Mesh</string>
-       </attribute>
-      </widget>
-      <widget class="QWidget" name="tabAnalysis">
-       <attribute name="title">
-        <string>Analysis</string>
-       </attribute>
-      </widget>
-      <widget class="QWidget" name="tabPlot">
-       <attribute name="title">
-        <string>Plot</string>
-       </attribute>
-      </widget>
-      <widget class="QWidget" name="tabView">
-       <attribute name="title">
-        <string>View</string>
-       </attribute>
-      </widget>
      </widget>
     </item>
    </layout>

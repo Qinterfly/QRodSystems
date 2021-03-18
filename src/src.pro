@@ -11,14 +11,18 @@ CONFIG += c++20
 DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
+    main/controltabs.cpp \
     main/main.cpp \
-    main/mainWindow.cpp
+    main/mainwindow.cpp \
+    main/view3dwidget.cpp
 
 HEADERS += \
-    main/mainWindow.h
+    main/controltabs.h \
+    main/mainwindow.h \
+    main/view3dwidget.h
 
 FORMS += \
-    main/mainWindow.ui
+    main/mainwindow.ui
 
 # Deployment
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -32,11 +36,6 @@ LIBS += -L$${LIB_PATH}
 include($${ADS_PATH}/ads.pri)
 adsBuildStatic {
     DEFINES += ADS_STATIC
-}
-lessThan(QT_MAJOR_VERSION, 6) {
-    win32 {
-        QT += axcontainer
-    }
 }
 INCLUDEPATH += $${ADS_PATH}/src
 DEPENDPATH  += $${ADS_PATH}/src

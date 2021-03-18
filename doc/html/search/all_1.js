@@ -1,7 +1,4 @@
 var searchData=
 [
-  ['main_2ecpp_3',['main.cpp',['../main_8cpp.html',1,'']]],
-  ['mainwindow_4',['MainWindow',['../class_main_window.html',1,'']]],
-  ['mainwindow_2ecpp_5',['mainWindow.cpp',['../main_window_8cpp.html',1,'']]],
-  ['mainwindow_2eh_6',['mainWindow.h',['../main_window_8h.html',1,'']]]
+  ['initializegl_6',['initializeGL',['../class_view3_d_widget.html#aa6883a6e91cc36e53df976816ac33538',1,'View3DWidget']]]
 ];

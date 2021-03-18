@@ -76,7 +76,7 @@ $(function() {
 <p>The main window of the program.  
  <a href="class_main_window.html#details">More...</a></p>
 
-<p><code>#include &lt;<a class="el" href="main_window_8h_source.html">mainWindow.h</a>&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="mainwindow_8h_source.html">mainwindow.h</a>&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for MainWindow:</div>
 <div class="dyncontent">
@@ -92,10 +92,10 @@ Public Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-slots"></a>
 Private Slots</h2></td></tr>
-<tr class="memitem:a75f312348931a74ba750132ea4eada92"><td class="memItemLeft" align="right" valign="top"><a id="a75f312348931a74ba750132ea4eada92"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_main_window.html#a75f312348931a74ba750132ea4eada92">createObjectManager</a> ()</td></tr>
-<tr class="memdesc:a75f312348931a74ba750132ea4eada92"><td class="mdescLeft">&#160;</td><td class="mdescRight">Show an object manager. <br /></td></tr>
-<tr class="separator:a75f312348931a74ba750132ea4eada92"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab5fbab4da79354007582fc3bf424ded3"><td class="memItemLeft" align="right" valign="top"><a id="ab5fbab4da79354007582fc3bf424ded3"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_main_window.html#ab5fbab4da79354007582fc3bf424ded3">createDataObjectsManager</a> ()</td></tr>
+<tr class="memdesc:ab5fbab4da79354007582fc3bf424ded3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Show a manager for designing data objects. <br /></td></tr>
+<tr class="separator:ab5fbab4da79354007582fc3bf424ded3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
 Private Member Functions</h2></td></tr>
@@ -103,10 +103,14 @@ Private Member Functions</h2></td></tr>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_main_window.html#ab6c344756703a73ced03b73608fa2c8e">createContent</a> ()</td></tr>
 <tr class="memdesc:ab6c344756703a73ced03b73608fa2c8e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create all the widgets and corresponding actions. <br /></td></tr>
 <tr class="separator:ab6c344756703a73ced03b73608fa2c8e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1082e0344834a8c56d4d0c1a13306c56"><td class="memItemLeft" align="right" valign="top"><a id="a1082e0344834a8c56d4d0c1a13306c56"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_main_window.html#a1082e0344834a8c56d4d0c1a13306c56">createManagersToolBar</a> ()</td></tr>
-<tr class="memdesc:a1082e0344834a8c56d4d0c1a13306c56"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a toolbar consisted of object designers. <br /></td></tr>
-<tr class="separator:a1082e0344834a8c56d4d0c1a13306c56"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a09e8f62b7c208189ac64532ba1383433"><td class="memItemLeft" align="right" valign="top"><a id="a09e8f62b7c208189ac64532ba1383433"></a>
+ads::CDockWidget *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_main_window.html#a09e8f62b7c208189ac64532ba1383433">createProjectHierarchy</a> ()</td></tr>
+<tr class="memdesc:a09e8f62b7c208189ac64532ba1383433"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a widget to represent a project hierarchy. <br /></td></tr>
+<tr class="separator:a09e8f62b7c208189ac64532ba1383433"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8f657aa06bb31625bab5cbc1b16f2389"><td class="memItemLeft" align="right" valign="top"><a id="a8f657aa06bb31625bab5cbc1b16f2389"></a>
+ads::CDockWidget *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_main_window.html#a8f657aa06bb31625bab5cbc1b16f2389">createGLWindow</a> ()</td></tr>
+<tr class="memdesc:a8f657aa06bb31625bab5cbc1b16f2389"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create an OpenGL widget. <br /></td></tr>
+<tr class="separator:a8f657aa06bb31625bab5cbc1b16f2389"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2d5354fec33f23a8181700c2869a9b5b"><td class="memItemLeft" align="right" valign="top"><a id="a2d5354fec33f23a8181700c2869a9b5b"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_main_window.html#a2d5354fec33f23a8181700c2869a9b5b">specifyMenuConnections</a> ()</td></tr>
 <tr class="memdesc:a2d5354fec33f23a8181700c2869a9b5b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set signals and slots for menu actions. <br /></td></tr>
@@ -117,12 +121,15 @@ Private Attributes</h2></td></tr>
 <tr class="memitem:ae189804894adebd52909d08fa0eed326"><td class="memItemLeft" align="right" valign="top"><a id="ae189804894adebd52909d08fa0eed326"></a>
 Ui::MainWindow *&#160;</td><td class="memItemRight" valign="bottom"><b>mpUi</b></td></tr>
 <tr class="separator:ae189804894adebd52909d08fa0eed326"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a33773d4cf398ed195f0405481af4cbf7"><td class="memItemLeft" align="right" valign="top"><a id="a33773d4cf398ed195f0405481af4cbf7"></a>
+ads::CDockManager *&#160;</td><td class="memItemRight" valign="bottom"><b>mpDockManager</b></td></tr>
+<tr class="separator:a33773d4cf398ed195f0405481af4cbf7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>The main window of the program. </p>
 </div><hr/>The documentation for this class was generated from the following files:<ul>
-<li>/home/qinterfly/Library/Projects/QRodSystems/src/main/<a class="el" href="main_window_8h_source.html">mainWindow.h</a></li>
-<li>/home/qinterfly/Library/Projects/QRodSystems/src/main/<a class="el" href="main_window_8cpp.html">mainWindow.cpp</a></li>
+<li>/home/qinterfly/Library/Projects/QRodSystems/src/main/<a class="el" href="mainwindow_8h_source.html">mainwindow.h</a></li>
+<li>/home/qinterfly/Library/Projects/QRodSystems/src/main/<a class="el" href="mainwindow_8cpp.html">mainwindow.cpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

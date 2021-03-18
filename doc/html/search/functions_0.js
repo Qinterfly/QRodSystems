@@ -1,6 +1,7 @@
 var searchData=
 [
-  ['createcontent_12',['createContent',['../class_main_window.html#ab6c344756703a73ced03b73608fa2c8e',1,'MainWindow']]],
-  ['createmanagerstoolbar_13',['createManagersToolBar',['../class_main_window.html#a1082e0344834a8c56d4d0c1a13306c56',1,'MainWindow']]],
-  ['createobjectmanager_14',['createObjectManager',['../class_main_window.html#a75f312348931a74ba750132ea4eada92',1,'MainWindow']]]
+  ['createcontent_27',['createContent',['../class_main_window.html#ab6c344756703a73ced03b73608fa2c8e',1,'MainWindow']]],
+  ['createdataobjectsmanager_28',['createDataObjectsManager',['../class_main_window.html#ab5fbab4da79354007582fc3bf424ded3',1,'MainWindow']]],
+  ['createglwindow_29',['createGLWindow',['../class_main_window.html#a8f657aa06bb31625bab5cbc1b16f2389',1,'MainWindow']]],
+  ['createprojecthierarchy_30',['createProjectHierarchy',['../class_main_window.html#a09e8f62b7c208189ac64532ba1383433',1,'MainWindow']]]
 ];

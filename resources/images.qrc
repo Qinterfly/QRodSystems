@@ -60,5 +60,13 @@
         <file>icons/View-Top.svg</file>
         <file>icons/Window-New.svg</file>
         <file>icons/Edit-Table.svg</file>
+        <file>icons/Hierarchy-Structure.svg</file>
+        <file>icons/Stream-Graphic.svg</file>
+        <file>icons/Predictive-Models.svg</file>
+        <file>icons/Data-Collection.svg</file>
+        <file>icons/Object-Database.svg</file>
+        <file>icons/Data.svg</file>
+        <file>icons/Packet.svg</file>
+        <file>icons/Database.svg</file>
     </qresource>
 </RCC>
