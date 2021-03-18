@@ -37,6 +37,8 @@ private:
     void createContent();
     ads::CDockWidget* createProjectHierarchy();
     ads::CDockWidget* createGLWindow();
+    ads::CDockWidget* createLogWindow();
+    ads::CDockWidget* createPropertiesWindow();
     // Signals&Slots
     void specifyMenuConnections();
 
