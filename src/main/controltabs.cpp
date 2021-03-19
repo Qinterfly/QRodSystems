@@ -19,12 +19,12 @@ ManagersTab::ManagersTab(QWidget* parent)
     QToolBar* pToolBar = new QToolBar();
     pToolBar->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
     // Data Objects
-    pToolBar->addAction(QIcon(":/icons/edit-table.svg"), tr("Data Objects"));
+    pToolBar->addAction(QIcon(":/icons/edit-table.svg"), tr("Data Objects"), this, &ManagersTab::actionDataObjectsTriggered);
     pToolBar->addSeparator();
     // Rod Properties
-    pToolBar->addAction(QIcon(":/icons/packet.svg"), tr("Rod Properties"));
+    pToolBar->addAction(QIcon(":/icons/packet.svg"), tr("Rod Properties"), this, &ManagersTab::actionRodPropertiesTriggered);
     // Rod Contructor
-    pToolBar->addAction(QIcon(":/icons/std-placement.svg"), tr("Rod Constructor"));
+    pToolBar->addAction(QIcon(":/icons/std-placement.svg"), tr("Rod Constructor"), this, &ManagersTab::actionRodConstructorTriggered);
     pToolBar->addSeparator();
     // Adding the layout to the tab
     pLayout->setMenuBar(pToolBar);

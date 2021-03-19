@@ -58,7 +58,13 @@ void MainWindow::createContent()
     QTabWidget* pTabControlWidget = new QTabWidget();
     pTabControlWidget->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
     pTabControlWidget->setMaximumHeight(95);
-    pTabControlWidget->addTab(new ManagersTab(), tr("Managers"));
+    // Managers
+    ManagersTab* pManagersTab = new ManagersTab();
+    pTabControlWidget->addTab(pManagersTab, tr("Managers"));
+    connect(pManagersTab, &ManagersTab::actionDataObjectsTriggered, this, &MainWindow::createDataObjectsManager);
+    connect(pManagersTab, &ManagersTab::actionRodPropertiesTriggered, this, &MainWindow::createRodPropertiesManager);
+    connect(pManagersTab, &ManagersTab::actionRodConstructorTriggered, this, &MainWindow::createRodConstructorManager);
+    // Other
     pTabControlWidget->addTab(new QWidget(), tr("Model"));
     pTabControlWidget->addTab(new QWidget(), tr("Mesh"));
     pTabControlWidget->addTab(new QWidget(), tr("Analysis"));
@@ -174,4 +180,14 @@ void MainWindow::createDataObjectsManager()
     // TODO
 }
 
+//! Show a manager to set rod properties based on the created data objects
+void MainWindow::createRodPropertiesManager()
+{
+    // TODO
+}
 
+//! Show a manager to create a rod with assigned data properties
+void MainWindow::createRodConstructorManager()
+{
+    // TODO
+}

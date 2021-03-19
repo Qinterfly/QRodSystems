@@ -25,6 +25,7 @@ LogWidget::LogWidget(QWidget* parent)
     horizontalHeader()->setStretchLastSection(true);
     setSizeAdjustPolicy(AdjustToContents);
     setHorizontalHeaderLabels({"Time", "Type", "Message"});
+    setEditTriggers(QTableWidget::NoEditTriggers);
 }
 
 //! Represent a message sent

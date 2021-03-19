@@ -18,6 +18,11 @@ class ManagersTab : public QWidget
 public:
     explicit ManagersTab(QWidget* parent = nullptr);
     ~ManagersTab() = default;
+
+signals:
+    void actionDataObjectsTriggered();
+    void actionRodPropertiesTriggered();
+    void actionRodConstructorTriggered();
 };
 
 

@@ -44,15 +44,17 @@ private:
     void specifyMenuConnections();
 
 private slots:
-    void createDataObjectsManager();
     void saveViewSettings();
     void restoreViewSettings();
-
-public:
-    static LogWidget* pLogger;
+    void createDataObjectsManager();
+    void createRodPropertiesManager();
+    void createRodConstructorManager();
 
 private:
     Ui::MainWindow* mpUi;
     ads::CDockManager* mpDockManager;
+
+public:
+    static LogWidget* pLogger;
 };
 #endif // MAINWINDOW_H

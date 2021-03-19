@@ -187,6 +187,9 @@
      <pointsize>10</pointsize>
     </font>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+Q</string>
+   </property>
   </action>
   <action name="actionAboutQt">
    <property name="text">
@@ -245,6 +248,10 @@
    </property>
   </action>
   <action name="actionCut">
+   <property name="icon">
+    <iconset resource="../../resources/images.qrc">
+     <normaloff>:/icons/edit-cut.svg</normaloff>:/icons/edit-cut.svg</iconset>
+   </property>
    <property name="text">
     <string>&amp;Cut</string>
    </property>
@@ -258,6 +265,10 @@
    </property>
   </action>
   <action name="actionCopy">
+   <property name="icon">
+    <iconset resource="../../resources/images.qrc">
+     <normaloff>:/icons/edit-copy.svg</normaloff>:/icons/edit-copy.svg</iconset>
+   </property>
    <property name="text">
     <string>&amp;Copy</string>
    </property>
@@ -271,6 +282,10 @@
    </property>
   </action>
   <action name="actionPaste">
+   <property name="icon">
+    <iconset resource="../../resources/images.qrc">
+     <normaloff>:/icons/edit-paste.svg</normaloff>:/icons/edit-paste.svg</iconset>
+   </property>
    <property name="text">
     <string>&amp;Paste</string>
    </property>

@@ -8,11 +8,13 @@
 #include <QApplication>
 #include "mainwindow.h"
 
+//! Log all the messages
 void throwMessage(QtMsgType type, const QMessageLogContext& /*context*/, const QString& message)
 {
     MainWindow::pLogger->log(type, message);
 }
 
+//! Entry point
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
