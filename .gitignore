@@ -1,6 +1,9 @@
 archive
 bin
+doc/html
+doc/latex
 doc/temp
 preparation
 theory
+*.pro.*
 TODO.txt
