@@ -17,6 +17,7 @@ void throwMessage(QtMsgType type, const QMessageLogContext& /*context*/, const Q
 //! Entry point
 int main(int argc, char *argv[])
 {
+    QGuiApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
     QApplication app(argc, argv);
     app.setStyle("Fusion");
     qInstallMessageHandler(throwMessage);

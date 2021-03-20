@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['managerstab_46',['ManagersTab',['../class_managers_tab.html#a397b8eebb3607a7fa420365c47610388',1,'ManagersTab']]]
+  ['log_70',['log',['../class_log_widget.html#ae5ebf3bbc15acd8f1bf573b7e76d59a1',1,'LogWidget']]]
 ];

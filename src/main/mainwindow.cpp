@@ -5,6 +5,7 @@
  * \brief Implementation of MainWindow class
  */
 
+#include <QDesktopWidget>
 #include <QToolBar>
 #include <QTableWidget>
 #include <QTreeView>
@@ -12,7 +13,6 @@
 #include <QTextEdit>
 #include <QVBoxLayout>
 #include <QSettings>
-#include <QXmlStreamWriter>
 #include "DockManager.h"
 #include "DockWidget.h"
 #include "ads_globals.h"
@@ -22,13 +22,15 @@
 #include "controltabs.h"
 #include "view3dwidget.h"
 #include "logwidget.h"
+#include "../managers/dataobjectsmanager.h"
 
 using ads::CDockManager;
 using ads::CDockWidget;
 using ads::CDockAreaWidget;
 
-const static QString kFileNameViewSettings = "ViewSettings.ini";
+void moveToCenter(QWidget*);
 LogWidget* MainWindow::pLogger = nullptr;
+const static QString kFileNameSettings = "Settings.ini";
 
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent)
@@ -37,7 +39,8 @@ MainWindow::MainWindow(QWidget* parent)
     mpUi->setupUi(this);
     createContent();
     specifyMenuConnections();
-    restoreViewSettings();
+    restoreSettings();
+    createDataObjectsManager();
 }
 
 MainWindow::~MainWindow()
@@ -48,6 +51,7 @@ MainWindow::~MainWindow()
 //! Create all the widgets and corresponding actions
 void MainWindow::createContent()
 {
+    mpSettings = QSharedPointer<QSettings>(new QSettings(kFileNameSettings, QSettings::IniFormat));
     // Configuration
     CDockManager::setConfigFlag(CDockManager::FocusHighlighting, true);
     QVBoxLayout* pLayout = new QVBoxLayout(mpUi->centralWidget);
@@ -76,26 +80,26 @@ void MainWindow::createContent()
     pLayout->addWidget(mpDockManager);;
     ads::CDockWidget* pDockWidget = nullptr;
     // OpenGL window
-    pDockWidget = createGLWindow();
+    pDockWidget = createGLWidget();
     mpDockManager->addDockWidget(ads::TopDockWidgetArea, pDockWidget);
     // Log window
-    pDockWidget = createLogWindow();
+    pDockWidget = createLogWidget();
     mpDockManager->addDockWidget(ads::BottomDockWidgetArea, pDockWidget);
     // Project hierarchy
-    pDockWidget = createProjectHierarchy();
+    pDockWidget = createProjectHierarchyWidget();
     CDockAreaWidget* pArea = mpDockManager->addDockWidget(ads::LeftDockWidgetArea, pDockWidget);
     // Properties
-    pDockWidget = createPropertiesWindow();
+    pDockWidget = createPropertiesWidget();
     mpDockManager->addDockWidget(ads::BottomDockWidgetArea, pDockWidget, pArea);
     // Views
     mpUi->menuWindow->addSeparator();
-    mpUi->menuWindow->addAction("&Save View Settings", this, &MainWindow::saveViewSettings);
-    mpUi->menuWindow->addAction("&Restore View Settings", this, &MainWindow::restoreViewSettings);
+    mpUi->menuWindow->addAction("&Save View Settings", this, &MainWindow::saveSettings);
+    mpUi->menuWindow->addAction("&Restore View Settings", this, &MainWindow::restoreSettings);
     qInfo() << "Application successfully started";
 }
 
 //! Create a widget to represent a project hierarchy
-CDockWidget* MainWindow::createProjectHierarchy()
+CDockWidget* MainWindow::createProjectHierarchyWidget()
 {
     QTreeView* pWidget = new QTreeView();
     pWidget->setFrameShape(QFrame::NoFrame);
@@ -109,7 +113,7 @@ CDockWidget* MainWindow::createProjectHierarchy()
 }
 
 //! Create an OpenGL widget
-CDockWidget* MainWindow::createGLWindow()
+CDockWidget* MainWindow::createGLWidget()
 {
     View3DWidget* pWidget = new View3DWidget();
     CDockWidget* pDockWidget = new CDockWidget(tr("Rod System"));
@@ -119,7 +123,7 @@ CDockWidget* MainWindow::createGLWindow()
 }
 
 //! Create a window for logging
-CDockWidget* MainWindow::createLogWindow()
+CDockWidget* MainWindow::createLogWidget()
 {
     pLogger = new LogWidget();
     CDockWidget* pDockWidget = new CDockWidget(tr("Logging"));
@@ -129,7 +133,7 @@ CDockWidget* MainWindow::createLogWindow()
 }
 
 //! Create a window to modify properies of selected objercts
-CDockWidget* MainWindow::createPropertiesWindow()
+CDockWidget* MainWindow::createPropertiesWidget()
 {
     QTableWidget* pWidget = new QTableWidget();
     pWidget->setColumnCount(3);
@@ -151,33 +155,35 @@ void MainWindow::specifyMenuConnections()
 }
 
 //! Save the current view state
-void MainWindow::saveViewSettings()
+void MainWindow::saveSettings()
 {
-    QSettings settings(kFileNameViewSettings, QSettings::IniFormat);
-    settings.setValue("mainWindow/Geometry", saveGeometry());
-    settings.setValue("mainWindow/State", saveState());
-    settings.setValue("mainWindow/DockingState", mpDockManager->saveState());
-    if (settings.status() == QSettings::NoError)
-        qInfo() << "View settings were written to the file" << kFileNameViewSettings;
+    mpSettings->setValue("mainWindow/Geometry", saveGeometry());
+    mpSettings->setValue("mainWindow/State", saveState());
+    mpSettings->setValue("mainWindow/DockingState", mpDockManager->saveState());
+    if (mpSettings->status() == QSettings::NoError)
+        qInfo() << "Settings were written to the file" << kFileNameSettings;
 }
 
 //! Restore a view state from a file
-void MainWindow::restoreViewSettings()
+void MainWindow::restoreSettings()
 {
-    QSettings settings(kFileNameViewSettings, QSettings::IniFormat);
-    bool isOk = restoreGeometry(settings.value("mainWindow/Geometry").toByteArray())
-                && restoreState(settings.value("mainWindow/State").toByteArray())
-                && mpDockManager->restoreState(settings.value("mainWindow/DockingState").toByteArray());
+    bool isOk = restoreGeometry(mpSettings->value("mainWindow/Geometry").toByteArray())
+                && restoreState(mpSettings->value("mainWindow/State").toByteArray())
+                && mpDockManager->restoreState(mpSettings->value("mainWindow/DockingState").toByteArray());
     if (isOk)
-        qInfo() << "View settings were restored from the file" << kFileNameViewSettings;
+        qInfo() << "Settings were restored from the file" << kFileNameSettings;
     else
-        qWarning() << "An error occured while reading view settings from the file" << kFileNameViewSettings;;
+        qWarning() << "An error occured while reading settings from the file" << kFileNameSettings;;
 }
 
 //! Show a manager for designing data objects
 void MainWindow::createDataObjectsManager()
 {
-    // TODO
+    if (mpDataObjectsManager && mpDataObjectsManager->isVisible())
+        return;
+    mpDataObjectsManager = new DataObjectsManager(*mpSettings, mpUi->centralWidget);
+    moveToCenter(mpDataObjectsManager);
+    mpDataObjectsManager->show();
 }
 
 //! Show a manager to set rod properties based on the created data objects
@@ -190,4 +196,13 @@ void MainWindow::createRodPropertiesManager()
 void MainWindow::createRodConstructorManager()
 {
     // TODO
+}
+
+//! Helper function to situate widgets at the center of their parent widgets
+void moveToCenter(QWidget* pWidget)
+{
+    const QRect screenGeometry = QApplication::desktop()->screenGeometry(pWidget->parentWidget());
+    int x = (screenGeometry.width() - pWidget->width()) / 2;
+    int y = (screenGeometry.height() - pWidget->height()) / 2;
+    pWidget->move(x, y);
 }

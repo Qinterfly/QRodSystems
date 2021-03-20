@@ -11,18 +11,22 @@
 #include <QMainWindow>
 #include "logwidget.h"
 
-namespace ads
-{
-class CDockManager;
-class CDockWidget;
-}
 QT_BEGIN_NAMESPACE
 namespace Ui
 {
 class MainWindow;
 }
+class QSettings;
 QT_END_NAMESPACE
 
+namespace ads
+{
+class CDockManager;
+class CDockWidget;
+}
+
+class LogWidget;
+class DataObjectsManager;
 
 //! The main window of the program
 class MainWindow : public QMainWindow
@@ -36,16 +40,16 @@ public:
 private:
     // Content
     void createContent();
-    ads::CDockWidget* createProjectHierarchy();
-    ads::CDockWidget* createGLWindow();
-    ads::CDockWidget* createLogWindow();
-    ads::CDockWidget* createPropertiesWindow();
+    ads::CDockWidget* createProjectHierarchyWidget();
+    ads::CDockWidget* createGLWidget();
+    ads::CDockWidget* createLogWidget();
+    ads::CDockWidget* createPropertiesWidget();
     // Signals&Slots
     void specifyMenuConnections();
 
 private slots:
-    void saveViewSettings();
-    void restoreViewSettings();
+    void saveSettings();
+    void restoreSettings();
     void createDataObjectsManager();
     void createRodPropertiesManager();
     void createRodConstructorManager();
@@ -53,7 +57,8 @@ private slots:
 private:
     Ui::MainWindow* mpUi;
     ads::CDockManager* mpDockManager;
-
+    QSharedPointer<QSettings> mpSettings;
+    DataObjectsManager* mpDataObjectsManager = nullptr;
 public:
     static LogWidget* pLogger;
 };

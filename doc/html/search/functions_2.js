@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['log_45',['log',['../class_log_widget.html#ae5ebf3bbc15acd8f1bf573b7e76d59a1',1,'LogWidget']]]
+  ['initializegl_69',['initializeGL',['../class_view3_d_widget.html#aa6883a6e91cc36e53df976816ac33538',1,'View3DWidget']]]
 ];

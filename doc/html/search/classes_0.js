@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['logwidget_25',['LogWidget',['../class_log_widget.html',1,'']]]
+  ['dataobjectsmanager_39',['DataObjectsManager',['../class_data_objects_manager.html',1,'']]]
 ];
