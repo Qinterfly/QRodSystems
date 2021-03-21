@@ -30,13 +30,14 @@ using ads::CDockAreaWidget;
 
 void moveToCenter(QWidget*);
 LogWidget* MainWindow::pLogger = nullptr;
-const static QString kFileNameSettings = "Settings.ini";
+const static QString skFileNameSettings = "Settings.ini";
 
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent)
     , mpUi(new Ui::MainWindow)
+    , mProject("Undefined")
 {
-    mpUi->setupUi(this);
+    initializeWindow();
     createContent();
     specifyMenuConnections();
     restoreSettings();
@@ -48,10 +49,17 @@ MainWindow::~MainWindow()
     delete mpUi;
 }
 
+//! Set a state and geometry of MainWindow
+void MainWindow::initializeWindow()
+{
+    mpUi->setupUi(this);
+    setWindowState(Qt::WindowMaximized);
+}
+
 //! Create all the widgets and corresponding actions
 void MainWindow::createContent()
 {
-    mpSettings = QSharedPointer<QSettings>(new QSettings(kFileNameSettings, QSettings::IniFormat));
+    mpSettings = QSharedPointer<QSettings>(new QSettings(skFileNameSettings, QSettings::IniFormat));
     // Configuration
     CDockManager::setConfigFlag(CDockManager::FocusHighlighting, true);
     QVBoxLayout* pLayout = new QVBoxLayout(mpUi->centralWidget);
@@ -93,9 +101,9 @@ void MainWindow::createContent()
     mpDockManager->addDockWidget(ads::BottomDockWidgetArea, pDockWidget, pArea);
     // Views
     mpUi->menuWindow->addSeparator();
-    mpUi->menuWindow->addAction("&Save View Settings", this, &MainWindow::saveSettings);
-    mpUi->menuWindow->addAction("&Restore View Settings", this, &MainWindow::restoreSettings);
-    qInfo() << "Application successfully started";
+    mpUi->menuWindow->addAction(tr("&Save Settings"), this, &MainWindow::saveSettings);
+    mpUi->menuWindow->addAction(tr("&Restore Settings"), this, &MainWindow::restoreSettings);
+    qInfo() << tr("Application successfully started");
 }
 
 //! Create a widget to represent a project hierarchy
@@ -112,7 +120,7 @@ CDockWidget* MainWindow::createProjectHierarchyWidget()
     return pDockWidget;
 }
 
-//! Create an OpenGL widget
+//! Create an OpenGL widget to render rods
 CDockWidget* MainWindow::createGLWidget()
 {
     View3DWidget* pWidget = new View3DWidget();
@@ -161,7 +169,7 @@ void MainWindow::saveSettings()
     mpSettings->setValue("mainWindow/State", saveState());
     mpSettings->setValue("mainWindow/DockingState", mpDockManager->saveState());
     if (mpSettings->status() == QSettings::NoError)
-        qInfo() << "Settings were written to the file" << kFileNameSettings;
+        qInfo() << tr("Settings were written to the file") << skFileNameSettings;
 }
 
 //! Restore a view state from a file
@@ -171,9 +179,9 @@ void MainWindow::restoreSettings()
                 && restoreState(mpSettings->value("mainWindow/State").toByteArray())
                 && mpDockManager->restoreState(mpSettings->value("mainWindow/DockingState").toByteArray());
     if (isOk)
-        qInfo() << "Settings were restored from the file" << kFileNameSettings;
+        qInfo() << tr("Settings were restored from the file") << skFileNameSettings;
     else
-        qWarning() << "An error occured while reading settings from the file" << kFileNameSettings;;
+        qWarning() << tr("An error occured while reading settings from the file") << skFileNameSettings;;
 }
 
 //! Show a manager for designing data objects

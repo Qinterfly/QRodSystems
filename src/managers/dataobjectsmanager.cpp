@@ -79,8 +79,8 @@ CDockWidget* DataObjectsManager::createDataTablesWidget()
     QToolBar* pToolBar = pDockWidget->createDefaultToolBar();
     pToolBar->setToolButtonStyle(Qt::ToolButtonStyle::ToolButtonIconOnly);
     pDockWidget->setToolBarIconSize(kIconSize, CDockWidget::StateDocked);
-    pToolBar->addAction(QIcon(":/icons/list-add.svg"), "Add");
-    pToolBar->addAction(QIcon(":/icons/list-remove.svg"), "Remove");
+    pToolBar->addAction(QIcon(":/icons/plus.svg"), tr("Add"));
+    pToolBar->addAction(QIcon(":/icons/minus.svg"), tr("Remove"));
     return pDockWidget;
 }
 
@@ -94,27 +94,27 @@ CDockWidget* DataObjectsManager::createDataObjectsWidget()
     QToolBar* pToolBar = pDockWidget->createDefaultToolBar();
     pToolBar->setToolButtonStyle(Qt::ToolButtonStyle::ToolButtonIconOnly);
     pDockWidget->setToolBarIconSize(kIconSize, CDockWidget::StateDocked);
-    pToolBar->addAction("Scalar");
-    pToolBar->addAction("Vector");
-    pToolBar->addAction("Matrix");
-    pToolBar->addAction("Surface");
+    pToolBar->addAction(QIcon(":/icons/letter-s.svg"), tr("Scalar"));
+    pToolBar->addAction(QIcon(":/icons/letter-v.svg"), tr("Vector"));
+    pToolBar->addAction(QIcon(":/icons/letter-m.svg"), tr("Matrix"));
+    pToolBar->addAction(QIcon(":/icons/letter-xy.svg"), tr("Surface"));
     pToolBar->addSeparator();
-    pToolBar->addAction("Remove");
+    pToolBar->addAction(QIcon(":/icons/delete.svg"), tr("Remove"));
     return pDockWidget;
 }
 
 //! Create a widget enables to code data objects
 CDockWidget* DataObjectsManager::createCodeWidget()
 {
-    CDockWidget* pDockWidget = new CDockWidget("Code");
+    CDockWidget* pDockWidget = new CDockWidget(tr("Code"));
     QTextEdit* pWidget = new QTextEdit();
     pDockWidget->setWidget(pWidget);
     // ToolBar
     QToolBar* pToolBar = pDockWidget->createDefaultToolBar();
     pToolBar->setToolButtonStyle(Qt::ToolButtonStyle::ToolButtonIconOnly);
     pDockWidget->setToolBarIconSize(kIconSize, CDockWidget::StateDocked);
-    pToolBar->addAction(QIcon(":/icons/debug-start.svg"), "Start");
-    pToolBar->addAction(QIcon(":/icons/debug-stop.svg"), "Stop");
+    pToolBar->addAction(QIcon(":/icons/debug-start.svg"), tr("Start"));
+    pToolBar->addAction(QIcon(":/icons/debug-stop.svg"), tr("Stop"));
     return pDockWidget;
 }
 
@@ -123,7 +123,7 @@ QLayout* DataObjectsManager::createDialogControls()
 {
     QHBoxLayout* pLayout = new QHBoxLayout();
     pLayout->setContentsMargins(0, 0, 3, 5);
-    QPushButton* pAcceptButton = new QPushButton(QIcon(":/icons/edit-ok.svg"), "Apply");
+    QPushButton* pAcceptButton = new QPushButton(QIcon(":/icons/edit-ok.svg"), tr("Apply"));
     connect(pAcceptButton, &QPushButton::clicked, this, &DataObjectsManager::apply);
     pLayout->addStretch();
     pLayout->addWidget(pAcceptButton);

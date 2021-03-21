@@ -1,6 +1,6 @@
 
 lessThan(QT_MAJOR_VERSION, 6) {
-    CONFIG(debug, debug|release){
+    CONFIG(debug, debug|release) {
         win32 {
             LIBS += -L$${ADS_PATH} -lqtadvanceddockingd
         }
@@ -11,7 +11,7 @@ lessThan(QT_MAJOR_VERSION, 6) {
             LIBS += -L$${ADS_PATH} -lqtadvanceddocking
         }
     }
-    else{
+    else {
         LIBS += -L$${ADS_PATH} -lqtadvanceddocking
     }
 }

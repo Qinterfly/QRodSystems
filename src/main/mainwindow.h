@@ -10,6 +10,7 @@
 
 #include <QMainWindow>
 #include "logwidget.h"
+#include "../core/project.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui
@@ -24,8 +25,6 @@ namespace ads
 class CDockManager;
 class CDockWidget;
 }
-
-class LogWidget;
 class DataObjectsManager;
 
 //! The main window of the program
@@ -39,6 +38,7 @@ public:
 
 private:
     // Content
+    void initializeWindow();
     void createContent();
     ads::CDockWidget* createProjectHierarchyWidget();
     ads::CDockWidget* createGLWidget();
@@ -59,6 +59,9 @@ private:
     ads::CDockManager* mpDockManager;
     QSharedPointer<QSettings> mpSettings;
     DataObjectsManager* mpDataObjectsManager = nullptr;
+    QRS::Project mProject;
+    QString mLastPath;
+
 public:
     static LogWidget* pLogger;
 };

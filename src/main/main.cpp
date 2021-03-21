@@ -22,6 +22,6 @@ int main(int argc, char *argv[])
     app.setStyle("Fusion");
     qInstallMessageHandler(throwMessage);
     MainWindow window;
-    window.showMaximized();
+    window.show();
     return app.exec();
 }

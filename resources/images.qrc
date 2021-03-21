@@ -6,7 +6,6 @@
         <file>icons/data-table.svg</file>
         <file>icons/debug-start.svg</file>
         <file>icons/debug-stop.svg</file>
-        <file>icons/delete.svg</file>
         <file>icons/document-new.svg</file>
         <file>icons/document-open.svg</file>
         <file>icons/document-save-as.svg</file>
@@ -68,5 +67,12 @@
         <file>icons/data.svg</file>
         <file>icons/packet.svg</file>
         <file>icons/database.svg</file>
+        <file>icons/letter-s.svg</file>
+        <file>icons/letter-v.svg</file>
+        <file>icons/letter-xy.svg</file>
+        <file>icons/letter-m.svg</file>
+        <file>icons/delete.svg</file>
+        <file>icons/minus.svg</file>
+        <file>icons/plus.svg</file>
     </qresource>
 </RCC>
