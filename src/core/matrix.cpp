@@ -16,3 +16,4 @@ Matrix<T>::Matrix(uint numRows, uint numCols)
 {
     mValues.resize(numRows * numCols);
 }
+

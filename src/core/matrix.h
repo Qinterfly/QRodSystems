@@ -19,7 +19,9 @@ template<typename T>
 class Matrix
 {
 public:
-    Matrix(uint numRows = 3, uint numCols = 3);
+    Matrix() = default;
+    Matrix(uint numRows, uint numCols);
+    ~Matrix() = default;
     void setValue(T&);
 
 private:

@@ -8,23 +8,42 @@
 #ifndef PROJECT_H
 #define PROJECT_H
 
+#include <QObject>
 #include <QUuid>
-#include <QSharedPointer>
+#include <memory>
 #include <list>
 #include "dataobject.h"
+#include "matrix.h"
 
 class QString;
 
 namespace QRS
 {
-using ListScalars = std::list<QSharedPointer<DataObject<double>>>;
+using ScalarDataObject = DataObject<double>;
+using VectorDataObject = DataObject<std::vector<ScalarDataType>>;
+using MatrixDataObject = DataObject<Matrix<ScalarDataType>>;
+
+template <typename A>
+using ListPointers = std::list<std::shared_ptr<A>>;
+using ListScalars  = ListPointers<ScalarDataObject>;
+using ListVectors  = ListPointers<VectorDataObject>;
+using ListMatrices = ListPointers<MatrixDataObject>;
 
 //! Project class to interact with a created system of rods
-class Project
+class Project : public QObject
 {
+    Q_OBJECT
+
 public:
     Project(QString name);
-    ~Project() = default;
+    virtual ~Project() = default;
+    // Data objects
+    ListScalars& getScalars() { return mScalars; }
+
+public slots:
+    void addScalar();
+    void addVector();
+    void addMatrix();
 
 private:
     //! Unique project identifier
@@ -37,6 +56,8 @@ private:
     uint mNumModified = 0;
     //! Data objects
     ListScalars mScalars;
+    ListVectors mVectors;
+    ListMatrices mMatrices;
 };
 
 }

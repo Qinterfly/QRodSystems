@@ -20,7 +20,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "controltabs.h"
-#include "view3dwidget.h"
+#include "view3d.h"
 #include "logwidget.h"
 #include "../managers/dataobjectsmanager.h"
 
@@ -123,7 +123,7 @@ CDockWidget* MainWindow::createProjectHierarchyWidget()
 //! Create an OpenGL widget to render rods
 CDockWidget* MainWindow::createGLWidget()
 {
-    View3DWidget* pWidget = new View3DWidget();
+    View3D* pWidget = new View3D();
     CDockWidget* pDockWidget = new CDockWidget(tr("Rod System"));
     pDockWidget->setWidget(pWidget);
     mpUi->menuWindow->addAction(pDockWidget->toggleViewAction());
@@ -189,7 +189,7 @@ void MainWindow::createDataObjectsManager()
 {
     if (mpDataObjectsManager && mpDataObjectsManager->isVisible())
         return;
-    mpDataObjectsManager = new DataObjectsManager(*mpSettings, mpUi->centralWidget);
+    mpDataObjectsManager = new DataObjectsManager(mProject, *mpSettings, mpUi->centralWidget);
     moveToCenter(mpDataObjectsManager);
     mpDataObjectsManager->show();
 }

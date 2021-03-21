@@ -10,28 +10,41 @@
 
 #include <QString>
 #include <unordered_map>
+#include "matrix.h"
 
 namespace QRS
 {
+using ScalarDataType = double;
+using VectorDataType = std::vector<ScalarDataType>;
+using MatrixDataType = Matrix<ScalarDataType>;
 
-//! Data object
-//! \tparam double
-//! \tparam vector<double>
-//! \tparam matrix<double>
-//! \tparam surface<double>
+/*!
+ * \brief Data object which is designied in the way to be represented in a table easily
+ * \tparam double
+ * \tparam vector<double>
+ * \tparam matrix<double>
+ * \tparam surface<double>
+ */
 template <typename T>
 class DataObject
 {
+    using DataHolder = std::unordered_map<ScalarDataType, T>;
+
 public:
-    DataObject(QString name);
+    DataObject(const QString& name);
     ~DataObject() = default;
-    void addEntity(double key, const T& entity);
+    static uint getID();
+    // Modification
+    void addEntity(double keyParameter, const T& entity);
+    void modifyEntity(double keyParameter, const T& entity);
+    void removeEntity(double keyParameter);
 
 private:
-    std::unordered_map<double, T> mEntities;
-    QString mName;
     static uint smID;
+    QString mName;
+    DataHolder mEntities;
 };
+
 
 }
 

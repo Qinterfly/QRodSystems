@@ -2,23 +2,23 @@
  * \file
  * \author Pavel Lakiza
  * \date March 2021
- * \brief Declaration of View3DWidget class
+ * \brief Declaration of View3D class
  */
 
-#ifndef VIEW3DWIDGET_H
-#define VIEW3DWIDGET_H
+#ifndef VIEW3D_H
+#define VIEW3D_H
 
 #include <QOpenGLWidget>
 #include <QOpenGLFunctions>
 
 //! A widget to represent the resulted rod system
-class View3DWidget : public QOpenGLWidget, protected QOpenGLFunctions
+class View3D : public QOpenGLWidget, protected QOpenGLFunctions
 {
     Q_OBJECT
 
 public:
-    View3DWidget(QWidget* parent = nullptr);
-    ~View3DWidget() = default;
+    View3D(QWidget* parent = nullptr);
+    ~View3D() = default;
 
 protected:
     void initializeGL() override;
@@ -28,4 +28,4 @@ private:
     bool mCore;
 };
 
-#endif // VIEW3DWIDGET_H
+#endif // VIEW3D_H

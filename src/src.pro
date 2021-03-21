@@ -18,7 +18,7 @@ SOURCES += \
     main/logwidget.cpp \
     main/main.cpp \
     main/mainwindow.cpp \
-    main/view3dwidget.cpp \
+    main/view3d.cpp \
     managers/dataobjectsmanager.cpp
 
 HEADERS += \
@@ -28,7 +28,7 @@ HEADERS += \
     main/controltabs.h \
     main/logwidget.h \
     main/mainwindow.h \
-    main/view3dwidget.h \
+    main/view3d.h \
     managers/dataobjectsmanager.h
 
 FORMS += \

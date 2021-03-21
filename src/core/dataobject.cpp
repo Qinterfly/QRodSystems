@@ -7,21 +7,55 @@
 
 #include "dataobject.h"
 
+namespace QRS
+{
+template class DataObject<ScalarDataType>;
+template class DataObject<VectorDataType>;
+template class DataObject<MatrixDataType>;
+}
+
 using namespace QRS;
 
 template <typename T>
 uint DataObject<T>::smID = 0;
 
+//! Retrieve of the last created object
 template <typename T>
-DataObject<T>::DataObject(QString name)
-    : mName(name)
+uint DataObject<T>::getID()
 {
-    ++smID;
+    return DataObject<T>::smID;
 }
 
-//! Add a data entity
+//! Base constructor
 template <typename T>
-void DataObject<T>::addEntity(double key, const T& entity)
+DataObject<T>::DataObject(const QString& name)
 {
-    mEntities.insert(key, entity);
+    ++smID;
+    mName = name;
 }
+
+/*!
+ * \brief Add a data entity
+ * \param[in] keyParameter \f$ \xi \f$ is the leading variable
+ * \param[in] entity It may be scalar, vector, matrix or surface
+ */
+template <typename T>
+void DataObject<T>::addEntity(double keyParameter, const T& entity)
+{
+    mEntities.insert({keyParameter, entity});
+}
+
+//! Remove a data entity with the specified key
+template <typename T>
+void DataObject<T>::removeEntity(double keyParameter)
+{
+    mEntities.erase(keyParameter);
+}
+
+//! Modify a data entity with the specified key
+template <typename T>
+void DataObject<T>::modifyEntity(double keyParameter, const T& entity)
+{
+    mEntities[keyParameter] = entity;
+}
+

@@ -20,6 +20,10 @@ namespace ads
 class CDockManager;
 class CDockWidget;
 }
+namespace QRS
+{
+class Project;
+}
 
 class QTabWidget;
 class QSettings;
@@ -30,16 +34,18 @@ class DataObjectsManager : public QDialog
     Q_OBJECT
 
 public:
-    explicit DataObjectsManager(QSettings& settings, QWidget* parent = nullptr);
+    explicit DataObjectsManager(QRS::Project& project, QSettings& settings, QWidget* parent = nullptr);
     ~DataObjectsManager();
     void closeEvent(QCloseEvent* ) override;
 
 private:
+    // Content
     void createContent();
     ads::CDockWidget* createDataTablesWidget();
     ads::CDockWidget* createDataObjectsWidget();
     ads::CDockWidget* createCodeWidget();
     QLayout* createDialogControls();
+    // Settings
     void restoreSettings();
     void saveSettings();
 
@@ -50,6 +56,7 @@ private:
     Ui::DataObjectsManager* mpUi;
     ads::CDockManager* mpDockManager;
     QTabWidget* mpDataTables;
+    QRS::Project& mProject;
     QSettings& mSettings;
 };
 

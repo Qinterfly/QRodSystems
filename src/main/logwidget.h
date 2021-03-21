@@ -10,6 +10,7 @@
 
 #include <QTableWidget>
 
+//! Log all the messages sent
 class LogWidget : public QTableWidget
 {
 public:

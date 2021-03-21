@@ -18,16 +18,19 @@
 
 #include "dataobjectsmanager.h"
 #include "ui_dataobjectsmanager.h"
+#include "../core/project.h"
 
 using ads::CDockManager;
 using ads::CDockWidget;
 using ads::CDockAreaWidget;
+using namespace QRS;
 
 const static QSize kIconSize = QSize(20, 20);
 
-DataObjectsManager::DataObjectsManager(QSettings& settings, QWidget* parent)
+DataObjectsManager::DataObjectsManager(QRS::Project& project, QSettings& settings, QWidget* parent)
     : QDialog(parent)
     , mpUi(new Ui::DataObjectsManager)
+    , mProject(project)
     , mSettings(settings)
 {
     mpUi->setupUi(this);
@@ -94,9 +97,9 @@ CDockWidget* DataObjectsManager::createDataObjectsWidget()
     QToolBar* pToolBar = pDockWidget->createDefaultToolBar();
     pToolBar->setToolButtonStyle(Qt::ToolButtonStyle::ToolButtonIconOnly);
     pDockWidget->setToolBarIconSize(kIconSize, CDockWidget::StateDocked);
-    pToolBar->addAction(QIcon(":/icons/letter-s.svg"), tr("Scalar"));
-    pToolBar->addAction(QIcon(":/icons/letter-v.svg"), tr("Vector"));
-    pToolBar->addAction(QIcon(":/icons/letter-m.svg"), tr("Matrix"));
+    pToolBar->addAction(QIcon(":/icons/letter-s.svg"), tr("Scalar"), &mProject, &Project::addScalar);
+    pToolBar->addAction(QIcon(":/icons/letter-v.svg"), tr("Vector"), &mProject, &Project::addVector);
+    pToolBar->addAction(QIcon(":/icons/letter-m.svg"), tr("Matrix"), &mProject, &Project::addMatrix);
     pToolBar->addAction(QIcon(":/icons/letter-xy.svg"), tr("Surface"));
     pToolBar->addSeparator();
     pToolBar->addAction(QIcon(":/icons/delete.svg"), tr("Remove"));
@@ -149,5 +152,6 @@ void DataObjectsManager::apply()
 {
     // TODO
 }
+
 
 
