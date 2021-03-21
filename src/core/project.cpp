@@ -17,26 +17,27 @@ Project::Project(QString name)
 
 }
 
-//! Add an instance of a scalar object
-void Project::addScalar()
+//! Create a data object with the specified type
+void Project::addDataObject(DataObjectType type)
 {
-    static const QString skName = "Scalar ";
-    QString nameObj = skName + QString::number(ScalarDataObject::getID() + 1);
-    mScalars.push_back(std::shared_ptr<ScalarDataObject>(new ScalarDataObject(nameObj)));
+    static const QString skName = "Object ";
+    QString nameObj = skName + QString::number(AbstractDataObject::numberObjects() + 1);
+    AbstractDataObject* pObject;
+    switch (type)
+    {
+    case DataObjectType::kScalar:
+        pObject = new ScalarDataObject(nameObj);
+        break;
+    case DataObjectType::kVector:
+        pObject = new VectorDataObject(nameObj);
+        break;
+    case DataObjectType::kMatrix:
+        pObject = new MatrixDataObject(nameObj);
+        break;
+    case DataObjectType::kSurface:
+        pObject = new SurfaceDataObject(nameObj);
+        break;
+    }
+    mDataObjects.push_back(std::shared_ptr<AbstractDataObject>(pObject));
 }
 
-//! Add an instance of a vector object
-void Project::addVector()
-{
-    static const QString skName = "Vector ";
-    QString nameObj = skName + QString::number(VectorDataObject::getID() + 1);
-    mVectors.push_back(std::shared_ptr<VectorDataObject>(new VectorDataObject(nameObj)));
-}
-
-//! Add an instance of a matrix object
-void Project::addMatrix()
-{
-    static const QString skName = "Matrix ";
-    QString nameObj = skName + QString::number(MatrixDataObject::getID() + 1);
-    mMatrices.push_back(std::shared_ptr<MatrixDataObject>(new MatrixDataObject(nameObj)));
-}

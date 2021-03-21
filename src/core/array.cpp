@@ -5,15 +5,20 @@
  * \brief Implementation of Matrix class
  */
 
-#include "matrix.h"
+#include "array.h"
+
+template class QRS::Array<double>;
 
 using namespace QRS;
 
 template<typename T>
-Matrix<T>::Matrix(uint numRows, uint numCols)
+Array<T>::Array(IndexType numRows, IndexType numCols)
     : mNumRows(numRows)
     , mNumCols(numCols)
 {
     mValues.resize(numRows * numCols);
 }
+
+
+
 

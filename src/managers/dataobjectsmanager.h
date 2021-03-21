@@ -51,6 +51,7 @@ private:
 
 private slots:
     void apply();
+    void addScalar();
 
 private:
     Ui::DataObjectsManager* mpUi;

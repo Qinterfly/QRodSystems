@@ -97,9 +97,9 @@ CDockWidget* DataObjectsManager::createDataObjectsWidget()
     QToolBar* pToolBar = pDockWidget->createDefaultToolBar();
     pToolBar->setToolButtonStyle(Qt::ToolButtonStyle::ToolButtonIconOnly);
     pDockWidget->setToolBarIconSize(kIconSize, CDockWidget::StateDocked);
-    pToolBar->addAction(QIcon(":/icons/letter-s.svg"), tr("Scalar"), &mProject, &Project::addScalar);
-    pToolBar->addAction(QIcon(":/icons/letter-v.svg"), tr("Vector"), &mProject, &Project::addVector);
-    pToolBar->addAction(QIcon(":/icons/letter-m.svg"), tr("Matrix"), &mProject, &Project::addMatrix);
+    pToolBar->addAction(QIcon(":/icons/letter-s.svg"), tr("Scalar"), this, &DataObjectsManager::addScalar);
+    pToolBar->addAction(QIcon(":/icons/letter-v.svg"), tr("Vector"));//, &mProject, &Project::addVector);
+    pToolBar->addAction(QIcon(":/icons/letter-m.svg"), tr("Matrix"));//, &mProject, &Project::addMatrix);
     pToolBar->addAction(QIcon(":/icons/letter-xy.svg"), tr("Surface"));
     pToolBar->addSeparator();
     pToolBar->addAction(QIcon(":/icons/delete.svg"), tr("Remove"));
@@ -151,6 +151,12 @@ void DataObjectsManager::restoreSettings()
 void DataObjectsManager::apply()
 {
     // TODO
+}
+
+//!
+void DataObjectsManager::addScalar()
+{
+    mProject.addDataObject(DataObjectType::kScalar);
 }
 
 
