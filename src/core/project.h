@@ -11,13 +11,13 @@
 #include <QUuid>
 #include <QSharedPointer>
 #include <list>
-#include "dataobjects.h"
+#include "dataobject.h"
 
 class QString;
 
 namespace QRS
 {
-using ListDataObjects = std::list<QSharedPointer<AbstractDataObject>>;
+using ListScalars = std::list<QSharedPointer<DataObject<double>>>;
 
 //! Project class to interact with a created system of rods
 class Project
@@ -36,7 +36,7 @@ private:
     //! Number of modifications since last saving
     uint mNumModified = 0;
     //! Data objects
-    ListDataObjects mDataObjects;
+    ListScalars mScalars;
 };
 
 }

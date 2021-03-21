@@ -11,7 +11,8 @@ CONFIG += c++20
 DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
-    core/dataobjects.cpp \
+    core/dataobject.cpp \
+    core/matrix.cpp \
     core/project.cpp \
     main/controltabs.cpp \
     main/logwidget.cpp \
@@ -21,7 +22,8 @@ SOURCES += \
     managers/dataobjectsmanager.cpp
 
 HEADERS += \
-    core/dataobjects.h \
+    core/dataobject.h \
+    core/matrix.h \
     core/project.h \
     main/controltabs.h \
     main/logwidget.h \
