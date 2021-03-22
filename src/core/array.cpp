@@ -7,6 +7,7 @@
 
 #include "array.h"
 
+template class QRS::Row<double>;
 template class QRS::Array<double>;
 
 using namespace QRS;
@@ -16,9 +17,14 @@ Array<T>::Array(IndexType numRows, IndexType numCols)
     : mNumRows(numRows)
     , mNumCols(numCols)
 {
-    mValues.resize(numRows * numCols);
+    mData.resize(numRows * numCols);
 }
 
-
+//! Get a row by index
+template<typename T>
+Row<T> Array<T>::operator[](IndexType iRow)
+{
+    return Row<T>(&mData[mNumRows * iRow]);
+}
 
 

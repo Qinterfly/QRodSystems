@@ -1,7 +1,5 @@
 #include <QtTest/QTest>
 
-#include "core/project.h"
-
 class TestCore : public QObject
 {
     Q_OBJECT

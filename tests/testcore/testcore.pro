@@ -9,8 +9,5 @@ TEMPLATE = app
 SOURCES += \
     testcore.cpp
 
-COREPATH = ../../src
 
-INCLUDEPATH += $${COREPATH}
-
-DEPENDPATH += $${COREPATH}
+include(../../src/core/core.pri)
