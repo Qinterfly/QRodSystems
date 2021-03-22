@@ -10,8 +10,8 @@
 
 #include <QObject>
 #include <QUuid>
+#include <unordered_map>
 #include <memory>
-#include <list>
 #include "abstractdataobject.h"
 #include "array.h"
 
@@ -20,7 +20,7 @@ class QString;
 namespace QRS
 {
 
-using DataObjects = std::list<std::shared_ptr<AbstractDataObject>>;
+using DataObjects = std::unordered_map<DataIDType, std::shared_ptr<AbstractDataObject>>;
 
 //! Project class to interact with a created system of rods
 class Project : public QObject
@@ -31,7 +31,11 @@ public:
     Project(QString name);
     virtual ~Project() = default;
     // Data objects
-    DataObjects& getDataObjects() { return mDataObjects; }
+    DataObjects const& getDataObject() const { return mDataObjects; }
+    std::unordered_map<DataIDType, AbstractDataObject*> getDataObjects();
+
+signals:
+    void dataObjectAdded();
 
 public slots:
     void addDataObject(DataObjectType type);

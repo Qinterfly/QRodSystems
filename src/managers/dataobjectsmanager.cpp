@@ -19,6 +19,7 @@
 #include "dataobjectsmanager.h"
 #include "ui_dataobjectsmanager.h"
 #include "../core/project.h"
+#include "../core/scalardataobject.h"
 
 using ads::CDockManager;
 using ads::CDockWidget;
@@ -36,6 +37,7 @@ DataObjectsManager::DataObjectsManager(QRS::Project& project, QSettings& setting
     mpUi->setupUi(this);
     createContent();
     restoreSettings();
+    retrieveDataObjects();
 }
 
 DataObjectsManager::~DataObjectsManager()
@@ -91,16 +93,18 @@ CDockWidget* DataObjectsManager::createDataTablesWidget()
 CDockWidget* DataObjectsManager::createDataObjectsWidget()
 {
     CDockWidget* pDockWidget = new CDockWidget("Objects");
-    QListWidget* pWidget = new QListWidget();
-    pDockWidget->setWidget(pWidget);
+    mpListObjects = new QListWidget();
+    mpListObjects->setIconSize(QSize(11, 11));
+    pDockWidget->setWidget(mpListObjects);
     // ToolBar
     QToolBar* pToolBar = pDockWidget->createDefaultToolBar();
     pToolBar->setToolButtonStyle(Qt::ToolButtonStyle::ToolButtonIconOnly);
     pDockWidget->setToolBarIconSize(kIconSize, CDockWidget::StateDocked);
+    // Actions
     pToolBar->addAction(QIcon(":/icons/letter-s.svg"), tr("Scalar"), this, &DataObjectsManager::addScalar);
-    pToolBar->addAction(QIcon(":/icons/letter-v.svg"), tr("Vector"));//, &mProject, &Project::addVector);
-    pToolBar->addAction(QIcon(":/icons/letter-m.svg"), tr("Matrix"));//, &mProject, &Project::addMatrix);
-    pToolBar->addAction(QIcon(":/icons/letter-xy.svg"), tr("Surface"));
+    pToolBar->addAction(QIcon(":/icons/letter-v.svg"), tr("Vector"), this, &DataObjectsManager::addVector);
+    pToolBar->addAction(QIcon(":/icons/letter-m.svg"), tr("Matrix"), this, &DataObjectsManager::addMatrix);
+    pToolBar->addAction(QIcon(":/icons/letter-xy.svg"), tr("Surface"), this, &DataObjectsManager::addSurface);
     pToolBar->addSeparator();
     pToolBar->addAction(QIcon(":/icons/delete.svg"), tr("Remove"));
     return pDockWidget;
@@ -153,11 +157,43 @@ void DataObjectsManager::apply()
     // TODO
 }
 
-//!
+//! Make a copy of existed data objects
+void DataObjectsManager::retrieveDataObjects()
+{
+    mDataObjects = mProject.getDataObjects();
+}
+
+//! Add a scalar object
 void DataObjectsManager::addScalar()
 {
-    mProject.addDataObject(DataObjectType::kScalar);
+    static QString const kScalarName = "Scalar ";
+    static QIcon icon = QIcon(":/icons/letter-s.svg");
+    QString name = kScalarName + QString::number(ScalarDataObject::numberScalars() + 1);
+    ScalarDataObject* scalar = new ScalarDataObject(name);
+    mDataObjects.emplace(scalar->id(), scalar);
+    QListWidgetItem* item = new QListWidgetItem(icon, name);
+    item->setData(Qt::UserRole, scalar->id());
+    mpListObjects->addItem(item);
 }
+
+//! Add a vector object
+void DataObjectsManager::addVector()
+{
+    // TODO
+}
+
+//! Add a matrix object
+void DataObjectsManager::addMatrix()
+{
+    // TODO
+}
+
+//! Add a surface object
+void DataObjectsManager::addSurface()
+{
+    // TODO
+}
+
 
 
 

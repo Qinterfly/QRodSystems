@@ -14,6 +14,7 @@ SOURCES += \
     core/abstractdataobject.cpp \
     core/array.cpp \
     core/project.cpp \
+    core/scalardataobject.cpp \
     main/controltabs.cpp \
     main/logwidget.cpp \
     main/main.cpp \
@@ -24,7 +25,9 @@ SOURCES += \
 HEADERS += \
     core/abstractdataobject.h \
     core/array.h \
+    core/datatypes.h \
     core/project.h \
+    core/scalardataobject.h \
     main/controltabs.h \
     main/logwidget.h \
     main/mainwindow.h \

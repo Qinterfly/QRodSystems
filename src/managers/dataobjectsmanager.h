@@ -8,7 +8,10 @@
 #ifndef DATAOBJECTSMANAGER_H
 #define DATAOBJECTSMANAGER_H
 
+#include <QSignalMapper>
 #include <QDialog>
+#include <unordered_map>
+#include "../core/datatypes.h"
 
 namespace Ui
 {
@@ -23,10 +26,12 @@ class CDockWidget;
 namespace QRS
 {
 class Project;
+class AbstractDataObject;
 }
-
 class QTabWidget;
 class QSettings;
+class QListWidget;
+
 
 //! Manager to create objects of different types: scalars, vectors, matroces and surfaces
 class DataObjectsManager : public QDialog
@@ -45,6 +50,7 @@ private:
     ads::CDockWidget* createDataObjectsWidget();
     ads::CDockWidget* createCodeWidget();
     QLayout* createDialogControls();
+    void retrieveDataObjects();
     // Settings
     void restoreSettings();
     void saveSettings();
@@ -52,6 +58,9 @@ private:
 private slots:
     void apply();
     void addScalar();
+    void addVector();
+    void addMatrix();
+    void addSurface();
 
 private:
     Ui::DataObjectsManager* mpUi;
@@ -59,6 +68,8 @@ private:
     QTabWidget* mpDataTables;
     QRS::Project& mProject;
     QSettings& mSettings;
+    std::unordered_map<QRS::DataIDType, QRS::AbstractDataObject*> mDataObjects;
+    QListWidget* mpListObjects;
 };
 
 #endif // DATAOBJECTSMANAGER_H

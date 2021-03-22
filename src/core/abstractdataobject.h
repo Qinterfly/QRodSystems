@@ -11,22 +11,13 @@
 #include <QString>
 #include <unordered_map>
 #include "array.h"
-
+#include "datatypes.h"
 
 namespace QRS
 {
 
-using DataValueType = double;
-using DataKeyType = double;
 using DataItemType = Array<DataValueType>;
 
-enum DataObjectType
-{
-    kScalar,
-    kVector,
-    kMatrix,
-    kSurface
-};
 
 //! Data object which is designied in the way to be represented in a table easily
 class AbstractDataObject
@@ -36,56 +27,54 @@ class AbstractDataObject
 public:
     AbstractDataObject(DataObjectType type, const QString& name);
     virtual ~AbstractDataObject() = default;
-    uint getID() const { return mID; }
+    virtual AbstractDataObject* clone() const = 0;
     virtual void addItem(DataValueType keyParameter) = 0;
     void removeItem(DataValueType keyParameter);
+    DataIDType id() const { return mID; }
+    DataObjectType type() const { return mType; }
     static uint numberObjects();
 
 protected:
     const DataObjectType mType;
     QString mName;
     DataHolder mItems;
-    uint mID;
+    DataIDType mID;
 
 private:
     static uint smNumObjects;
 };
 
-//! Scalar data object
-class ScalarDataObject : public AbstractDataObject
-{
-public:
-    ScalarDataObject(const QString& name);
-    ~ScalarDataObject() {};
-    void addItem(DataValueType keyParameter) override;
-};
+// TODO
 
-//! Vector data object
-class VectorDataObject : public AbstractDataObject
-{
-public:
-    VectorDataObject(const QString& name);
-    ~VectorDataObject() = default;
-    void addItem(DataValueType keyParameter) override;
-};
+////! Vector data object
+//class VectorDataObject : public AbstractDataObject
+//{
+//public:
+//    VectorDataObject(const QString& name);
+//    ~VectorDataObject() = default;
+//    AbstractDataObject* clone() const override;
+//    void addItem(DataValueType keyParameter) override;
+//};
 
-//! Matrix data object
-class MatrixDataObject : public AbstractDataObject
-{
-public:
-    MatrixDataObject(const QString& name);
-    ~MatrixDataObject() = default;
-    void addItem(DataValueType keyParameter) override;
-};
+////! Matrix data object
+//class MatrixDataObject : public AbstractDataObject
+//{
+//public:
+//    MatrixDataObject(const QString& name);
+//    ~MatrixDataObject() = default;
+//    AbstractDataObject* clone() const override;
+//    void addItem(DataValueType keyParameter) override;
+//};
 
-//! Surface data object
-class SurfaceDataObject : public AbstractDataObject
-{
-public:
-    SurfaceDataObject(const QString& name);
-    ~SurfaceDataObject() = default;
-    void addItem(DataValueType keyParameter) override;
-};
+////! Surface data object
+//class SurfaceDataObject : public AbstractDataObject
+//{
+//public:
+//    SurfaceDataObject(const QString& name);
+//    ~SurfaceDataObject() = default;
+//    AbstractDataObject* clone() const override;
+//    void addItem(DataValueType keyParameter) override;
+//};
 
 
 }
