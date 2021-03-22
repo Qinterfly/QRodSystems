@@ -1,3 +1,10 @@
+/*!
+ * \file
+ * \author Pavel Lakiza
+ * \date March 2021
+ * \brief Declaration of ScalarDataObject class
+ */
+
 #ifndef SCALARDATAOBJECT_H
 #define SCALARDATAOBJECT_H
 

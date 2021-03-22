@@ -10,33 +10,10 @@ CONFIG += c++20
 
 DEFINES += QT_DEPRECATED_WARNINGS
 
-SOURCES += \
-    core/abstractdataobject.cpp \
-    core/array.cpp \
-    core/project.cpp \
-    core/scalardataobject.cpp \
-    main/controltabs.cpp \
-    main/logwidget.cpp \
-    main/main.cpp \
-    main/mainwindow.cpp \
-    main/view3d.cpp \
-    managers/dataobjectsmanager.cpp
-
-HEADERS += \
-    core/abstractdataobject.h \
-    core/array.h \
-    core/datatypes.h \
-    core/project.h \
-    core/scalardataobject.h \
-    main/controltabs.h \
-    main/logwidget.h \
-    main/mainwindow.h \
-    main/view3d.h \
-    managers/dataobjectsmanager.h
-
-FORMS += \
-    main/mainwindow.ui \
-    managers/dataobjectsmanager.ui
+include(core/core.pri)
+include(main/main.pri)
+include(managers/managers.pri)
+include(render/render.pri)
 
 # Deployment
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -48,11 +25,14 @@ LIBS += -L$${LIB_PATH}
 
 ## Advanced Docking System
 include($${ADS_PATH}/ads.pri)
-adsBuildStatic {
-    DEFINES += ADS_STATIC
-}
-INCLUDEPATH += $${ADS_PATH}/src
-DEPENDPATH  += $${ADS_PATH}/src
 
 RESOURCES += \
     ../resources/images.qrc
+
+# Distribution options
+PROJECT_NAME = QRodSystems
+PROJECT_VERSION = 0.0.1
+DISTNAME = $${PROJECT_NAME} (v$${PROJECT_VERSION})
+
+DEFINES += \
+    VERSION=\\\"$$PROJECT_VERSION\\\" \

@@ -23,3 +23,11 @@ unix:!macx {
     LIBS += -L$${ADS_PATH} -lxcb
     QT += x11extras
 }
+
+INCLUDEPATH += $${ADS_PATH}/src
+DEPENDPATH  += $${ADS_PATH}/src
+
+adsBuildStatic {
+    DEFINES += ADS_STATIC
+}
+

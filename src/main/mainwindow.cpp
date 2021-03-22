@@ -13,6 +13,7 @@
 #include <QTextEdit>
 #include <QVBoxLayout>
 #include <QSettings>
+#include <QMessageBox>
 #include "DockManager.h"
 #include "DockWidget.h"
 #include "ads_globals.h"
@@ -160,6 +161,7 @@ void MainWindow::specifyMenuConnections()
     connect(mpUi->actionExit, &QAction::triggered, this, &QMainWindow::close);
     // Help
     connect(mpUi->actionAboutQt, &QAction::triggered, qApp, &QApplication::aboutQt);
+    connect(mpUi->actionAboutProgram, &QAction::triggered, this, &MainWindow::aboutProgram);
 }
 
 //! Save the current view state
@@ -204,6 +206,21 @@ void MainWindow::createRodPropertiesManager()
 void MainWindow::createRodConstructorManager()
 {
     // TODO
+}
+
+//! Show information about a program
+void MainWindow::aboutProgram()
+{
+    const QString aboutMsg = tr(
+                                 "QRodSystems is a multiplatform wrapper to create rod systems via KLPALGSYS core. "
+                                 "You can download the code from <a href='https://github.com/qinterfly/QRodSystems'>GitHub</a>. If you find any "
+                                 "bug or problem, please report it in <a href='https://github.com/qinterfly/QRodSystems/issues'>the issues "
+                                 "page</a> so I can fix it as soon as possible.<br><br>"
+                                 "Copyright &copy; 2021 QRodSystems (Pavel Lakiza) "
+                                 "Copyright &copy; 2021 KLPALGSYS (Dmitriy Krasnorutskiy)"
+                             );
+
+    QMessageBox::about(this, tr("About QRodSystems v%1").arg(VERSION), aboutMsg);
 }
 
 //! Helper function to situate widgets at the center of their parent widgets

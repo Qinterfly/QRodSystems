@@ -48,6 +48,7 @@ private:
     void specifyMenuConnections();
 
 private slots:
+    void aboutProgram();
     void saveSettings();
     void restoreSettings();
     void createDataObjectsManager();
