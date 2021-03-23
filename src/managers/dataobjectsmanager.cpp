@@ -5,11 +5,11 @@
  * \brief Implementation of the DataObjectsManager class
  */
 
+#include <QTreeView>
 #include <QSettings>
 #include <QHBoxLayout>
 #include <QToolBar>
 #include <QListWidget>
-#include <QTableView>
 #include <QTextEdit>
 #include <QPushButton>
 #include <QSpacerItem>
@@ -20,6 +20,7 @@
 #include "ui_dataobjectsmanager.h"
 #include "../core/project.h"
 #include "../core/scalardataobject.h"
+#include "scalartablemodel.h"
 
 using ads::CDockManager;
 using ads::CDockWidget;
@@ -62,7 +63,7 @@ void DataObjectsManager::createContent()
     mpDockManager = new CDockManager();
     pMainLayout->addWidget(mpDockManager);
     // Tables
-    mpDockManager->addDockWidget(ads::LeftDockWidgetArea, createDataTablesWidget());
+    mpDockManager->addDockWidget(ads::LeftDockWidgetArea, createDataTableWidget());
     // Objects
     CDockAreaWidget* pArea = mpDockManager->addDockWidget(ads::RightDockWidgetArea, createDataObjectsWidget());
     // Code
@@ -72,21 +73,19 @@ void DataObjectsManager::createContent()
 }
 
 //! Create a tabbed widget to interact with data tables
-CDockWidget* DataObjectsManager::createDataTablesWidget()
+CDockWidget* DataObjectsManager::createDataTableWidget()
 {
-    CDockWidget* pDockWidget = new CDockWidget("Data Tables");
-    pDockWidget->setFeature(CDockWidget::DockWidgetClosable, false);
-    mpDataTables = new QTabWidget();
-    mpDataTables->setTabPosition(QTabWidget::TabPosition::South);
-    mpDataTables->setTabsClosable(true);
-    pDockWidget->setWidget(mpDataTables);
+    mpDockDataTable = new CDockWidget("Data Table");
+    mpDockDataTable->setFeature(CDockWidget::DockWidgetClosable, false);
+    mpDataTable = new QTreeView();
+    mpDockDataTable->setWidget(mpDataTable);
     // ToolBar
-    QToolBar* pToolBar = pDockWidget->createDefaultToolBar();
+    QToolBar* pToolBar = mpDockDataTable->createDefaultToolBar();
     pToolBar->setToolButtonStyle(Qt::ToolButtonStyle::ToolButtonIconOnly);
-    pDockWidget->setToolBarIconSize(kIconSize, CDockWidget::StateDocked);
+    mpDockDataTable->setToolBarIconSize(kIconSize, CDockWidget::StateDocked);
     pToolBar->addAction(QIcon(":/icons/plus.svg"), tr("Add"));
     pToolBar->addAction(QIcon(":/icons/minus.svg"), tr("Remove"));
-    return pDockWidget;
+    return mpDockDataTable;
 }
 
 //! Create an object to present all data objects
@@ -96,6 +95,10 @@ CDockWidget* DataObjectsManager::createDataObjectsWidget()
     pDockWidget->setFeature(CDockWidget::DockWidgetClosable, false);
     mpListObjects = new QListWidget();
     mpListObjects->setIconSize(QSize(11, 11));
+    mpListObjects->setSelectionMode(QAbstractItemView::SingleSelection);
+    mpListObjects->setSelectionBehavior(QAbstractItemView::SelectItems);
+    mpListObjects->setEditTriggers(QAbstractItemView::EditKeyPressed);
+    connect(mpListObjects, &QListWidget::currentItemChanged, this, &DataObjectsManager::representSelectedDataObject);
     pDockWidget->setWidget(mpListObjects);
     // ToolBar
     QToolBar* pToolBar = pDockWidget->createDefaultToolBar();
@@ -196,6 +199,27 @@ void DataObjectsManager::addSurface()
     // TODO
 }
 
+//! Select a data object from the list
+void DataObjectsManager::selectDataObject(int index)
+{
+    if (index > mpListObjects->count())
+        return;
+    mpListObjects->setCurrentRow(index);
+}
 
-
+//! Represent a selected data object according to its type
+void DataObjectsManager::representSelectedDataObject()
+{
+    uint iRowSelected = mpListObjects->currentRow();
+    DataIDType id = mpListObjects->item(iRowSelected)->data(Qt::UserRole).toUInt();
+    AbstractDataObject* pObject = mDataObjects[id];
+    switch (pObject->type())
+    {
+    case kScalar:
+        ScalarTableModel* model = new ScalarTableModel(static_cast<ScalarDataObject*>(pObject), mpDockDataTable);
+        mpDataTable->setModel(model);
+        mpDataTable->expandAll();
+        break;
+    }
+}
 

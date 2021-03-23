@@ -12,6 +12,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 include(core/core.pri)
 include(main/main.pri)
+include(central/central.pri)
 include(managers/managers.pri)
 include(render/render.pri)
 
@@ -22,17 +23,19 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 # Libraries
 LIBS += -L$${LIB_PATH}
+include($${ADS_PATH}/ads.pri) # Advanced Docking System
 
-## Advanced Docking System
-include($${ADS_PATH}/ads.pri)
-
+# Resources
 RESOURCES += \
     ../resources/images.qrc
 
 # Distribution options
+PROJECT_AUTHOR = "Qinterfly"
 PROJECT_NAME = "QRodSystems"
 PROJECT_VERSION = "0.0.1"
-DISTNAME = $${PROJECT_NAME} (v$${PROJECT_VERSION})
+PROJECT_DIST = $${PROJECT_NAME} (v$${PROJECT_VERSION})
 
 DEFINES += \
-    VERSION=\\\"$$PROJECT_VERSION\\\" \
+    APP_AUTHOR=\\\"$$PROJECT_AUTHOR\\\" \
+    APP_NAME=\\\"$$PROJECT_NAME\\\" \
+    APP_VERSION=\\\"$$PROJECT_VERSION\\\" \

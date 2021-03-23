@@ -17,6 +17,9 @@ void throwMessage(QtMsgType type, const QMessageLogContext& /*context*/, const Q
 //! Entry point
 int main(int argc, char *argv[])
 {
+    QCoreApplication::setOrganizationName(APP_AUTHOR);
+    QCoreApplication::setApplicationName(APP_NAME);
+    QCoreApplication::setApplicationVersion(APP_VERSION);
     QGuiApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
     QApplication app(argc, argv);
     app.setStyle("Fusion");

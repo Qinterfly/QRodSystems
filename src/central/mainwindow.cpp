@@ -36,13 +36,11 @@ const static QString skFileNameSettings = "Settings.ini";
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent)
     , mpUi(new Ui::MainWindow)
-    , mProject("Undefined")
 {
     initializeWindow();
     createContent();
     specifyMenuConnections();
     restoreSettings();
-    createDataObjectsManager();
 }
 
 MainWindow::~MainWindow()
@@ -60,6 +58,7 @@ void MainWindow::initializeWindow()
 //! Create all the widgets and corresponding actions
 void MainWindow::createContent()
 {
+    mpProject = new QRS::Project("Undefined");
     mpSettings = QSharedPointer<QSettings>(new QSettings(skFileNameSettings, QSettings::IniFormat));
     // Configuration
     CDockManager::setConfigFlag(CDockManager::FocusHighlighting, true);
@@ -191,7 +190,7 @@ void MainWindow::createDataObjectsManager()
 {
     if (mpDataObjectsManager && mpDataObjectsManager->isVisible())
         return;
-    mpDataObjectsManager = new DataObjectsManager(mProject, *mpSettings, mpUi->centralWidget);
+    mpDataObjectsManager = new DataObjectsManager(*mpProject, *mpSettings, mpUi->centralWidget);
     moveToCenter(mpDataObjectsManager);
     mpDataObjectsManager->show();
 }
@@ -220,7 +219,7 @@ void MainWindow::aboutProgram()
                                  "Copyright &copy; 2021 KLPALGSYS (Dmitriy Krasnorutskiy)"
                              );
 
-    QMessageBox::about(this, tr("About QRodSystems v%1").arg(VERSION), aboutMsg);
+    QMessageBox::about(this, tr("About QRodSystems v%1").arg(APP_VERSION), aboutMsg);
 }
 
 //! Helper function to situate widgets at the center of their parent widgets

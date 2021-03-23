@@ -1,4 +1,6 @@
 TEMPLATE = subdirs
 
 SUBDIRS += \
-    testcore
+    testcore \
+    testmanagers 
+

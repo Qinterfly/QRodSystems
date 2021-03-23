@@ -28,7 +28,7 @@ namespace QRS
 class Project;
 class AbstractDataObject;
 }
-class QTabWidget;
+class QTreeView;
 class QSettings;
 class QListWidget;
 
@@ -42,11 +42,12 @@ public:
     explicit DataObjectsManager(QRS::Project& project, QSettings& settings, QWidget* parent = nullptr);
     ~DataObjectsManager();
     void closeEvent(QCloseEvent* ) override;
+    void selectDataObject(int index);
 
 private:
     // Content
     void createContent();
-    ads::CDockWidget* createDataTablesWidget();
+    ads::CDockWidget* createDataTableWidget();
     ads::CDockWidget* createDataObjectsWidget();
     ads::CDockWidget* createCodeWidget();
     QLayout* createDialogControls();
@@ -55,21 +56,28 @@ private:
     void restoreSettings();
     void saveSettings();
 
-private slots:
+public slots:
     void apply();
     void addScalar();
     void addVector();
     void addMatrix();
     void addSurface();
 
+private slots:
+    void representSelectedDataObject();
+
 private:
     Ui::DataObjectsManager* mpUi;
+    // Docks
     ads::CDockManager* mpDockManager;
-    QTabWidget* mpDataTables;
+    ads::CDockWidget* mpDockDataTable;
+    // Widgets
+    QListWidget* mpListObjects;
+    QTreeView* mpDataTable;
+    // Data
     QRS::Project& mProject;
     QSettings& mSettings;
     std::unordered_map<QRS::DataIDType, QRS::AbstractDataObject*> mDataObjects;
-    QListWidget* mpListObjects;
 };
 
 #endif // DATAOBJECTSMANAGER_H

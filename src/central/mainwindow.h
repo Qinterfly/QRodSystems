@@ -60,7 +60,7 @@ private:
     ads::CDockManager* mpDockManager;
     QSharedPointer<QSettings> mpSettings;
     DataObjectsManager* mpDataObjectsManager = nullptr;
-    QRS::Project mProject;
+    QRS::Project* mpProject;
     QString mLastPath;
 
 public:
