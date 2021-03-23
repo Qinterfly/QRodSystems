@@ -2,7 +2,7 @@
  * \file
  * \author Pavel Lakiza
  * \date March 2021
- * \brief Declaration of AbstractDataObject class
+ * \brief Declaration of the AbstractDataObject class
  */
 
 #ifndef ABSTRACTDATAOBJECT_H

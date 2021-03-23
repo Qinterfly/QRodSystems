@@ -2,7 +2,7 @@
  * \file
  * \author Pavel Lakiza
  * \date March 2021
- * \brief Declaration of DataObjectsManager class
+ * \brief Declaration of the DataObjectsManager class
  */
 
 #ifndef DATAOBJECTSMANAGER_H

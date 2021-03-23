@@ -2,7 +2,7 @@
  * \file
  * \author Pavel Lakiza
  * \date March 2021
- * \brief Declaration of QRS::Project class
+ * \brief Declaration of the QRS::Project class
  */
 
 #ifndef PROJECT_H

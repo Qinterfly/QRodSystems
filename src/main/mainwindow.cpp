@@ -2,7 +2,7 @@
  * \file
  * \author Pavel Lakiza
  * \date March 2021
- * \brief Implementation of MainWindow class
+ * \brief Implementation of the MainWindow class
  */
 
 #include <QDesktopWidget>

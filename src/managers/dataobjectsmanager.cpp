@@ -2,7 +2,7 @@
  * \file
  * \author Pavel Lakiza
  * \date March 2021
- * \brief Implementation of DataObjectsManager class
+ * \brief Implementation of the DataObjectsManager class
  */
 
 #include <QSettings>
@@ -93,6 +93,7 @@ CDockWidget* DataObjectsManager::createDataTablesWidget()
 CDockWidget* DataObjectsManager::createDataObjectsWidget()
 {
     CDockWidget* pDockWidget = new CDockWidget("Objects");
+    pDockWidget->setFeature(CDockWidget::DockWidgetClosable, false);
     mpListObjects = new QListWidget();
     mpListObjects->setIconSize(QSize(11, 11));
     pDockWidget->setWidget(mpListObjects);
@@ -114,6 +115,7 @@ CDockWidget* DataObjectsManager::createDataObjectsWidget()
 CDockWidget* DataObjectsManager::createCodeWidget()
 {
     CDockWidget* pDockWidget = new CDockWidget(tr("Code"));
+    pDockWidget->setFeature(CDockWidget::DockWidgetClosable, false);
     QTextEdit* pWidget = new QTextEdit();
     pDockWidget->setWidget(pWidget);
     // ToolBar

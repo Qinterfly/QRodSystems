@@ -2,7 +2,7 @@
  * \file
  * \author Pavel Lakiza
  * \date March 2021
- * \brief Declaration of MainWindow class
+ * \brief Declaration of the MainWindow class
  */
 
 #ifndef MAINWINDOW_H

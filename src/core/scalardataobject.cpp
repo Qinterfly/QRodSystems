@@ -2,7 +2,7 @@
  * \file
  * \author Pavel Lakiza
  * \date March 2021
- * \brief Implementation of ScalarDataObject class
+ * \brief Implementation of the ScalarDataObject class
  */
 
 #include "scalardataobject.h"

@@ -2,7 +2,7 @@
  * \file
  * \author Pavel Lakiza
  * \date March 2021
- * \brief Declaration of ControlTabs class
+ * \brief Declaration of the ControlTabs class
  */
 
 #ifndef CONTROLTABS_H

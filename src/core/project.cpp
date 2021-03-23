@@ -2,7 +2,7 @@
  * \file
  * \author Pavel Lakiza
  * \date March 2021
- * \brief Implementation of QRS::Project class
+ * \brief Implementation of the QRS::Project class
  */
 
 #include <QDebug>

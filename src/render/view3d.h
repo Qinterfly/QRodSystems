@@ -2,7 +2,7 @@
  * \file
  * \author Pavel Lakiza
  * \date March 2021
- * \brief Declaration of View3D class
+ * \brief Declaration of the View3D class
  */
 
 #ifndef VIEW3D_H

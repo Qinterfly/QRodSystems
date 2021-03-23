@@ -2,7 +2,7 @@
  * \file
  * \author Pavel Lakiza
  * \date March 2021
- * \brief Declaration of LogWidget class
+ * \brief Declaration of the LogWidget class
  */
 
 #ifndef LOGWIDGET_H

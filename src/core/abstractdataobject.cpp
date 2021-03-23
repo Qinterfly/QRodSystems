@@ -2,7 +2,7 @@
  * \file
  * \author Pavel Lakiza
  * \date March 2021
- * \brief Implementation of AbstractDataObject class
+ * \brief Implementation of the AbstractDataObject class
  */
 
 #include "abstractdataobject.h"

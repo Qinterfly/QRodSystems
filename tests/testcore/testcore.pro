@@ -9,5 +9,6 @@ TEMPLATE = app
 SOURCES += \
     testcore.cpp
 
-
 include(../../src/core/core.pri)
+
+INCLUDEPATH += ../../src

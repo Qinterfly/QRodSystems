@@ -30,8 +30,8 @@ RESOURCES += \
     ../resources/images.qrc
 
 # Distribution options
-PROJECT_NAME = QRodSystems
-PROJECT_VERSION = 0.0.1
+PROJECT_NAME = "QRodSystems"
+PROJECT_VERSION = "0.0.1"
 DISTNAME = $${PROJECT_NAME} (v$${PROJECT_VERSION})
 
 DEFINES += \

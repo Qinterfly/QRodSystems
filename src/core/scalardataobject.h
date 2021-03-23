@@ -2,7 +2,7 @@
  * \file
  * \author Pavel Lakiza
  * \date March 2021
- * \brief Declaration of ScalarDataObject class
+ * \brief Declaration of the ScalarDataObject class
  */
 
 #ifndef SCALARDATAOBJECT_H
