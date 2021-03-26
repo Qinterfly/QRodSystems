@@ -21,14 +21,16 @@ class ScalarTableModel : public QStandardItemModel
     Q_OBJECT
 
 public:
-    ScalarTableModel(QRS::ScalarDataObject* pScalarDataObject, QWidget* parent = nullptr);
+    ScalarTableModel(QWidget* parent = nullptr);
     ~ScalarTableModel() = default;
+    void setScalarDataObject(QRS::ScalarDataObject* pScalarDataObject);
 
 private:
     void updateContent();
 
 private:
-    QRS::ScalarDataObject* mpScalarDataObject;
+    QRS::ScalarDataObject* mpScalarDataObject = nullptr;
 };
+
 
 #endif // SCALARTABLEMODEL_H

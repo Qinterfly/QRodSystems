@@ -13,10 +13,16 @@
 #include <unordered_map>
 #include "../core/datatypes.h"
 
+QT_BEGIN_NAMESPACE
 namespace Ui
 {
 class DataObjectsManager;
 }
+class QTreeView;
+class QSettings;
+class QListWidget;
+class ScalarTableModel;
+QT_END_NAMESPACE
 
 namespace ads
 {
@@ -28,15 +34,13 @@ namespace QRS
 class Project;
 class AbstractDataObject;
 }
-class QTreeView;
-class QSettings;
-class QListWidget;
-
 
 //! Manager to create objects of different types: scalars, vectors, matroces and surfaces
 class DataObjectsManager : public QDialog
 {
     Q_OBJECT
+
+    using mapDataObjects = std::unordered_map<QRS::DataIDType, QRS::AbstractDataObject*>;
 
 public:
     explicit DataObjectsManager(QRS::Project& project, QSettings& settings, QWidget* parent = nullptr);
@@ -62,6 +66,7 @@ public slots:
     void addVector();
     void addMatrix();
     void addSurface();
+    const mapDataObjects& getDataObjects() { return mDataObjects; };
 
 private slots:
     void representSelectedDataObject();
@@ -70,14 +75,15 @@ private:
     Ui::DataObjectsManager* mpUi;
     // Docks
     ads::CDockManager* mpDockManager;
-    ads::CDockWidget* mpDockDataTable;
     // Widgets
     QListWidget* mpListObjects;
     QTreeView* mpDataTable;
     // Data
     QRS::Project& mProject;
     QSettings& mSettings;
-    std::unordered_map<QRS::DataIDType, QRS::AbstractDataObject*> mDataObjects;
+    mapDataObjects mDataObjects;
+    // Models
+    ScalarTableModel* mpScalarTableModel;
 };
 
 #endif // DATAOBJECTSMANAGER_H

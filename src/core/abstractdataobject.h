@@ -22,14 +22,16 @@ using DataItemType = Array<DataValueType>;
 //! Data object which is designied in the way to be represented in a table easily
 class AbstractDataObject
 {
-    using DataHolder = std::unordered_map<DataKeyType, DataItemType>;
+    using DataHolder = std::map<DataKeyType, DataItemType>;
 
 public:
     AbstractDataObject(DataObjectType type, const QString& name);
     virtual ~AbstractDataObject() = default;
     virtual AbstractDataObject* clone() const = 0;
-    virtual void addItem(DataValueType keyParameter) = 0;
+    virtual DataItemType& addItem(DataValueType keyParameter) = 0;
     void removeItem(DataValueType keyParameter);
+    DataHolder& getItems() { return mItems; }
+    DataItemType& getItem(DataValueType keyParameter) { return mItems.at(keyParameter); }
     DataIDType id() const { return mID; }
     DataObjectType type() const { return mType; }
     static uint numberObjects();

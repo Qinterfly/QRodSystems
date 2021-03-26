@@ -75,17 +75,20 @@ void DataObjectsManager::createContent()
 //! Create a tabbed widget to interact with data tables
 CDockWidget* DataObjectsManager::createDataTableWidget()
 {
-    mpDockDataTable = new CDockWidget("Data Table");
-    mpDockDataTable->setFeature(CDockWidget::DockWidgetClosable, false);
+    CDockWidget* pDockWidget = new CDockWidget("Data Table");
+    pDockWidget->setFeature(CDockWidget::DockWidgetClosable, false);
     mpDataTable = new QTreeView();
-    mpDockDataTable->setWidget(mpDataTable);
+    mpDataTable->sortByColumn(0, Qt::SortOrder::AscendingOrder);
+    pDockWidget->setWidget(mpDataTable);
+    // Models
+    mpScalarTableModel = new ScalarTableModel(pDockWidget);
     // ToolBar
-    QToolBar* pToolBar = mpDockDataTable->createDefaultToolBar();
+    QToolBar* pToolBar = pDockWidget->createDefaultToolBar();
     pToolBar->setToolButtonStyle(Qt::ToolButtonStyle::ToolButtonIconOnly);
-    mpDockDataTable->setToolBarIconSize(kIconSize, CDockWidget::StateDocked);
+    pDockWidget->setToolBarIconSize(kIconSize, CDockWidget::StateDocked);
     pToolBar->addAction(QIcon(":/icons/plus.svg"), tr("Add"));
     pToolBar->addAction(QIcon(":/icons/minus.svg"), tr("Remove"));
-    return mpDockDataTable;
+    return pDockWidget;
 }
 
 //! Create an object to present all data objects
@@ -216,8 +219,9 @@ void DataObjectsManager::representSelectedDataObject()
     switch (pObject->type())
     {
     case kScalar:
-        ScalarTableModel* model = new ScalarTableModel(static_cast<ScalarDataObject*>(pObject), mpDockDataTable);
-        mpDataTable->setModel(model);
+        mpScalarTableModel->setScalarDataObject(static_cast<ScalarDataObject*>(pObject));
+        mpDataTable->setSortingEnabled(false);
+        mpDataTable->setModel(mpScalarTableModel);
         mpDataTable->expandAll();
         break;
     }

@@ -21,11 +21,32 @@ Array<T>::Array(IndexType numRows, IndexType numCols)
         mpData[i] = 0.0;
 }
 
+//! Copy constructor
+template<typename T>
+Array<T>::Array(Array<T> const& another)
+{
+    delete[] mpData;
+    const IndexType& newSize = another.size();
+    mpData = new T[newSize];
+    for (int i = 0; i != newSize; ++i)
+        mpData[i] = another.mpData[i];
+    mNumRows = another.mNumRows;
+    mNumCols = another.mNumCols;
+}
+
+//! Move constructor
+template<typename T>
+Array<T>::Array(Array<T>&& another)
+{
+    std::swap(mpData, another.mpData);
+    mNumRows = std::exchange(another.mNumRows, 0);
+    mNumCols = std::exchange(another.mNumCols, 0);
+}
+
 template<typename T>
 Array<T>::~Array()
 {
-    if (mpData)
-        delete[] mpData;
+    delete[] mpData;
 }
 
 //! Resize and copy previous values if possible
@@ -47,7 +68,7 @@ void Array<T>::resize(IndexType numRows, IndexType numCols)
     // Filling with zeros
     for (IndexType i = 0; i != newSize; ++i)
         pData[i] = 0.0;
-    // Copy previous values
+    // Copying previous values
     IndexType iCur;
     IndexType iNew;
     IndexType minNumRows = std::min(mNumRows, numRows);

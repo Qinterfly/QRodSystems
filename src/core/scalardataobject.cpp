@@ -25,9 +25,10 @@ uint ScalarDataObject::numberScalars()
 }
 
 //! Insert a new item into ScalarDataObject
-void ScalarDataObject::addItem(DataValueType keyParameter)
+DataItemType& ScalarDataObject::addItem(DataValueType keyParameter)
 {
     mItems.emplace(keyParameter, DataItemType(1, 1));
+    return mItems.at(keyParameter);
 }
 
 //! Clone a scalar data object

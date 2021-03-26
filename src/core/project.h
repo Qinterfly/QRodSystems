@@ -31,7 +31,7 @@ public:
     Project(QString name);
     virtual ~Project() = default;
     // Data objects
-    DataObjects const& getDataObject() const { return mDataObjects; }
+    std::shared_ptr<AbstractDataObject> getDataObject(DataIDType id);
     std::unordered_map<DataIDType, AbstractDataObject*> getDataObjects();
 
 signals:

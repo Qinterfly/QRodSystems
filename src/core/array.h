@@ -15,7 +15,6 @@ namespace QRS
 
 using IndexType = unsigned int;
 
-
 //! Numerical array class
 template<typename T>
 class Array
@@ -25,6 +24,8 @@ private:
 
 public:
     Array(IndexType numRows = 1, IndexType numCols = 1);
+    Array(Array<T> const& another);
+    Array(Array<T>&& another);
     ~Array();
     T* data() { return mpData; }
     void resize(IndexType numRows, IndexType numCols);
@@ -33,15 +34,18 @@ public:
     IndexType size() const { return mNumRows * mNumCols; }
     Row<T> operator[](IndexType iRow) { return Row<T>(&mpData[mNumCols * iRow]); };
     template<typename K> friend QDebug operator<<(QDebug stream, Array<K>& array);
+
 private:
     IndexType mNumRows;
     IndexType mNumCols;
-    T* mpData;
+    T* mpData = nullptr;
     //! Proxy class to acquire a row by index
     template <typename U>
     struct Row
     {
+        Row() = delete;
         Row(T* pData) : pRow(pData) { };
+        ~Row() { }
         T& operator[](IndexType iCol) { return pRow[iCol]; }
         T* pRow;
     };
@@ -51,8 +55,8 @@ private:
 template<typename K>
 QDebug operator<<(QDebug stream, Array<K>& array)
 {
-    IndexType const& nRows = array.rows();
-    IndexType const& nCols = array.cols();
+    const IndexType& nRows = array.rows();
+    const IndexType& nCols = array.cols();
     stream = stream.noquote();
     stream << QString("Array size: %1 x %2").arg(QString::number(nRows), QString::number(nCols));
     stream << Qt::endl;

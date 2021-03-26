@@ -35,11 +35,25 @@ void TestManagers::initTestCase()
     mpDataObjectsManager = new DataObjectsManager(*mpProject, *mpSettings);
 }
 
-//![1]
+//! Test how the data objects manager handles with data
 void TestManagers::testDataObjectsManager()
 {
     mpDataObjectsManager->show();
+    // Adding a scalar object
     mpDataObjectsManager->addScalar();
+    auto dataObjects = mpDataObjectsManager->getDataObjects();
+    ScalarDataObject* pScalar = (ScalarDataObject*) dataObjects.begin()->second;
+    // Inserting itmes into the object
+    int nStep = 100;
+    double startValue = 1.0;
+    double endValue = 10.0;
+    double step = (endValue - startValue) / (double) (nStep - 1);
+    for (int i = 0; i != nStep; ++i)
+    {
+        auto& t = pScalar->addItem(startValue + i * step);
+        t[0][0] = startValue / endValue * i;
+    }
+    // Selecting it
     mpDataObjectsManager->selectDataObject(0);
     QTest::qWait(5000);
 }

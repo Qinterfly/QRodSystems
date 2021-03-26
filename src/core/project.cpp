@@ -11,7 +11,7 @@
 
 using namespace QRS;
 
-AbstractDataObject* createDataObject(DataObjectType type, QString const& name);
+AbstractDataObject* createDataObject(DataObjectType type, const QString& name);
 
 //! Construct a clean project with the user specified name
 Project::Project(QString name)
@@ -19,6 +19,14 @@ Project::Project(QString name)
     , mName(name)
 {
 
+}
+
+//! Retrieve a data object by identificator
+std::shared_ptr<AbstractDataObject> Project::getDataObject(DataIDType id)
+{
+    if (mDataObjects.find(id) == mDataObjects.end())
+        return nullptr;
+    return mDataObjects[id];
 }
 
 //! Create a data object with the specified type
@@ -48,7 +56,7 @@ std::unordered_map<DataIDType, AbstractDataObject*> Project::getDataObjects()
 }
 
 //! Helper function to create DataObject instance by a type and name
-AbstractDataObject* createDataObject(DataObjectType type, QString const& name)
+AbstractDataObject* createDataObject(DataObjectType type, const QString& name)
 {
     AbstractDataObject* pObject = nullptr;
     switch (type)

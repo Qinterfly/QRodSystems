@@ -20,12 +20,11 @@ public:
     ScalarDataObject(const QString& name);
     ~ScalarDataObject() {};
     AbstractDataObject* clone() const override;
-    void addItem(DataValueType keyParameter) override;
+    DataItemType& addItem(DataValueType keyParameter) override;
     static uint numberScalars();
 
 private:
     static uint smNumScalars;
-
 };
 
 }
