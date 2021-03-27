@@ -74,5 +74,11 @@
         <file>icons/delete.svg</file>
         <file>icons/minus.svg</file>
         <file>icons/plus.svg</file>
+        <file>icons/table-row-delete.svg</file>
+        <file>icons/table-row-add.svg</file>
+        <file>icons/table-column-delete.svg</file>
+        <file>icons/table-column-add.svg</file>
+        <file>icons/arrows-collapse.svg</file>
+        <file>icons/arrows-expand.svg</file>
     </qresource>
 </RCC>

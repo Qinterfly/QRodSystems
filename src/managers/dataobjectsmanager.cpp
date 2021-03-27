@@ -33,7 +33,7 @@ using ads::CDockWidget;
 using ads::CDockAreaWidget;
 using namespace QRS;
 
-const static QSize kIconSize = QSize(20, 20);
+const static QSize kIconSize = QSize(22, 22);
 
 DataObjectsManager::DataObjectsManager(QRS::Project& project, QSettings& settings, QWidget* parent)
     : QDialog(parent)
@@ -98,11 +98,14 @@ CDockWidget* DataObjectsManager::createDataTableWidget()
     QToolBar* pToolBar = pDockWidget->createDefaultToolBar();
     pToolBar->setToolButtonStyle(Qt::ToolButtonStyle::ToolButtonIconOnly);
     pDockWidget->setToolBarIconSize(kIconSize, CDockWidget::StateDocked);
-    pToolBar->addAction(QIcon(":/icons/plus.svg"), tr("Add"), this, &DataObjectsManager::insertItemAfterSelected);
-    pToolBar->addAction(QIcon(":/icons/minus.svg"), tr("Remove"), this, &DataObjectsManager::removeSelectedItem);
+    pToolBar->addAction(QIcon(":/icons/arrows-expand.svg"), tr("Expand"), mpDataTable, &QTreeView::expandAll);
+    pToolBar->addAction(QIcon(":/icons/arrows-collapse.svg"), tr("Collapse"), mpDataTable, &QTreeView::collapseAll);
     pToolBar->addSeparator();
-    pToolBar->addAction(QIcon(":/icons/plus.svg"), tr("Expand"), mpDataTable, &QTreeView::expandAll); // TODO
-    pToolBar->addAction(QIcon(":/icons/plus.svg"), tr("Collapse"), mpDataTable, &QTreeView::collapseAll); // TODO
+    pToolBar->addAction(QIcon(":/icons/table-row-add.svg"), tr("Add Roww"), this, &DataObjectsManager::insertItemAfterSelected);
+    pToolBar->addAction(QIcon(":/icons/table-row-delete.svg"), tr("Remove Row"), this, &DataObjectsManager::removeSelectedItem);
+    pToolBar->addSeparator();
+    pToolBar->addAction(QIcon(":/icons/table-column-add.svg"), tr("Add Column"));
+    pToolBar->addAction(QIcon(":/icons/table-column-delete.svg"), tr("Remove Column"));
     return pDockWidget;
 }
 
