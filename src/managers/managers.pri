@@ -10,6 +10,7 @@ HEADERS += \
 SOURCES += \
     $$PWD/dataobjectsmanager.cpp \
     $$PWD/doublespinboxitemdelegate.cpp \
+    $$PWD/interfacetablemodel.cpp \
     $$PWD/scalartablemodel.cpp
     
 FORMS += \

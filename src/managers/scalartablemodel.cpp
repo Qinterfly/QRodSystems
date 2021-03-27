@@ -11,7 +11,6 @@
 #include <QTreeView>
 
 using namespace QRS;
-static const short kNumShowPrecision = 4;
 
 ScalarTableModel::ScalarTableModel(QWidget* parent)
     : QStandardItemModel(parent)
@@ -27,19 +26,11 @@ void ScalarTableModel::setScalarDataObject(QRS::ScalarDataObject* pScalarDataObj
     updateContent();
 }
 
-//! Helper function to make an item which holds a double value
-QStandardItem* makeDoubleItem(double value)
-{
-    QStandardItem* item = new QStandardItem;
-    item->setData(value, Qt::UserRole);
-    item->setData(QString::number(value, 'g', kNumShowPrecision), Qt::EditRole);
-    return item;
-}
-
 //! Helper function to prepare row
 QList<QStandardItem*> prepareRow(double const& key, double const& value)
 {
-    return { makeDoubleItem(key), makeDoubleItem(value) };
+    return { InterfaceTableModel::makeDoubleItem(key),
+             InterfaceTableModel::makeDoubleItem(value) };
 }
 
 //! Represent all items contained in a scalar data object
@@ -70,6 +61,7 @@ bool ScalarTableModel::setData(const QModelIndex& indexEdit, const QVariant& val
     double key = data(index(indexEdit.row(), 0), Qt::UserRole).toDouble();
     double doubleValue = value.toDouble();
     bool isOkay = false;
+    bool isSort = false;
     // Check whether a key or value was changed
     switch (indexEdit.column())
     {
@@ -77,6 +69,7 @@ bool ScalarTableModel::setData(const QModelIndex& indexEdit, const QVariant& val
     {
         double newKey = value.toDouble();
         isOkay = mpScalarDataObject->changeItemKey(key, newKey);
+        isSort = true;
         break;
     }
     case 1:
@@ -88,6 +81,8 @@ bool ScalarTableModel::setData(const QModelIndex& indexEdit, const QVariant& val
     {
         QStandardItemModel::setData(indexEdit, value, Qt::UserRole);
         QStandardItemModel::setData(indexEdit, QString::number(doubleValue, 'g', kNumShowPrecision), Qt::EditRole);
+        if (isSort)
+            sort(0, Qt::AscendingOrder);
     }
     return isOkay;
 }

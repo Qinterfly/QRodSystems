@@ -58,6 +58,8 @@ bool AbstractDataObject::setArrayValue(DataKeyType key, DataValueType newValue, 
 //! \return Returns the input value of the key if it is unique, otherwise -- a first available key
 DataValueType AbstractDataObject::getAvailableItemKey(DataValueType key) const
 {
+    static const double kMultLastKey = 1.05;
+    static const double kEpsilon = std::numeric_limits<double>::epsilon();
     // Check if a set containes an item with the specified key
     auto currentIterator = mItems.find(key);
     if (currentIterator == mItems.end())
@@ -68,11 +70,11 @@ DataValueType AbstractDataObject::getAvailableItemKey(DataValueType key) const
     {
         auto nextIterator = currentIterator;
         ++nextIterator;
-        // Whether a multiplied value of the last found key or a mean value is used
+        // Whether a multiplied value of a last found key or a mean value is returned
         if (nextIterator == mItems.end())
         {
-            const double kMultLastKey = 1.05;
-            return mItems.rbegin()->first * kMultLastKey;
+            double lastKey = mItems.rbegin()->first;
+            return qAbs(lastKey) <= kEpsilon ? 1.0 : lastKey * kMultLastKey;
         }
         else
         {
