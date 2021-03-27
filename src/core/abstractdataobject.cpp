@@ -12,7 +12,7 @@ using namespace QRS;
 uint AbstractDataObject::smNumObjects = 0;
 
 //! Base constructor
-AbstractDataObject::AbstractDataObject(DataObjectType type, const QString& name)
+AbstractDataObject::AbstractDataObject(DataObjectType type, QString const& name)
     : mType(type)
     , mName(name)
 {
@@ -26,52 +26,59 @@ uint AbstractDataObject::numberObjects()
     return smNumObjects;
 }
 
-//! Remove an entity with the specified key
-void AbstractDataObject::removeItem(DataKeyType keyParameter)
+//! Modify a key existed
+bool AbstractDataObject::changeItemKey(DataKeyType oldKey, DataKeyType newKey)
 {
-    mItems.erase(keyParameter);
+    // If the table does not contain the old key or the new one is already presented
+    if (mItems.find(oldKey) == mItems.end() || mItems.find(newKey) != mItems.end())
+        return false;
+    DataItemType obj = mItems[oldKey];
+    mItems.erase(oldKey);
+    mItems.emplace(newKey, std::move(obj));
+    return true;
 }
 
-// TODO
+//! Remove an entity with the specified key
+void AbstractDataObject::removeItem(DataKeyType key)
+{
+    mItems.erase(key);
+}
 
-////! Construct a vector data object
-//VectorDataObject::VectorDataObject(const QString& name)
-//    : AbstractDataObject(DataObjectType::kVector, name)
-//{
+//! Set an array value with the specified indices
+bool AbstractDataObject::setArrayValue(DataKeyType key, DataValueType newValue, uint iRow, uint iColumn)
+{
+    if (mItems.find(key) == mItems.end())
+        return false;
+    DataItemType& array = mItems.at(key);
+    array[iRow][iColumn] = newValue;
+    return true;
+}
 
-//}
-
-////! Insert a new item into VectorDataObject
-//void VectorDataObject::addItem(DataValueType keyParameter)
-//{
-//    mItems.emplace(keyParameter, DataItemType(1, 3));
-//}
-
-////! Construct a matrix data object
-//MatrixDataObject::MatrixDataObject(const QString& name)
-//    : AbstractDataObject(DataObjectType::kMatrix, name)
-//{
-
-//}
-
-////! Insert a new item into MatrixDataObject
-//void MatrixDataObject::addItem(DataValueType keyParameter)
-//{
-//    mItems.emplace(keyParameter, DataItemType(3, 3));
-//}
-
-////! Construct a surface data object
-//SurfaceDataObject::SurfaceDataObject(const QString& name)
-//    : AbstractDataObject(DataObjectType::kSurface, name)
-//{
-
-//}
-
-////! Insert a new item into SurfaceDataObject
-//void SurfaceDataObject::addItem(DataValueType keyParameter)
-//{
-//    mItems.emplace(keyParameter, DataItemType(1, 2));
-//}
-
+//! Check if a given key is unique
+//! \return Returns the input value of the key if it is unique, otherwise -- a first available key
+DataValueType AbstractDataObject::getAvailableItemKey(DataValueType key) const
+{
+    // Check if a set containes an item with the specified key
+    auto currentIterator = mItems.find(key);
+    if (currentIterator == mItems.end())
+    {
+        return key;
+    }
+    else
+    {
+        auto nextIterator = currentIterator;
+        ++nextIterator;
+        // Whether a multiplied value of the last found key or a mean value is used
+        if (nextIterator == mItems.end())
+        {
+            const double kMultLastKey = 1.05;
+            return mItems.rbegin()->first * kMultLastKey;
+        }
+        else
+        {
+            return (nextIterator->first + currentIterator->first) / 2.0;
+        }
+    }
+}
 
 

@@ -28,7 +28,7 @@ class Project : public QObject
     Q_OBJECT
 
 public:
-    Project(QString name);
+    Project(QString const& name);
     virtual ~Project() = default;
     // Data objects
     std::shared_ptr<AbstractDataObject> getDataObject(DataIDType id);

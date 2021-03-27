@@ -8,13 +8,16 @@
 #include <QDebug>
 #include "project.h"
 #include "scalardataobject.h"
+#include "vectordataobject.h"
+#include "matrixdataobject.h"
+#include "surfacedataobject.h"
 
 using namespace QRS;
 
-AbstractDataObject* createDataObject(DataObjectType type, const QString& name);
+AbstractDataObject* createDataObject(DataObjectType type, QString const& name);
 
 //! Construct a clean project with the user specified name
-Project::Project(QString name)
+Project::Project(QString const& name)
     : mID(QUuid::createUuid())
     , mName(name)
 {
@@ -56,7 +59,7 @@ std::unordered_map<DataIDType, AbstractDataObject*> Project::getDataObjects()
 }
 
 //! Helper function to create DataObject instance by a type and name
-AbstractDataObject* createDataObject(DataObjectType type, const QString& name)
+AbstractDataObject* createDataObject(DataObjectType type, QString const& name)
 {
     AbstractDataObject* pObject = nullptr;
     switch (type)
@@ -64,15 +67,15 @@ AbstractDataObject* createDataObject(DataObjectType type, const QString& name)
     case DataObjectType::kScalar:
         pObject = new ScalarDataObject(name);
         break;
-//    case DataObjectType::kVector:
-//        pObject = new VectorDataObject(name);
-//        break;
-//    case DataObjectType::kMatrix:
-//        pObject = new MatrixDataObject(name);
-//        break;
-//    case DataObjectType::kSurface:
-//        pObject = new SurfaceDataObject(name);
-//        break;
+    case DataObjectType::kVector:
+        pObject = new VectorDataObject(name);
+        break;
+    case DataObjectType::kMatrix:
+        pObject = new MatrixDataObject(name);
+        break;
+    case DataObjectType::kSurface:
+        pObject = new SurfaceDataObject(name);
+        break;
     }
     return pObject;
 }

@@ -21,6 +21,7 @@ class DataObjectsManager;
 class QTreeView;
 class QSettings;
 class QListWidget;
+class InterfaceTableModel;
 class ScalarTableModel;
 QT_END_NAMESPACE
 
@@ -66,10 +67,15 @@ public slots:
     void addVector();
     void addMatrix();
     void addSurface();
+    void insertItemAfterSelected();
+    void removeSelectedItem();
     const mapDataObjects& getDataObjects() { return mDataObjects; };
 
 private slots:
     void representSelectedDataObject();
+
+private:
+    void emplaceDataObject(QRS::AbstractDataObject* dataObject, QIcon const& icon, QString const& name);
 
 private:
     Ui::DataObjectsManager* mpUi;
@@ -83,6 +89,7 @@ private:
     QSettings& mSettings;
     mapDataObjects mDataObjects;
     // Models
+    InterfaceTableModel* mpInterfaceTableModel = nullptr;
     ScalarTableModel* mpScalarTableModel;
 };
 

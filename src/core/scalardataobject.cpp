@@ -12,7 +12,7 @@ using namespace QRS;
 uint ScalarDataObject::smNumScalars = 0;
 
 //! Construct a scalar data object
-ScalarDataObject::ScalarDataObject(const QString& name)
+ScalarDataObject::ScalarDataObject(QString const& name)
     : AbstractDataObject(DataObjectType::kScalar, name)
 {
     ++smNumScalars;
@@ -25,10 +25,11 @@ uint ScalarDataObject::numberScalars()
 }
 
 //! Insert a new item into ScalarDataObject
-DataItemType& ScalarDataObject::addItem(DataValueType keyParameter)
+DataItemType& ScalarDataObject::addItem(DataValueType key)
 {
-    mItems.emplace(keyParameter, DataItemType(1, 1));
-    return mItems.at(keyParameter);
+    DataValueType rightKey = getAvailableItemKey(key);
+    mItems.emplace(rightKey, DataItemType(1, 1));
+    return mItems.at(rightKey);
 }
 
 //! Clone a scalar data object
@@ -39,4 +40,3 @@ AbstractDataObject* ScalarDataObject::clone() const
     obj->mID = mID;
     return obj;
 }
-

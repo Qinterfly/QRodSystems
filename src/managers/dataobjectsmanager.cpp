@@ -20,7 +20,11 @@
 #include "ui_dataobjectsmanager.h"
 #include "../core/project.h"
 #include "../core/scalardataobject.h"
+#include "../core/vectordataobject.h"
+#include "../core/matrixdataobject.h"
+#include "../core/surfacedataobject.h"
 #include "scalartablemodel.h"
+#include "doublespinboxitemdelegate.h"
 
 using ads::CDockManager;
 using ads::CDockWidget;
@@ -79,15 +83,19 @@ CDockWidget* DataObjectsManager::createDataTableWidget()
     pDockWidget->setFeature(CDockWidget::DockWidgetClosable, false);
     mpDataTable = new QTreeView();
     mpDataTable->sortByColumn(0, Qt::SortOrder::AscendingOrder);
+    mpDataTable->setSelectionMode(QAbstractItemView::ExtendedSelection);
     pDockWidget->setWidget(mpDataTable);
+    // Editor of table values
+    DoubleSpinBoxItemDelegate* itemDelegate = new DoubleSpinBoxItemDelegate();
+    mpDataTable->setItemDelegate(itemDelegate);
     // Models
     mpScalarTableModel = new ScalarTableModel(pDockWidget);
     // ToolBar
     QToolBar* pToolBar = pDockWidget->createDefaultToolBar();
     pToolBar->setToolButtonStyle(Qt::ToolButtonStyle::ToolButtonIconOnly);
     pDockWidget->setToolBarIconSize(kIconSize, CDockWidget::StateDocked);
-    pToolBar->addAction(QIcon(":/icons/plus.svg"), tr("Add"));
-    pToolBar->addAction(QIcon(":/icons/minus.svg"), tr("Remove"));
+    pToolBar->addAction(QIcon(":/icons/plus.svg"), tr("Add"), this, &DataObjectsManager::insertItemAfterSelected);
+    pToolBar->addAction(QIcon(":/icons/minus.svg"), tr("Remove"), this, &DataObjectsManager::removeSelectedItem);
     return pDockWidget;
 }
 
@@ -177,29 +185,34 @@ void DataObjectsManager::addScalar()
     static QString const kScalarName = "Scalar ";
     static QIcon icon = QIcon(":/icons/letter-s.svg");
     QString name = kScalarName + QString::number(ScalarDataObject::numberScalars() + 1);
-    ScalarDataObject* scalar = new ScalarDataObject(name);
-    mDataObjects.emplace(scalar->id(), scalar);
-    QListWidgetItem* item = new QListWidgetItem(icon, name);
-    item->setData(Qt::UserRole, scalar->id());
-    mpListObjects->addItem(item);
+    emplaceDataObject(new ScalarDataObject(name), icon, name);
 }
 
 //! Add a vector object
 void DataObjectsManager::addVector()
 {
-    // TODO
+    static QString const kVectorName = "Vector ";
+    static QIcon icon = QIcon(":/icons/letter-v.svg");
+    QString name = kVectorName + QString::number(VectorDataObject::numberVectors() + 1);
+    emplaceDataObject(new VectorDataObject(name), icon, name);
 }
 
 //! Add a matrix object
 void DataObjectsManager::addMatrix()
 {
-    // TODO
+    static QString const kMatrixName = "Matrix ";
+    static QIcon icon = QIcon(":/icons/letter-m.svg");
+    QString name = kMatrixName + QString::number(MatrixDataObject::numberMatrices() + 1);
+    emplaceDataObject(new MatrixDataObject(name), icon, name);
 }
 
 //! Add a surface object
 void DataObjectsManager::addSurface()
 {
-    // TODO
+    static QString const kSurfaceName = "Surface ";
+    static QIcon icon = QIcon(":/icons/letter-xy.svg");
+    QString name = kSurfaceName + QString::number(SurfaceDataObject::numberSurfaces() + 1);
+    emplaceDataObject(new SurfaceDataObject(name), icon, name);
 }
 
 //! Select a data object from the list
@@ -216,14 +229,50 @@ void DataObjectsManager::representSelectedDataObject()
     uint iRowSelected = mpListObjects->currentRow();
     DataIDType id = mpListObjects->item(iRowSelected)->data(Qt::UserRole).toUInt();
     AbstractDataObject* pObject = mDataObjects[id];
+    mpInterfaceTableModel = nullptr;
     switch (pObject->type())
     {
     case kScalar:
-        mpScalarTableModel->setScalarDataObject(static_cast<ScalarDataObject*>(pObject));
         mpDataTable->setSortingEnabled(false);
+        mpScalarTableModel->setScalarDataObject(static_cast<ScalarDataObject*>(pObject));
+        mpDataTable->setSortingEnabled(true);
         mpDataTable->setModel(mpScalarTableModel);
-        mpDataTable->expandAll();
+        mpInterfaceTableModel = mpScalarTableModel;
+        break;
+    case kVector:
+        break;
+    case kMatrix:
+        break;
+    case kSurface:
         break;
     }
 }
 
+//! Insert a new array into the data object
+void DataObjectsManager::insertItemAfterSelected()
+{
+    if (mpListObjects->currentRow() < 0 || !mpInterfaceTableModel)
+        return;
+    mpDataTable->setSortingEnabled(false);
+    mpInterfaceTableModel->insertItemAfterSelected(mpDataTable->selectionModel());
+    mpDataTable->setSortingEnabled(true);
+}
+
+//! Remove a selected item
+void DataObjectsManager::removeSelectedItem()
+{
+    if (mpListObjects->currentRow() < 0 || !mpInterfaceTableModel)
+        return;
+    mpDataTable->setSortingEnabled(false);
+    mpInterfaceTableModel->removeSelectedItem(mpDataTable->selectionModel());
+    mpDataTable->setSortingEnabled(true);
+}
+
+//! Helper function to insert data objects into the manager
+void DataObjectsManager::emplaceDataObject(AbstractDataObject* dataObject, QIcon const& icon, QString const& name)
+{
+    mDataObjects.emplace(dataObject->id(), dataObject);
+    QListWidgetItem* item = new QListWidgetItem(icon, name);
+    item->setData(Qt::UserRole, dataObject->id());
+    mpListObjects->addItem(item);
+}

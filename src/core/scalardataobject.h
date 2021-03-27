@@ -17,10 +17,10 @@ namespace QRS
 class ScalarDataObject : public AbstractDataObject
 {
 public:
-    ScalarDataObject(const QString& name);
+    ScalarDataObject(QString const& name);
     ~ScalarDataObject() {};
     AbstractDataObject* clone() const override;
-    DataItemType& addItem(DataValueType keyParameter) override;
+    DataItemType& addItem(DataValueType key) override;
     static uint numberScalars();
 
 private:

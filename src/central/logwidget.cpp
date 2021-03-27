@@ -60,9 +60,11 @@ void LogWidget::log(QtMsgType messageType, const QString& message)
         break;
     }
     QString time = QTime::currentTime().toString();
+    QString filterMessage = message;
+    filterMessage.remove('\"');
     setItem(iRow, ColumnType::kTime, new QTableWidgetItem(time));
     setItem(iRow, ColumnType::kType, new QTableWidgetItem(icon, type));
-    setItem(iRow, ColumnType::kMessage, new QTableWidgetItem(message));
+    setItem(iRow, ColumnType::kMessage, new QTableWidgetItem(filterMessage));
     resizeColumnsToContents();
     QTimer::singleShot(kWaitToScroll, this, &QTableWidget::scrollToBottom);
 }

@@ -1,7 +1,7 @@
 LIB_PATH = $${PWD}/../lib
 ADS_PATH = $${LIB_PATH}/ADS
 
-QT     += core gui widgets
+QT  += core gui widgets
 
 TARGET   = QRodSystems
 TEMPLATE = app

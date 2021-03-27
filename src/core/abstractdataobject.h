@@ -25,11 +25,14 @@ class AbstractDataObject
     using DataHolder = std::map<DataKeyType, DataItemType>;
 
 public:
-    AbstractDataObject(DataObjectType type, const QString& name);
+    AbstractDataObject(DataObjectType type, QString const& name);
     virtual ~AbstractDataObject() = default;
     virtual AbstractDataObject* clone() const = 0;
-    virtual DataItemType& addItem(DataValueType keyParameter) = 0;
-    void removeItem(DataValueType keyParameter);
+    virtual DataItemType& addItem(DataKeyType key) = 0;
+    void removeItem(DataValueType key);
+    bool changeItemKey(DataKeyType oldKey, DataKeyType newKey);
+    DataValueType getAvailableItemKey(DataValueType key) const;
+    bool setArrayValue(DataKeyType key, DataValueType newValue, uint iRow = 0, uint iColumn = 0);
     DataHolder& getItems() { return mItems; }
     DataItemType& getItem(DataValueType keyParameter) { return mItems.at(keyParameter); }
     DataIDType id() const { return mID; }
@@ -45,39 +48,6 @@ protected:
 private:
     static uint smNumObjects;
 };
-
-// TODO
-
-////! Vector data object
-//class VectorDataObject : public AbstractDataObject
-//{
-//public:
-//    VectorDataObject(const QString& name);
-//    ~VectorDataObject() = default;
-//    AbstractDataObject* clone() const override;
-//    void addItem(DataValueType keyParameter) override;
-//};
-
-////! Matrix data object
-//class MatrixDataObject : public AbstractDataObject
-//{
-//public:
-//    MatrixDataObject(const QString& name);
-//    ~MatrixDataObject() = default;
-//    AbstractDataObject* clone() const override;
-//    void addItem(DataValueType keyParameter) override;
-//};
-
-////! Surface data object
-//class SurfaceDataObject : public AbstractDataObject
-//{
-//public:
-//    SurfaceDataObject(const QString& name);
-//    ~SurfaceDataObject() = default;
-//    AbstractDataObject* clone() const override;
-//    void addItem(DataValueType keyParameter) override;
-//};
-
 
 }
 

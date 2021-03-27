@@ -44,18 +44,19 @@ void TestManagers::testDataObjectsManager()
     auto dataObjects = mpDataObjectsManager->getDataObjects();
     ScalarDataObject* pScalar = (ScalarDataObject*) dataObjects.begin()->second;
     // Inserting itmes into the object
-    int nStep = 100;
-    double startValue = 1.0;
-    double endValue = 10.0;
+    int nStep = 10;
+    double startValue = 0.1;
+    double endValue = 1.5;
     double step = (endValue - startValue) / (double) (nStep - 1);
     for (int i = 0; i != nStep; ++i)
     {
         auto& t = pScalar->addItem(startValue + i * step);
-        t[0][0] = startValue / endValue * i;
+        t[0][0] = startValue / endValue * (i + 1);
     }
+    pScalar->addItem(endValue); // Already existed key
     // Selecting it
     mpDataObjectsManager->selectDataObject(0);
-    QTest::qWait(5000);
+    QTest::qWait(10000);
 }
 
 //![2]
