@@ -13,6 +13,7 @@
 #include <QTextEdit>
 #include <QPushButton>
 #include <QSpacerItem>
+#include <QHeaderView>
 #include "DockManager.h"
 #include "DockWidget.h"
 
@@ -23,7 +24,8 @@
 #include "../core/vectordataobject.h"
 #include "../core/matrixdataobject.h"
 #include "../core/surfacedataobject.h"
-#include "scalartablemodel.h"
+#include "basetablemodel.h"
+#include "matrixtablemodel.h"
 #include "doublespinboxitemdelegate.h"
 
 using ads::CDockManager;
@@ -84,18 +86,23 @@ CDockWidget* DataObjectsManager::createDataTableWidget()
     mpDataTable = new QTreeView();
     mpDataTable->sortByColumn(0, Qt::SortOrder::AscendingOrder);
     mpDataTable->setSelectionMode(QAbstractItemView::ExtendedSelection);
+    mpDataTable->setHeaderHidden(false);
     pDockWidget->setWidget(mpDataTable);
     // Editor of table values
     DoubleSpinBoxItemDelegate* itemDelegate = new DoubleSpinBoxItemDelegate();
     mpDataTable->setItemDelegate(itemDelegate);
     // Models
-    mpScalarTableModel = new ScalarTableModel(pDockWidget);
+    mpBaseTableModel = new BaseTableModel(pDockWidget);
+    mpMatrixTableModel = new MatrixTableModel(pDockWidget);
     // ToolBar
     QToolBar* pToolBar = pDockWidget->createDefaultToolBar();
     pToolBar->setToolButtonStyle(Qt::ToolButtonStyle::ToolButtonIconOnly);
     pDockWidget->setToolBarIconSize(kIconSize, CDockWidget::StateDocked);
     pToolBar->addAction(QIcon(":/icons/plus.svg"), tr("Add"), this, &DataObjectsManager::insertItemAfterSelected);
     pToolBar->addAction(QIcon(":/icons/minus.svg"), tr("Remove"), this, &DataObjectsManager::removeSelectedItem);
+    pToolBar->addSeparator();
+    pToolBar->addAction(QIcon(":/icons/plus.svg"), tr("Expand"), mpDataTable, &QTreeView::expandAll); // TODO
+    pToolBar->addAction(QIcon(":/icons/plus.svg"), tr("Collapse"), mpDataTable, &QTreeView::collapseAll); // TODO
     return pDockWidget;
 }
 
@@ -121,7 +128,7 @@ CDockWidget* DataObjectsManager::createDataObjectsWidget()
     pToolBar->addAction(QIcon(":/icons/letter-m.svg"), tr("Matrix"), this, &DataObjectsManager::addMatrix);
     pToolBar->addAction(QIcon(":/icons/letter-xy.svg"), tr("Surface"), this, &DataObjectsManager::addSurface);
     pToolBar->addSeparator();
-    pToolBar->addAction(QIcon(":/icons/delete.svg"), tr("Remove"));
+    pToolBar->addAction(QIcon(":/icons/delete.svg"), tr("Remove"), this, &DataObjectsManager::removeSelectedDataObject);
     return pDockWidget;
 }
 
@@ -226,22 +233,31 @@ void DataObjectsManager::selectDataObject(int index)
 //! Represent a selected data object according to its type
 void DataObjectsManager::representSelectedDataObject()
 {
-    uint iRowSelected = mpListObjects->currentRow();
+    mpInterfaceTableModel = nullptr;
+    int iRowSelected = mpListObjects->currentRow();
+    if (iRowSelected < 0 || iRowSelected > mpListObjects->count())
+        return;
     DataIDType id = mpListObjects->item(iRowSelected)->data(Qt::UserRole).toUInt();
     AbstractDataObject* pObject = mDataObjects[id];
-    mpInterfaceTableModel = nullptr;
+    mpBaseTableModel->setDataObject(nullptr);
+    mpMatrixTableModel->setDataObject(nullptr);
     switch (pObject->type())
     {
     case kScalar:
-        mpDataTable->setSortingEnabled(false);
-        mpScalarTableModel->setScalarDataObject(static_cast<ScalarDataObject*>(pObject));
-        mpDataTable->setSortingEnabled(true);
-        mpDataTable->setModel(mpScalarTableModel);
-        mpInterfaceTableModel = mpScalarTableModel;
-        break;
     case kVector:
+        mpDataTable->setSortingEnabled(false);
+        mpBaseTableModel->setDataObject(pObject);
+        mpDataTable->setSortingEnabled(true);
+        mpDataTable->setModel(mpBaseTableModel);
+        mpInterfaceTableModel = mpBaseTableModel;
         break;
     case kMatrix:
+        mpDataTable->setSortingEnabled(false);
+        mpMatrixTableModel->setDataObject(pObject);
+        mpDataTable->setSortingEnabled(true);
+        mpDataTable->setModel(mpMatrixTableModel);
+        mpInterfaceTableModel = mpMatrixTableModel;
+        mpDataTable->expandAll();
         break;
     case kSurface:
         break;
@@ -266,6 +282,23 @@ void DataObjectsManager::removeSelectedItem()
     mpDataTable->setSortingEnabled(false);
     mpInterfaceTableModel->removeSelectedItem(mpDataTable->selectionModel());
     mpDataTable->setSortingEnabled(true);
+}
+
+//! Remove a selected data object
+void DataObjectsManager::removeSelectedDataObject()
+{
+    if (mpListObjects->currentRow() < 0)
+        return;
+    QListWidgetItem* item = mpListObjects->currentItem();
+    uint id = item->data(Qt::UserRole).toUInt();
+    mpListObjects->removeItemWidget(item);
+    mDataObjects.erase(id);
+    delete item;
+    if (!mpListObjects->count())
+    {
+        mpInterfaceTableModel = nullptr;
+        mpDataTable->setModel(nullptr);
+    }
 }
 
 //! Helper function to insert data objects into the manager

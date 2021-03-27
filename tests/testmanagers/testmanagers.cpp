@@ -6,6 +6,9 @@
 #include "core/project.h"
 #include "core/abstractdataobject.h"
 #include "core/scalardataobject.h"
+#include "core/vectordataobject.h"
+#include "core/matrixdataobject.h"
+#include "core/surfacedataobject.h"
 
 #include "managers/dataobjectsmanager.h"
 
@@ -27,7 +30,7 @@ private:
     DataObjectsManager* mpDataObjectsManager;
 };
 
-//![0]
+//! Init
 void TestManagers::initTestCase()
 {
     mpProject = new Project("Test");
@@ -39,27 +42,59 @@ void TestManagers::initTestCase()
 void TestManagers::testDataObjectsManager()
 {
     mpDataObjectsManager->show();
-    // Adding a scalar object
+    // Creating data objects of different types
     mpDataObjectsManager->addScalar();
+    mpDataObjectsManager->addVector();
+    mpDataObjectsManager->addMatrix();
+    mpDataObjectsManager->addSurface();
     auto dataObjects = mpDataObjectsManager->getDataObjects();
-    ScalarDataObject* pScalar = (ScalarDataObject*) dataObjects.begin()->second;
+    ScalarDataObject* pScalar;
+    VectorDataObject* pVector;
+    MatrixDataObject* pMatrix;
+    SurfaceDataObject* pSurface;
+    for (auto& mapObj : dataObjects)
+    {
+        AbstractDataObject* obj = mapObj.second;
+        switch (obj->type())
+        {
+        case (kScalar):
+            pScalar = (ScalarDataObject*)obj;
+            break;
+        case (kVector):
+            pVector = (VectorDataObject*)obj;
+            break;
+        case (kMatrix):
+            pMatrix = (MatrixDataObject*)obj;
+            break;
+        case (kSurface):
+            pSurface = (SurfaceDataObject*)obj;
+            break;
+        }
+    }
     // Inserting itmes into the object
     int nStep = 10;
     double startValue = 0.1;
     double endValue = 1.5;
     double step = (endValue - startValue) / (double) (nStep - 1);
+    double tempValue;
     for (int i = 0; i != nStep; ++i)
     {
-        auto& t = pScalar->addItem(startValue + i * step);
+        tempValue = startValue + i * step;
+        // Scalar
+        auto& t = pScalar->addItem(tempValue);
         t[0][0] = startValue / endValue * (i + 1);
+        // Others
+        pVector->addItem(tempValue);
+        pMatrix->addItem(tempValue);
+        pSurface->addItem(tempValue);
     }
     pScalar->addItem(endValue); // Already existed key
-    // Selecting it
+    // Selecting
     mpDataObjectsManager->selectDataObject(0);
-    QTest::qWait(10000);
+    QTest::qWait(100000);
 }
 
-//![2]
+//! Cleanup
 void TestManagers::cleanupTestCase()
 {
     delete mpProject;

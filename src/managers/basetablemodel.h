@@ -2,29 +2,29 @@
  * \file
  * \author Pavel Lakiza
  * \date March 2021
- * \brief Declaration of the ScalarTableModel class
+ * \brief Declaration of the BaseTableModel class
  */
 
-#ifndef SCALARTABLEMODEL_H
-#define SCALARTABLEMODEL_H
+#ifndef BASETABLEMODEL_H
+#define BASETABLEMODEL_H
 
 #include <QStandardItemModel>
 #include "interfacetablemodel.h"
 
 namespace QRS
 {
-class ScalarDataObject;
+class AbstractDataObject;
 }
 
-//! Table model to represent a scalar data object
-class ScalarTableModel : public QStandardItemModel, public InterfaceTableModel
+//! Table model to represent either a scalar or vector data object
+class BaseTableModel : public QStandardItemModel, public InterfaceTableModel
 {
     Q_OBJECT
 
 public:
-    ScalarTableModel(QWidget* parent = nullptr);
-    ~ScalarTableModel() = default;
-    void setScalarDataObject(QRS::ScalarDataObject* pScalarDataObject);
+    BaseTableModel(QWidget* parent = nullptr);
+    ~BaseTableModel() = default;
+    void setDataObject(QRS::AbstractDataObject* pDataObject);
     bool setData(const QModelIndex& indexEdit, const QVariant& value, int role = Qt::EditRole) override;
     void insertItemAfterSelected(QItemSelectionModel* selectionModel) override;
     void removeSelectedItem(QItemSelectionModel* selectionModel) override;
@@ -34,8 +34,7 @@ private:
     void clearContent();
 
 private:
-    QRS::ScalarDataObject* mpScalarDataObject = nullptr;
+    QRS::AbstractDataObject* mpDataObject = nullptr;
 };
 
-
-#endif // SCALARTABLEMODEL_H
+#endif // BASETABLEMODEL_H

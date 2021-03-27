@@ -33,12 +33,12 @@ public:
     // Data objects
     std::shared_ptr<AbstractDataObject> getDataObject(DataIDType id);
     std::unordered_map<DataIDType, AbstractDataObject*> getDataObjects();
+    void addDataObject(DataObjectType type);
+    void removeDataObject(DataIDType id);
 
 signals:
-    void dataObjectAdded();
-
-public slots:
-    void addDataObject(DataObjectType type);
+    void dataObjectAdded(DataIDType id);
+    void dataObjectRemoved(DataIDType id);
 
 private:
     //! Unique project identifier

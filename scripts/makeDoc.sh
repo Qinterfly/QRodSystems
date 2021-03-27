@@ -1,5 +1,10 @@
 #!/bin/bash
 
+basePath=$(pwd)
+scriptPath=$(dirname "$0")
+
+cd $scriptPath
+
 # Generate a documentation based on the configuration file
 cd ../doc
 doxygen config
@@ -13,3 +18,4 @@ mv refman.pdf ../doc.pdf
 cd ../html
 firefox annotated.html
 
+cd $basePath

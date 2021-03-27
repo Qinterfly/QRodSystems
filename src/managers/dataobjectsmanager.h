@@ -21,9 +21,11 @@ class DataObjectsManager;
 class QTreeView;
 class QSettings;
 class QListWidget;
-class InterfaceTableModel;
-class ScalarTableModel;
 QT_END_NAMESPACE
+
+class InterfaceTableModel;
+class BaseTableModel;
+class MatrixTableModel;
 
 namespace ads
 {
@@ -70,6 +72,7 @@ public slots:
     void insertItemAfterSelected();
     void removeSelectedItem();
     const mapDataObjects& getDataObjects() { return mDataObjects; };
+    void removeSelectedDataObject();
 
 private slots:
     void representSelectedDataObject();
@@ -90,7 +93,8 @@ private:
     mapDataObjects mDataObjects;
     // Models
     InterfaceTableModel* mpInterfaceTableModel = nullptr;
-    ScalarTableModel* mpScalarTableModel;
+    BaseTableModel* mpBaseTableModel;
+    MatrixTableModel* mpMatrixTableModel;
 };
 
 #endif // DATAOBJECTSMANAGER_H

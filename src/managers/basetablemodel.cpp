@@ -2,59 +2,70 @@
  * \file
  * \author Pavel Lakiza
  * \date March 2021
- * \brief Implementation of the ScalarTableModel class
+ * \brief Implementation of the BaseTableModel class
  */
-
-#include "scalartablemodel.h"
-#include "scalardataobject.h"
 
 #include <QTreeView>
 
+#include "basetablemodel.h"
+#include "abstractdataobject.h"
+
 using namespace QRS;
 
-ScalarTableModel::ScalarTableModel(QWidget* parent)
+BaseTableModel::BaseTableModel(QWidget* parent)
     : QStandardItemModel(parent)
 {
-    setColumnCount(2);
-    setHorizontalHeaderLabels({"Key", "Value"});
+
 }
 
-//! Set a scalar data object to represent
-void ScalarTableModel::setScalarDataObject(QRS::ScalarDataObject* pScalarDataObject)
+//! Set a data object to represent
+void BaseTableModel::setDataObject(AbstractDataObject* pDataObject)
 {
-    ScalarTableModel::mpScalarDataObject = pScalarDataObject;
+    mpDataObject = pDataObject;
+    if (!mpDataObject)
+    {
+        clearContent();
+        return;
+    }
+    switch (mpDataObject->type())
+    {
+    case kScalar:
+        setColumnCount(2);
+        setHorizontalHeaderLabels({"Key", "Value"});
+        break;
+    case kVector:
+        setColumnCount(4);
+        setHorizontalHeaderLabels({"Key", "Value 1", "Value 2", "Value 3"});
+        break;
+    default:
+        break;
+    }
     updateContent();
 }
 
-//! Helper function to prepare row
-QList<QStandardItem*> prepareRow(double const& key, double const& value)
-{
-    return { InterfaceTableModel::makeDoubleItem(key),
-             InterfaceTableModel::makeDoubleItem(value) };
-}
-
-//! Represent all items contained in a scalar data object
-void ScalarTableModel::updateContent()
+//! Represent all items which a data object contains
+void BaseTableModel::updateContent()
 {
     clearContent();
-    if (!mpScalarDataObject)
+    if (!mpDataObject)
         return;
     QStandardItem* rootItem = invisibleRootItem();
-    auto& mapScalars = mpScalarDataObject->getItems();
-    for (auto& item : mapScalars)
+    auto& map = mpDataObject->getItems();
+    for (auto& iterator : map)
     {
-        rootItem->appendRow(prepareRow(item.first, item.second[0][0]));
+        DataItemType& array = iterator.second;
+        rootItem->appendRow(prepareRow(iterator.first, array, 0));
     }
 }
 
 //! Clear previously created items
-void ScalarTableModel::clearContent()
+void BaseTableModel::clearContent()
 {
     removeRows(0, rowCount());
 }
 
 //! Set the data acquired from a delegate
-bool ScalarTableModel::setData(const QModelIndex& indexEdit, const QVariant& value, int role)
+bool BaseTableModel::setData(const QModelIndex& indexEdit, const QVariant& value, int role)
 {
     if (role != Qt::UserRole)
         return false;
@@ -63,18 +74,16 @@ bool ScalarTableModel::setData(const QModelIndex& indexEdit, const QVariant& val
     bool isOkay = false;
     bool isSort = false;
     // Check whether a key or value was changed
-    switch (indexEdit.column())
-    {
-    case 0:
+    short iColumn = indexEdit.column();
+    if (iColumn == 0)
     {
         double newKey = value.toDouble();
-        isOkay = mpScalarDataObject->changeItemKey(key, newKey);
+        isOkay = mpDataObject->changeItemKey(key, newKey);
         isSort = true;
-        break;
     }
-    case 1:
-        isOkay = mpScalarDataObject->setArrayValue(key, doubleValue);
-        break;
+    else
+    {
+        isOkay = mpDataObject->setArrayValue(key, doubleValue, 0, iColumn);
     }
     // Display the changed value
     if (isOkay)
@@ -88,25 +97,25 @@ bool ScalarTableModel::setData(const QModelIndex& indexEdit, const QVariant& val
 }
 
 //! Insert a new item after selected one
-void ScalarTableModel::insertItemAfterSelected(QItemSelectionModel* selectionModel)
+void BaseTableModel::insertItemAfterSelected(QItemSelectionModel* selectionModel)
 {
     QModelIndexList listSelected = selectionModel->selectedRows();
     if (listSelected.isEmpty())
     {
-        mpScalarDataObject->addItem(0.0);
+        mpDataObject->addItem(0.0);
     }
     else
     {
         QModelIndex& lastSelected = *listSelected.rbegin();
         uint iRow = lastSelected.row();
         double key = index(iRow, 0).data(Qt::UserRole).toDouble();
-        mpScalarDataObject->addItem(key);
+        mpDataObject->addItem(key);
     }
     updateContent();
 }
 
 //! Remove an array under selection
-void ScalarTableModel::removeSelectedItem(QItemSelectionModel* selectionModel)
+void BaseTableModel::removeSelectedItem(QItemSelectionModel* selectionModel)
 {
     QModelIndexList listSelected = selectionModel->selectedRows();
     uint iRow;
@@ -115,7 +124,7 @@ void ScalarTableModel::removeSelectedItem(QItemSelectionModel* selectionModel)
     {
         iRow = ind.row();
         key = index(iRow, 0).data(Qt::UserRole).toDouble();
-        mpScalarDataObject->removeItem(key);
+        mpDataObject->removeItem(key);
     }
     updateContent();
 }

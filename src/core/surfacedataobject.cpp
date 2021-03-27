@@ -13,7 +13,7 @@ uint SurfaceDataObject::smNumSurfaces = 0;
 
 //! Construct a surface data object
 SurfaceDataObject::SurfaceDataObject(QString const& name)
-    : AbstractDataObject(DataObjectType::kScalar, name)
+    : AbstractDataObject(DataObjectType::kSurface, name)
 {
     ++smNumSurfaces;
 }

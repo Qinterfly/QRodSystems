@@ -40,9 +40,10 @@ void Project::addDataObject(DataObjectType type)
     AbstractDataObject* pObject = createDataObject(type, nameObj);
     if (pObject)
     {
-        mDataObjects.emplace(pObject->id(), std::shared_ptr<AbstractDataObject>(pObject));
+        DataIDType id = pObject->id();
+        mDataObjects.emplace(id, std::shared_ptr<AbstractDataObject>(pObject));
         qInfo() << QString("New data object with ID %1 was added into the project").arg(QString::number(pObject->id()));
-        emit dataObjectAdded();
+        emit dataObjectAdded(id);
     }
 }
 
@@ -56,6 +57,16 @@ std::unordered_map<DataIDType, AbstractDataObject*> Project::getDataObjects()
         result.emplace(obj->id(), obj);
     }
     return result;
+}
+
+//! Remove a data object by id
+void Project::removeDataObject(DataIDType id)
+{
+    if (mDataObjects.find(id) != mDataObjects.end())
+    {
+        mDataObjects.erase(id);
+        emit dataObjectRemoved(id);
+    }
 }
 
 //! Helper function to create DataObject instance by a type and name
@@ -79,3 +90,4 @@ AbstractDataObject* createDataObject(DataObjectType type, QString const& name)
     }
     return pObject;
 }
+

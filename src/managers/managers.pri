@@ -4,14 +4,15 @@ HEADERS += \
     $$PWD/dataobjectsmanager.h \
     $$PWD/doublespinboxitemdelegate.h \
     $$PWD/interfacetablemodel.h \
-    $$PWD/scalartablemodel.h
-
+    $$PWD/basetablemodel.h  \
+    $$PWD/matrixtablemodel.h
 
 SOURCES += \
     $$PWD/dataobjectsmanager.cpp \
     $$PWD/doublespinboxitemdelegate.cpp \
     $$PWD/interfacetablemodel.cpp \
-    $$PWD/scalartablemodel.cpp
-    
+    $$PWD/basetablemodel.cpp  \
+    $$PWD/matrixtablemodel.cpp
+
 FORMS += \
 	$$PWD/dataobjectsmanager.ui
