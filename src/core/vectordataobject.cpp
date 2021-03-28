@@ -9,19 +9,19 @@
 
 using namespace QRS;
 
-uint VectorDataObject::smNumVectors = 0;
+uint VectorDataObject::smNumInstances = 0;
 
 //! Construct a vector data object
 VectorDataObject::VectorDataObject(QString const& name)
     : AbstractDataObject(DataObjectType::kVector, name)
 {
-    ++smNumVectors;
+    ++smNumInstances;
 }
 
 //! Get a number of created vectors
-uint VectorDataObject::numberVectors()
+uint VectorDataObject::numberInstances()
 {
-    return smNumVectors;
+    return smNumInstances;
 }
 
 //! Insert a new item into VectorDataObject

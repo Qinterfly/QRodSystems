@@ -18,6 +18,14 @@ QStandardItem* InterfaceTableModel::makeDoubleItem(double value)
     return item;
 }
 
+//! Helper function to create an item which holds a string and cannot be modfifed
+QStandardItem* InterfaceTableModel::makeLabelItem(QString const& name)
+{
+    QStandardItem* itemName = new QStandardItem(name);
+    itemName->setFlags(Qt::NoItemFlags);
+    return itemName;
+}
+
 //! Helper function to copy a row from an array
 QList<QStandardItem*> InterfaceTableModel::prepareRow(QRS::Array<double>& array, uint iRow)
 {
@@ -40,8 +48,6 @@ QList<QStandardItem*> InterfaceTableModel::prepareRow(double const& key, QRS::Ar
 QList<QStandardItem*> InterfaceTableModel::prepareRow(QString const& name, QRS::Array<double>& array, uint iRow)
 {
     QList<QStandardItem*> resultList = prepareRow(array, iRow);
-    QStandardItem* itemName = new QStandardItem(name);
-    itemName->setFlags(Qt::NoItemFlags);
-    resultList.push_front(itemName);
+    resultList.push_front(makeLabelItem(name));
     return resultList;
 }

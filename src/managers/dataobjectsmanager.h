@@ -21,11 +21,13 @@ class DataObjectsManager;
 class QTreeView;
 class QSettings;
 class QListWidget;
+class QListWidgetItem;
 QT_END_NAMESPACE
 
 class InterfaceTableModel;
 class BaseTableModel;
 class MatrixTableModel;
+class SurfaceTableModel;
 
 namespace ads
 {
@@ -51,6 +53,23 @@ public:
     void closeEvent(QCloseEvent* ) override;
     void selectDataObject(int index);
 
+public slots:
+    void apply();
+    void addScalar();
+    void addVector();
+    void addMatrix();
+    void addSurface();
+    void insertItemAfterSelected();
+    void insertLeadingItemAfterSelected();
+    void removeSelectedItem();
+    void removeSelectedLeadingItem();
+    const mapDataObjects& getDataObjects() { return mDataObjects; };
+    void removeSelectedDataObject();
+
+private slots:
+    void representSelectedDataObject();
+    void renameDataObject(QListWidgetItem* item);
+
 private:
     // Content
     void createContent();
@@ -62,23 +81,9 @@ private:
     // Settings
     void restoreSettings();
     void saveSettings();
-
-public slots:
-    void apply();
-    void addScalar();
-    void addVector();
-    void addMatrix();
-    void addSurface();
-    void insertItemAfterSelected();
-    void removeSelectedItem();
-    const mapDataObjects& getDataObjects() { return mDataObjects; };
-    void removeSelectedDataObject();
-
-private slots:
-    void representSelectedDataObject();
-
-private:
+    // Helpers
     void emplaceDataObject(QRS::AbstractDataObject* dataObject, QIcon const& icon, QString const& name);
+    bool isDataTableModifiable();
 
 private:
     Ui::DataObjectsManager* mpUi;
@@ -95,6 +100,7 @@ private:
     InterfaceTableModel* mpInterfaceTableModel = nullptr;
     BaseTableModel* mpBaseTableModel;
     MatrixTableModel* mpMatrixTableModel;
+    SurfaceTableModel* mpSurfaceTableModel;
 };
 
 #endif // DATAOBJECTSMANAGER_H

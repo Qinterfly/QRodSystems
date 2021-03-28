@@ -23,12 +23,14 @@ private:
     template <typename U> struct Row;
 
 public:
-    Array(IndexType numRows = 1, IndexType numCols = 1);
+    Array(IndexType numRows = 0, IndexType numCols = 0);
     Array(Array<T> const& another);
     Array(Array<T>&& another);
     ~Array();
     T* data() { return mpData; }
     void resize(IndexType numRows, IndexType numCols);
+    void removeColumn(IndexType iRemoveColumn);
+    void swapColumns(IndexType iFirstColumn, IndexType iSecondColumn);
     IndexType rows() const { return mNumRows; };
     IndexType cols() const { return mNumCols; };
     IndexType size() const { return mNumRows * mNumCols; }

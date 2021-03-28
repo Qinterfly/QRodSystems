@@ -23,6 +23,9 @@ void TestCore::testArray()
     matrix[1][1] = 4.0;
     matrix.resize(3, 3);
     matrix.resize(5, 5);
+    qDebug() << matrix;
+    matrix.removeColumn(1);
+    qDebug() << matrix;
     matrix.resize(1, 1);
     QCOMPARE(matrix[0][0], 1);
     matrix.resize(0, 1);

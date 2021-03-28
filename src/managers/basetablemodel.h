@@ -27,7 +27,9 @@ public:
     void setDataObject(QRS::AbstractDataObject* pDataObject);
     bool setData(const QModelIndex& indexEdit, const QVariant& value, int role = Qt::EditRole) override;
     void insertItemAfterSelected(QItemSelectionModel* selectionModel) override;
+    void insertLeadingItemAfterSelected(QItemSelectionModel* /*selectionModel*/) override { };
     void removeSelectedItem(QItemSelectionModel* selectionModel) override;
+    void removeSelectedLeadingItem(QItemSelectionModel* /*selectionModel*/) override { };
 
 private:
     void updateContent();

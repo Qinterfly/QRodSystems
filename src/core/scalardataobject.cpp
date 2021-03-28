@@ -9,19 +9,19 @@
 
 using namespace QRS;
 
-uint ScalarDataObject::smNumScalars = 0;
+uint ScalarDataObject::smNumInstances = 0;
 
 //! Construct a scalar data object
 ScalarDataObject::ScalarDataObject(QString const& name)
     : AbstractDataObject(DataObjectType::kScalar, name)
 {
-    ++smNumScalars;
+    ++smNumInstances;
 }
 
 //! Get a number of created scalars
-uint ScalarDataObject::numberScalars()
+uint ScalarDataObject::numberInstances()
 {
-    return smNumScalars;
+    return smNumInstances;
 }
 
 //! Insert a new item into ScalarDataObject

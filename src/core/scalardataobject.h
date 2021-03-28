@@ -21,10 +21,10 @@ public:
     ~ScalarDataObject() {};
     AbstractDataObject* clone() const override;
     DataItemType& addItem(DataValueType key) override;
-    static uint numberScalars();
+    static uint numberInstances();
 
 private:
-    static uint smNumScalars;
+    static uint smNumInstances;
 };
 
 }

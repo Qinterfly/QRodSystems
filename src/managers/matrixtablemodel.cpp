@@ -78,26 +78,25 @@ bool MatrixTableModel::setData(const QModelIndex& indexEdit, const QVariant& val
     else
         iKeyRow = iParentRow;
     double key = data(index(iKeyRow, 0), Qt::UserRole).toDouble();
-    double doubleValue = value.toDouble();
+    double newValue = value.toDouble();
     bool isOkay = false;
     bool isSort = false;
     // Check whether a key or value was changed
     short iColumn = indexEdit.column();
     if (isKeyEdited)
     {
-        double newKey = value.toDouble();
-        isOkay = mpDataObject->changeItemKey(key, newKey);
+        isOkay = mpDataObject->changeItemKey(key, newValue);
         isSort = true;
     }
     else
     {
-        isOkay = mpDataObject->setArrayValue(key, doubleValue, indexEdit.row(), iColumn);
+        isOkay = mpDataObject->setArrayValue(key, newValue, indexEdit.row(), iColumn);
     }
     // Display the changed value
     if (isOkay)
     {
         QStandardItemModel::setData(indexEdit, value, Qt::UserRole);
-        QStandardItemModel::setData(indexEdit, QString::number(doubleValue, 'g', kNumShowPrecision), Qt::EditRole);
+        QStandardItemModel::setData(indexEdit, QString::number(newValue, 'g', kNumShowPrecision), Qt::EditRole);
         if (isSort)
             sort(0, Qt::AscendingOrder);
     }

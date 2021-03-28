@@ -21,10 +21,10 @@ public:
     ~VectorDataObject() {};
     AbstractDataObject* clone() const override;
     DataItemType& addItem(DataValueType key) override;
-    static uint numberVectors();
+    static uint numberInstances();
 
 private:
-    static uint smNumVectors;
+    static uint smNumInstances;
 };
 
 }

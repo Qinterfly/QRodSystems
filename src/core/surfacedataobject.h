@@ -21,10 +21,15 @@ public:
     ~SurfaceDataObject() {};
     AbstractDataObject* clone() const override;
     DataItemType& addItem(DataValueType key) override;
-    static uint numberSurfaces();
+    DataKeyType addLeadingItem(DataValueType key);
+    void removeLeadingItem(DataValueType key);
+    bool changeLeadingItemKey(DataKeyType oldKey, DataKeyType newKey);
+    DataHolder& getLeadingItems() { return mLeadingItems; }
+    static uint numberInstances();
 
 private:
-    static uint smNumSurfaces;
+    static uint smNumInstances;
+    DataHolder mLeadingItems;
 };
 
 }

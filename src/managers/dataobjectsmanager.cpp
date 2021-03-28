@@ -13,7 +13,6 @@
 #include <QTextEdit>
 #include <QPushButton>
 #include <QSpacerItem>
-#include <QHeaderView>
 #include "DockManager.h"
 #include "DockWidget.h"
 
@@ -26,6 +25,7 @@
 #include "../core/surfacedataobject.h"
 #include "basetablemodel.h"
 #include "matrixtablemodel.h"
+#include "surfacetablemodel.h"
 #include "doublespinboxitemdelegate.h"
 
 using ads::CDockManager;
@@ -94,6 +94,7 @@ CDockWidget* DataObjectsManager::createDataTableWidget()
     // Models
     mpBaseTableModel = new BaseTableModel(pDockWidget);
     mpMatrixTableModel = new MatrixTableModel(pDockWidget);
+    mpSurfaceTableModel = new SurfaceTableModel(pDockWidget);
     // ToolBar
     QToolBar* pToolBar = pDockWidget->createDefaultToolBar();
     pToolBar->setToolButtonStyle(Qt::ToolButtonStyle::ToolButtonIconOnly);
@@ -104,8 +105,8 @@ CDockWidget* DataObjectsManager::createDataTableWidget()
     pToolBar->addAction(QIcon(":/icons/table-row-add.svg"), tr("Add Roww"), this, &DataObjectsManager::insertItemAfterSelected);
     pToolBar->addAction(QIcon(":/icons/table-row-delete.svg"), tr("Remove Row"), this, &DataObjectsManager::removeSelectedItem);
     pToolBar->addSeparator();
-    pToolBar->addAction(QIcon(":/icons/table-column-add.svg"), tr("Add Column"));
-    pToolBar->addAction(QIcon(":/icons/table-column-delete.svg"), tr("Remove Column"));
+    pToolBar->addAction(QIcon(":/icons/table-column-add.svg"), tr("Add Column"), this, &DataObjectsManager::insertLeadingItemAfterSelected);
+    pToolBar->addAction(QIcon(":/icons/table-column-delete.svg"), tr("Remove Column"), this, &DataObjectsManager::removeSelectedLeadingItem);
     return pDockWidget;
 }
 
@@ -118,7 +119,9 @@ CDockWidget* DataObjectsManager::createDataObjectsWidget()
     mpListObjects->setIconSize(QSize(11, 11));
     mpListObjects->setSelectionMode(QAbstractItemView::SingleSelection);
     mpListObjects->setSelectionBehavior(QAbstractItemView::SelectItems);
-    mpListObjects->setEditTriggers(QAbstractItemView::EditKeyPressed);
+    mpListObjects->setEditTriggers(QAbstractItemView::DoubleClicked);
+    connect(mpListObjects, &QListWidget::itemDoubleClicked, mpListObjects, &QListWidget::editItem);
+    connect(mpListObjects, &QListWidget::itemChanged, this, &DataObjectsManager::renameDataObject);
     connect(mpListObjects, &QListWidget::currentItemChanged, this, &DataObjectsManager::representSelectedDataObject);
     pDockWidget->setWidget(mpListObjects);
     // ToolBar
@@ -194,7 +197,7 @@ void DataObjectsManager::addScalar()
 {
     static QString const kScalarName = "Scalar ";
     static QIcon icon = QIcon(":/icons/letter-s.svg");
-    QString name = kScalarName + QString::number(ScalarDataObject::numberScalars() + 1);
+    QString name = kScalarName + QString::number(ScalarDataObject::numberInstances() + 1);
     emplaceDataObject(new ScalarDataObject(name), icon, name);
 }
 
@@ -203,7 +206,7 @@ void DataObjectsManager::addVector()
 {
     static QString const kVectorName = "Vector ";
     static QIcon icon = QIcon(":/icons/letter-v.svg");
-    QString name = kVectorName + QString::number(VectorDataObject::numberVectors() + 1);
+    QString name = kVectorName + QString::number(VectorDataObject::numberInstances() + 1);
     emplaceDataObject(new VectorDataObject(name), icon, name);
 }
 
@@ -212,7 +215,7 @@ void DataObjectsManager::addMatrix()
 {
     static QString const kMatrixName = "Matrix ";
     static QIcon icon = QIcon(":/icons/letter-m.svg");
-    QString name = kMatrixName + QString::number(MatrixDataObject::numberMatrices() + 1);
+    QString name = kMatrixName + QString::number(MatrixDataObject::numberInstances() + 1);
     emplaceDataObject(new MatrixDataObject(name), icon, name);
 }
 
@@ -221,7 +224,7 @@ void DataObjectsManager::addSurface()
 {
     static QString const kSurfaceName = "Surface ";
     static QIcon icon = QIcon(":/icons/letter-xy.svg");
-    QString name = kSurfaceName + QString::number(SurfaceDataObject::numberSurfaces() + 1);
+    QString name = kSurfaceName + QString::number(SurfaceDataObject::numberInstances() + 1);
     emplaceDataObject(new SurfaceDataObject(name), icon, name);
 }
 
@@ -263,6 +266,10 @@ void DataObjectsManager::representSelectedDataObject()
         mpDataTable->expandAll();
         break;
     case kSurface:
+        mpDataTable->setSortingEnabled(false);
+        mpSurfaceTableModel->setDataObject((SurfaceDataObject*)pObject);
+        mpDataTable->setModel(mpSurfaceTableModel);
+        mpInterfaceTableModel = mpSurfaceTableModel;
         break;
     }
 }
@@ -270,21 +277,29 @@ void DataObjectsManager::representSelectedDataObject()
 //! Insert a new array into the data object
 void DataObjectsManager::insertItemAfterSelected()
 {
-    if (mpListObjects->currentRow() < 0 || !mpInterfaceTableModel)
-        return;
-    mpDataTable->setSortingEnabled(false);
-    mpInterfaceTableModel->insertItemAfterSelected(mpDataTable->selectionModel());
-    mpDataTable->setSortingEnabled(true);
+    if (isDataTableModifiable())
+        mpInterfaceTableModel->insertItemAfterSelected(mpDataTable->selectionModel());
+}
+
+//! Insert a new leading item into the data object
+void DataObjectsManager::insertLeadingItemAfterSelected()
+{
+    if (isDataTableModifiable())
+        mpInterfaceTableModel->insertLeadingItemAfterSelected(mpDataTable->selectionModel());
 }
 
 //! Remove a selected item
 void DataObjectsManager::removeSelectedItem()
 {
-    if (mpListObjects->currentRow() < 0 || !mpInterfaceTableModel)
-        return;
-    mpDataTable->setSortingEnabled(false);
-    mpInterfaceTableModel->removeSelectedItem(mpDataTable->selectionModel());
-    mpDataTable->setSortingEnabled(true);
+    if (isDataTableModifiable())
+        mpInterfaceTableModel->removeSelectedItem(mpDataTable->selectionModel());
+}
+
+//! Remove a selected leading item
+void DataObjectsManager::removeSelectedLeadingItem()
+{
+    if (isDataTableModifiable())
+        mpInterfaceTableModel->removeSelectedLeadingItem(mpDataTable->selectionModel());
 }
 
 //! Remove a selected data object
@@ -293,7 +308,7 @@ void DataObjectsManager::removeSelectedDataObject()
     if (mpListObjects->currentRow() < 0)
         return;
     QListWidgetItem* item = mpListObjects->currentItem();
-    uint id = item->data(Qt::UserRole).toUInt();
+    DataIDType id = item->data(Qt::UserRole).toUInt();
     mpListObjects->removeItemWidget(item);
     mDataObjects.erase(id);
     delete item;
@@ -304,11 +319,25 @@ void DataObjectsManager::removeSelectedDataObject()
     }
 }
 
+//! Rename a data object
+void DataObjectsManager::renameDataObject(QListWidgetItem* item)
+{
+    DataIDType id = item->data(Qt::UserRole).toUInt();
+    mDataObjects.at(id)->setName(item->text());
+}
+
 //! Helper function to insert data objects into the manager
 void DataObjectsManager::emplaceDataObject(AbstractDataObject* dataObject, QIcon const& icon, QString const& name)
 {
     mDataObjects.emplace(dataObject->id(), dataObject);
     QListWidgetItem* item = new QListWidgetItem(icon, name);
     item->setData(Qt::UserRole, dataObject->id());
+    item->setFlags (item->flags () | Qt::ItemIsEditable);
     mpListObjects->addItem(item);
+}
+
+//! Helper function to check if it is possible to interact with data object content
+bool DataObjectsManager::isDataTableModifiable()
+{
+    return mpListObjects->currentRow() >= 0 && mpInterfaceTableModel;
 }

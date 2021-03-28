@@ -28,7 +28,7 @@ Array<T>::Array(Array<T> const& another)
     delete[] mpData;
     const IndexType& newSize = another.size();
     mpData = new T[newSize];
-    for (int i = 0; i != newSize; ++i)
+    for (IndexType i = 0; i != newSize; ++i)
         mpData[i] = another.mpData[i];
     mNumRows = another.mNumRows;
     mNumCols = another.mNumCols;
@@ -85,4 +85,42 @@ void Array<T>::resize(IndexType numRows, IndexType numCols)
     mpData = pData;
     mNumRows = numRows;
     mNumCols = numCols;
+}
+
+//! Remove a column by index
+template<typename T>
+void Array<T>::removeColumn(IndexType iRemoveColumn)
+{
+    if (iRemoveColumn >= mNumCols)
+        return;
+    IndexType numCols = mNumCols - 1;
+    const IndexType newSize = mNumRows * numCols;
+    T* pData = new T[newSize];
+    IndexType k = 0;
+    IndexType iCur;
+    for (IndexType iRow = 0; iRow != mNumRows; ++iRow)
+    {
+        iCur = iRow * mNumCols;
+        for (IndexType jCol = 0; jCol != mNumCols; ++jCol)
+        {
+            if (jCol != iRemoveColumn)
+            {
+                pData[k] = mpData[iCur + jCol];
+                ++k;
+            }
+        }
+    }
+    delete[] mpData;
+    mpData = pData;
+    mNumCols = numCols;
+}
+
+//! Swap two columns
+template<typename T>
+void Array<T>::swapColumns(IndexType iFirstColumn, IndexType iSecondColumn)
+{
+    if (iFirstColumn >= mNumCols || iSecondColumn >= mNumCols)
+        return;
+    for (IndexType iRow = 0; iRow != mNumRows; ++iRow)
+        std::swap(mpData[iRow + iFirstColumn], mpData[iRow + iSecondColumn]);
 }

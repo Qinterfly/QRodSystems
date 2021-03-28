@@ -21,10 +21,10 @@ public:
     ~MatrixDataObject() {};
     AbstractDataObject* clone() const override;
     DataItemType& addItem(DataValueType key) override;
-    static uint numberMatrices();
+    static uint numberInstances();
 
 private:
-    static uint smNumMatrices;
+    static uint smNumInstances;
 };
 
 }

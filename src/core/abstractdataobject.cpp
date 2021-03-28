@@ -27,14 +27,16 @@ uint AbstractDataObject::numberObjects()
 }
 
 //! Modify a key existed
-bool AbstractDataObject::changeItemKey(DataKeyType oldKey, DataKeyType newKey)
+bool AbstractDataObject::changeItemKey(DataKeyType oldKey, DataKeyType newKey, DataHolder* items)
 {
+    if (!items)
+        items = &mItems;
     // If the table does not contain the old key or the new one is already presented
-    if (mItems.find(oldKey) == mItems.end() || mItems.find(newKey) != mItems.end())
+    if (items->find(oldKey) == items->end() || items->find(newKey) != items->end())
         return false;
-    DataItemType obj = mItems[oldKey];
-    mItems.erase(oldKey);
-    mItems.emplace(newKey, std::move(obj));
+    DataItemType obj = items->at(oldKey);
+    items->erase(oldKey);
+    items->emplace(newKey, std::move(obj));
     return true;
 }
 
@@ -56,13 +58,15 @@ bool AbstractDataObject::setArrayValue(DataKeyType key, DataValueType newValue, 
 
 //! Check if a given key is unique
 //! \return Returns the input value of the key if it is unique, otherwise -- a first available key
-DataValueType AbstractDataObject::getAvailableItemKey(DataValueType key) const
+DataValueType AbstractDataObject::getAvailableItemKey(DataValueType key, DataHolder const* items) const
 {
+    if (!items)
+        items = &mItems;
     static const double kMultLastKey = 1.05;
     static const double kEpsilon = std::numeric_limits<double>::epsilon();
     // Check if a set containes an item with the specified key
-    auto currentIterator = mItems.find(key);
-    if (currentIterator == mItems.end())
+    auto currentIterator = items->find(key);
+    if (currentIterator == items->end())
     {
         return key;
     }
@@ -71,9 +75,9 @@ DataValueType AbstractDataObject::getAvailableItemKey(DataValueType key) const
         auto nextIterator = currentIterator;
         ++nextIterator;
         // Whether a multiplied value of a last found key or a mean value is returned
-        if (nextIterator == mItems.end())
+        if (nextIterator == items->end())
         {
-            double lastKey = mItems.rbegin()->first;
+            double lastKey = items->rbegin()->first;
             return qAbs(lastKey) <= kEpsilon ? 1.0 : lastKey * kMultLastKey;
         }
         else

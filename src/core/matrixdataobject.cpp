@@ -9,19 +9,19 @@
 
 using namespace QRS;
 
-uint MatrixDataObject::smNumMatrices = 0;
+uint MatrixDataObject::smNumInstances = 0;
 
 //! Construct a matrix data object
 MatrixDataObject::MatrixDataObject(QString const& name)
     : AbstractDataObject(DataObjectType::kMatrix, name)
 {
-    ++smNumMatrices;
+    ++smNumInstances;
 }
 
 //! Get a number of created matrices
-uint MatrixDataObject::numberMatrices()
+uint MatrixDataObject::numberInstances()
 {
-    return smNumMatrices;
+    return smNumInstances;
 }
 
 //! Insert a new item into MatrixDataObject

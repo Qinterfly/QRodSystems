@@ -90,7 +90,7 @@ void TestManagers::testDataObjectsManager()
     }
     pScalar->addItem(endValue); // Already existed key
     // Selecting
-    mpDataObjectsManager->selectDataObject(0);
+    mpDataObjectsManager->selectDataObject(3);
     QTest::qWait(10000);
 }
 
