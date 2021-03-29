@@ -38,8 +38,11 @@ public:
     template<typename K> friend QDebug operator<<(QDebug stream, Array<K>& array);
 
 private:
+    //! Number of rows
     IndexType mNumRows;
+    //! Number of columns
     IndexType mNumCols;
+    //! Pointer to the data stored
     T* mpData = nullptr;
     //! Proxy class to acquire a row by index
     template <typename U>

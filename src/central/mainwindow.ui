@@ -16,7 +16,7 @@
    </font>
   </property>
   <property name="windowTitle">
-   <string>QRodSystems</string>
+   <string>QRodSystems[*]</string>
   </property>
   <property name="windowIcon">
    <iconset resource="../../resources/images.qrc">

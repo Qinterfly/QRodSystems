@@ -9,7 +9,6 @@
 #define PROJECT_H
 
 #include <QObject>
-#include <QUuid>
 #include <unordered_map>
 #include <memory>
 #include "abstractdataobject.h"
@@ -29,20 +28,38 @@ class Project : public QObject
 
 public:
     Project(QString const& name);
+    Project(QString const& path, QString const& fileName);
     virtual ~Project() = default;
+    // State
+    bool isModified() const { return mNumModified == 0; }
     // Data objects
     std::shared_ptr<AbstractDataObject> getDataObject(DataIDType id);
     std::unordered_map<DataIDType, AbstractDataObject*> getDataObjects();
     void addDataObject(DataObjectType type);
     void removeDataObject(DataIDType id);
+    void setDataObjects(std::unordered_map<DataIDType, AbstractDataObject*> dataObjects);
+    // Getters and setters
+    QString const& name() const { return mName; }
+    QString const& filePath() const { return mFilePath; }
+    static QString const& getFileExtension() { return skProjectExtension; }
+
+private:
+    void specifyConnections();
 
 signals:
     void dataObjectAdded(DataIDType id);
     void dataObjectRemoved(DataIDType id);
+    void allDataObjectsChanged();
+
+public slots:
+    bool save(QString const& dir, QString const& fileName);
+
+private slots:
+    void setModified();
 
 private:
     //! Unique project identifier
-    const QUuid mID;
+    quint32 mID;
     //! Project name
     QString mName;
     //! Path to a file where a project is stored
@@ -51,6 +68,8 @@ private:
     uint mNumModified = 0;
     //! Data objects
     DataObjects mDataObjects;
+    //! File extensionn
+    static const QString skProjectExtension;
 };
 
 }

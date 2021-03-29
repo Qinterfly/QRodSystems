@@ -53,6 +53,7 @@ void MainWindow::initializeWindow()
 {
     mpUi->setupUi(this);
     setWindowState(Qt::WindowMaximized);
+    setWindowModified(true);
 }
 
 //! Create all the widgets and corresponding actions
@@ -60,6 +61,7 @@ void MainWindow::createContent()
 {
     mpProject = new QRS::Project("Undefined");
     mpSettings = QSharedPointer<QSettings>(new QSettings(skFileNameSettings, QSettings::IniFormat));
+    setProjectTitle();
     // Configuration
     CDockManager::setConfigFlag(CDockManager::FocusHighlighting, true);
     QVBoxLayout* pLayout = new QVBoxLayout(mpUi->centralWidget);
@@ -169,6 +171,7 @@ void MainWindow::saveSettings()
     mpSettings->setValue("mainWindow/Geometry", saveGeometry());
     mpSettings->setValue("mainWindow/State", saveState());
     mpSettings->setValue("mainWindow/DockingState", mpDockManager->saveState());
+    mpDockManager->savePerspectives(*mpSettings);
     if (mpSettings->status() == QSettings::NoError)
         qInfo() << tr("Settings were written to the file") << skFileNameSettings;
 }
@@ -179,6 +182,7 @@ void MainWindow::restoreSettings()
     bool isOk = restoreGeometry(mpSettings->value("mainWindow/Geometry").toByteArray())
                 && restoreState(mpSettings->value("mainWindow/State").toByteArray())
                 && mpDockManager->restoreState(mpSettings->value("mainWindow/DockingState").toByteArray());
+    mpDockManager->loadPerspectives(*mpSettings);
     if (isOk)
         qInfo() << tr("Settings were restored from the file") << skFileNameSettings;
     else
@@ -211,15 +215,21 @@ void MainWindow::createRodConstructorManager()
 void MainWindow::aboutProgram()
 {
     const QString aboutMsg = tr(
-                                 "QRodSystems is a multiplatform wrapper to create rod systems via KLPALGSYS core. "
+                                 "QRodSystems is a multiplatform wrapper to create rod systems by means of the KLPALGSYS core. "
                                  "You can download the code from <a href='https://github.com/qinterfly/QRodSystems'>GitHub</a>. If you find any "
                                  "bug or problem, please report it in <a href='https://github.com/qinterfly/QRodSystems/issues'>the issues "
                                  "page</a> so I can fix it as soon as possible.<br><br>"
                                  "Copyright &copy; 2021 QRodSystems (Pavel Lakiza) "
                                  "Copyright &copy; 2021 KLPALGSYS (Dmitriy Krasnorutskiy)"
                              );
-
     QMessageBox::about(this, tr("About QRodSystems v%1").arg(APP_VERSION), aboutMsg);
+}
+
+//! Show information a name of a project
+void MainWindow::setProjectTitle()
+{
+    QString title = APP_NAME;
+    setWindowTitle(QString(title + ": %1[*]").arg(mpProject->name()));
 }
 
 //! Helper function to situate widgets at the center of their parent widgets

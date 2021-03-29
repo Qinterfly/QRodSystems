@@ -40,12 +40,17 @@ public:
     static uint numberObjects();
 
 protected:
+    //! Object type
     const DataObjectType mType;
+    //! Name of an object
     QString mName;
+    //! Map contains all created entities
     DataHolder mItems;
+    //! Unique object identificator
     DataIDType mID;
 
 private:
+    //! Number of all objects created
     static uint smNumObjects;
 };
 

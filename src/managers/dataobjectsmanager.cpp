@@ -13,6 +13,7 @@
 #include <QTextEdit>
 #include <QPushButton>
 #include <QSpacerItem>
+#include <QMessageBox>
 #include "DockManager.h"
 #include "DockWidget.h"
 
@@ -42,6 +43,7 @@ DataObjectsManager::DataObjectsManager(QRS::Project& project, QSettings& setting
     , mSettings(settings)
 {
     mpUi->setupUi(this);
+    setWindowModified(false);
     createContent();
     restoreSettings();
     retrieveDataObjects();
@@ -50,14 +52,32 @@ DataObjectsManager::DataObjectsManager(QRS::Project& project, QSettings& setting
 DataObjectsManager::~DataObjectsManager()
 {
     delete mpUi;
+    for (auto iter = mDataObjects.begin(); iter != mDataObjects.end(); ++iter)
+        delete iter->second;
+    mDataObjects.clear();
 }
 
 //! Save settings and delete handling widgets before closing the window
 void DataObjectsManager::closeEvent(QCloseEvent* event)
 {
-    saveSettings();
-    mpDockManager->deleteLater();
-    QDialog::closeEvent(event);
+    event->ignore();
+    if (isWindowModified())
+    {
+        auto dialogResult = QMessageBox::question(this
+                            , tr("Close confirmation")
+                            , tr("Data objects manager contains unsaved changes. Would you like to close it anyway?")
+                            , QMessageBox::Yes | QMessageBox::No);
+        if (QMessageBox::Yes == dialogResult)
+        {
+            saveSettings();
+            mpDockManager->deleteLater();
+            event->accept();
+        }
+    }
+    else
+    {
+        event->accept();
+    }
 }
 
 //! Create all the widgets
@@ -120,7 +140,6 @@ CDockWidget* DataObjectsManager::createDataObjectsWidget()
     mpListObjects->setSelectionMode(QAbstractItemView::SingleSelection);
     mpListObjects->setSelectionBehavior(QAbstractItemView::SelectItems);
     mpListObjects->setEditTriggers(QAbstractItemView::DoubleClicked);
-    connect(mpListObjects, &QListWidget::itemDoubleClicked, mpListObjects, &QListWidget::editItem);
     connect(mpListObjects, &QListWidget::itemChanged, this, &DataObjectsManager::renameDataObject);
     connect(mpListObjects, &QListWidget::currentItemChanged, this, &DataObjectsManager::representSelectedDataObject);
     pDockWidget->setWidget(mpListObjects);
@@ -171,6 +190,7 @@ void DataObjectsManager::saveSettings()
 {
     mSettings.setValue("dataObjectsManager/Geometry", saveGeometry());
     mSettings.setValue("dataObjectsManager/DockingState", mpDockManager->saveState());
+    mpDockManager->savePerspectives(mSettings);
 }
 
 //! Restore settings from a file
@@ -178,12 +198,15 @@ void DataObjectsManager::restoreSettings()
 {
     restoreGeometry(mSettings.value("dataObjectsManager/Geometry").toByteArray());
     mpDockManager->restoreState(mSettings.value("dataObjectsManager/DockingState").toByteArray());
+    mpDockManager->loadPerspectives(mSettings);
 }
 
-//! Apply all the changes made by a user
+//! Apply all the changes made by user
 void DataObjectsManager::apply()
 {
-    // TODO
+    mProject.setDataObjects(mDataObjects);
+    setWindowModified(false);
+    qInfo() << tr("Data objects were modified through the data object manager");
 }
 
 //! Make a copy of existed data objects
@@ -247,6 +270,7 @@ void DataObjectsManager::representSelectedDataObject()
     AbstractDataObject* pObject = mDataObjects[id];
     mpBaseTableModel->setDataObject(nullptr);
     mpMatrixTableModel->setDataObject(nullptr);
+    mpDataTable->setHeaderHidden(false);
     switch (pObject->type())
     {
     case kScalar:
@@ -267,6 +291,7 @@ void DataObjectsManager::representSelectedDataObject()
         break;
     case kSurface:
         mpDataTable->setSortingEnabled(false);
+        mpDataTable->setHeaderHidden(true);
         mpSurfaceTableModel->setDataObject((SurfaceDataObject*)pObject);
         mpDataTable->setModel(mpSurfaceTableModel);
         mpInterfaceTableModel = mpSurfaceTableModel;
@@ -278,28 +303,40 @@ void DataObjectsManager::representSelectedDataObject()
 void DataObjectsManager::insertItemAfterSelected()
 {
     if (isDataTableModifiable())
+    {
         mpInterfaceTableModel->insertItemAfterSelected(mpDataTable->selectionModel());
+        setWindowModified(true);
+    }
 }
 
 //! Insert a new leading item into the data object
 void DataObjectsManager::insertLeadingItemAfterSelected()
 {
     if (isDataTableModifiable())
+    {
         mpInterfaceTableModel->insertLeadingItemAfterSelected(mpDataTable->selectionModel());
+        setWindowModified(true);
+    }
 }
 
 //! Remove a selected item
 void DataObjectsManager::removeSelectedItem()
 {
     if (isDataTableModifiable())
+    {
         mpInterfaceTableModel->removeSelectedItem(mpDataTable->selectionModel());
+        setWindowModified(true);
+    }
 }
 
 //! Remove a selected leading item
 void DataObjectsManager::removeSelectedLeadingItem()
 {
     if (isDataTableModifiable())
+    {
         mpInterfaceTableModel->removeSelectedLeadingItem(mpDataTable->selectionModel());
+        setWindowModified(true);
+    }
 }
 
 //! Remove a selected data object
@@ -317,6 +354,7 @@ void DataObjectsManager::removeSelectedDataObject()
         mpInterfaceTableModel = nullptr;
         mpDataTable->setModel(nullptr);
     }
+    setWindowModified(true);
 }
 
 //! Rename a data object
@@ -324,6 +362,7 @@ void DataObjectsManager::renameDataObject(QListWidgetItem* item)
 {
     DataIDType id = item->data(Qt::UserRole).toUInt();
     mDataObjects.at(id)->setName(item->text());
+    setWindowModified(true);
 }
 
 //! Helper function to insert data objects into the manager
@@ -334,6 +373,7 @@ void DataObjectsManager::emplaceDataObject(AbstractDataObject* dataObject, QIcon
     item->setData(Qt::UserRole, dataObject->id());
     item->setFlags (item->flags () | Qt::ItemIsEditable);
     mpListObjects->addItem(item);
+    setWindowModified(true);
 }
 
 //! Helper function to check if it is possible to interact with data object content
@@ -341,3 +381,4 @@ bool DataObjectsManager::isDataTableModifiable()
 {
     return mpListObjects->currentRow() >= 0 && mpInterfaceTableModel;
 }
+

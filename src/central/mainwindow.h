@@ -44,6 +44,7 @@ private:
     ads::CDockWidget* createGLWidget();
     ads::CDockWidget* createLogWidget();
     ads::CDockWidget* createPropertiesWidget();
+    void setProjectTitle();
     // Signals&Slots
     void specifyMenuConnections();
 

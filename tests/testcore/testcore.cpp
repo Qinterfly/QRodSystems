@@ -1,6 +1,8 @@
 #include <QtTest/QTest>
 
 #include "array.h"
+#include "project.h"
+#include "scalardataobject.h"
 
 using namespace QRS;
 
@@ -9,9 +11,31 @@ class TestCore : public QObject
     Q_OBJECT
 
 private slots:
+    void initTestCase();
     void testArray();
     void testModifyArray();
+    void saveProject();
+    void readProject();
+    void cleanupTestCase();
+
+private:
+    Project* mpProject;
+    const QString mBasePath = "../../../../examples";
 };
+
+//! Initialize data
+void TestCore::initTestCase()
+{
+    const uint numObjects = 10;
+    mpProject = new Project("test");
+    for (int i = 0; i != numObjects; ++i)
+    {
+        mpProject->addDataObject(kScalar);
+        mpProject->addDataObject(kVector);
+        mpProject->addDataObject(kMatrix);
+        mpProject->addDataObject(kSurface);
+    }
+}
 
 //! Test how an array is created
 void TestCore::testArray()
@@ -43,6 +67,26 @@ void TestCore::testModifyArray()
     t[1][1] = 15;
     QCOMPARE(map[1.0][0][0], 10);
     QCOMPARE(map[1.0][1][1], 15);
+}
+
+//! Try saving a project
+void TestCore::saveProject()
+{
+    QVERIFY(mpProject->save(mBasePath, mpProject->name()));
+}
+
+//! Try reading a project
+void TestCore::readProject()
+{
+    Project tempProject(mBasePath, mpProject->name());
+    QCOMPARE(mpProject->name(), tempProject.name());
+}
+
+
+//! Cleanup
+void TestCore::cleanupTestCase()
+{
+    delete mpProject;
 }
 
 

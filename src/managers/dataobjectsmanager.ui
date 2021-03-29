@@ -16,7 +16,7 @@
    </font>
   </property>
   <property name="windowTitle">
-   <string>Data Objects Manager</string>
+   <string>Data Objects Manager[*]</string>
   </property>
  </widget>
  <resources/>
