@@ -21,7 +21,8 @@ public:
     ~VectorDataObject() {};
     AbstractDataObject* clone() const override;
     DataItemType& addItem(DataValueType key) override;
-    static uint numberInstances();
+    static uint numberInstances() { return smNumInstances; }
+    static void setNumberInstances(uint numInstances) { smNumInstances = numInstances; }
 
 private:
     static uint smNumInstances;

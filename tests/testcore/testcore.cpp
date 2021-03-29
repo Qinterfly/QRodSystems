@@ -26,9 +26,9 @@ private:
 //! Initialize data
 void TestCore::initTestCase()
 {
-    const uint numObjects = 10;
+    const uint numObjects = 5;
     mpProject = new Project("test");
-    for (int i = 0; i != numObjects; ++i)
+    for (uint i = 0; i != numObjects; ++i)
     {
         mpProject->addDataObject(kScalar);
         mpProject->addDataObject(kVector);
@@ -80,6 +80,7 @@ void TestCore::readProject()
 {
     Project tempProject(mBasePath, mpProject->name());
     QCOMPARE(mpProject->name(), tempProject.name());
+    QCOMPARE(mpProject->getDataObjects().size(), tempProject.getDataObjects().size());
 }
 
 

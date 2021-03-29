@@ -25,7 +25,10 @@ public:
     void removeLeadingItem(DataValueType key);
     bool changeLeadingItemKey(DataKeyType oldKey, DataKeyType newKey);
     DataHolder& getLeadingItems() { return mLeadingItems; }
-    static uint numberInstances();
+    static uint numberInstances() { return smNumInstances; }
+    static void setNumberInstances(uint numInstances) { smNumInstances = numInstances; }
+    void serialize(QDataStream& stream) const override;
+    virtual void deserialize(QDataStream& stream) override;
 
 private:
     static uint smNumInstances;

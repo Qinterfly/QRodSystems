@@ -47,8 +47,8 @@ private:
     void specifyConnections();
 
 signals:
-    void dataObjectAdded(DataIDType id);
-    void dataObjectRemoved(DataIDType id);
+    void dataObjectAdded(QRS::DataIDType id);
+    void dataObjectRemoved(QRS::DataIDType id);
     void allDataObjectsChanged();
 
 public slots:

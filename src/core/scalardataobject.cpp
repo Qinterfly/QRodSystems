@@ -18,12 +18,6 @@ ScalarDataObject::ScalarDataObject(QString const& name)
     ++smNumInstances;
 }
 
-//! Get a number of created scalars
-uint ScalarDataObject::numberInstances()
-{
-    return smNumInstances;
-}
-
 //! Insert a new item into ScalarDataObject
 DataItemType& ScalarDataObject::addItem(DataValueType key)
 {

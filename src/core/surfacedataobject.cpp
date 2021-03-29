@@ -20,12 +20,6 @@ SurfaceDataObject::SurfaceDataObject(QString const& name)
     mLeadingItems.emplace(1.0, Array<double>());
 }
 
-//! Get a number of created surfaces
-uint SurfaceDataObject::numberInstances()
-{
-    return smNumInstances;
-}
-
 //! Insert a new item into SurfaceDataObject
 DataItemType& SurfaceDataObject::addItem(DataValueType key)
 {
@@ -78,3 +72,33 @@ bool SurfaceDataObject::changeLeadingItemKey(DataKeyType oldKey, DataKeyType new
     }
     return isOkay;
 }
+
+//! Serialize additional data of a surface object
+void SurfaceDataObject::serialize(QDataStream& stream) const
+{
+    AbstractDataObject::serialize(stream);
+    stream << (quint32)mLeadingItems.size();
+    for (auto& item : mLeadingItems)
+    {
+        stream << item.first;
+        stream << item.second;
+    }
+}
+
+//! Deserialize additional data of a surface object
+void SurfaceDataObject::deserialize(QDataStream& stream)
+{
+    AbstractDataObject::deserialize(stream);
+    mLeadingItems.clear();
+    quint32 numLeadingItems;
+    DataKeyType key;
+    stream >> numLeadingItems;
+    for (quint32 i = 0; i != numLeadingItems; ++i)
+    {
+        DataItemType leadingDataItem;
+        stream >> key;
+        stream >> leadingDataItem;
+        mLeadingItems.emplace(key, leadingDataItem);
+    }
+}
+

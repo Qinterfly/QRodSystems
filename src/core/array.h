@@ -36,6 +36,8 @@ public:
     IndexType size() const { return mNumRows * mNumCols; }
     Row<T> operator[](IndexType iRow) { return Row<T>(&mpData[mNumCols * iRow]); };
     template<typename K> friend QDebug operator<<(QDebug stream, Array<K>& array);
+    template<typename K> friend QDataStream& operator<<(QDataStream& stream, Array<K> const& array);
+    template<typename K> friend QDataStream& operator>>(QDataStream& stream, Array<K>& array);
 
 private:
     //! Number of rows
@@ -56,12 +58,12 @@ private:
     };
 };
 
-//! Print all the values as well as their indices
+//! Print all array values using the matrix format
 template<typename K>
-QDebug operator<<(QDebug stream, Array<K>& array)
+inline QDebug operator<<(QDebug stream, Array<K>& array)
 {
-    const IndexType& nRows = array.rows();
-    const IndexType& nCols = array.cols();
+    IndexType const& nRows = array.mNumRows;
+    IndexType const& nCols = array.mNumCols;
     stream = stream.noquote();
     stream << QString("Array size: %1 x %2").arg(QString::number(nRows), QString::number(nCols));
     stream << Qt::endl;
@@ -74,8 +76,30 @@ QDebug operator<<(QDebug stream, Array<K>& array)
     return stream;
 }
 
+//! Write an array to a stream
+template<typename K>
+inline QDataStream& operator<<(QDataStream& stream, Array<K> const& array)
+{
+    stream << array.mNumRows << array.mNumCols;
+    IndexType const& size = array.size();
+    for (IndexType i = 0; i != size; ++i)
+        stream << array.mpData[i];
+    return stream;
 }
 
+//! Read an array from a stream
+template<typename K>
+inline QDataStream& operator>>(QDataStream& stream, Array<K>& array)
+{
+    delete[] array.mpData;
+    stream >> array.mNumRows >> array.mNumCols;
+    IndexType const& size = array.size();
+    array.mpData = new K[size];
+    for (IndexType i = 0; i != size; ++i)
+        stream >> array.mpData[i];
+    return stream;
+}
 
+}
 
 #endif // ARRAY_H

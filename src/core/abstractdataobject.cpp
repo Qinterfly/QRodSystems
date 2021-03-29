@@ -20,12 +20,6 @@ AbstractDataObject::AbstractDataObject(DataObjectType type, QString const& name)
     mID = smNumObjects;
 }
 
-//! Get a number of created data objects
-uint AbstractDataObject::numberObjects()
-{
-    return smNumObjects;
-}
-
 //! Modify a key existed
 bool AbstractDataObject::changeItemKey(DataKeyType oldKey, DataKeyType newKey, DataHolder* items)
 {
@@ -87,4 +81,36 @@ DataValueType AbstractDataObject::getAvailableItemKey(DataValueType key, DataHol
     }
 }
 
+//! Serialize an abstract data object
+void AbstractDataObject::serialize(QDataStream& stream) const
+{
+    stream << (quint32)mType;
+    stream << mName;
+    stream << (quint32)mID;
+    stream << (quint32)mItems.size();
+    for (auto& item : mItems)
+    {
+        stream << item.first;
+        stream << item.second;
+    }
+}
 
+/*! /brief Partly deserialize an abstract data object
+ * It is assumed that a type and name have already been assigned.
+ * So, only an identifier and items need to be set
+ */
+void AbstractDataObject::deserialize(QDataStream& stream)
+{
+    mItems.clear();
+    quint32 numItems;
+    DataKeyType key;
+    stream >> mID;
+    stream >> numItems;
+    for (quint32 i = 0; i != numItems; ++i)
+    {
+        DataItemType dataItem;
+        stream >> key;
+        stream >> dataItem;
+        mItems.emplace(key, dataItem);
+    }
+}

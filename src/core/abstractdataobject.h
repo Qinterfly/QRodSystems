@@ -9,6 +9,7 @@
 #define ABSTRACTDATAOBJECT_H
 
 #include <QString>
+#include <QDataStream>
 #include <unordered_map>
 #include "array.h"
 #include "datatypes.h"
@@ -37,22 +38,40 @@ public:
     DataIDType id() const { return mID; }
     DataObjectType type() const { return mType; }
     void setName(QString const& name) { mName = name; }
-    static uint numberObjects();
-
+    static uint numberObjects() { return smNumObjects; }
+    static void setNumberObjects(uint numObjects) { smNumObjects = numObjects; }
+    virtual void serialize(QDataStream& stream) const;
+    virtual void deserialize(QDataStream& stream);
+    friend QDataStream& operator<<(QDataStream& stream, AbstractDataObject const& obj);
+    friend QDataStream& operator>>(QDataStream& stream, AbstractDataObject& obj);
 protected:
     //! Object type
     const DataObjectType mType;
     //! Name of an object
     QString mName;
-    //! Map contains all created entities
-    DataHolder mItems;
     //! Unique object identificator
     DataIDType mID;
+    //! Map contains all created entities
+    DataHolder mItems;
 
 private:
     //! Number of all objects created
     static uint smNumObjects;
 };
+
+//! Print a data object to a stream
+inline QDataStream& operator<<(QDataStream& stream, AbstractDataObject const& obj)
+{
+    obj.serialize(stream);
+    return stream;
+}
+
+//! Read a data object from a stream
+inline QDataStream& operator>>(QDataStream& stream, AbstractDataObject& obj)
+{
+    obj.deserialize(stream);
+    return stream;
+}
 
 }
 

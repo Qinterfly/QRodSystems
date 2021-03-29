@@ -18,12 +18,6 @@ VectorDataObject::VectorDataObject(QString const& name)
     ++smNumInstances;
 }
 
-//! Get a number of created vectors
-uint VectorDataObject::numberInstances()
-{
-    return smNumInstances;
-}
-
 //! Insert a new item into VectorDataObject
 DataItemType& VectorDataObject::addItem(DataValueType key)
 {

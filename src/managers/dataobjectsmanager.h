@@ -52,6 +52,7 @@ public:
     ~DataObjectsManager();
     void closeEvent(QCloseEvent* ) override;
     void selectDataObject(int index);
+    mapDataObjects const & getDataObjects() { return mDataObjects; };
 
 public slots:
     void apply();
@@ -63,7 +64,6 @@ public slots:
     void insertLeadingItemAfterSelected();
     void removeSelectedItem();
     void removeSelectedLeadingItem();
-    const mapDataObjects& getDataObjects() { return mDataObjects; };
     void removeSelectedDataObject();
 
 private slots:

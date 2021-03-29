@@ -18,12 +18,6 @@ MatrixDataObject::MatrixDataObject(QString const& name)
     ++smNumInstances;
 }
 
-//! Get a number of created matrices
-uint MatrixDataObject::numberInstances()
-{
-    return smNumInstances;
-}
-
 //! Insert a new item into MatrixDataObject
 DataItemType& MatrixDataObject::addItem(DataValueType key)
 {

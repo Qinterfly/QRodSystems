@@ -50,7 +50,6 @@ void Project::addDataObject(DataObjectType type)
     {
         DataIDType id = pObject->id();
         mDataObjects.emplace(id, std::shared_ptr<AbstractDataObject>(pObject));
-        qInfo() << QString("New data object with ID %1 was added into the project").arg(QString::number(pObject->id()));
         emit dataObjectAdded(id);
     }
 }
@@ -123,12 +122,19 @@ bool Project::save(QString const& path, QString const& fileName)
     out.setFloatingPointPrecision(QDataStream::DoublePrecision);
     // Saving
     // 1. Header
-    out << QDateTime::currentDateTime().toString(kDateFormat);
-    out << kFileVersion;
+    out << QDateTime::currentDateTime().toString(kDateFormat); // Current date and time
+    out << kFileVersion;                                       // File version
     // 2. Project info
-    out << mID;
+    out << mID;                                                // Unique identificator
     // 3. Data objects
-    // TODO
+    out << (quint32)AbstractDataObject::numberObjects();       // Raw number of objects of all types
+    out << (quint32)ScalarDataObject::numberInstances();       // Raw number of scalars
+    out << (quint32)VectorDataObject::numberInstances();       // Raw number of vectors
+    out << (quint32)MatrixDataObject::numberInstances();       // Raw number of matrices
+    out << (quint32)SurfaceDataObject::numberInstances();      // Raw number of surface
+    out << (quint32)mDataObjects.size();                       // Number of object to be written/read
+    for (auto& item : mDataObjects)
+        out << *item.second;                                   // Data object content
     file.flush();
     file.close();
     // Renaming the project
@@ -161,7 +167,55 @@ Project::Project(QString const& path, QString const& fileName)
     // 2. Project info
     in >> mID;
     // 3. Data objects
-    // TODO
+    quint32 intTempNumber;
+    in >> intTempNumber;
+    AbstractDataObject::setNumberObjects(intTempNumber);
+    in >> intTempNumber;
+    ScalarDataObject::setNumberInstances(intTempNumber);
+    in >> intTempNumber;
+    VectorDataObject::setNumberInstances(intTempNumber);
+    in >> intTempNumber;
+    MatrixDataObject::setNumberInstances(intTempNumber);
+    in >> intTempNumber;
+    SurfaceDataObject::setNumberInstances(intTempNumber);
+    in >> intTempNumber;
+    mDataObjects.clear();
+    DataObjectType type;
+    QString name;
+    ScalarDataObject* pScalar;
+    VectorDataObject* pVector;
+    MatrixDataObject* pMatrix;
+    SurfaceDataObject* pSurface;
+    for (quint32 i = 0; i != intTempNumber; ++i)
+    {
+        in >> type;
+        in >> name;
+        AbstractDataObject* pObject = nullptr;
+        switch (type)
+        {
+        case (kScalar):
+            pScalar = new ScalarDataObject(name);
+            in >> *pScalar;
+            pObject = pScalar;
+            break;
+        case (kVector):
+            pVector = new VectorDataObject(name);
+            in >> *pVector;
+            pObject = pVector;
+            break;
+        case (kMatrix):
+            pMatrix = new MatrixDataObject(name);
+            in >> *pMatrix;
+            pObject = pMatrix;
+            break;
+        case (kSurface):
+            pSurface = new SurfaceDataObject(name);
+            in >> *pSurface;
+            pObject = pSurface;
+            break;
+        }
+        mDataObjects.emplace(pObject->id(), std::shared_ptr<AbstractDataObject>(pObject));
+    }
     file.close();
     // Renaming the project
     mName = baseFileName;
