@@ -14,6 +14,7 @@
 #include <QPushButton>
 #include <QSpacerItem>
 #include <QMessageBox>
+#include <QShortcut>
 #include "DockManager.h"
 #include "DockWidget.h"
 
@@ -35,6 +36,7 @@ using ads::CDockAreaWidget;
 using namespace QRS;
 
 const static QSize kIconSize = QSize(22, 22);
+void setToolBarShortcutHints(QToolBar* pToolBar);
 
 DataObjectsManager::DataObjectsManager(QRS::Project& project, QSettings& settings, QWidget* parent)
     : QDialog(parent)
@@ -119,14 +121,25 @@ CDockWidget* DataObjectsManager::createDataTableWidget()
     QToolBar* pToolBar = pDockWidget->createDefaultToolBar();
     pToolBar->setToolButtonStyle(Qt::ToolButtonStyle::ToolButtonIconOnly);
     pDockWidget->setToolBarIconSize(kIconSize, CDockWidget::StateDocked);
-    pToolBar->addAction(QIcon(":/icons/arrows-expand.svg"), tr("Expand"), mpDataTable, &QTreeView::expandAll);
-    pToolBar->addAction(QIcon(":/icons/arrows-collapse.svg"), tr("Collapse"), mpDataTable, &QTreeView::collapseAll);
+    QAction* pAction;
+    // Expanding actions
+    pAction = pToolBar->addAction(QIcon(":/icons/arrows-expand.svg"), tr("Expand"), mpDataTable, &QTreeView::expandAll);
+    pAction->setShortcut(Qt::Key_E);
+    pAction = pToolBar->addAction(QIcon(":/icons/arrows-collapse.svg"), tr("Collapse"), mpDataTable, &QTreeView::collapseAll);
+    pAction->setShortcut(Qt::Key_C);
     pToolBar->addSeparator();
-    pToolBar->addAction(QIcon(":/icons/table-row-add.svg"), tr("Add Roww"), this, &DataObjectsManager::insertItemAfterSelected);
-    pToolBar->addAction(QIcon(":/icons/table-row-delete.svg"), tr("Remove Row"), this, &DataObjectsManager::removeSelectedItem);
+    // Rows actions
+    pAction = pToolBar->addAction(QIcon(":/icons/table-row-add.svg"), tr("Add Row"), this, &DataObjectsManager::insertItemAfterSelected);
+    pAction->setShortcut(Qt::Key_A);
+    pAction = pToolBar->addAction(QIcon(":/icons/table-row-delete.svg"), tr("Remove Row"), this, &DataObjectsManager::removeSelectedItem);
+    pAction->setShortcut(Qt::Key_D);
     pToolBar->addSeparator();
-    pToolBar->addAction(QIcon(":/icons/table-column-add.svg"), tr("Add Column"), this, &DataObjectsManager::insertLeadingItemAfterSelected);
-    pToolBar->addAction(QIcon(":/icons/table-column-delete.svg"), tr("Remove Column"), this, &DataObjectsManager::removeSelectedLeadingItem);
+    // Columns actions
+    pAction = pToolBar->addAction(QIcon(":/icons/table-column-add.svg"), tr("Add Column"), this, &DataObjectsManager::insertLeadingItemAfterSelected);
+    pAction->setShortcut(Qt::CTRL + Qt::Key_A);
+    pAction = pToolBar->addAction(QIcon(":/icons/table-column-delete.svg"), tr("Remove Column"), this, &DataObjectsManager::removeSelectedLeadingItem);
+    pAction->setShortcut(Qt::CTRL + Qt::Key_D);
+    setToolBarShortcutHints(pToolBar);
     return pDockWidget;
 }
 
@@ -380,5 +393,13 @@ void DataObjectsManager::emplaceDataObject(AbstractDataObject* dataObject, QIcon
 bool DataObjectsManager::isDataTableModifiable()
 {
     return mpListObjects->currentRow() >= 0 && mpInterfaceTableModel;
+}
+
+//! Helper function to add a shortcut hint to all actions which a toolbar contains
+void setToolBarShortcutHints(QToolBar* pToolBar)
+{
+    QList<QAction*> listActions = pToolBar->actions();
+    for (auto& action : listActions)
+        action->setText(QString(action->text() + " (%1)").arg(action->shortcut().toString()));
 }
 

@@ -95,9 +95,11 @@ void AbstractDataObject::serialize(QDataStream& stream) const
     }
 }
 
-/*! /brief Partly deserialize an abstract data object
+/*!
+ * \brief Partly deserialize an abstract data object
+ *
  * It is assumed that a type and name have already been assigned.
- * So, only an identifier and items need to be set
+ * So, only an identifier and items need to be set.
  */
 void AbstractDataObject::deserialize(QDataStream& stream)
 {
