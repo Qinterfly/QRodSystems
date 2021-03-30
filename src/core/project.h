@@ -31,7 +31,7 @@ public:
     Project(QString const& path, QString const& fileName);
     virtual ~Project() = default;
     // State
-    bool isModified() const { return mNumModified == 0; }
+    bool isModified() const { return mIsModified; }
     // Data objects
     std::shared_ptr<AbstractDataObject> getDataObject(DataIDType id);
     std::unordered_map<DataIDType, AbstractDataObject*> getDataObjects();
@@ -43,19 +43,17 @@ public:
     QString const& filePath() const { return mFilePath; }
     static QString const& getFileExtension() { return skProjectExtension; }
 
-private:
-    void specifyConnections();
-
 signals:
     void dataObjectAdded(QRS::DataIDType id);
     void dataObjectRemoved(QRS::DataIDType id);
     void allDataObjectsChanged();
+    void modified(bool modifiedState);
 
 public slots:
     bool save(QString const& dir, QString const& fileName);
 
 private slots:
-    void setModified();
+    void setModified(bool modifiedState = true);
 
 private:
     //! Unique project identifier
@@ -64,8 +62,8 @@ private:
     QString mName;
     //! Path to a file where a project is stored
     QString mFilePath;
-    //! Number of modifications since last saving
-    uint mNumModified = 0;
+    //! Flag whether a project has been modified since last saving
+    bool mIsModified = true;
     //! Data objects
     DataObjects mDataObjects;
     //! File extensionn

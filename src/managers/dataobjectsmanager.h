@@ -50,9 +50,9 @@ class DataObjectsManager : public QDialog
 public:
     explicit DataObjectsManager(QRS::Project& project, QSettings& settings, QWidget* parent = nullptr);
     ~DataObjectsManager();
-    void closeEvent(QCloseEvent* ) override;
+    void closeEvent(QCloseEvent* event) override;
     void selectDataObject(int index);
-    mapDataObjects const & getDataObjects() { return mDataObjects; };
+    mapDataObjects const& getDataObjects() { return mDataObjects; };
 
 public slots:
     void apply();

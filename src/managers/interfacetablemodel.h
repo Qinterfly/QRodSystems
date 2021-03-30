@@ -20,7 +20,7 @@ template <typename T>
 class Array;
 }
 
-static const short kNumShowPrecision = 4;
+static const short kNumShowPrecision = 6;
 
 //! User interface to add and remove items
 class InterfaceTableModel

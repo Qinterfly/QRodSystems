@@ -40,21 +40,30 @@ private:
     // Content
     void initializeWindow();
     void createContent();
+    void closeEvent(QCloseEvent* event) override;
     ads::CDockWidget* createProjectHierarchyWidget();
     ads::CDockWidget* createGLWidget();
     ads::CDockWidget* createLogWidget();
     ads::CDockWidget* createPropertiesWidget();
     void setProjectTitle();
-    // Signals&Slots
+    // Signals & Slots
     void specifyMenuConnections();
+    void saveProjectChangesDialog();
 
 private slots:
-    void aboutProgram();
+    // Project
+    void createProject();
+    void openProject();
+    bool saveProject();
+    // Settings
     void saveSettings();
     void restoreSettings();
+    // Managers
     void createDataObjectsManager();
     void createRodPropertiesManager();
     void createRodConstructorManager();
+    // Help
+    void aboutProgram();
 
 private:
     Ui::MainWindow* mpUi;

@@ -32,6 +32,7 @@ using ads::CDockAreaWidget;
 void moveToCenter(QWidget*);
 LogWidget* MainWindow::pLogger = nullptr;
 const static QString skFileNameSettings = "Settings.ini";
+const static QString skDefaultProjectName = "Undefined";
 
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent)
@@ -59,7 +60,7 @@ void MainWindow::initializeWindow()
 //! Create all the widgets and corresponding actions
 void MainWindow::createContent()
 {
-    mpProject = new QRS::Project("Undefined");
+    mpProject = new QRS::Project(skDefaultProjectName);
     mpSettings = QSharedPointer<QSettings>(new QSettings(skFileNameSettings, QSettings::IniFormat));
     setProjectTitle();
     // Configuration
@@ -158,14 +159,18 @@ CDockWidget* MainWindow::createPropertiesWidget()
 //! Set signals and slots for menu actions
 void MainWindow::specifyMenuConnections()
 {
-    // File
+    // Project
+    connect(mpUi->actionNewProject, &QAction::triggered, this, &MainWindow::createProject);
+    connect(mpUi->actionOpenProject, &QAction::triggered, this, &MainWindow::openProject);
+    connect(mpUi->actionSaveProject, &QAction::triggered, this, &MainWindow::saveProject);
     connect(mpUi->actionExit, &QAction::triggered, this, &QMainWindow::close);
+    connect(mpProject, &QRS::Project::modified, this, &MainWindow::setWindowModified);
     // Help
     connect(mpUi->actionAboutQt, &QAction::triggered, qApp, &QApplication::aboutQt);
     connect(mpUi->actionAboutProgram, &QAction::triggered, this, &MainWindow::aboutProgram);
 }
 
-//! Save the current view state
+//! Save the current window settings
 void MainWindow::saveSettings()
 {
     mpSettings->setValue("mainWindow/Geometry", saveGeometry());
@@ -176,12 +181,12 @@ void MainWindow::saveSettings()
         qInfo() << tr("Settings were written to the file") << skFileNameSettings;
 }
 
-//! Restore a view state from a file
+//! Restore window settings from a file
 void MainWindow::restoreSettings()
 {
     bool isOk = restoreGeometry(mpSettings->value("mainWindow/Geometry").toByteArray())
-                && restoreState(mpSettings->value("mainWindow/State").toByteArray())
-                && mpDockManager->restoreState(mpSettings->value("mainWindow/DockingState").toByteArray());
+        && restoreState(mpSettings->value("mainWindow/State").toByteArray())
+        && mpDockManager->restoreState(mpSettings->value("mainWindow/DockingState").toByteArray());
     mpDockManager->loadPerspectives(*mpSettings);
     if (isOk)
         qInfo() << tr("Settings were restored from the file") << skFileNameSettings;
@@ -211,18 +216,75 @@ void MainWindow::createRodConstructorManager()
     // TODO
 }
 
-//! Show information about a program
-void MainWindow::aboutProgram()
+//! Create a project and substitute the current one with it
+void MainWindow::createProject()
 {
-    const QString aboutMsg = tr(
-                                 "QRodSystems is a multiplatform wrapper to create rod systems by means of the KLPALGSYS core. "
-                                 "You can download the code from <a href='https://github.com/qinterfly/QRodSystems'>GitHub</a>. If you find any "
-                                 "bug or problem, please report it in <a href='https://github.com/qinterfly/QRodSystems/issues'>the issues "
-                                 "page</a> so I can fix it as soon as possible.<br><br>"
-                                 "Copyright &copy; 2021 QRodSystems (Pavel Lakiza) "
-                                 "Copyright &copy; 2021 KLPALGSYS (Dmitriy Krasnorutskiy)"
-                             );
-    QMessageBox::about(this, tr("About QRodSystems v%1").arg(APP_VERSION), aboutMsg);
+    saveProjectChangesDialog();
+    delete mpProject;
+    mpProject = new QRS::Project(skDefaultProjectName);
+    setProjectTitle();
+}
+
+//! Open a project
+void MainWindow::openProject()
+{
+    saveProjectChangesDialog();
+    // TODO
+}
+
+//! Save the current project
+bool MainWindow::saveProject()
+{
+    // TODO
+    return true;
+}
+
+//! Save project changes
+void MainWindow::saveProjectChangesDialog()
+{
+    if (isWindowModified())
+    {
+        const QMessageBox::StandardButton res = QMessageBox::warning(this, tr("Save project changes"),
+                tr(
+                    "The project has been modified.\n"
+                    "Would you like to save it"
+                ),
+                QMessageBox::Yes | QMessageBox::No);
+        if (res == QMessageBox::Yes)
+            saveProject();
+    }
+}
+
+//! Save project and settings before exit
+void MainWindow::closeEvent(QCloseEvent* event)
+{
+    event->ignore();
+    if (isWindowModified())
+    {
+        bool isClosed = false;
+        const QMessageBox::StandardButton res = QMessageBox::warning(this, tr("Save project changes"),
+                tr(
+                    "The project has been modified.\n"
+                    "Would you like to save it before exit?"
+                ),
+                QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
+        switch (res)
+        {
+        case QMessageBox::Save:
+            isClosed = saveProject();
+            break;
+        case QMessageBox::Cancel:
+            isClosed = false;
+            break;
+        case QMessageBox::Discard:
+            isClosed = true;
+            break;
+        default:
+            break;
+        }
+        if (isClosed)
+            event->accept();
+    }
 }
 
 //! Show information a name of a project
@@ -230,6 +292,20 @@ void MainWindow::setProjectTitle()
 {
     QString title = APP_NAME;
     setWindowTitle(QString(title + ": %1[*]").arg(mpProject->name()));
+}
+
+//! Show information about a program
+void MainWindow::aboutProgram()
+{
+    const QString aboutMsg = tr(
+            "QRodSystems is a multiplatform wrapper to create rod systems by means of the KLPALGSYS core. "
+            "You can download the code from <a href='https://github.com/qinterfly/QRodSystems'>GitHub</a>. If you find any "
+            "bug or problem, please report it in <a href='https://github.com/qinterfly/QRodSystems/issues'>the issues "
+            "page</a> so I can fix it as soon as possible.<br><br>"
+            "Copyright &copy; 2021 QRodSystems (Pavel Lakiza) "
+            "Copyright &copy; 2021 KLPALGSYS (Dmitriy Krasnorutskiy)"
+        );
+    QMessageBox::about(this, tr("About QRodSystems v%1").arg(APP_VERSION), aboutMsg);
 }
 
 //! Helper function to situate widgets at the center of their parent widgets

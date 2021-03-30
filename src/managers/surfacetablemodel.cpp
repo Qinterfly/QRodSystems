@@ -99,38 +99,37 @@ bool SurfaceTableModel::setData(const QModelIndex& indexEdit, const QVariant& va
 //! Insert a new item after selected one
 void SurfaceTableModel::insertItemAfterSelected(QItemSelectionModel* selectionModel)
 {
-    QModelIndexList listSelected = selectionModel->selectedRows();
+    QModelIndexList listSelected = selectionModel->selectedIndexes();
     if (listSelected.isEmpty())
     {
         mpDataObject->addItem(0.0);
     }
     else
     {
-        for (auto rowItemIterator = listSelected.rbegin(); rowItemIterator != listSelected.rend(); ++rowItemIterator)
+        uint iRow;
+        double key;
+        for (QModelIndex& currentIndex : listSelected)
         {
-
-            QModelIndex& lastSelected = *rowItemIterator;
-            uint iRow = lastSelected.row();
+            iRow = currentIndex.row();
             if (iRow != 0)
             {
-                double key = index(iRow, 0).data(Qt::UserRole).toDouble();
+                key = index(iRow, 0).data(Qt::UserRole).toDouble();
                 mpDataObject->addItem(key);
-                break;
             }
         }
-        updateContent();
     }
+    updateContent();
 }
 
 //! Remove an array under selection
 void SurfaceTableModel::removeSelectedItem(QItemSelectionModel* selectionModel)
 {
-    QModelIndexList listSelected = selectionModel->selectedRows();
+    QModelIndexList listSelected = selectionModel->selectedIndexes();
     uint iRow;
     double key;
-    for (QModelIndex& ind : listSelected)
+    for (QModelIndex& currentIndex : listSelected)
     {
-        iRow = ind.row();
+        iRow = currentIndex.row();
         if (iRow != 0)
         {
             key = index(iRow, 0).data(Qt::UserRole).toDouble();
@@ -143,12 +142,17 @@ void SurfaceTableModel::removeSelectedItem(QItemSelectionModel* selectionModel)
 //! Add a new leading item after selected one
 void SurfaceTableModel::insertLeadingItemAfterSelected(QItemSelectionModel* selectionModel)
 {
-    QModelIndex currentIndex = selectionModel->currentIndex();
-    int iColumn = currentIndex.column();
-    if (currentIndex.row() == 0 && iColumn > 0)
+    QModelIndexList listSelected = selectionModel->selectedIndexes();
+    int iColumn;
+    double key;
+    for (QModelIndex& currentIndex : listSelected)
     {
-        double key = index(0, iColumn).data(Qt::UserRole).toDouble();
-        mpDataObject->addLeadingItem(key);
+        iColumn = currentIndex.column();
+        if (iColumn > 0)
+        {
+            key = index(0, iColumn).data(Qt::UserRole).toDouble();
+            mpDataObject->addLeadingItem(key);
+        }
     }
     updateContent();
 }
@@ -156,12 +160,17 @@ void SurfaceTableModel::insertLeadingItemAfterSelected(QItemSelectionModel* sele
 //! Remove a selected leading item
 void SurfaceTableModel::removeSelectedLeadingItem(QItemSelectionModel* selectionModel)
 {
-    QModelIndex currentIndex = selectionModel->currentIndex();
-    int iColumn = currentIndex.column();
-    if (currentIndex.row() == 0 && iColumn > 0)
+    QModelIndexList listSelected = selectionModel->selectedIndexes();
+    uint iColumn;
+    double key;
+    for (QModelIndex& currentIndex : listSelected)
     {
-        double key = index(0, iColumn).data(Qt::UserRole).toDouble();
-        mpDataObject->removeLeadingItem(key);
+        iColumn = currentIndex.column();
+        if (iColumn > 0)
+        {
+            key = index(0, iColumn).data(Qt::UserRole).toDouble();
+            mpDataObject->removeLeadingItem(key);
+        }
     }
     updateContent();
 }

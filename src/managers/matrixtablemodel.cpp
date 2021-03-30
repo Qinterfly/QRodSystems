@@ -106,22 +106,21 @@ bool MatrixTableModel::setData(const QModelIndex& indexEdit, const QVariant& val
 //! Insert a new item after selected one
 void MatrixTableModel::insertItemAfterSelected(QItemSelectionModel* selectionModel)
 {
-    QModelIndexList listSelected = selectionModel->selectedRows();
+    QModelIndexList listSelected = selectionModel->selectedIndexes();
     if (listSelected.isEmpty())
     {
         mpDataObject->addItem(0.0);
     }
     else
     {
-        for (auto& itemTable : listSelected)
+        for (QModelIndex& currentIndex : listSelected)
         {
             // If it is a parent
-            if (itemTable.parent().row() < 0)
+            if (currentIndex.parent().row() < 0)
             {
-                uint iRow = itemTable.row();
+                uint iRow = currentIndex.row();
                 double key = index(iRow, 0).data(Qt::UserRole).toDouble();
                 mpDataObject->addItem(key);
-                break;
             }
         }
     }
@@ -131,15 +130,15 @@ void MatrixTableModel::insertItemAfterSelected(QItemSelectionModel* selectionMod
 //! Remove an array under selection
 void MatrixTableModel::removeSelectedItem(QItemSelectionModel* selectionModel)
 {
-    QModelIndexList listSelectedRows = selectionModel->selectedRows();
+    QModelIndexList listSelected = selectionModel->selectedIndexes();
     QStandardItem* itemTable;
-    for (QModelIndex& ind : listSelectedRows)
+    for (QModelIndex& currentIndex : listSelected)
     {
-        itemTable = itemFromIndex(ind);
+        itemTable = itemFromIndex(currentIndex);
         // If it is a parent
         if (itemTable->rowCount() > 0)
         {
-            uint iRow = ind.row();
+            uint iRow = currentIndex.row();
             double key = index(iRow, 0).data(Qt::UserRole).toDouble();
             mpDataObject->removeItem(key);
         }

@@ -31,7 +31,6 @@
         <file>icons/list-remove.svg</file>
         <file>icons/polygon-pick.svg</file>
         <file>icons/preferences-general.svg</file>
-        <file>icons/preferences-system.svg</file>
         <file>icons/statistics.svg</file>
         <file>icons/std-axiscross.svg</file>
         <file>icons/std-coordinatesystem.svg</file>
@@ -80,5 +79,11 @@
         <file>icons/table-column-add.svg</file>
         <file>icons/arrows-collapse.svg</file>
         <file>icons/arrows-expand.svg</file>
+        <file>icons/dialog-debug.svg</file>
+        <file>icons/dialog-error.svg</file>
+        <file>icons/dialog-fatal.svg</file>
+        <file>icons/dialog-info.svg</file>
+        <file>icons/dialog-warning.svg</file>
+        <file>icons/dialog-question.svg</file>
     </qresource>
 </RCC>

@@ -29,7 +29,7 @@ Project::Project(QString const& name)
     : mID(QRandomGenerator::global()->generate())
     , mName(name)
 {
-    specifyConnections();
+
 }
 
 //! Retrieve a data object by identificator
@@ -51,6 +51,7 @@ void Project::addDataObject(DataObjectType type)
         DataIDType id = pObject->id();
         mDataObjects.emplace(id, std::shared_ptr<AbstractDataObject>(pObject));
         emit dataObjectAdded(id);
+        setModified(true);
     }
 }
 
@@ -73,6 +74,7 @@ void Project::removeDataObject(DataIDType id)
     {
         mDataObjects.erase(id);
         emit dataObjectRemoved(id);
+        setModified(true);
     }
 }
 
@@ -87,21 +89,14 @@ void Project::setDataObjects(std::unordered_map<DataIDType, AbstractDataObject*>
         mDataObjects.emplace(pDataObject->id(), std::shared_ptr<AbstractDataObject>(pDataObject->clone()));
     }
     emit allDataObjectsChanged();
+    setModified(true);
 }
 
-//! Increase a number of modifications whenever a project is changed
-void Project::setModified()
+//! Set a modification state
+void Project::setModified(bool modifiedState)
 {
-    ++mNumModified;
-}
-
-//! Specify connections between objects
-void Project::specifyConnections()
-{
-    // While modified
-    connect(this, &Project::allDataObjectsChanged, this, &Project::setModified);
-    connect(this, &Project::dataObjectAdded, this, &Project::setModified);
-    connect(this, &Project::dataObjectRemoved, this, &Project::setModified);
+    mIsModified = modifiedState;
+    emit modified(mIsModified);
 }
 
 //! Save a project to a file
@@ -141,6 +136,7 @@ bool Project::save(QString const& path, QString const& fileName)
     mName = baseFileName;
     mFilePath = filePath;
     qInfo() << tr("Project was saved to the file: %1").arg(mFilePath);
+    setModified(false);
     return true;
 }
 

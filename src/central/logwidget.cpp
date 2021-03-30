@@ -25,7 +25,7 @@ LogWidget::LogWidget(QWidget* parent)
     setSizeAdjustPolicy(AdjustToContents);
     horizontalHeader()->setStretchLastSection(true);
     setHorizontalHeaderLabels({tr("Time"), tr("Type"), tr("Message")});
-    setEditTriggers(QTableWidget::NoEditTriggers);
+    setEditTriggers(QAbstractItemView::NoEditTriggers);
 }
 
 //! Represent a message sent
@@ -35,28 +35,28 @@ void LogWidget::log(QtMsgType messageType, const QString& message)
     int iRow = rowCount();
     insertRow(iRow);
     QString type = "Unknown";
-    QIcon icon = QIcon::fromTheme("dialog-question");
+    QIcon icon = QIcon(":/icons/dialog-question.svg");
     switch (messageType)
     {
     case QtDebugMsg:
         type = "Debug";
-        icon = QIcon();
+        icon = QIcon(":/icons/dialog-debug.svg");
         break;
     case QtInfoMsg:
         type = "Info";
-        icon = QIcon::fromTheme("dialog-information");
+        icon = QIcon(":/icons/dialog-info.svg");
         break;
     case QtWarningMsg:
         type = "Warning";
-        icon = QIcon::fromTheme("dialog-warning");
+        icon = QIcon(":/icons/dialog-warning.svg");
         break;
     case QtCriticalMsg:
         type = "Critical";
-        icon = QIcon::fromTheme("dialog-error");
+        icon = QIcon(":/icons/dialog-error.svg");
         break;
     case QtFatalMsg:
         type = "Fatal";
-        icon = QIcon::fromTheme("dialog-error");
+        icon = QIcon(":/icons/dialog-fatal.svg");
         break;
     }
     QString time = QTime::currentTime().toString();

@@ -66,9 +66,9 @@ void DataObjectsManager::closeEvent(QCloseEvent* event)
     if (isWindowModified())
     {
         auto dialogResult = QMessageBox::question(this
-                            , tr("Close confirmation")
-                            , tr("Data objects manager contains unsaved changes. Would you like to close it anyway?")
-                            , QMessageBox::Yes | QMessageBox::No);
+                , tr("Close confirmation")
+                , tr("Data objects manager contains unsaved changes. Would you like to close it anyway?")
+                , QMessageBox::Yes | QMessageBox::No);
         if (QMessageBox::Yes == dialogResult)
         {
             saveSettings();
@@ -108,6 +108,7 @@ CDockWidget* DataObjectsManager::createDataTableWidget()
     mpDataTable = new QTreeView();
     mpDataTable->sortByColumn(0, Qt::SortOrder::AscendingOrder);
     mpDataTable->setSelectionMode(QAbstractItemView::ExtendedSelection);
+    mpDataTable->setSelectionBehavior(QAbstractItemView::SelectItems);
     mpDataTable->setHeaderHidden(false);
     pDockWidget->setWidget(mpDataTable);
     // Editor of table values
@@ -283,7 +284,6 @@ void DataObjectsManager::representSelectedDataObject()
     AbstractDataObject* pObject = mDataObjects[id];
     mpBaseTableModel->setDataObject(nullptr);
     mpMatrixTableModel->setDataObject(nullptr);
-    mpDataTable->setHeaderHidden(false);
     switch (pObject->type())
     {
     case kScalar:
@@ -304,7 +304,6 @@ void DataObjectsManager::representSelectedDataObject()
         break;
     case kSurface:
         mpDataTable->setSortingEnabled(false);
-        mpDataTable->setHeaderHidden(true);
         mpSurfaceTableModel->setDataObject((SurfaceDataObject*)pObject);
         mpDataTable->setModel(mpSurfaceTableModel);
         mpInterfaceTableModel = mpSurfaceTableModel;

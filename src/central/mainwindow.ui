@@ -48,22 +48,22 @@
      <string>&amp;Window</string>
     </property>
    </widget>
-   <widget class="QMenu" name="menuFile">
+   <widget class="QMenu" name="menuProject">
     <property name="font">
      <font>
       <pointsize>10</pointsize>
      </font>
     </property>
     <property name="title">
-     <string>&amp;File</string>
+     <string>&amp;Project</string>
     </property>
     <addaction name="separator"/>
-    <addaction name="actionNew"/>
-    <addaction name="actionOpen"/>
-    <addaction name="actionOpenRecent"/>
+    <addaction name="actionNewProject"/>
+    <addaction name="actionOpenProject"/>
+    <addaction name="actionOpenRecentProjects"/>
     <addaction name="separator"/>
-    <addaction name="actionSave"/>
-    <addaction name="actionSaveAs"/>
+    <addaction name="actionSaveProject"/>
+    <addaction name="actionSaveAsProject"/>
     <addaction name="separator"/>
     <addaction name="actionExit"/>
    </widget>
@@ -98,13 +98,13 @@
     <addaction name="actionAboutQt"/>
     <addaction name="actionAboutProgram"/>
    </widget>
-   <addaction name="menuFile"/>
+   <addaction name="menuProject"/>
    <addaction name="menuEdit"/>
    <addaction name="menuWindow"/>
    <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
-  <action name="actionNew">
+  <action name="actionNewProject">
    <property name="icon">
     <iconset resource="../../resources/images.qrc">
      <normaloff>:/icons/document-new.svg</normaloff>:/icons/document-new.svg</iconset>
@@ -121,7 +121,7 @@
     <string>Ctrl+N</string>
    </property>
   </action>
-  <action name="actionOpen">
+  <action name="actionOpenProject">
    <property name="icon">
     <iconset resource="../../resources/images.qrc">
      <normaloff>:/icons/document-open.svg</normaloff>:/icons/document-open.svg</iconset>
@@ -138,7 +138,7 @@
     <string>Ctrl+O</string>
    </property>
   </action>
-  <action name="actionSave">
+  <action name="actionSaveProject">
    <property name="text">
     <string>Save</string>
    </property>
@@ -151,7 +151,7 @@
     <string>Ctrl+S</string>
    </property>
   </action>
-  <action name="actionSaveAs">
+  <action name="actionSaveAsProject">
    <property name="icon">
     <iconset resource="../../resources/images.qrc">
      <normaloff>:/icons/document-save-as.svg</normaloff>:/icons/document-save-as.svg</iconset>
@@ -168,7 +168,7 @@
     <string>Ctrl+Shift+S</string>
    </property>
   </action>
-  <action name="actionOpenRecent">
+  <action name="actionOpenRecentProjects">
    <property name="text">
     <string>Open Recent</string>
    </property>
