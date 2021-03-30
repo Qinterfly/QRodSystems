@@ -90,7 +90,7 @@ bool MatrixTableModel::setData(const QModelIndex& indexEdit, const QVariant& val
     }
     else
     {
-        isOkay = mpDataObject->setArrayValue(key, newValue, indexEdit.row(), iColumn);
+        isOkay = mpDataObject->setArrayValue(key, newValue, indexEdit.row(), iColumn - 1);
     }
     // Display the changed value
     if (isOkay)

@@ -49,12 +49,14 @@ private:
     // Signals & Slots
     void specifyMenuConnections();
     void saveProjectChangesDialog();
+    bool saveProjectHelper(QString const& filePath);
 
 private slots:
     // Project
     void createProject();
     void openProject();
     bool saveProject();
+    bool saveProjectAs();
     // Settings
     void saveSettings();
     void restoreSettings();

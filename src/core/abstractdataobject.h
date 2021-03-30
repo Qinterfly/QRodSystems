@@ -37,6 +37,7 @@ public:
     DataItemType& getItem(DataValueType keyParameter) { return mItems.at(keyParameter); }
     DataIDType id() const { return mID; }
     DataObjectType type() const { return mType; }
+    QString const& name() const { return mName; }
     void setName(QString const& name) { mName = name; }
     static uint numberObjects() { return smNumObjects; }
     static void setNumberObjects(uint numObjects) { smNumObjects = numObjects; }

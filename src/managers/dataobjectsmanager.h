@@ -82,7 +82,8 @@ private:
     void restoreSettings();
     void saveSettings();
     // Helpers
-    void emplaceDataObject(QRS::AbstractDataObject* dataObject, QIcon const& icon, QString const& name);
+    void emplaceDataObject(QRS::AbstractDataObject* dataObject);
+    void addListDataObjects(QRS::AbstractDataObject* dataObject);
     bool isDataTableModifiable();
 
 private:
@@ -90,7 +91,7 @@ private:
     // Docks
     ads::CDockManager* mpDockManager;
     // Widgets
-    QListWidget* mpListObjects;
+    QListWidget* mpListDataObjects;
     QTreeView* mpDataTable;
     // Data
     QRS::Project& mProject;

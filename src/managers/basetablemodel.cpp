@@ -82,7 +82,7 @@ bool BaseTableModel::setData(const QModelIndex& indexEdit, const QVariant& value
     }
     else
     {
-        isOkay = mpDataObject->setArrayValue(key, newValue, 0, iColumn);
+        isOkay = mpDataObject->setArrayValue(key, newValue, 0, iColumn - 1);
     }
     // Display the changed value
     if (isOkay)

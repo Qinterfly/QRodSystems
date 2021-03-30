@@ -14,6 +14,7 @@
 #include <QVBoxLayout>
 #include <QSettings>
 #include <QMessageBox>
+#include <QFileDialog>
 #include "DockManager.h"
 #include "DockWidget.h"
 #include "ads_globals.h"
@@ -32,7 +33,8 @@ using ads::CDockAreaWidget;
 void moveToCenter(QWidget*);
 LogWidget* MainWindow::pLogger = nullptr;
 const static QString skFileNameSettings = "Settings.ini";
-const static QString skDefaultProjectName = "Undefined";
+const static QString skDefaultProjectName = "Project 1";
+static QString const& skProjectExtension = QRS::Project::getFileExtension();
 
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent)
@@ -60,6 +62,7 @@ void MainWindow::initializeWindow()
 //! Create all the widgets and corresponding actions
 void MainWindow::createContent()
 {
+    mLastPath = '.' + QDir::separator();
     mpProject = new QRS::Project(skDefaultProjectName);
     mpSettings = QSharedPointer<QSettings>(new QSettings(skFileNameSettings, QSettings::IniFormat));
     setProjectTitle();
@@ -163,6 +166,7 @@ void MainWindow::specifyMenuConnections()
     connect(mpUi->actionNewProject, &QAction::triggered, this, &MainWindow::createProject);
     connect(mpUi->actionOpenProject, &QAction::triggered, this, &MainWindow::openProject);
     connect(mpUi->actionSaveProject, &QAction::triggered, this, &MainWindow::saveProject);
+    connect(mpUi->actionSaveProject, &QAction::triggered, this, &MainWindow::saveProjectAs);
     connect(mpUi->actionExit, &QAction::triggered, this, &QMainWindow::close);
     connect(mpProject, &QRS::Project::modified, this, &MainWindow::setWindowModified);
     // Help
@@ -185,8 +189,8 @@ void MainWindow::saveSettings()
 void MainWindow::restoreSettings()
 {
     bool isOk = restoreGeometry(mpSettings->value("mainWindow/Geometry").toByteArray())
-        && restoreState(mpSettings->value("mainWindow/State").toByteArray())
-        && mpDockManager->restoreState(mpSettings->value("mainWindow/DockingState").toByteArray());
+                && restoreState(mpSettings->value("mainWindow/State").toByteArray())
+                && mpDockManager->restoreState(mpSettings->value("mainWindow/DockingState").toByteArray());
     mpDockManager->loadPerspectives(*mpSettings);
     if (isOk)
         qInfo() << tr("Settings were restored from the file") << skFileNameSettings;
@@ -222,21 +226,58 @@ void MainWindow::createProject()
     saveProjectChangesDialog();
     delete mpProject;
     mpProject = new QRS::Project(skDefaultProjectName);
+    connect(mpProject, &QRS::Project::modified, this, &MainWindow::setWindowModified);
     setProjectTitle();
 }
 
 //! Open a project
 void MainWindow::openProject()
 {
-    saveProjectChangesDialog();
-    // TODO
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Open Project"),
+                       mLastPath, tr("Project file format (*%1)").arg(skProjectExtension));
+    if (!fileName.isEmpty())
+    {
+        QFileInfo info(fileName);
+        QString path = info.path();
+        fileName = info.baseName();
+        delete mpProject;
+        mpProject = new QRS::Project(path, fileName);
+        connect(mpProject, &QRS::Project::modified, this, &MainWindow::setWindowModified);
+        setWindowModified(false);
+        mLastPath = path;
+        setProjectTitle();
+    }
 }
 
 //! Save the current project
 bool MainWindow::saveProject()
 {
-    // TODO
-    return true;
+    QString filePath = mpProject->filePath();
+    if (filePath.isEmpty())
+        return saveProjectAs();
+    return saveProjectHelper(filePath);
+}
+
+//! Save the current project under a new name
+bool MainWindow::saveProjectAs()
+{
+    QString filePath = QFileDialog::getSaveFileName(this, tr("Save Project"), mLastPath,
+                       tr("Project file format (*%1)").arg(skProjectExtension));
+    return saveProjectHelper(filePath);
+}
+
+//! Helper method to perform saving of the current project
+bool MainWindow::saveProjectHelper(QString const& filePath)
+{
+    if (filePath.isEmpty())
+        return false;
+    QFileInfo info(filePath);
+    QString path = info.path();
+    QString fileName = info.baseName();
+    bool isSaved = mpProject->save(path, fileName);
+    mLastPath = path;
+    setProjectTitle();
+    return isSaved;
 }
 
 //! Save project changes
@@ -245,11 +286,11 @@ void MainWindow::saveProjectChangesDialog()
     if (isWindowModified())
     {
         const QMessageBox::StandardButton res = QMessageBox::warning(this, tr("Save project changes"),
-                tr(
-                    "The project has been modified.\n"
-                    "Would you like to save it"
-                ),
-                QMessageBox::Yes | QMessageBox::No);
+                                                tr(
+                                                        "The project has been modified.\n"
+                                                        "Would you like to save it"
+                                                ),
+                                                QMessageBox::Yes | QMessageBox::No);
         if (res == QMessageBox::Yes)
             saveProject();
     }
@@ -263,11 +304,11 @@ void MainWindow::closeEvent(QCloseEvent* event)
     {
         bool isClosed = false;
         const QMessageBox::StandardButton res = QMessageBox::warning(this, tr("Save project changes"),
-                tr(
-                    "The project has been modified.\n"
-                    "Would you like to save it before exit?"
-                ),
-                QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
+                                                tr(
+                                                        "The project has been modified.\n"
+                                                        "Would you like to save it before exit?"
+                                                ),
+                                                QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
         switch (res)
         {
         case QMessageBox::Save:
@@ -285,6 +326,10 @@ void MainWindow::closeEvent(QCloseEvent* event)
         if (isClosed)
             event->accept();
     }
+    else
+    {
+        event->accept();
+    }
 }
 
 //! Show information a name of a project
@@ -298,13 +343,13 @@ void MainWindow::setProjectTitle()
 void MainWindow::aboutProgram()
 {
     const QString aboutMsg = tr(
-            "QRodSystems is a multiplatform wrapper to create rod systems by means of the KLPALGSYS core. "
-            "You can download the code from <a href='https://github.com/qinterfly/QRodSystems'>GitHub</a>. If you find any "
-            "bug or problem, please report it in <a href='https://github.com/qinterfly/QRodSystems/issues'>the issues "
-            "page</a> so I can fix it as soon as possible.<br><br>"
-            "Copyright &copy; 2021 QRodSystems (Pavel Lakiza) "
-            "Copyright &copy; 2021 KLPALGSYS (Dmitriy Krasnorutskiy)"
-        );
+                                 "QRodSystems is a multiplatform wrapper to create rod systems by means of the KLPALGSYS core. "
+                                 "You can download the code from <a href='https://github.com/qinterfly/QRodSystems'>GitHub</a>. If you find any "
+                                 "bug or problem, please report it in <a href='https://github.com/qinterfly/QRodSystems/issues'>the issues "
+                                 "page</a> so I can fix it as soon as possible.<br><br>"
+                                 "Copyright &copy; 2021 QRodSystems (Pavel Lakiza) "
+                                 "Copyright &copy; 2021 KLPALGSYS (Dmitriy Krasnorutskiy)"
+                             );
     QMessageBox::about(this, tr("About QRodSystems v%1").arg(APP_VERSION), aboutMsg);
 }
 

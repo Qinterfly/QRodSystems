@@ -37,6 +37,7 @@ using namespace QRS;
 
 const static QSize kIconSize = QSize(22, 22);
 void setToolBarShortcutHints(QToolBar* pToolBar);
+QIcon getDataObjectIcon(DataObjectType type);
 
 DataObjectsManager::DataObjectsManager(QRS::Project& project, QSettings& settings, QWidget* parent)
     : QDialog(parent)
@@ -66,9 +67,9 @@ void DataObjectsManager::closeEvent(QCloseEvent* event)
     if (isWindowModified())
     {
         auto dialogResult = QMessageBox::question(this
-                , tr("Close confirmation")
-                , tr("Data objects manager contains unsaved changes. Would you like to close it anyway?")
-                , QMessageBox::Yes | QMessageBox::No);
+                            , tr("Close confirmation")
+                            , tr("Data objects manager contains unsaved changes. Would you like to close it anyway?")
+                            , QMessageBox::Yes | QMessageBox::No);
         if (QMessageBox::Yes == dialogResult)
         {
             saveSettings();
@@ -149,14 +150,14 @@ CDockWidget* DataObjectsManager::createDataObjectsWidget()
 {
     CDockWidget* pDockWidget = new CDockWidget("Objects");
     pDockWidget->setFeature(CDockWidget::DockWidgetClosable, false);
-    mpListObjects = new QListWidget();
-    mpListObjects->setIconSize(QSize(11, 11));
-    mpListObjects->setSelectionMode(QAbstractItemView::SingleSelection);
-    mpListObjects->setSelectionBehavior(QAbstractItemView::SelectItems);
-    mpListObjects->setEditTriggers(QAbstractItemView::DoubleClicked);
-    connect(mpListObjects, &QListWidget::itemChanged, this, &DataObjectsManager::renameDataObject);
-    connect(mpListObjects, &QListWidget::currentItemChanged, this, &DataObjectsManager::representSelectedDataObject);
-    pDockWidget->setWidget(mpListObjects);
+    mpListDataObjects = new QListWidget();
+    mpListDataObjects->setIconSize(QSize(11, 11));
+    mpListDataObjects->setSelectionMode(QAbstractItemView::SingleSelection);
+    mpListDataObjects->setSelectionBehavior(QAbstractItemView::SelectItems);
+    mpListDataObjects->setEditTriggers(QAbstractItemView::DoubleClicked);
+    connect(mpListDataObjects, &QListWidget::itemChanged, this, &DataObjectsManager::renameDataObject);
+    connect(mpListDataObjects, &QListWidget::currentItemChanged, this, &DataObjectsManager::representSelectedDataObject);
+    pDockWidget->setWidget(mpListDataObjects);
     // ToolBar
     QToolBar* pToolBar = pDockWidget->createDefaultToolBar();
     pToolBar->setToolButtonStyle(Qt::ToolButtonStyle::ToolButtonIconOnly);
@@ -227,60 +228,58 @@ void DataObjectsManager::apply()
 void DataObjectsManager::retrieveDataObjects()
 {
     mDataObjects = mProject.getDataObjects();
+    for (auto const& mapItem : mDataObjects)
+        addListDataObjects(mapItem.second);
 }
 
 //! Add a scalar object
 void DataObjectsManager::addScalar()
 {
     static QString const kScalarName = "Scalar ";
-    static QIcon icon = QIcon(":/icons/letter-s.svg");
     QString name = kScalarName + QString::number(ScalarDataObject::numberInstances() + 1);
-    emplaceDataObject(new ScalarDataObject(name), icon, name);
+    emplaceDataObject(new ScalarDataObject(name));
 }
 
 //! Add a vector object
 void DataObjectsManager::addVector()
 {
     static QString const kVectorName = "Vector ";
-    static QIcon icon = QIcon(":/icons/letter-v.svg");
     QString name = kVectorName + QString::number(VectorDataObject::numberInstances() + 1);
-    emplaceDataObject(new VectorDataObject(name), icon, name);
+    emplaceDataObject(new VectorDataObject(name));
 }
 
 //! Add a matrix object
 void DataObjectsManager::addMatrix()
 {
     static QString const kMatrixName = "Matrix ";
-    static QIcon icon = QIcon(":/icons/letter-m.svg");
     QString name = kMatrixName + QString::number(MatrixDataObject::numberInstances() + 1);
-    emplaceDataObject(new MatrixDataObject(name), icon, name);
+    emplaceDataObject(new MatrixDataObject(name));
 }
 
 //! Add a surface object
 void DataObjectsManager::addSurface()
 {
     static QString const kSurfaceName = "Surface ";
-    static QIcon icon = QIcon(":/icons/letter-xy.svg");
     QString name = kSurfaceName + QString::number(SurfaceDataObject::numberInstances() + 1);
-    emplaceDataObject(new SurfaceDataObject(name), icon, name);
+    emplaceDataObject(new SurfaceDataObject(name));
 }
 
 //! Select a data object from the list
 void DataObjectsManager::selectDataObject(int index)
 {
-    if (index > mpListObjects->count())
+    if (index > mpListDataObjects->count())
         return;
-    mpListObjects->setCurrentRow(index);
+    mpListDataObjects->setCurrentRow(index);
 }
 
 //! Represent a selected data object according to its type
 void DataObjectsManager::representSelectedDataObject()
 {
     mpInterfaceTableModel = nullptr;
-    int iRowSelected = mpListObjects->currentRow();
-    if (iRowSelected < 0 || iRowSelected > mpListObjects->count())
+    int iRowSelected = mpListDataObjects->currentRow();
+    if (iRowSelected < 0 || iRowSelected > mpListDataObjects->count())
         return;
-    DataIDType id = mpListObjects->item(iRowSelected)->data(Qt::UserRole).toUInt();
+    DataIDType id = mpListDataObjects->item(iRowSelected)->data(Qt::UserRole).toUInt();
     AbstractDataObject* pObject = mDataObjects[id];
     mpBaseTableModel->setDataObject(nullptr);
     mpMatrixTableModel->setDataObject(nullptr);
@@ -354,14 +353,14 @@ void DataObjectsManager::removeSelectedLeadingItem()
 //! Remove a selected data object
 void DataObjectsManager::removeSelectedDataObject()
 {
-    if (mpListObjects->currentRow() < 0)
+    if (mpListDataObjects->currentRow() < 0)
         return;
-    QListWidgetItem* item = mpListObjects->currentItem();
+    QListWidgetItem* item = mpListDataObjects->currentItem();
     DataIDType id = item->data(Qt::UserRole).toUInt();
-    mpListObjects->removeItemWidget(item);
+    mpListDataObjects->removeItemWidget(item);
     mDataObjects.erase(id);
     delete item;
-    if (!mpListObjects->count())
+    if (!mpListDataObjects->count())
     {
         mpInterfaceTableModel = nullptr;
         mpDataTable->setModel(nullptr);
@@ -378,20 +377,27 @@ void DataObjectsManager::renameDataObject(QListWidgetItem* item)
 }
 
 //! Helper function to insert data objects into the manager
-void DataObjectsManager::emplaceDataObject(AbstractDataObject* dataObject, QIcon const& icon, QString const& name)
+void DataObjectsManager::emplaceDataObject(AbstractDataObject* dataObject)
 {
     mDataObjects.emplace(dataObject->id(), dataObject);
-    QListWidgetItem* item = new QListWidgetItem(icon, name);
+    addListDataObjects(dataObject);
+    setWindowModified(true);
+}
+
+//! Add a data object to the list
+void DataObjectsManager::addListDataObjects(AbstractDataObject* dataObject)
+{
+    QIcon icon = getDataObjectIcon(dataObject->type());
+    QListWidgetItem* item = new QListWidgetItem(icon, dataObject->name());
     item->setData(Qt::UserRole, dataObject->id());
     item->setFlags (item->flags () | Qt::ItemIsEditable);
-    mpListObjects->addItem(item);
-    setWindowModified(true);
+    mpListDataObjects->addItem(item);
 }
 
 //! Helper function to check if it is possible to interact with data object content
 bool DataObjectsManager::isDataTableModifiable()
 {
-    return mpListObjects->currentRow() >= 0 && mpInterfaceTableModel;
+    return mpListDataObjects->currentRow() >= 0 && mpInterfaceTableModel;
 }
 
 //! Helper function to add a shortcut hint to all actions which a toolbar contains
@@ -400,5 +406,23 @@ void setToolBarShortcutHints(QToolBar* pToolBar)
     QList<QAction*> listActions = pToolBar->actions();
     for (auto& action : listActions)
         action->setText(QString(action->text() + " (%1)").arg(action->shortcut().toString()));
+}
+
+//! Helper function to assign appropriate data object icon
+QIcon getDataObjectIcon(DataObjectType type)
+{
+    switch(type)
+    {
+    case kScalar:
+        return QIcon(":/icons/letter-s.svg");
+    case kVector:
+        return QIcon(":/icons/letter-v.svg");
+    case kMatrix:
+        return QIcon(":/icons/letter-m.svg");
+    case kSurface:
+        return QIcon(":/icons/letter-xy.svg");
+    default:
+        return QIcon();
+    }
 }
 

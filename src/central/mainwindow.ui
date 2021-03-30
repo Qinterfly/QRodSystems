@@ -48,14 +48,14 @@
      <string>&amp;Window</string>
     </property>
    </widget>
-   <widget class="QMenu" name="menuProject">
+   <widget class="QMenu" name="menuFile">
     <property name="font">
      <font>
       <pointsize>10</pointsize>
      </font>
     </property>
     <property name="title">
-     <string>&amp;Project</string>
+     <string>&amp;File</string>
     </property>
     <addaction name="separator"/>
     <addaction name="actionNewProject"/>
@@ -98,7 +98,7 @@
     <addaction name="actionAboutQt"/>
     <addaction name="actionAboutProgram"/>
    </widget>
-   <addaction name="menuProject"/>
+   <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
    <addaction name="menuWindow"/>
    <addaction name="menuHelp"/>

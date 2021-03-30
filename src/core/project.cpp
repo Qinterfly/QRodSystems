@@ -28,6 +28,7 @@ AbstractDataObject* createDataObject(DataObjectType type, QString const& name);
 Project::Project(QString const& name)
     : mID(QRandomGenerator::global()->generate())
     , mName(name)
+    , mIsModified(true)
 {
 
 }
@@ -216,6 +217,7 @@ Project::Project(QString const& path, QString const& fileName)
     // Renaming the project
     mName = baseFileName;
     mFilePath = filePath;
+    setModified(false);
     qInfo() << tr("Project was read from the file: %1").arg(mFilePath);
 }
 
