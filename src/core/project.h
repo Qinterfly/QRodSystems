@@ -63,7 +63,7 @@ private:
     //! Path to a file where a project is stored
     QString mFilePath;
     //! Flag whether a project has been modified since last saving
-    bool mIsModified = true;
+    bool mIsModified;
     //! Data objects
     DataObjects mDataObjects;
     //! File extensionn

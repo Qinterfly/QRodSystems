@@ -143,6 +143,7 @@ bool Project::save(QString const& path, QString const& fileName)
 
 //! Read a project from a file
 Project::Project(QString const& path, QString const& fileName)
+    : mIsModified(false)
 {
     QString baseFileName = QFileInfo(fileName).baseName();
     QString filePath = QFileInfo(path + QDir::separator() + fileName + skProjectExtension).absoluteFilePath();
@@ -217,7 +218,6 @@ Project::Project(QString const& path, QString const& fileName)
     // Renaming the project
     mName = baseFileName;
     mFilePath = filePath;
-    setModified(false);
     qInfo() << tr("Project was read from the file: %1").arg(mFilePath);
 }
 
