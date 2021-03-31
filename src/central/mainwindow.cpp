@@ -177,10 +177,11 @@ void MainWindow::specifyMenuConnections()
 //! Save the current window settings
 void MainWindow::saveSettings()
 {
-    mpSettings->setValue("mainWindow/Geometry", saveGeometry());
-    mpSettings->setValue("mainWindow/State", saveState());
-    mpSettings->setValue("mainWindow/DockingState", mpDockManager->saveState());
-    mpDockManager->savePerspectives(*mpSettings);
+    mpSettings->beginGroup("MainWindow");
+    mpSettings->setValue("geometry", saveGeometry());
+    mpSettings->setValue("state", saveState());
+    mpSettings->setValue("dockingState", mpDockManager->saveState());
+    mpSettings->endGroup();
     if (mpSettings->status() == QSettings::NoError)
         qInfo() << tr("Settings were written to the file") << skFileNameSettings;
 }
@@ -188,14 +189,15 @@ void MainWindow::saveSettings()
 //! Restore window settings from a file
 void MainWindow::restoreSettings()
 {
-    bool isOk = restoreGeometry(mpSettings->value("mainWindow/Geometry").toByteArray())
-                && restoreState(mpSettings->value("mainWindow/State").toByteArray())
-                && mpDockManager->restoreState(mpSettings->value("mainWindow/DockingState").toByteArray());
-    mpDockManager->loadPerspectives(*mpSettings);
+    mpSettings->beginGroup("MainWindow");
+    bool isOk = restoreGeometry(mpSettings->value("geometry").toByteArray())
+                && restoreState(mpSettings->value("state").toByteArray())
+                && mpDockManager->restoreState(mpSettings->value("dockingState").toByteArray());
+    mpSettings->endGroup();
     if (isOk)
         qInfo() << tr("Settings were restored from the file") << skFileNameSettings;
     else
-        qWarning() << tr("An error occured while reading settings from the file") << skFileNameSettings;;
+        qWarning() << tr("An error occured while reading settings from the file") << skFileNameSettings;
 }
 
 //! Show a manager for designing data objects
@@ -330,6 +332,20 @@ void MainWindow::setProjectTitle()
 {
     QString title = APP_NAME;
     setWindowTitle(QString(title + ": %1[*]").arg(mpProject->name()));
+}
+
+//! Retrieve recent projects from the settings file
+void MainWindow::getRecentProjects()
+{
+    QString const kRecentName = "RecentProjects";
+    QList<QVariant> listProjects = mpSettings->value(kRecentName).toList();
+    // TODO
+}
+
+//! Add the current project to the recent ones
+void MainWindow::addToRecentProjects()
+{
+    // TODO
 }
 
 //! Show information about a program

@@ -203,17 +203,19 @@ QLayout* DataObjectsManager::createDialogControls()
 //! Save settings to a file
 void DataObjectsManager::saveSettings()
 {
-    mSettings.setValue("dataObjectsManager/Geometry", saveGeometry());
-    mSettings.setValue("dataObjectsManager/DockingState", mpDockManager->saveState());
-    mpDockManager->savePerspectives(mSettings);
+    mSettings.beginGroup("DataObjectsManager");
+    mSettings.setValue("geometry", saveGeometry());
+    mSettings.setValue("dockingState", mpDockManager->saveState());
+    mSettings.endGroup();
 }
 
 //! Restore settings from a file
 void DataObjectsManager::restoreSettings()
 {
-    restoreGeometry(mSettings.value("dataObjectsManager/Geometry").toByteArray());
-    mpDockManager->restoreState(mSettings.value("dataObjectsManager/DockingState").toByteArray());
-    mpDockManager->loadPerspectives(mSettings);
+    mSettings.beginGroup("DataObjectsManager");
+    restoreGeometry(mSettings.value("geometry").toByteArray());
+    mpDockManager->restoreState(mSettings.value("dockingState").toByteArray());
+    mSettings.endGroup();
 }
 
 //! Apply all the changes made by user

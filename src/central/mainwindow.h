@@ -46,6 +46,8 @@ private:
     ads::CDockWidget* createLogWidget();
     ads::CDockWidget* createPropertiesWidget();
     void setProjectTitle();
+    void getRecentProjects();
+    void addToRecentProjects();
     // Signals & Slots
     void specifyMenuConnections();
     bool saveProjectChangesDialog();
