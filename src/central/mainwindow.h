@@ -46,19 +46,21 @@ private:
     ads::CDockWidget* createLogWidget();
     ads::CDockWidget* createPropertiesWidget();
     void setProjectTitle();
-    void getRecentProjects();
+    void retrieveRecentProjects();
     void addToRecentProjects();
     // Signals & Slots
     void specifyMenuConnections();
     bool saveProjectChangesDialog();
     bool saveProjectHelper(QString const& filePath);
+    void openProjectHelper(QString const& filePath);
 
 private slots:
     // Project
     void createProject();
     void openProject();
+    void openRecentProject();
     bool saveProject();
-    bool saveProjectAs();
+    bool saveAsProject();
     void projectModified();
     // Settings
     void saveSettings();
@@ -77,6 +79,7 @@ private:
     DataObjectsManager* mpDataObjectsManager = nullptr;
     QRS::Project* mpProject;
     QString mLastPath;
+    QList<QString> mPathRecentProjects;
 
 public:
     static LogWidget* pLogger;

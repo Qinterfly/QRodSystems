@@ -31,10 +31,18 @@ using ads::CDockWidget;
 using ads::CDockAreaWidget;
 
 void moveToCenter(QWidget*);
+
 LogWidget* MainWindow::pLogger = nullptr;
-const static QString skFileNameSettings = "Settings.ini";
+// Project constants
 const static QString skDefaultProjectName = "Default";
-static QString const& skProjectExtension = QRS::Project::getFileExtension();
+static QString const& skProjectExtension  = QRS::Project::getFileExtension();
+// Settings constants
+const static QString skSettingsFileName       = "Settings.ini";
+const static QString skSettingsWindow         = "MainWindow";
+const static QString skSettingsGeometry       = "geometry";
+const static QString skSettingsState          = "state";
+const static QString skSettingsDockingState   = "dockingState";
+const static QString skSettingsRecentProjects = "RecentProjects";
 
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent)
@@ -64,7 +72,7 @@ void MainWindow::createContent()
 {
     mLastPath = '.' + QDir::separator();
     mpProject = new QRS::Project(skDefaultProjectName);
-    mpSettings = QSharedPointer<QSettings>(new QSettings(skFileNameSettings, QSettings::IniFormat));
+    mpSettings = QSharedPointer<QSettings>(new QSettings(skSettingsFileName, QSettings::IniFormat));
     setProjectTitle();
     // Configuration
     CDockManager::setConfigFlag(CDockManager::FocusHighlighting, true);
@@ -166,7 +174,7 @@ void MainWindow::specifyMenuConnections()
     connect(mpUi->actionNewProject, &QAction::triggered, this, &MainWindow::createProject);
     connect(mpUi->actionOpenProject, &QAction::triggered, this, &MainWindow::openProject);
     connect(mpUi->actionSaveProject, &QAction::triggered, this, &MainWindow::saveProject);
-    connect(mpUi->actionSaveProject, &QAction::triggered, this, &MainWindow::saveProjectAs);
+    connect(mpUi->actionSaveAsProject, &QAction::triggered, this, &MainWindow::saveAsProject);
     connect(mpUi->actionExit, &QAction::triggered, this, &QMainWindow::close);
     connect(mpProject, &QRS::Project::modified, this, &MainWindow::projectModified);
     // Help
@@ -177,27 +185,28 @@ void MainWindow::specifyMenuConnections()
 //! Save the current window settings
 void MainWindow::saveSettings()
 {
-    mpSettings->beginGroup("MainWindow");
-    mpSettings->setValue("geometry", saveGeometry());
-    mpSettings->setValue("state", saveState());
-    mpSettings->setValue("dockingState", mpDockManager->saveState());
+    mpSettings->beginGroup(skSettingsWindow);
+    mpSettings->setValue(skSettingsGeometry, saveGeometry());
+    mpSettings->setValue(skSettingsState, saveState());
+    mpSettings->setValue(skSettingsDockingState, mpDockManager->saveState());
     mpSettings->endGroup();
     if (mpSettings->status() == QSettings::NoError)
-        qInfo() << tr("Settings were written to the file") << skFileNameSettings;
+        qInfo() << tr("Settings were written to the file") << skSettingsFileName;
 }
 
 //! Restore window settings from a file
 void MainWindow::restoreSettings()
 {
-    mpSettings->beginGroup("MainWindow");
-    bool isOk = restoreGeometry(mpSettings->value("geometry").toByteArray())
-                && restoreState(mpSettings->value("state").toByteArray())
-                && mpDockManager->restoreState(mpSettings->value("dockingState").toByteArray());
+    mpSettings->beginGroup(skSettingsWindow);
+    bool isOk = restoreGeometry(mpSettings->value(skSettingsGeometry).toByteArray())
+                && restoreState(mpSettings->value(skSettingsState).toByteArray())
+                && mpDockManager->restoreState(mpSettings->value(skSettingsDockingState).toByteArray());
     mpSettings->endGroup();
+    retrieveRecentProjects();
     if (isOk)
-        qInfo() << tr("Settings were restored from the file") << skFileNameSettings;
+        qInfo() << tr("Settings were restored from the file") << skSettingsFileName;
     else
-        qWarning() << tr("An error occured while reading settings from the file") << skFileNameSettings;
+        qWarning() << tr("An error occured while reading settings from the file") << skSettingsFileName;
 }
 
 //! Show a manager for designing data objects
@@ -239,20 +248,36 @@ void MainWindow::openProject()
 {
     if (!saveProjectChangesDialog())
         return;
-    QString fileName = QFileDialog::getOpenFileName(this, tr("Open Project"),
+    QString filePath = QFileDialog::getOpenFileName(this, tr("Open Project"),
                        mLastPath, tr("Project file format (*%1)").arg(skProjectExtension));
-    if (!fileName.isEmpty())
-    {
-        QFileInfo info(fileName);
-        QString path = info.path();
-        fileName = info.baseName();
-        delete mpProject;
-        mpProject = new QRS::Project(path, fileName);
-        connect(mpProject, &QRS::Project::modified, this, &MainWindow::projectModified);
-        setWindowModified(false);
-        mLastPath = path;
-        setProjectTitle();
-    }
+    openProjectHelper(filePath);
+}
+
+//! Open the project which was selected from the Recent Projects menu
+void MainWindow::openRecentProject()
+{
+    if (!saveProjectChangesDialog())
+        return;
+    QAction* pAction = (QAction*)sender();
+    if (pAction)
+        openProjectHelper(pAction->text());
+}
+
+//! Helper method to perform opening of the specified project
+void MainWindow::openProjectHelper(QString const& filePath)
+{
+    if (filePath.isEmpty())
+        return;
+    QFileInfo info(filePath);
+    QString path = info.path();
+    QString baseName = info.baseName();
+    delete mpProject;
+    mpProject = new QRS::Project(path, baseName);
+    connect(mpProject, &QRS::Project::modified, this, &MainWindow::projectModified);
+    setWindowModified(false);
+    mLastPath = path;
+    setProjectTitle();
+    addToRecentProjects();
 }
 
 //! Whenever a project has been modified
@@ -267,16 +292,19 @@ bool MainWindow::saveProject()
 {
     QString filePath = mpProject->filePath();
     if (filePath.isEmpty())
-        return saveProjectAs();
+        return saveAsProject();
     return saveProjectHelper(filePath);
 }
 
 //! Save the current project under a new name
-bool MainWindow::saveProjectAs()
+bool MainWindow::saveAsProject()
 {
     QString filePath = QFileDialog::getSaveFileName(this, tr("Save Project"), mLastPath,
                        tr("Project file format (*%1)").arg(skProjectExtension));
-    return saveProjectHelper(filePath);
+    bool isSaved = saveProjectHelper(filePath);
+    if (isSaved)
+        addToRecentProjects();
+    return isSaved;
 }
 
 //! Helper method to perform saving of the current project
@@ -335,17 +363,48 @@ void MainWindow::setProjectTitle()
 }
 
 //! Retrieve recent projects from the settings file
-void MainWindow::getRecentProjects()
+void MainWindow::retrieveRecentProjects()
 {
-    QString const kRecentName = "RecentProjects";
-    QList<QVariant> listProjects = mpSettings->value(kRecentName).toList();
-    // TODO
+    QList<QVariant> listSettingsProjects = mpSettings->value(skSettingsRecentProjects).toList();
+    mPathRecentProjects.clear();
+    mpUi->menuRecentProjects->clear();
+    QString pathProject;
+    QList<QVariant> listUpdatedPaths;
+    for (auto& varPath : listSettingsProjects)
+    {
+        pathProject = varPath.toString();
+        if (QFileInfo::exists(pathProject))
+        {
+            listUpdatedPaths.push_back(pathProject);
+            QAction* pAction = mpUi->menuRecentProjects->addAction(pathProject);
+            connect(pAction, &QAction::triggered, this, &MainWindow::openRecentProject);
+            mPathRecentProjects.push_back(pathProject);
+        }
+    }
+    mpSettings->setValue(skSettingsRecentProjects, listUpdatedPaths);
 }
 
 //! Add the current project to the recent ones
 void MainWindow::addToRecentProjects()
 {
-    // TODO
+    static const int kMaxRecentProjects = 5;
+    QString const& filePath = mpProject->filePath();
+    if (!filePath.isEmpty())
+    {
+        if (!mPathRecentProjects.contains(filePath))
+            mPathRecentProjects.push_back(filePath);
+        while (mPathRecentProjects.count() > kMaxRecentProjects)
+            mPathRecentProjects.pop_front();
+        mpUi->menuRecentProjects->clear();
+        QList<QVariant> listSettingsProjects;
+        for (auto& path : mPathRecentProjects)
+        {
+            listSettingsProjects.push_back(path);
+            QAction* pAction = mpUi->menuRecentProjects->addAction(path);
+            connect(pAction, &QAction::triggered, this, &MainWindow::openRecentProject);
+        }
+        mpSettings->setValue(skSettingsRecentProjects, listSettingsProjects);
+    }
 }
 
 //! Show information about a program

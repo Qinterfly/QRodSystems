@@ -57,10 +57,15 @@
     <property name="title">
      <string>&amp;File</string>
     </property>
+    <widget class="QMenu" name="menuRecentProjects">
+     <property name="title">
+      <string>Recent</string>
+     </property>
+    </widget>
     <addaction name="separator"/>
     <addaction name="actionNewProject"/>
     <addaction name="actionOpenProject"/>
-    <addaction name="actionOpenRecentProjects"/>
+    <addaction name="menuRecentProjects"/>
     <addaction name="separator"/>
     <addaction name="actionSaveProject"/>
     <addaction name="actionSaveAsProject"/>
@@ -166,16 +171,6 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+Shift+S</string>
-   </property>
-  </action>
-  <action name="actionOpenRecentProjects">
-   <property name="text">
-    <string>Open Recent</string>
-   </property>
-   <property name="font">
-    <font>
-     <pointsize>10</pointsize>
-    </font>
    </property>
   </action>
   <action name="actionExit">
@@ -309,6 +304,11 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+B</string>
+   </property>
+  </action>
+  <action name="actionw">
+   <property name="text">
+    <string>w</string>
    </property>
   </action>
  </widget>
