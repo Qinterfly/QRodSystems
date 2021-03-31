@@ -1,7 +1,7 @@
 /*!
  * \file
  * \author Pavel Lakiza
- * \date March 2021
+ * \date April 2021
  * \brief Implementation of the MainWindow class
  */
 
@@ -25,24 +25,19 @@
 #include "view3d.h"
 #include "logwidget.h"
 #include "../managers/dataobjectsmanager.h"
+#include "uiconstants.h"
 
 using ads::CDockManager;
 using ads::CDockWidget;
 using ads::CDockAreaWidget;
 
-void moveToCenter(QWidget*);
-
 LogWidget* MainWindow::pLogger = nullptr;
-// Project constants
 const static QString skDefaultProjectName = "Default";
 static QString const& skProjectExtension  = QRS::Project::getFileExtension();
-// Settings constants
-const static QString skSettingsFileName       = "Settings.ini";
-const static QString skSettingsWindow         = "MainWindow";
-const static QString skSettingsGeometry       = "geometry";
-const static QString skSettingsState          = "state";
-const static QString skSettingsDockingState   = "dockingState";
-const static QString skSettingsRecentProjects = "RecentProjects";
+const static QString skMainWindow = "MainWindow";
+const static QString skRecentProjects = "RecentProjects";
+
+void moveToCenter(QWidget*);
 
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent)
@@ -72,7 +67,7 @@ void MainWindow::createContent()
 {
     mLastPath = '.' + QDir::separator();
     mpProject = new QRS::Project(skDefaultProjectName);
-    mpSettings = QSharedPointer<QSettings>(new QSettings(skSettingsFileName, QSettings::IniFormat));
+    mpSettings = QSharedPointer<QSettings>(new QSettings(UiConstants::Settings::skFileName, QSettings::IniFormat));
     setProjectTitle();
     // Configuration
     CDockManager::setConfigFlag(CDockManager::FocusHighlighting, true);
@@ -185,28 +180,28 @@ void MainWindow::specifyMenuConnections()
 //! Save the current window settings
 void MainWindow::saveSettings()
 {
-    mpSettings->beginGroup(skSettingsWindow);
-    mpSettings->setValue(skSettingsGeometry, saveGeometry());
-    mpSettings->setValue(skSettingsState, saveState());
-    mpSettings->setValue(skSettingsDockingState, mpDockManager->saveState());
+    mpSettings->beginGroup(skMainWindow);
+    mpSettings->setValue(UiConstants::Settings::skGeometry, saveGeometry());
+    mpSettings->setValue(UiConstants::Settings::skState, saveState());
+    mpSettings->setValue(UiConstants::Settings::skDockingState, mpDockManager->saveState());
     mpSettings->endGroup();
     if (mpSettings->status() == QSettings::NoError)
-        qInfo() << tr("Settings were written to the file") << skSettingsFileName;
+        qInfo() << tr("Settings were written to the file") << UiConstants::Settings::skFileName;
 }
 
 //! Restore window settings from a file
 void MainWindow::restoreSettings()
 {
-    mpSettings->beginGroup(skSettingsWindow);
-    bool isOk = restoreGeometry(mpSettings->value(skSettingsGeometry).toByteArray())
-                && restoreState(mpSettings->value(skSettingsState).toByteArray())
-                && mpDockManager->restoreState(mpSettings->value(skSettingsDockingState).toByteArray());
+    mpSettings->beginGroup(skMainWindow);
+    bool isOk = restoreGeometry(mpSettings->value(UiConstants::Settings::skGeometry).toByteArray())
+                && restoreState(mpSettings->value(UiConstants::Settings::skState).toByteArray())
+                && mpDockManager->restoreState(mpSettings->value(UiConstants::Settings::skDockingState).toByteArray());
     mpSettings->endGroup();
     retrieveRecentProjects();
     if (isOk)
-        qInfo() << tr("Settings were restored from the file") << skSettingsFileName;
+        qInfo() << tr("Settings were restored from the file") << UiConstants::Settings::skFileName;
     else
-        qWarning() << tr("An error occured while reading settings from the file") << skSettingsFileName;
+        qWarning() << tr("An error occured while reading settings from the file") << UiConstants::Settings::skFileName;
 }
 
 //! Show a manager for designing data objects
@@ -365,7 +360,7 @@ void MainWindow::setProjectTitle()
 //! Retrieve recent projects from the settings file
 void MainWindow::retrieveRecentProjects()
 {
-    QList<QVariant> listSettingsProjects = mpSettings->value(skSettingsRecentProjects).toList();
+    QList<QVariant> listSettingsProjects = mpSettings->value(skRecentProjects).toList();
     mPathRecentProjects.clear();
     mpUi->menuRecentProjects->clear();
     QString pathProject;
@@ -381,7 +376,7 @@ void MainWindow::retrieveRecentProjects()
             mPathRecentProjects.push_back(pathProject);
         }
     }
-    mpSettings->setValue(skSettingsRecentProjects, listUpdatedPaths);
+    mpSettings->setValue(skRecentProjects, listUpdatedPaths);
 }
 
 //! Add the current project to the recent ones
@@ -403,7 +398,7 @@ void MainWindow::addToRecentProjects()
             QAction* pAction = mpUi->menuRecentProjects->addAction(path);
             connect(pAction, &QAction::triggered, this, &MainWindow::openRecentProject);
         }
-        mpSettings->setValue(skSettingsRecentProjects, listSettingsProjects);
+        mpSettings->setValue(skRecentProjects, listSettingsProjects);
     }
 }
 

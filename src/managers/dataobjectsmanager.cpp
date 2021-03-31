@@ -20,6 +20,7 @@
 
 #include "dataobjectsmanager.h"
 #include "ui_dataobjectsmanager.h"
+#include "../central/uiconstants.h"
 #include "../core/project.h"
 #include "../core/scalardataobject.h"
 #include "../core/vectordataobject.h"
@@ -36,6 +37,8 @@ using ads::CDockAreaWidget;
 using namespace QRS;
 
 const static QSize kIconSize = QSize(22, 22);
+const QString skDataObjectsWindow = "DataObjectsManager";
+
 void setToolBarShortcutHints(QToolBar* pToolBar);
 QIcon getDataObjectIcon(DataObjectType type);
 
@@ -203,18 +206,18 @@ QLayout* DataObjectsManager::createDialogControls()
 //! Save settings to a file
 void DataObjectsManager::saveSettings()
 {
-    mSettings.beginGroup("DataObjectsManager");
-    mSettings.setValue("geometry", saveGeometry());
-    mSettings.setValue("dockingState", mpDockManager->saveState());
+    mSettings.beginGroup(skDataObjectsWindow);
+    mSettings.setValue(UiConstants::Settings::skGeometry, saveGeometry());
+    mSettings.setValue(UiConstants::Settings::skDockingState, mpDockManager->saveState());
     mSettings.endGroup();
 }
 
 //! Restore settings from a file
 void DataObjectsManager::restoreSettings()
 {
-    mSettings.beginGroup("DataObjectsManager");
-    restoreGeometry(mSettings.value("geometry").toByteArray());
-    mpDockManager->restoreState(mSettings.value("dockingState").toByteArray());
+    mSettings.beginGroup(skDataObjectsWindow);
+    restoreGeometry(mSettings.value(UiConstants::Settings::skGeometry).toByteArray());
+    mpDockManager->restoreState(mSettings.value(UiConstants::Settings::skDockingState).toByteArray());
     mSettings.endGroup();
 }
 
