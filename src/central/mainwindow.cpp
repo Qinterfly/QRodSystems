@@ -33,7 +33,8 @@ using ads::CDockAreaWidget;
 
 LogWidget* MainWindow::pLogger = nullptr;
 const static QString skDefaultProjectName = "Default";
-static QString const& skProjectExtension  = QRS::Project::getFileExtension();
+static QString const& skProjectExtension = QRS::Project::getFileExtension();
+const static QString skSettingsFileName = "Settings.ini";
 const static QString skMainWindow = "MainWindow";
 const static QString skRecentProjects = "RecentProjects";
 
@@ -67,7 +68,7 @@ void MainWindow::createContent()
 {
     mLastPath = '.' + QDir::separator();
     mpProject = new QRS::Project(skDefaultProjectName);
-    mpSettings = QSharedPointer<QSettings>(new QSettings(UiConstants::Settings::skFileName, QSettings::IniFormat));
+    mpSettings = QSharedPointer<QSettings>(new QSettings(skSettingsFileName, QSettings::IniFormat));
     setProjectTitle();
     // Configuration
     CDockManager::setConfigFlag(CDockManager::FocusHighlighting, true);
@@ -186,7 +187,7 @@ void MainWindow::saveSettings()
     mpSettings->setValue(UiConstants::Settings::skDockingState, mpDockManager->saveState());
     mpSettings->endGroup();
     if (mpSettings->status() == QSettings::NoError)
-        qInfo() << tr("Settings were written to the file") << UiConstants::Settings::skFileName;
+        qInfo() << tr("Settings were written to the file") << skSettingsFileName;
 }
 
 //! Restore window settings from a file
@@ -199,9 +200,9 @@ void MainWindow::restoreSettings()
     mpSettings->endGroup();
     retrieveRecentProjects();
     if (isOk)
-        qInfo() << tr("Settings were restored from the file") << UiConstants::Settings::skFileName;
+        qInfo() << tr("Settings were restored from the file") << skSettingsFileName;
     else
-        qWarning() << tr("An error occured while reading settings from the file") << UiConstants::Settings::skFileName;
+        qWarning() << tr("An error occured while reading settings from the file") << skSettingsFileName;
 }
 
 //! Show a manager for designing data objects

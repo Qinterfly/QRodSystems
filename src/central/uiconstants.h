@@ -15,7 +15,6 @@ namespace UiConstants
 
 namespace Settings
 {
-const QString skFileName     = "Settings.ini";
 const QString skGeometry     = "geometry";
 const QString skState        = "state";
 const QString skDockingState = "dockingState";
