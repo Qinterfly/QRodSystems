@@ -28,7 +28,7 @@ AbstractDataObject* createDataObject(DataObjectType type, QString const& name);
 Project::Project(QString const& name)
     : mID(QRandomGenerator::global()->generate())
     , mName(name)
-    , mIsModified(true)
+    , mIsModified(false)
 {
 
 }

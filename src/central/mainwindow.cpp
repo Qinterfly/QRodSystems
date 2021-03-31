@@ -33,7 +33,7 @@ using ads::CDockAreaWidget;
 void moveToCenter(QWidget*);
 LogWidget* MainWindow::pLogger = nullptr;
 const static QString skFileNameSettings = "Settings.ini";
-const static QString skDefaultProjectName = "Project 1";
+const static QString skDefaultProjectName = "Default";
 static QString const& skProjectExtension = QRS::Project::getFileExtension();
 
 MainWindow::MainWindow(QWidget* parent)
@@ -56,7 +56,7 @@ void MainWindow::initializeWindow()
 {
     mpUi->setupUi(this);
     setWindowState(Qt::WindowMaximized);
-    setWindowModified(true);
+    setWindowModified(false);
 }
 
 //! Create all the widgets and corresponding actions
@@ -168,7 +168,7 @@ void MainWindow::specifyMenuConnections()
     connect(mpUi->actionSaveProject, &QAction::triggered, this, &MainWindow::saveProject);
     connect(mpUi->actionSaveProject, &QAction::triggered, this, &MainWindow::saveProjectAs);
     connect(mpUi->actionExit, &QAction::triggered, this, &QMainWindow::close);
-    connect(mpProject, &QRS::Project::modified, this, &MainWindow::setWindowModified);
+    connect(mpProject, &QRS::Project::modified, this, &MainWindow::projectModified);
     // Help
     connect(mpUi->actionAboutQt, &QAction::triggered, qApp, &QApplication::aboutQt);
     connect(mpUi->actionAboutProgram, &QAction::triggered, this, &MainWindow::aboutProgram);
@@ -223,16 +223,20 @@ void MainWindow::createRodConstructorManager()
 //! Create a project and substitute the current one with it
 void MainWindow::createProject()
 {
-    saveProjectChangesDialog();
+    if (!saveProjectChangesDialog())
+        return;
     delete mpProject;
     mpProject = new QRS::Project(skDefaultProjectName);
-    connect(mpProject, &QRS::Project::modified, this, &MainWindow::setWindowModified);
+    connect(mpProject, &QRS::Project::modified, this, &MainWindow::projectModified);
+    setWindowModified(false);
     setProjectTitle();
 }
 
 //! Open a project
 void MainWindow::openProject()
 {
+    if (!saveProjectChangesDialog())
+        return;
     QString fileName = QFileDialog::getOpenFileName(this, tr("Open Project"),
                        mLastPath, tr("Project file format (*%1)").arg(skProjectExtension));
     if (!fileName.isEmpty())
@@ -242,11 +246,18 @@ void MainWindow::openProject()
         fileName = info.baseName();
         delete mpProject;
         mpProject = new QRS::Project(path, fileName);
-        connect(mpProject, &QRS::Project::modified, this, &MainWindow::setWindowModified);
+        connect(mpProject, &QRS::Project::modified, this, &MainWindow::projectModified);
         setWindowModified(false);
         mLastPath = path;
         setProjectTitle();
     }
+}
+
+//! Whenever a project has been modified
+void MainWindow::projectModified()
+{
+    setWindowModified(mpProject->isModified());
+    setProjectTitle();
 }
 
 //! Save the current project
@@ -281,55 +292,37 @@ bool MainWindow::saveProjectHelper(QString const& filePath)
 }
 
 //! Save project changes
-void MainWindow::saveProjectChangesDialog()
+bool MainWindow::saveProjectChangesDialog()
 {
     if (isWindowModified())
     {
         const QMessageBox::StandardButton res = QMessageBox::warning(this, tr("Save project changes"),
                                                 tr(
-                                                        "The project has been modified.\n"
-                                                        "Would you like to save it"
+                                                        "The project containes unsaved changes.\n"
+                                                        "Would you like to save it?"
                                                 ),
-                                                QMessageBox::Yes | QMessageBox::No);
-        if (res == QMessageBox::Yes)
+                                                QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
+        switch (res)
+        {
+        case QMessageBox::Yes:
             saveProject();
+            break;
+        case QMessageBox::Cancel:
+            return false;
+        default:
+            break;
+        }
     }
+    return true;
 }
 
 //! Save project and settings before exit
 void MainWindow::closeEvent(QCloseEvent* event)
 {
-    event->ignore();
-    if (isWindowModified())
-    {
-        bool isClosed = false;
-        const QMessageBox::StandardButton res = QMessageBox::warning(this, tr("Save project changes"),
-                                                tr(
-                                                        "The project has been modified.\n"
-                                                        "Would you like to save it before exit?"
-                                                ),
-                                                QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
-        switch (res)
-        {
-        case QMessageBox::Save:
-            isClosed = saveProject();
-            break;
-        case QMessageBox::Cancel:
-            isClosed = false;
-            break;
-        case QMessageBox::Discard:
-            isClosed = true;
-            break;
-        default:
-            break;
-        }
-        if (isClosed)
-            event->accept();
-    }
-    else
-    {
+    if (saveProjectChangesDialog())
         event->accept();
-    }
+    else
+        event->ignore();
 }
 
 //! Show information a name of a project

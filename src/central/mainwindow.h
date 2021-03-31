@@ -48,7 +48,7 @@ private:
     void setProjectTitle();
     // Signals & Slots
     void specifyMenuConnections();
-    void saveProjectChangesDialog();
+    bool saveProjectChangesDialog();
     bool saveProjectHelper(QString const& filePath);
 
 private slots:
@@ -57,6 +57,7 @@ private slots:
     void openProject();
     bool saveProject();
     bool saveProjectAs();
+    void projectModified();
     // Settings
     void saveSettings();
     void restoreSettings();
