@@ -1,3 +1,10 @@
+/*!
+ * \file
+ * \author Pavel Lakiza
+ * \date March 2021
+ * \brief Testing of the core functionality
+ */
+
 #include <QtTest/QTest>
 
 #include "array.h"

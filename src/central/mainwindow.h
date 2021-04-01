@@ -35,6 +35,8 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget* parent = nullptr);
     ~MainWindow();
+    void openProject(QString const& filePath);
+    bool saveProject();
 
 private:
     // Content
@@ -50,16 +52,15 @@ private:
     void addToRecentProjects();
     // Signals & Slots
     void specifyMenuConnections();
+    // Project
     bool saveProjectChangesDialog();
     bool saveProjectHelper(QString const& filePath);
-    void openProjectHelper(QString const& filePath);
 
 private slots:
     // Project
     void createProject();
-    void openProject();
+    void openProjectDialog();
     void openRecentProject();
-    bool saveProject();
     bool saveAsProject();
     void projectModified();
     // Settings

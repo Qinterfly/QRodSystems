@@ -52,6 +52,7 @@ MainWindow::MainWindow(QWidget* parent)
 
 MainWindow::~MainWindow()
 {
+    delete mpProject;
     delete mpUi;
 }
 
@@ -168,7 +169,7 @@ void MainWindow::specifyMenuConnections()
 {
     // Project
     connect(mpUi->actionNewProject, &QAction::triggered, this, &MainWindow::createProject);
-    connect(mpUi->actionOpenProject, &QAction::triggered, this, &MainWindow::openProject);
+    connect(mpUi->actionOpenProject, &QAction::triggered, this, &MainWindow::openProjectDialog);
     connect(mpUi->actionSaveProject, &QAction::triggered, this, &MainWindow::saveProject);
     connect(mpUi->actionSaveAsProject, &QAction::triggered, this, &MainWindow::saveAsProject);
     connect(mpUi->actionExit, &QAction::triggered, this, &QMainWindow::close);
@@ -239,28 +240,18 @@ void MainWindow::createProject()
     setProjectTitle();
 }
 
-//! Open a project
-void MainWindow::openProject()
+//! Open a project by using a dialog
+void MainWindow::openProjectDialog()
 {
     if (!saveProjectChangesDialog())
         return;
     QString filePath = QFileDialog::getOpenFileName(this, tr("Open Project"),
                        mLastPath, tr("Project file format (*%1)").arg(skProjectExtension));
-    openProjectHelper(filePath);
+    openProject(filePath);
 }
 
-//! Open the project which was selected from the Recent Projects menu
-void MainWindow::openRecentProject()
-{
-    if (!saveProjectChangesDialog())
-        return;
-    QAction* pAction = (QAction*)sender();
-    if (pAction)
-        openProjectHelper(pAction->text());
-}
-
-//! Helper method to perform opening of the specified project
-void MainWindow::openProjectHelper(QString const& filePath)
+//! Open the specific project
+void MainWindow::openProject(QString const& filePath)
 {
     if (filePath.isEmpty())
         return;
@@ -274,6 +265,16 @@ void MainWindow::openProjectHelper(QString const& filePath)
     mLastPath = path;
     setProjectTitle();
     addToRecentProjects();
+}
+
+//! Open the project which was selected from the Recent Projects menu
+void MainWindow::openRecentProject()
+{
+    if (!saveProjectChangesDialog())
+        return;
+    QAction* pAction = (QAction*)sender();
+    if (pAction)
+        openProject(pAction->text());
 }
 
 //! Whenever a project has been modified

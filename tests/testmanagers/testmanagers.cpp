@@ -1,3 +1,10 @@
+/*!
+ * \file
+ * \author Pavel Lakiza
+ * \date March 2021
+ * \brief Testing of managers used to create data objects
+ */
+
 #include <QtTest>
 #include <QCoreApplication>
 

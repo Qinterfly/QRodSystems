@@ -165,18 +165,17 @@ Project::Project(QString const& path, QString const& fileName)
     // 2. Project info
     in >> mID;
     // 3. Data objects
-    quint32 intTempNumber;
-    in >> intTempNumber;
-    AbstractDataObject::setNumberObjects(intTempNumber);
-    in >> intTempNumber;
-    ScalarDataObject::setNumberInstances(intTempNumber);
-    in >> intTempNumber;
-    VectorDataObject::setNumberInstances(intTempNumber);
-    in >> intTempNumber;
-    MatrixDataObject::setNumberInstances(intTempNumber);
-    in >> intTempNumber;
-    SurfaceDataObject::setNumberInstances(intTempNumber);
-    in >> intTempNumber;
+    quint32 numObjects;
+    in >> numObjects;
+    AbstractDataObject::setNumberObjects(numObjects);
+    in >> numObjects;
+    ScalarDataObject::setNumberInstances(numObjects);
+    in >> numObjects;
+    VectorDataObject::setNumberInstances(numObjects);
+    in >> numObjects;
+    MatrixDataObject::setNumberInstances(numObjects);
+    in >> numObjects;
+    SurfaceDataObject::setNumberInstances(numObjects);
     mDataObjects.clear();
     DataObjectType type;
     QString name;
@@ -184,7 +183,8 @@ Project::Project(QString const& path, QString const& fileName)
     VectorDataObject* pVector;
     MatrixDataObject* pMatrix;
     SurfaceDataObject* pSurface;
-    for (quint32 i = 0; i != intTempNumber; ++i)
+    in >> numObjects;
+    for (quint32 i = 0; i != numObjects; ++i)
     {
         in >> type;
         in >> name;

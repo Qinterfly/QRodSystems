@@ -67,21 +67,23 @@ DataObjectsManager::~DataObjectsManager()
 void DataObjectsManager::closeEvent(QCloseEvent* event)
 {
     event->ignore();
+    bool isClosed = false;
     if (isWindowModified())
     {
         auto dialogResult = QMessageBox::question(this
                             , tr("Close confirmation")
                             , tr("Data objects manager contains unsaved changes. Would you like to close it anyway?")
                             , QMessageBox::Yes | QMessageBox::No);
-        if (QMessageBox::Yes == dialogResult)
-        {
-            saveSettings();
-            mpDockManager->deleteLater();
-            event->accept();
-        }
+        isClosed = QMessageBox::Yes == dialogResult;
     }
     else
     {
+        isClosed = true;
+    }
+    if (isClosed)
+    {
+        saveSettings();
+        mpDockManager->deleteLater();
         event->accept();
     }
 }

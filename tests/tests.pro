@@ -2,5 +2,6 @@ TEMPLATE = subdirs
 
 SUBDIRS += \
     testcore \
-    testmanagers 
+    testmanagers \
+    testcentral
 
