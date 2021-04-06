@@ -18,20 +18,22 @@ class TestCore : public QObject
     Q_OBJECT
 
 private slots:
-    void initTestCase();
-    void testArray();
-    void testModifyArray();
+    void initTest();
+    void createArray();
+    void modifyArray();
+    void importDataObjects();
     void saveProject();
     void readProject();
-    void cleanupTestCase();
-
+    void cleanupTest();
 private:
     Project* mpProject;
-    const QString mBasePath = "../../../../examples";
+    const QString mBasePath = "../../../../";
+    const QString mExamplesPath = mBasePath + "examples";
+    const QString mImportPath = mBasePath + "preparation/Mathcad/dwds/Input";
 };
 
 //! Initialize data
-void TestCore::initTestCase()
+void TestCore::initTest()
 {
     const uint numObjects = 5;
     mpProject = new Project("test");
@@ -45,7 +47,7 @@ void TestCore::initTestCase()
 }
 
 //! Test how an array is created
-void TestCore::testArray()
+void TestCore::createArray()
 {
     Array<double> matrix(2, 2);
     matrix[0][0] = 1.0;
@@ -64,7 +66,7 @@ void TestCore::testArray()
 }
 
 //! Test how an array object can be modified
-void TestCore::testModifyArray()
+void TestCore::modifyArray()
 {
     std::map<double, Array<double>> map;
     map.emplace(0.0, Array<double>(1, 1));
@@ -76,23 +78,33 @@ void TestCore::testModifyArray()
     QCOMPARE(map[1.0][1][1], 15);
 }
 
+//! Try importing data objects
+void TestCore::importDataObjects()
+{
+    Project tempProject("imported");
+    tempProject.importDataObjects(mImportPath, "w1.prn");
+    tempProject.importDataObjects(mImportPath, "w3.prn");
+    tempProject.importDataObjects(mImportPath, "w9.prn");
+    tempProject.importDataObjects(mImportPath, "xy.prn");
+    QVERIFY(tempProject.save(mExamplesPath, tempProject.name()));
+}
+
 //! Try saving a project
 void TestCore::saveProject()
 {
-    QVERIFY(mpProject->save(mBasePath, mpProject->name()));
+    QVERIFY(mpProject->save(mExamplesPath, mpProject->name()));
 }
 
 //! Try reading a project
 void TestCore::readProject()
 {
-    Project tempProject(mBasePath, mpProject->name());
+    Project tempProject(mExamplesPath, mpProject->name());
     QCOMPARE(mpProject->name(), tempProject.name());
     QCOMPARE(mpProject->getDataObjects().size(), tempProject.getDataObjects().size());
 }
 
-
 //! Cleanup
-void TestCore::cleanupTestCase()
+void TestCore::cleanupTest()
 {
     delete mpProject;
 }

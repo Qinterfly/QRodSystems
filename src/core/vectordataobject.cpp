@@ -10,6 +10,7 @@
 using namespace QRS;
 
 uint VectorDataObject::smNumInstances = 0;
+const IndexType skNumElements = 3;
 
 //! Construct a vector data object
 VectorDataObject::VectorDataObject(QString const& name)
@@ -22,7 +23,7 @@ VectorDataObject::VectorDataObject(QString const& name)
 DataItemType& VectorDataObject::addItem(DataValueType key)
 {
     DataValueType rightKey = getAvailableItemKey(key);
-    mItems.emplace(rightKey, DataItemType(1, 3));
+    mItems.emplace(rightKey, DataItemType(1, skNumElements));
     return mItems.at(rightKey);
 }
 
@@ -33,4 +34,21 @@ AbstractDataObject* VectorDataObject::clone() const
     obj->mItems = mItems;
     obj->mID = mID;
     return obj;
+}
+
+//! Import a vector data object from a file
+void VectorDataObject::import(QTextStream& stream)
+{
+    mItems.clear();
+    quint32 numItems;
+    stream >> numItems;
+    stream.readLine();
+    double key;
+    for (quint32 iItem = 0; iItem != numItems; ++iItem)
+    {
+        stream >> key;
+        DataItemType& item = addItem(key);
+        for (IndexType j = 0; j != skNumElements; ++j)
+            stream >> item[0][j];
+    }
 }

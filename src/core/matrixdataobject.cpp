@@ -10,6 +10,7 @@
 using namespace QRS;
 
 uint MatrixDataObject::smNumInstances = 0;
+const IndexType skNumElements = 3;
 
 //! Construct a matrix data object
 MatrixDataObject::MatrixDataObject(QString const& name)
@@ -22,7 +23,7 @@ MatrixDataObject::MatrixDataObject(QString const& name)
 DataItemType& MatrixDataObject::addItem(DataValueType key)
 {
     DataValueType rightKey = getAvailableItemKey(key);
-    mItems.emplace(rightKey, DataItemType(3, 3));
+    mItems.emplace(rightKey, DataItemType(skNumElements, skNumElements));
     return mItems.at(rightKey);
 }
 
@@ -33,4 +34,22 @@ AbstractDataObject* MatrixDataObject::clone() const
     obj->mItems = mItems;
     obj->mID = mID;
     return obj;
+}
+
+//! Import a matrix data object from a file
+void MatrixDataObject::import(QTextStream& stream)
+{
+    mItems.clear();
+    quint32 numItems;
+    stream >> numItems;
+    stream.readLine();
+    double key;
+    for (quint32 iItem = 0; iItem != numItems; ++iItem)
+    {
+        stream >> key;
+        DataItemType& item = addItem(key);
+        for (IndexType i = 0; i != skNumElements; ++i)
+            for (IndexType j = 0; j != skNumElements; ++j)
+                stream >> item[i][j];
+    }
 }

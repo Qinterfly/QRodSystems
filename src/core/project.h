@@ -35,13 +35,14 @@ public:
     // Data objects
     std::shared_ptr<AbstractDataObject> getDataObject(DataIDType id);
     std::unordered_map<DataIDType, AbstractDataObject*> getDataObjects();
-    void addDataObject(DataObjectType type);
+    DataIDType addDataObject(DataObjectType type);
     void removeDataObject(DataIDType id);
     void setDataObjects(std::unordered_map<DataIDType, AbstractDataObject*> dataObjects);
     // Getters and setters
     QString const& name() const { return mName; }
     QString const& filePath() const { return mFilePath; }
     static QString const& getFileExtension() { return skProjectExtension; }
+    void importDataObjects(QString const& path, QString const& fileName);
 
 signals:
     void dataObjectAdded(QRS::DataIDType id);

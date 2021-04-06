@@ -14,6 +14,10 @@
 #include "array.h"
 #include "datatypes.h"
 
+QT_BEGIN_NAMESPACE
+class QFile;
+QT_END_NAMESPACE
+
 namespace QRS
 {
 
@@ -45,6 +49,8 @@ public:
     virtual void deserialize(QDataStream& stream);
     friend QDataStream& operator<<(QDataStream& stream, AbstractDataObject const& obj);
     friend QDataStream& operator>>(QDataStream& stream, AbstractDataObject& obj);
+    virtual void import(QTextStream& stream) = 0;
+
 protected:
     //! Object type
     const DataObjectType mType;

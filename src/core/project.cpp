@@ -22,7 +22,7 @@ using namespace QRS;
 
 const QString Project::skProjectExtension = ".qrs";
 
-AbstractDataObject* createDataObject(DataObjectType type, QString const& name);
+AbstractDataObject* createDataObject(DataObjectType type);
 
 //! Construct a clean project with the user specified name
 Project::Project(QString const& name)
@@ -42,18 +42,18 @@ std::shared_ptr<AbstractDataObject> Project::getDataObject(DataIDType id)
 }
 
 //! Create a data object with the specified type
-void Project::addDataObject(DataObjectType type)
+DataIDType Project::addDataObject(DataObjectType type)
 {
-    static const QString skName = "Object ";
-    QString nameObj = skName + QString::number(AbstractDataObject::numberObjects() + 1);
-    AbstractDataObject* pObject = createDataObject(type, nameObj);
+    AbstractDataObject* pObject = createDataObject(type);
     if (pObject)
     {
         DataIDType id = pObject->id();
         mDataObjects.emplace(id, std::shared_ptr<AbstractDataObject>(pObject));
         emit dataObjectAdded(id);
         setModified(true);
+        return id;
     }
+    return -1;
 }
 
 //! Copy data objects
@@ -147,7 +147,7 @@ Project::Project(QString const& path, QString const& fileName)
 {
     QString baseFileName = QFileInfo(fileName).baseName();
     QString filePath = QFileInfo(path + QDir::separator() + fileName + skProjectExtension).absoluteFilePath();
-    // Opening file to write
+    // Opening file to read
     QFile file(filePath);
     if (!file.open(QIODevice::ReadOnly))
     {
@@ -221,27 +221,75 @@ Project::Project(QString const& path, QString const& fileName)
     qInfo() << tr("Project was read from the file: %1").arg(mFilePath);
 }
 
+//! Import several data objects from a file
+void Project::importDataObjects(QString const& path, QString const& fileName)
+{
+    const QString kScalarFileName = "w1.prn";
+    const QString kVectorFileName = "w3.prn";
+    const QString kMatrixFileName = "w9.prn";
+    const QString kSurfaceFileName = "xy.prn";
+    DataIDType id = -1;
+    std::function <bool(QString const&)> isNameEqual = [&fileName](QString const& name) { return !fileName.compare(name, Qt::CaseInsensitive); };
+    DataObjectType type;
+    if (isNameEqual(kScalarFileName))
+        type = kScalar;
+    else if (isNameEqual(kVectorFileName))
+        type = kVector;
+    else if (isNameEqual(kMatrixFileName))
+        type = kMatrix;
+    else if (isNameEqual(kSurfaceFileName))
+        type = kSurface;
+    else
+        return;
+    QString filePath = path + QDir::separator() + fileName;
+    QFile file(filePath);
+    if (!file.open(QIODevice::ReadOnly))
+    {
+        qInfo() << tr("Data object cannot be read from the file: %1").arg(filePath);
+        return;
+    }
+    QTextStream stream(&file);
+    quint32 numDataObjects;
+    stream.readLine();
+    stream >> numDataObjects;
+    stream.readLine();
+    for (quint32 iDataObject = 0; iDataObject != numDataObjects; ++iDataObject)
+    {
+        id = addDataObject(type);
+        std::shared_ptr<AbstractDataObject> pDataObject = mDataObjects[id];
+        pDataObject->import(stream);
+    }
+    file.close();
+}
+
+
 //! Helper function to create DataObject instance by a type and name
-AbstractDataObject* createDataObject(DataObjectType type, QString const& name)
+AbstractDataObject* createDataObject(DataObjectType type)
 {
     AbstractDataObject* pObject = nullptr;
+    QString name;
     switch (type)
     {
     case DataObjectType::kScalar:
+        name = "Scalar " + QString::number(ScalarDataObject::numberInstances() + 1);
         pObject = new ScalarDataObject(name);
         break;
     case DataObjectType::kVector:
+        name = "Vector " + QString::number(VectorDataObject::numberInstances() + 1);
         pObject = new VectorDataObject(name);
         break;
     case DataObjectType::kMatrix:
+        name = "Matrix " + QString::number(MatrixDataObject::numberInstances() + 1);
         pObject = new MatrixDataObject(name);
         break;
     case DataObjectType::kSurface:
+        name = "Surface " + QString::number(SurfaceDataObject::numberInstances() + 1);
         pObject = new SurfaceDataObject(name);
         break;
     }
     return pObject;
 }
+
 
 
 

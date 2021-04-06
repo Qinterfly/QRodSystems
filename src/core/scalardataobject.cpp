@@ -5,6 +5,7 @@
  * \brief Implementation of the ScalarDataObject class
  */
 
+#include <QTextStream>
 #include "scalardataobject.h"
 
 using namespace QRS;
@@ -33,4 +34,20 @@ AbstractDataObject* ScalarDataObject::clone() const
     obj->mItems = mItems;
     obj->mID = mID;
     return obj;
+}
+
+//! Import a scalar data object from a file
+void ScalarDataObject::import(QTextStream& stream)
+{
+    mItems.clear();
+    quint32 numItems;
+    stream >> numItems;
+    stream.readLine();
+    double key;
+    for (quint32 iItem = 0; iItem != numItems; ++iItem)
+    {
+        stream >> key;
+        DataItemType& item = addItem(key);
+        stream >> item[0][0];
+    }
 }

@@ -32,6 +32,7 @@ DataItemType& SurfaceDataObject::addItem(DataValueType key)
 AbstractDataObject* SurfaceDataObject::clone() const
 {
     SurfaceDataObject* obj = new SurfaceDataObject(mName);
+    obj->mLeadingItems = mLeadingItems;
     obj->mItems = mItems;
     obj->mID = mID;
     return obj;
@@ -102,3 +103,31 @@ void SurfaceDataObject::deserialize(QDataStream& stream)
     }
 }
 
+//! Import a surface data object from a file
+void SurfaceDataObject::import(QTextStream& stream)
+{
+    mLeadingItems.clear();
+    mItems.clear();
+    quint32 numItems;
+    quint32 numLeadingItems;
+    quint32 tempInteger;
+    stream >> numItems >> numLeadingItems;
+    stream.readLine();
+    stream >> tempInteger;
+    // Leading items
+    double key;
+    for (quint32 iLeadingItem = 0; iLeadingItem != numLeadingItems; ++iLeadingItem)
+    {
+        DataItemType leadingDataItem;
+        stream >> key;
+        mLeadingItems.emplace(key, leadingDataItem);
+    }
+    // Items
+    for (quint32 iItem = 0; iItem != numItems; ++iItem)
+    {
+        stream >> key;
+        DataItemType& item = addItem(key);
+        for (IndexType j = 0; j != numLeadingItems; ++j)
+            stream >> item[0][j];
+    }
+}

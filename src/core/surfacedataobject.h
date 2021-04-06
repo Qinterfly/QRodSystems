@@ -29,6 +29,7 @@ public:
     static void setNumberInstances(uint numInstances) { smNumInstances = numInstances; }
     void serialize(QDataStream& stream) const override;
     virtual void deserialize(QDataStream& stream) override;
+    virtual void import(QTextStream& stream) override;
 
 private:
     static uint smNumInstances;
