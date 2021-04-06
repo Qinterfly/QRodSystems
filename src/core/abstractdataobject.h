@@ -1,7 +1,7 @@
 /*!
  * \file
  * \author Pavel Lakiza
- * \date March 2021
+ * \date April 2021
  * \brief Declaration of the AbstractDataObject class
  */
 
@@ -13,10 +13,6 @@
 #include <unordered_map>
 #include "array.h"
 #include "datatypes.h"
-
-QT_BEGIN_NAMESPACE
-class QFile;
-QT_END_NAMESPACE
 
 namespace QRS
 {

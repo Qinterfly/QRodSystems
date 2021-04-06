@@ -1,7 +1,7 @@
 /*!
  * \file
  * \author Pavel Lakiza
- * \date March 2021
+ * \date April 2021
  * \brief Implementation of the VectorDataObject class
  */
 
