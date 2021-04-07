@@ -211,7 +211,7 @@ void MainWindow::createDataObjectsManager()
 {
     if (mpDataObjectsManager && mpDataObjectsManager->isVisible())
         return;
-    mpDataObjectsManager = new DataObjectsManager(*mpProject, *mpSettings, mpUi->centralWidget);
+    mpDataObjectsManager = new DataObjectsManager(*mpProject, *mpSettings, mLastPath, mpUi->centralWidget);
     moveToCenter(mpDataObjectsManager);
     mpDataObjectsManager->show();
 }

@@ -15,6 +15,7 @@
 #include <QSpacerItem>
 #include <QMessageBox>
 #include <QShortcut>
+#include <QFileDialog>
 #include "DockManager.h"
 #include "DockWidget.h"
 
@@ -42,11 +43,12 @@ const QString skDataObjectsWindow = "DataObjectsManager";
 void setToolBarShortcutHints(QToolBar* pToolBar);
 QIcon getDataObjectIcon(DataObjectType type);
 
-DataObjectsManager::DataObjectsManager(QRS::Project& project, QSettings& settings, QWidget* parent)
+DataObjectsManager::DataObjectsManager(QRS::Project& project, QSettings& settings, QString& lastPath, QWidget* parent)
     : QDialog(parent)
     , mpUi(new Ui::DataObjectsManager)
     , mProject(project)
     , mSettings(settings)
+    , mLastPath(lastPath)
 {
     mpUi->setupUi(this);
     setWindowModified(false);
@@ -146,6 +148,9 @@ CDockWidget* DataObjectsManager::createDataTableWidget()
     pAction->setShortcut(Qt::CTRL + Qt::Key_A);
     pAction = pToolBar->addAction(QIcon(":/icons/table-column-delete.svg"), tr("Remove Column"), this, &DataObjectsManager::removeSelectedLeadingItem);
     pAction->setShortcut(Qt::CTRL + Qt::Key_D);
+    // Import action
+    pToolBar->addSeparator();
+    pToolBar->addAction(QIcon(":/icons/link-import.svg"), tr("Import"), this, &DataObjectsManager::importDataObjects);
     setToolBarShortcutHints(pToolBar);
     return pDockWidget;
 }
@@ -240,35 +245,43 @@ void DataObjectsManager::retrieveDataObjects()
 }
 
 //! Add a scalar object
-void DataObjectsManager::addScalar()
+DataIDType DataObjectsManager::addScalar()
 {
     static QString const kScalarName = "Scalar ";
     QString name = kScalarName + QString::number(ScalarDataObject::numberInstances() + 1);
-    emplaceDataObject(new ScalarDataObject(name));
+    AbstractDataObject* pObject = new ScalarDataObject(name);
+    emplaceDataObject(pObject);
+    return pObject->id();
 }
 
 //! Add a vector object
-void DataObjectsManager::addVector()
+DataIDType DataObjectsManager::addVector()
 {
     static QString const kVectorName = "Vector ";
     QString name = kVectorName + QString::number(VectorDataObject::numberInstances() + 1);
-    emplaceDataObject(new VectorDataObject(name));
+    AbstractDataObject* pObject = new VectorDataObject(name);
+    emplaceDataObject(pObject);
+    return pObject->id();
 }
 
 //! Add a matrix object
-void DataObjectsManager::addMatrix()
+DataIDType DataObjectsManager::addMatrix()
 {
     static QString const kMatrixName = "Matrix ";
     QString name = kMatrixName + QString::number(MatrixDataObject::numberInstances() + 1);
-    emplaceDataObject(new MatrixDataObject(name));
+    AbstractDataObject* pObject = new MatrixDataObject(name);
+    emplaceDataObject(pObject);
+    return pObject->id();
 }
 
 //! Add a surface object
-void DataObjectsManager::addSurface()
+DataIDType DataObjectsManager::addSurface()
 {
     static QString const kSurfaceName = "Surface ";
     QString name = kSurfaceName + QString::number(SurfaceDataObject::numberInstances() + 1);
-    emplaceDataObject(new SurfaceDataObject(name));
+    AbstractDataObject* pObject = new SurfaceDataObject(name);
+    emplaceDataObject(pObject);
+    return pObject->id();
 }
 
 //! Select a data object from the list
@@ -383,6 +396,24 @@ void DataObjectsManager::renameDataObject(QListWidgetItem* item)
     setWindowModified(true);
 }
 
+//! Import data objects from a file
+void DataObjectsManager::importDataObjects()
+{
+    QStringList files = QFileDialog::getOpenFileNames(this,
+                        "Select one or more files to import",
+                        mLastPath,
+                        "Data files (*.prn)");
+    if (files.isEmpty())
+        return;
+    QFileInfo info;
+    for (auto& filePath : files)
+    {
+        QFileInfo info(filePath);
+        importDataObject(info.path(), info.fileName());
+    }
+    mLastPath = QFileInfo(files[0]).path();
+}
+
 //! Helper function to insert data objects into the manager
 void DataObjectsManager::emplaceDataObject(AbstractDataObject* dataObject)
 {
@@ -401,6 +432,61 @@ void DataObjectsManager::addListDataObjects(AbstractDataObject* dataObject)
     mpListDataObjects->addItem(item);
 }
 
+//! Import a data object from a file
+void DataObjectsManager::importDataObject(QString const& path, QString const& fileName)
+{
+    const QString kScalarFileName = "w1.prn";
+    const QString kVectorFileName = "w3.prn";
+    const QString kMatrixFileName = "w9.prn";
+    const QString kSurfaceFileName = "xy.prn";
+    std::function <bool(QString const&)> isNameEqual = [&fileName](QString const& name) { return !fileName.compare(name, Qt::CaseInsensitive); };
+    DataObjectType type;
+    if (isNameEqual(kScalarFileName))
+        type = kScalar;
+    else if (isNameEqual(kVectorFileName))
+        type = kVector;
+    else if (isNameEqual(kMatrixFileName))
+        type = kMatrix;
+    else if (isNameEqual(kSurfaceFileName))
+        type = kSurface;
+    else
+        return;
+    QString filePath = path + QDir::separator() + fileName;
+    QFile file(filePath);
+    if (!file.open(QIODevice::ReadOnly))
+    {
+        qInfo() << QString("Data object cannot be read from the file: %1").arg(filePath);
+        return;
+    }
+    QTextStream stream(&file);
+    quint32 numDataObjects;
+    stream.readLine();
+    stream >> numDataObjects;
+    stream.readLine();
+    DataIDType id;
+    for (quint32 iDataObject = 0; iDataObject != numDataObjects; ++iDataObject)
+    {
+        switch (type)
+        {
+        case kScalar:
+            id = addScalar();
+            break;
+        case kVector:
+            id = addVector();
+            break;
+        case kMatrix:
+            id = addMatrix();
+            break;
+        case kSurface:
+            id = addSurface();
+            break;
+        }
+        AbstractDataObject* pDataObject = mDataObjects[id];
+        pDataObject->import(stream);
+    }
+    file.close();
+}
+
 //! Helper function to check if it is possible to interact with data object content
 bool DataObjectsManager::isDataTableModifiable()
 {
@@ -411,8 +497,15 @@ bool DataObjectsManager::isDataTableModifiable()
 void setToolBarShortcutHints(QToolBar* pToolBar)
 {
     QList<QAction*> listActions = pToolBar->actions();
+    QString shortCut;
     for (auto& action : listActions)
-        action->setText(QString(action->text() + " (%1)").arg(action->shortcut().toString()));
+    {
+        shortCut = action->shortcut().toString();
+        if (shortCut.isEmpty())
+            action->setText(QString(action->text()));
+        else
+            action->setText(QString(action->text() + " (%1)").arg(shortCut));
+    }
 }
 
 //! Helper function to assign appropriate data object icon
@@ -432,4 +525,3 @@ QIcon getDataObjectIcon(DataObjectType type)
         return QIcon();
     }
 }
-

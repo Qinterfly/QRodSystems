@@ -35,6 +35,7 @@ private:
     Project* mpProject;
     QSettings* mpSettings;
     DataObjectsManager* mpDataObjectsManager;
+    QString mLastPath;
 };
 
 //! Init
@@ -42,7 +43,7 @@ void TestManagers::initTestCase()
 {
     mpProject = new Project("Test");
     mpSettings = new QSettings("Settings.ini", QSettings::IniFormat);
-    mpDataObjectsManager = new DataObjectsManager(*mpProject, *mpSettings);
+    mpDataObjectsManager = new DataObjectsManager(*mpProject, *mpSettings, mLastPath);
 }
 
 //! Test how the data objects manager handles with data

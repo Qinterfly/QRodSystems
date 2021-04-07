@@ -48,7 +48,7 @@ class DataObjectsManager : public QDialog
     using mapDataObjects = std::unordered_map<QRS::DataIDType, QRS::AbstractDataObject*>;
 
 public:
-    explicit DataObjectsManager(QRS::Project& project, QSettings& settings, QWidget* parent = nullptr);
+    explicit DataObjectsManager(QRS::Project& project, QSettings& settings, QString& lastPath, QWidget* parent = nullptr);
     ~DataObjectsManager();
     void closeEvent(QCloseEvent* event) override;
     void selectDataObject(int index);
@@ -56,15 +56,16 @@ public:
 
 public slots:
     void apply();
-    void addScalar();
-    void addVector();
-    void addMatrix();
-    void addSurface();
+    QRS::DataIDType addScalar();
+    QRS::DataIDType addVector();
+    QRS::DataIDType addMatrix();
+    QRS::DataIDType addSurface();
     void insertItemAfterSelected();
     void insertLeadingItemAfterSelected();
     void removeSelectedItem();
     void removeSelectedLeadingItem();
     void removeSelectedDataObject();
+    void importDataObjects();
 
 private slots:
     void representSelectedDataObject();
@@ -85,6 +86,7 @@ private:
     void emplaceDataObject(QRS::AbstractDataObject* dataObject);
     void addListDataObjects(QRS::AbstractDataObject* dataObject);
     bool isDataTableModifiable();
+    void importDataObject(QString const& path, QString const& fileName);
 
 private:
     Ui::DataObjectsManager* mpUi;
@@ -97,6 +99,7 @@ private:
     QRS::Project& mProject;
     QSettings& mSettings;
     mapDataObjects mDataObjects;
+    QString& mLastPath;
     // Models
     InterfaceTableModel* mpInterfaceTableModel = nullptr;
     BaseTableModel* mpBaseTableModel;

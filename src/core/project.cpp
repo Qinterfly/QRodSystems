@@ -228,7 +228,6 @@ void Project::importDataObjects(QString const& path, QString const& fileName)
     const QString kVectorFileName = "w3.prn";
     const QString kMatrixFileName = "w9.prn";
     const QString kSurfaceFileName = "xy.prn";
-    DataIDType id = -1;
     std::function <bool(QString const&)> isNameEqual = [&fileName](QString const& name) { return !fileName.compare(name, Qt::CaseInsensitive); };
     DataObjectType type;
     if (isNameEqual(kScalarFileName))
@@ -243,6 +242,7 @@ void Project::importDataObjects(QString const& path, QString const& fileName)
         return;
     QString filePath = path + QDir::separator() + fileName;
     QFile file(filePath);
+    DataIDType id = -1;
     if (!file.open(QIODevice::ReadOnly))
     {
         qInfo() << tr("Data object cannot be read from the file: %1").arg(filePath);
@@ -261,7 +261,6 @@ void Project::importDataObjects(QString const& path, QString const& fileName)
     }
     file.close();
 }
-
 
 //! Helper function to create DataObject instance by a type and name
 AbstractDataObject* createDataObject(DataObjectType type)
