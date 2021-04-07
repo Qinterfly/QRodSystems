@@ -17,6 +17,7 @@
 #include "vectordataobject.h"
 #include "matrixdataobject.h"
 #include "surfacedataobject.h"
+#include "utilities.h"
 
 using namespace QRS;
 
@@ -224,42 +225,22 @@ Project::Project(QString const& path, QString const& fileName)
 //! Import several data objects from a file
 void Project::importDataObjects(QString const& path, QString const& fileName)
 {
-    const QString kScalarFileName = "w1.prn";
-    const QString kVectorFileName = "w3.prn";
-    const QString kMatrixFileName = "w9.prn";
-    const QString kSurfaceFileName = "xy.prn";
-    std::function <bool(QString const&)> isNameEqual = [&fileName](QString const& name) { return !fileName.compare(name, Qt::CaseInsensitive); };
-    DataObjectType type;
-    if (isNameEqual(kScalarFileName))
-        type = kScalar;
-    else if (isNameEqual(kVectorFileName))
-        type = kVector;
-    else if (isNameEqual(kMatrixFileName))
-        type = kMatrix;
-    else if (isNameEqual(kSurfaceFileName))
-        type = kSurface;
-    else
+    auto [type, pFile] = Utilities::File::getDataObjectFile(path, fileName);
+    if (pFile == nullptr)
         return;
-    QString filePath = path + QDir::separator() + fileName;
-    QFile file(filePath);
-    DataIDType id = -1;
-    if (!file.open(QIODevice::ReadOnly))
-    {
-        qInfo() << tr("Data object cannot be read from the file: %1").arg(filePath);
-        return;
-    }
-    QTextStream stream(&file);
+    QTextStream stream(pFile.data());
     quint32 numDataObjects;
     stream.readLine();
     stream >> numDataObjects;
     stream.readLine();
+    DataIDType id = -1;
     for (quint32 iDataObject = 0; iDataObject != numDataObjects; ++iDataObject)
     {
         id = addDataObject(type);
         std::shared_ptr<AbstractDataObject> pDataObject = mDataObjects[id];
         pDataObject->import(stream);
     }
-    file.close();
+    pFile->close();
 }
 
 //! Helper function to create DataObject instance by a type and name

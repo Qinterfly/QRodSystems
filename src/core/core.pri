@@ -8,9 +8,10 @@ HEADERS += \
     $$PWD/scalardataobject.h \
     $$PWD/vectordataobject.h \
     $$PWD/matrixdataobject.h \
-    $$PWD/surfacedataobject.h 
+    $$PWD/surfacedataobject.h \
+    $$PWD/utilities.h
 
-SOURCES += \   
+SOURCES += \
     $$PWD/array.cpp \
     $$PWD/project.cpp \
     $$PWD/abstractdataobject.cpp \
@@ -18,3 +19,4 @@ SOURCES += \
     $$PWD/vectordataobject.cpp \
     $$PWD/matrixdataobject.cpp \
     $$PWD/surfacedataobject.cpp \
+    $$PWD/utilities.cpp

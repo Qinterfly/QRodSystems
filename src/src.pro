@@ -7,6 +7,7 @@ TARGET   = QRodSystems
 TEMPLATE = app
 
 CONFIG += c++20
+QMAKE_CXXFLAGS += -std=c++20
 
 DEFINES += QT_DEPRECATED_WARNINGS
 
