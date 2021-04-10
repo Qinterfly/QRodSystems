@@ -3,6 +3,7 @@ INCLUDEPATH += $$PWD
 HEADERS += \
     $$PWD/datatypes.h \
     $$PWD/array.h \
+    $$PWD/hierarchytree.h \
     $$PWD/project.h \
     $$PWD/abstractdataobject.h \
     $$PWD/scalardataobject.h \
@@ -13,6 +14,7 @@ HEADERS += \
 
 SOURCES += \
     $$PWD/array.cpp \
+    $$PWD/hierarchytree.cpp \
     $$PWD/project.cpp \
     $$PWD/abstractdataobject.cpp \
     $$PWD/scalardataobject.cpp \

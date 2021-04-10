@@ -1,7 +1,7 @@
 /*!
  * \file
  * \author Pavel Lakiza
- * \date March 2021
+ * \date April 2021
  * \brief Declaration of the QRS::Project class
  */
 
@@ -13,8 +13,11 @@
 #include <memory>
 #include "abstractdataobject.h"
 #include "array.h"
+#include "hierarchytree.h"
 
+QT_BEGIN_NAMESPACE
 class QString;
+QT_END_NAMESPACE
 
 namespace QRS
 {
@@ -33,8 +36,9 @@ public:
     // State
     bool isModified() const { return mIsModified; }
     // Data objects
+    DataIDType numberDataObjects() const { return mDataObjects.size(); }
     std::shared_ptr<AbstractDataObject> getDataObject(DataIDType id);
-    std::unordered_map<DataIDType, AbstractDataObject*> getDataObjects();
+    std::unordered_map<DataIDType, AbstractDataObject*> cloneDataObjects() const;
     DataIDType addDataObject(DataObjectType type);
     void removeDataObject(DataIDType id);
     void setDataObjects(std::unordered_map<DataIDType, AbstractDataObject*> dataObjects);
@@ -67,6 +71,8 @@ private:
     bool mIsModified;
     //! Data objects
     DataObjects mDataObjects;
+    //! Hierarchy of data objects
+    HierarchyTree mHierarchyDataObjects;
     //! File extensionn
     static const QString skProjectExtension;
 };

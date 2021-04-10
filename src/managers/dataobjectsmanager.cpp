@@ -146,9 +146,9 @@ CDockWidget* DataObjectsManager::createDataTableWidget()
     pToolBar->addSeparator();
     // Columns actions
     pAction = pToolBar->addAction(QIcon(":/icons/table-column-add.svg"), tr("Add Column"), this, &DataObjectsManager::insertLeadingItemAfterSelected);
-    pAction->setShortcut(Qt::CTRL + Qt::Key_A);
+    pAction->setShortcut(QKeySequence(Qt::CTRL, Qt::Key_A));
     pAction = pToolBar->addAction(QIcon(":/icons/table-column-delete.svg"), tr("Remove Column"), this, &DataObjectsManager::removeSelectedLeadingItem);
-    pAction->setShortcut(Qt::CTRL + Qt::Key_D);
+    pAction->setShortcut(QKeySequence(Qt::CTRL, Qt::Key_D));
     // Import action
     pToolBar->addSeparator();
     pToolBar->addAction(QIcon(":/icons/link-import.svg"), tr("Import"), this, &DataObjectsManager::importDataObjects);
@@ -240,7 +240,7 @@ void DataObjectsManager::apply()
 //! Make a copy of existed data objects
 void DataObjectsManager::retrieveDataObjects()
 {
-    mDataObjects = mProject.getDataObjects();
+    mDataObjects = mProject.cloneDataObjects();
     for (auto const& mapItem : mDataObjects)
         addListDataObjects(mapItem.second);
 }
@@ -406,7 +406,6 @@ void DataObjectsManager::importDataObjects()
                         "Data files (*.prn)");
     if (files.isEmpty())
         return;
-    QFileInfo info;
     for (auto& filePath : files)
     {
         QFileInfo info(filePath);

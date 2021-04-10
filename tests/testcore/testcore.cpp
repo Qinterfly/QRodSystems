@@ -10,6 +10,7 @@
 #include "array.h"
 #include "project.h"
 #include "scalardataobject.h"
+#include "hierarchytree.h"
 
 using namespace QRS;
 
@@ -24,7 +25,9 @@ private slots:
     void importDataObjects();
     void saveProject();
     void readProject();
+    void createHierarchy();
     void cleanupTest();
+
 private:
     Project* mpProject;
     const QString mBasePath = "../../../../";
@@ -62,7 +65,7 @@ void TestCore::createArray()
     matrix.resize(1, 1);
     QCOMPARE(matrix[0][0], 1);
     matrix.resize(0, 1);
-    QCOMPARE(matrix.cols(), 0);
+    QCOMPARE(matrix.cols(), uint(0));
 }
 
 //! Test how an array object can be modified
@@ -100,7 +103,35 @@ void TestCore::readProject()
 {
     Project tempProject(mExamplesPath, mpProject->name());
     QCOMPARE(mpProject->name(), tempProject.name());
-    QCOMPARE(mpProject->getDataObjects().size(), tempProject.getDataObjects().size());
+    QCOMPARE(mpProject->numberDataObjects(), tempProject.numberDataObjects());
+}
+
+//! Try creating a hierarchy of data objects
+void TestCore::createHierarchy()
+{
+    HierarchyTree* pHierarchy = new HierarchyTree();
+    HierarchyNode& rootNode = pHierarchy->root();
+    // 0 - level
+    HierarchyNode* pFolderNode1 = new HierarchyNode(HierarchyNode::NodeType::kDirectory, "Folder 1");
+    HierarchyNode* pFolderNode2 = new HierarchyNode(HierarchyNode::NodeType::kDirectory, "Folder 2");
+    HierarchyNode* pFolderNode3 = new HierarchyNode(HierarchyNode::NodeType::kDirectory, "Folder 3");
+    // 1 - level
+    pFolderNode2->appendChild(new HierarchyNode(HierarchyNode::NodeType::kObject, "Object 1"));
+    HierarchyNode* pFolderNode4 = new HierarchyNode(HierarchyNode::NodeType::kDirectory, "Folder 4");
+    // 2 - level
+    pFolderNode4->appendChild(new HierarchyNode(HierarchyNode::NodeType::kObject, "Object 2"));
+    // Appending all the leafs
+    pFolderNode2->appendChild(pFolderNode4);
+    rootNode.appendChild(pFolderNode1);
+    rootNode.appendChild(pFolderNode2);
+    rootNode.appendChild(pFolderNode3);
+    // Print the hierarchy structure
+    qDebug().noquote() << *pHierarchy;
+    pHierarchy->removeNode(HierarchyNode::NodeType::kDirectory, "Folder 1");
+    pHierarchy->removeNode(HierarchyNode::NodeType::kDirectory, "Folder 2");
+    pHierarchy->changeNodeValue(HierarchyNode::NodeType::kDirectory, "Folder 3", "Folder 1");
+    qDebug().noquote() << *pHierarchy;
+    delete pHierarchy;
 }
 
 //! Cleanup

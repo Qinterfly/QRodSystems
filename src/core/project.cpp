@@ -50,6 +50,7 @@ DataIDType Project::addDataObject(DataObjectType type)
     {
         DataIDType id = pObject->id();
         mDataObjects.emplace(id, std::shared_ptr<AbstractDataObject>(pObject));
+        mHierarchyDataObjects.appendNode(new HierarchyNode(HierarchyNode::NodeType::kObject, pObject->name()));
         emit dataObjectAdded(id);
         setModified(true);
         return id;
@@ -57,8 +58,8 @@ DataIDType Project::addDataObject(DataObjectType type)
     return -1;
 }
 
-//! Copy data objects
-std::unordered_map<DataIDType, AbstractDataObject*> Project::getDataObjects()
+//! Clone data objects
+std::unordered_map<DataIDType, AbstractDataObject*> Project::cloneDataObjects() const
 {
     std::unordered_map<DataIDType, AbstractDataObject*> result;
     for (auto& pItem : mDataObjects)
