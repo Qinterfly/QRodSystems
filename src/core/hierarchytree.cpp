@@ -2,7 +2,7 @@
  * \file
  * \author Pavel Lakiza
  * \date April 2021
- * \brief Implementation of the HierarchyNode and HierarchyTree classes
+ * \brief Implementation of the HierarchyTree class
  */
 
 #include "hierarchytree.h"
@@ -11,10 +11,16 @@ using namespace QRS;
 
 static const QString kRootName = "Root";
 
-//! Tree constructor
+//! Base tree constructor
 HierarchyTree::HierarchyTree()
 {
     mpRootNode = new HierarchyNode(HierarchyNode::NodeType::kDirectory, kRootName);
+}
+
+//! Utilize the user defined node as the root
+HierarchyTree::HierarchyTree(HierarchyNode* pRootNode)
+{
+    mpRootNode = pRootNode;
 }
 
 //! Tree destructor
@@ -26,7 +32,7 @@ HierarchyTree::~HierarchyTree()
 //! Delete all nodes except the root node
 void HierarchyTree::clear()
 {
-    removeChildren(mpRootNode);
+    removeNodeSiblings(mpRootNode->mpFirstChild);
 }
 
 //! Append a node to the root node
@@ -38,15 +44,33 @@ void HierarchyTree::appendNode(HierarchyNode* pNode)
 //! Remove a node by type and value
 bool HierarchyTree::removeNode(HierarchyNode::NodeType type, QVariant const& value)
 {
-    HierarchyNode* pNode = find(mpRootNode, type, value);
+    HierarchyNode* pNode = findNode(mpRootNode, type, value);
     if (!pNode)
         return false;
     removeNode(pNode);
     return true;
 }
 
+//! Change the value of a node
+void HierarchyTree::changeNodeValue(HierarchyNode::NodeType type, QVariant const& oldValue, QVariant const& newValue)
+{
+    HierarchyNode* pNode = findNode(mpRootNode, type, oldValue);
+    if (!pNode)
+        return;
+    pNode->mValue = newValue;
+}
+
+//! Clone a tree
+HierarchyTree HierarchyTree::clone() const
+{
+    HierarchyTree tree(copyNode(mpRootNode, 0));
+    return tree;
+}
+
+// -- Auxiliary methods ----------------------------------------------------------------------------------------------------
+
 //! Find a node by type and value
-HierarchyNode* HierarchyTree::find(HierarchyNode* pBaseNode, HierarchyNode::NodeType type, QVariant const& value) const
+HierarchyNode* HierarchyTree::findNode(HierarchyNode* pBaseNode, HierarchyNode::NodeType type, QVariant const& value) const
 {
     HierarchyNode* pNextNode;
     HierarchyNode* pFoundNode = nullptr;
@@ -55,7 +79,7 @@ HierarchyNode* HierarchyTree::find(HierarchyNode* pBaseNode, HierarchyNode::Node
         pNextNode = pBaseNode->mpNextSibling;
         if (pBaseNode->mpFirstChild)
         {
-            pFoundNode = find(pBaseNode->mpFirstChild, type, value);
+            pFoundNode = findNode(pBaseNode->mpFirstChild, type, value);
             if (pFoundNode)
                 break;
         }
@@ -69,36 +93,58 @@ HierarchyNode* HierarchyTree::find(HierarchyNode* pBaseNode, HierarchyNode::Node
     return pFoundNode;
 }
 
+//! Copy a node
+HierarchyNode* HierarchyTree::copyNode(HierarchyNode* pBaseNode, uint relativeLevel) const
+{
+    HierarchyNode* pNewNode;
+    HierarchyNode* pFirstNewNode = nullptr;
+    HierarchyNode* pPrevNewNode = nullptr;
+    HierarchyNode* pNode = pBaseNode;
+    bool isFirst = true;
+    while (pNode)
+    {
+        pNewNode = new HierarchyNode(pNode->mType, pNode->mValue);
+        if (pNode->mpFirstChild)
+        {
+            pNewNode->mpFirstChild = copyNode(pNode->mpFirstChild, relativeLevel + 1);
+            pNewNode->mpFirstChild->mpParent = pNewNode;
+        }
+        if (isFirst)
+        {
+            isFirst = !isFirst;
+            pFirstNewNode = pNewNode;
+        }
+        if (relativeLevel == 0)
+            break;
+        pNode = pNode->mpNextSibling;
+        if (pPrevNewNode)
+            pPrevNewNode->mpNextSibling = pNewNode;
+        pPrevNewNode = pNewNode;
+    }
+    return pFirstNewNode;
+}
+
+//! Remove a node and all its subnodes
+void HierarchyTree::removeNode(HierarchyNode* pNode)
+{
+    removeNodeSiblings(pNode->mpFirstChild);
+    if (pNode->mpParent && pNode->mpParent->mpFirstChild == pNode)
+        pNode->mpParent->mpFirstChild = pNode->mpNextSibling;
+    delete pNode;
+}
+
 //! Remove all subnodes
-void HierarchyTree::removeChildren(HierarchyNode* pNode)
+void HierarchyTree::removeNodeSiblings(HierarchyNode* pNode)
 {
     HierarchyNode* pNextNode;
     while (pNode)
     {
         pNextNode = pNode->mpNextSibling;
         if (pNode->mpFirstChild)
-            removeChildren(pNode->mpFirstChild);
+            removeNodeSiblings(pNode->mpFirstChild);
         delete pNode;
         pNode = pNextNode;
     }
-}
-
-//! Remove a node and all its subnodes
-void HierarchyTree::removeNode(HierarchyNode* pNode)
-{
-    removeChildren(pNode->mpFirstChild);
-    if (pNode->mpParent && pNode->mpParent->mpFirstChild == pNode)
-        pNode->mpParent->mpFirstChild = pNode->mpNextSibling;
-    delete pNode;
-}
-
-//! Change the value of a node
-void HierarchyTree::changeNodeValue(HierarchyNode::NodeType type, QVariant const& oldValue, QVariant const& newValue)
-{
-    HierarchyNode* pNode = find(mpRootNode, type, oldValue);
-    if (!pNode)
-        return;
-    pNode->mValue = newValue;
 }
 
 //! Print a current node and all its subnodes
@@ -118,32 +164,4 @@ void HierarchyTree::printNode(uint level, HierarchyNode* pNode, QDebug stream)
     }
 }
 
-//! Node constructor
-HierarchyNode::HierarchyNode(NodeType type, QVariant value)
-    : mType(type)
-    , mValue(value)
-{
 
-}
-
-//! Add a child node
-void HierarchyNode::appendChild(HierarchyNode* node)
-{
-    if (mType != NodeType::kDirectory)
-    {
-        delete node;
-        return;
-    }
-    if (!mpFirstChild)
-    {
-        mpFirstChild = node;
-    }
-    else
-    {
-        HierarchyNode* pLastNode = mpFirstChild;
-        while (pLastNode->mpNextSibling)
-            pLastNode = pLastNode->mpNextSibling;
-        pLastNode->mpNextSibling = node;
-    }
-    node->mpParent = this;
-}

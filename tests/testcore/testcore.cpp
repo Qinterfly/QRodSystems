@@ -25,7 +25,7 @@ private slots:
     void importDataObjects();
     void saveProject();
     void readProject();
-    void createHierarchy();
+    void createHierarchyTree();
     void cleanupTest();
 
 private:
@@ -107,10 +107,10 @@ void TestCore::readProject()
 }
 
 //! Try creating a hierarchy of data objects
-void TestCore::createHierarchy()
+void TestCore::createHierarchyTree()
 {
-    HierarchyTree* pHierarchy = new HierarchyTree();
-    HierarchyNode& rootNode = pHierarchy->root();
+    HierarchyTree hierarchy;
+    HierarchyNode& rootNode = hierarchy.root();
     // 0 - level
     HierarchyNode* pFolderNode1 = new HierarchyNode(HierarchyNode::NodeType::kDirectory, "Folder 1");
     HierarchyNode* pFolderNode2 = new HierarchyNode(HierarchyNode::NodeType::kDirectory, "Folder 2");
@@ -125,13 +125,15 @@ void TestCore::createHierarchy()
     rootNode.appendChild(pFolderNode1);
     rootNode.appendChild(pFolderNode2);
     rootNode.appendChild(pFolderNode3);
+    // Make a duplicate
+    HierarchyTree duplicateHierarchy = hierarchy.clone();
     // Print the hierarchy structure
-    qDebug().noquote() << *pHierarchy;
-    pHierarchy->removeNode(HierarchyNode::NodeType::kDirectory, "Folder 1");
-    pHierarchy->removeNode(HierarchyNode::NodeType::kDirectory, "Folder 2");
-    pHierarchy->changeNodeValue(HierarchyNode::NodeType::kDirectory, "Folder 3", "Folder 1");
-    qDebug().noquote() << *pHierarchy;
-    delete pHierarchy;
+    qDebug().noquote() << hierarchy;
+    hierarchy.removeNode(HierarchyNode::NodeType::kDirectory, "Folder 1");
+    hierarchy.removeNode(HierarchyNode::NodeType::kDirectory, "Folder 2");
+    hierarchy.changeNodeValue(HierarchyNode::NodeType::kDirectory, "Folder 3", "Folder 1");
+    qDebug().noquote() << hierarchy;
+    qDebug().noquote() << duplicateHierarchy;
 }
 
 //! Cleanup
