@@ -41,7 +41,9 @@ public:
     std::unordered_map<DataIDType, AbstractDataObject*> cloneDataObjects() const;
     DataIDType addDataObject(DataObjectType type);
     void removeDataObject(DataIDType id);
-    void setDataObjects(std::unordered_map<DataIDType, AbstractDataObject*> dataObjects);
+    void setDataObjects(std::unordered_map<DataIDType, AbstractDataObject*> dataObjects, HierarchyTree const& hierarchyDataObjects);
+    // Hierarchy of data objects
+    HierarchyTree cloneHierarchyDataObjects() const;
     // Getters and setters
     QString const& name() const { return mName; }
     QString const& filePath() const { return mFilePath; }

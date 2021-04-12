@@ -70,19 +70,26 @@ std::unordered_map<DataIDType, AbstractDataObject*> Project::cloneDataObjects() 
     return result;
 }
 
+//! Clone a hierarchy of data objects
+HierarchyTree Project::cloneHierarchyDataObjects() const
+{
+    return mHierarchyDataObjects.clone();
+}
+
 //! Remove a data object by id
 void Project::removeDataObject(DataIDType id)
 {
     if (mDataObjects.find(id) != mDataObjects.end())
     {
         mDataObjects.erase(id);
+        mHierarchyDataObjects.removeNode(HierarchyNode::NodeType::kObject, id);
         emit dataObjectRemoved(id);
         setModified(true);
     }
 }
 
 //! Substitute current data objects with new ones
-void Project::setDataObjects(std::unordered_map<DataIDType, AbstractDataObject*> dataObjects)
+void Project::setDataObjects(std::unordered_map<DataIDType, AbstractDataObject*> dataObjects, HierarchyTree const& hierarchyDataObjects)
 {
     mDataObjects.clear();
     AbstractDataObject* pDataObject;
@@ -91,6 +98,7 @@ void Project::setDataObjects(std::unordered_map<DataIDType, AbstractDataObject*>
         pDataObject = item.second;
         mDataObjects.emplace(pDataObject->id(), std::shared_ptr<AbstractDataObject>(pDataObject->clone()));
     }
+    mHierarchyDataObjects = hierarchyDataObjects;
     emit allDataObjectsChanged();
     setModified(true);
 }

@@ -21,6 +21,7 @@ class HierarchyTree
 public:
     HierarchyTree();
     HierarchyTree(HierarchyNode* pRootNode);
+    HierarchyTree& operator=(HierarchyTree const& another);
     ~HierarchyTree();
     void clear();
     void appendNode(HierarchyNode* pNode);
@@ -28,10 +29,10 @@ public:
     void changeNodeValue(HierarchyNode::NodeType type, QVariant const& oldValue, QVariant const& newValue);
     HierarchyNode& root() { return *mpRootNode; }
     HierarchyTree clone() const;
+    HierarchyNode* findNode(HierarchyNode* pBaseNode, HierarchyNode::NodeType type, QVariant const& value) const;
     friend QDebug operator<<(QDebug stream, HierarchyTree& tree);
 
 private:
-    HierarchyNode* findNode(HierarchyNode* pBaseNode, HierarchyNode::NodeType type, QVariant const& value) const;
     HierarchyNode* copyNode(HierarchyNode* pBaseNode, uint relativeLevel) const;
     void removeNode(HierarchyNode* pNode);
     void removeNodeSiblings(HierarchyNode* pNode);

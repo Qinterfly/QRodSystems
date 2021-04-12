@@ -17,10 +17,18 @@ HierarchyTree::HierarchyTree()
     mpRootNode = new HierarchyNode(HierarchyNode::NodeType::kDirectory, kRootName);
 }
 
-//! Utilize the user defined node as the root
+//! Take the user defined node as the root
 HierarchyTree::HierarchyTree(HierarchyNode* pRootNode)
 {
     mpRootNode = pRootNode;
+}
+
+//! Copy assignment operator
+HierarchyTree& HierarchyTree::operator=(HierarchyTree const& another)
+{
+    removeNode(mpRootNode);
+    mpRootNode = copyNode(another.mpRootNode, 0);
+    return *this;
 }
 
 //! Tree destructor
@@ -63,11 +71,8 @@ void HierarchyTree::changeNodeValue(HierarchyNode::NodeType type, QVariant const
 //! Clone a tree
 HierarchyTree HierarchyTree::clone() const
 {
-    HierarchyTree tree(copyNode(mpRootNode, 0));
-    return tree;
+    return HierarchyTree(copyNode(mpRootNode, 0));
 }
-
-// -- Auxiliary methods ----------------------------------------------------------------------------------------------------
 
 //! Find a node by type and value
 HierarchyNode* HierarchyTree::findNode(HierarchyNode* pBaseNode, HierarchyNode::NodeType type, QVariant const& value) const

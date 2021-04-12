@@ -12,6 +12,7 @@
 #include <QDialog>
 #include <unordered_map>
 #include "../core/datatypes.h"
+#include "../core/hierarchytree.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui
@@ -99,6 +100,7 @@ private:
     QRS::Project& mProject;
     QSettings& mSettings;
     mapDataObjects mDataObjects;
+    QRS::HierarchyTree mHierarchyDataObjects;
     QString& mLastPath;
     // Models
     InterfaceTableModel* mpInterfaceTableModel = nullptr;

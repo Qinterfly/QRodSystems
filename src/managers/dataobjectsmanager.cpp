@@ -232,7 +232,7 @@ void DataObjectsManager::restoreSettings()
 //! Apply all the changes made by user
 void DataObjectsManager::apply()
 {
-    mProject.setDataObjects(mDataObjects);
+    mProject.setDataObjects(mDataObjects, mHierarchyDataObjects);
     setWindowModified(false);
     qInfo() << tr("Data objects were modified through the data object manager");
 }
@@ -241,6 +241,7 @@ void DataObjectsManager::apply()
 void DataObjectsManager::retrieveDataObjects()
 {
     mDataObjects = mProject.cloneDataObjects();
+    mHierarchyDataObjects = mProject.cloneHierarchyDataObjects();
     for (auto const& mapItem : mDataObjects)
         addListDataObjects(mapItem.second);
 }
@@ -380,6 +381,7 @@ void DataObjectsManager::removeSelectedDataObject()
     DataIDType id = item->data(Qt::UserRole).toUInt();
     mpListDataObjects->removeItemWidget(item);
     mDataObjects.erase(id);
+    mHierarchyDataObjects.removeNode(HierarchyNode::NodeType::kObject, id);
     delete item;
     if (!mpListDataObjects->count())
     {
@@ -417,7 +419,9 @@ void DataObjectsManager::importDataObjects()
 //! Helper function to insert data objects into the manager
 void DataObjectsManager::emplaceDataObject(AbstractDataObject* dataObject)
 {
-    mDataObjects.emplace(dataObject->id(), dataObject);
+    DataIDType id = dataObject->id();
+    mDataObjects.emplace(id, dataObject);
+    mHierarchyDataObjects.appendNode(new HierarchyNode(HierarchyNode::NodeType::kObject, id));
     addListDataObjects(dataObject);
     setWindowModified(true);
 }
