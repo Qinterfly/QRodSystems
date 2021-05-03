@@ -15,6 +15,23 @@ void throwMessage(QtMsgType type, const QMessageLogContext& /*context*/, const Q
     MainWindow::pLogger->log(type, message);
 }
 
+//! Load a style sheet
+void loadStyleSheet(QString const& path)
+{
+    QFile fileStyleSheet(path);
+    if (!fileStyleSheet.exists())
+    {
+        printf("File contained the style sheet was not found\n");
+    }
+    else
+    {
+        fileStyleSheet.open(QFile::ReadOnly | QFile::Text);
+        QTextStream streamStyle(&fileStyleSheet);
+        qApp->setStyleSheet(streamStyle.readAll());
+        fileStyleSheet.close();
+    }
+}
+
 //! Entry point
 int main(int argc, char *argv[])
 {
@@ -23,19 +40,8 @@ int main(int argc, char *argv[])
     QCoreApplication::setApplicationVersion(APP_VERSION);
     QGuiApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
     QApplication app(argc, argv);
-    QFile fileTheme(":/styles/light.qss");
-    if (!fileTheme.exists())
-    {
-        printf("Unable to set stylesheet, file not found\n");
-    }
-    else
-    {
-        fileTheme.open(QFile::ReadOnly | QFile::Text);
-        QTextStream streamTheme(&fileTheme);
-        qApp->setStyleSheet(streamTheme.readAll());
-        fileTheme.close();
-    }
     app.setStyle("Fusion");
+    loadStyleSheet(":/styles/light.css");
     qInstallMessageHandler(throwMessage);
     MainWindow window;
     window.show();

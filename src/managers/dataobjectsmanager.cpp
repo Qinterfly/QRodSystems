@@ -98,6 +98,7 @@ void DataObjectsManager::createContent()
     QVBoxLayout* pMainLayout = new QVBoxLayout(this);
     pMainLayout->setContentsMargins(0, 0, 0, 0);
     mpDockManager = new CDockManager();
+    mpDockManager->setStyleSheet("");
     pMainLayout->addWidget(mpDockManager);
     // Tables
     mpDockManager->addDockWidget(ads::LeftDockWidgetArea, createDataTableWidget());

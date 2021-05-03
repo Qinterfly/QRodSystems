@@ -18,6 +18,7 @@ namespace Ui
 class MainWindow;
 }
 class QSettings;
+class QLabel;
 QT_END_NAMESPACE
 
 namespace ads
@@ -76,6 +77,7 @@ private slots:
 private:
     Ui::MainWindow* mpUi;
     ads::CDockManager* mpDockManager;
+    QLabel* mpStatusLabel;
     QSharedPointer<QSettings> mpSettings;
     DataObjectsManager* mpDataObjectsManager = nullptr;
     QRS::Project* mpProject;

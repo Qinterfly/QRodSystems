@@ -28,8 +28,8 @@ include($${ADS_PATH}/ads.pri) # Advanced Docking System
 
 # Resources
 RESOURCES += \
-    ../resources/images.qrc \
-    ../resources/styles.qrc
+    ../resources/icons/icons.qrc \
+    ../resources/styles/styles.qrc
 
 # Distribution options
 PROJECT_AUTHOR = "Qinterfly"

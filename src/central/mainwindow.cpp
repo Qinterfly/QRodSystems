@@ -15,6 +15,7 @@
 #include <QSettings>
 #include <QMessageBox>
 #include <QFileDialog>
+#include <QLabel>
 #include "DockManager.h"
 #include "DockWidget.h"
 #include "ads_globals.h"
@@ -96,6 +97,7 @@ void MainWindow::createContent()
     pLayout->addWidget(pTabControlWidget);
     // Dock manager
     mpDockManager = new CDockManager();
+    mpDockManager->setStyleSheet("");
     pLayout->addWidget(mpDockManager);;
     ads::CDockWidget* pDockWidget = nullptr;
     // OpenGL window
@@ -107,6 +109,9 @@ void MainWindow::createContent()
     // Project hierarchy
     pDockWidget = createProjectHierarchyWidget();
     CDockAreaWidget* pArea = mpDockManager->addDockWidget(ads::LeftDockWidgetArea, pDockWidget);
+    // Status bar
+    mpStatusLabel = new QLabel();
+    mpUi->statusBar->addWidget(mpStatusLabel);
     // Properties
     pDockWidget = createPropertiesWidget();
     mpDockManager->addDockWidget(ads::BottomDockWidgetArea, pDockWidget, pArea);
