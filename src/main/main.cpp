@@ -6,6 +6,7 @@
  */
 
 #include <QApplication>
+#include <QFile>
 #include "mainwindow.h"
 
 //! Log all the messages
@@ -22,6 +23,18 @@ int main(int argc, char *argv[])
     QCoreApplication::setApplicationVersion(APP_VERSION);
     QGuiApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
     QApplication app(argc, argv);
+    QFile fileTheme(":/styles/light.qss");
+    if (!fileTheme.exists())
+    {
+        printf("Unable to set stylesheet, file not found\n");
+    }
+    else
+    {
+        fileTheme.open(QFile::ReadOnly | QFile::Text);
+        QTextStream streamTheme(&fileTheme);
+        qApp->setStyleSheet(streamTheme.readAll());
+        fileTheme.close();
+    }
     app.setStyle("Fusion");
     qInstallMessageHandler(throwMessage);
     MainWindow window;

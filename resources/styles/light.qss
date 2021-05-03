@@ -1,0 +1,17 @@
+/*
+ - https://doc.qt.io/qt-5/stylesheet.html
+ - https://doc.qt.io/qt-5/stylesheet-reference.html
+ - https://doc.qt.io/qt-5/stylesheet-examples.html
+ */
+
+/* QStatusBar 
+ * https://doc.qt.io/qt-5/stylesheet-examples.html#customizing-qstatusbar
+ */
+ 
+QStatusBar 
+{
+  border: 1px solid #0975e0;
+  background: #0975e0;
+}
+
+
