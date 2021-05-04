@@ -4,6 +4,9 @@ ADS_PATH = $${LIB_PATH}/ADS
 QT += testlib gui widgets
 CONFIG += qt warn_on depend_includepath testcase
 
+CONFIG += c++20
+QMAKE_CXXFLAGS += -std=c++20
+
 TEMPLATE = app
 
 SOURCES +=  \

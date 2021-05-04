@@ -41,7 +41,7 @@ int main(int argc, char *argv[])
     QGuiApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
     QApplication app(argc, argv);
     app.setStyle("Fusion");
-    loadStyleSheet(":/styles/light.css");
+    loadStyleSheet(":/styles/modern.qss");
     qInstallMessageHandler(throwMessage);
     MainWindow window;
     window.show();

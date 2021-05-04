@@ -147,9 +147,9 @@ CDockWidget* DataObjectsManager::createDataTableWidget()
     pToolBar->addSeparator();
     // Columns actions
     pAction = pToolBar->addAction(QIcon(":/icons/table-column-add.svg"), tr("Add Column"), this, &DataObjectsManager::insertLeadingItemAfterSelected);
-    pAction->setShortcut(QKeySequence(Qt::CTRL, Qt::Key_A));
+    pAction->setShortcut(QKeySequence("Ctrl+A"));
     pAction = pToolBar->addAction(QIcon(":/icons/table-column-delete.svg"), tr("Remove Column"), this, &DataObjectsManager::removeSelectedLeadingItem);
-    pAction->setShortcut(QKeySequence(Qt::CTRL, Qt::Key_D));
+    pAction->setShortcut(QKeySequence("Ctrl+D"));
     // Import action
     pToolBar->addSeparator();
     pToolBar->addAction(QIcon(":/icons/link-import.svg"), tr("Import"), this, &DataObjectsManager::importDataObjects);

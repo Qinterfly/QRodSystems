@@ -81,7 +81,7 @@ void MainWindow::createContent()
     // Tabbed toolbar
     QTabWidget* pTabControlWidget = new QTabWidget();
     pTabControlWidget->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
-    pTabControlWidget->setMaximumHeight(95);
+    pTabControlWidget->setMaximumHeight(92);
     // Managers
     ManagersTab* pManagersTab = new ManagersTab();
     pTabControlWidget->addTab(pManagersTab, tr("Managers"));
