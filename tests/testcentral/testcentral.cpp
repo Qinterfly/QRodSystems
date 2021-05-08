@@ -1,7 +1,7 @@
 /*!
  * \file
  * \author Pavel Lakiza
- * \date April 2021
+ * \date May 2021
  * \brief Testing of the central window
  */
 
@@ -10,6 +10,7 @@
 
 #include "ui_mainwindow.h"
 #include "mainwindow.h"
+#include "utilities.h"
 
 //! Test the central window
 class TestCentral : public QObject
@@ -23,7 +24,7 @@ public:
 private slots:
     void initTestCase();
     void cleanupTestCase();
-    void testProject();
+    void testRun();
 
 private:
     MainWindow* mWindow;
@@ -32,15 +33,24 @@ private:
 //! Initialization
 void TestCentral::initTestCase()
 {
+    // App
+    QCoreApplication::setOrganizationName(APP_AUTHOR);
+    QCoreApplication::setApplicationName(APP_NAME);
+    QCoreApplication::setApplicationVersion(APP_VERSION);
+    QGuiApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
+    qInstallMessageHandler(throwMessage);
+    qApp->setStyle("Fusion");
+    qApp->setStyleSheet(Utilities::File::loadFileContent(":/styles/modern.qss"));
+    // Window
     mWindow = new MainWindow();
     mWindow->openProject("../../../../examples/simple.qrs");
 }
 
-//! Check a loaded project representation
-void TestCentral::testProject()
+//! Test run
+void TestCentral::testRun()
 {
     mWindow->show();
-    QTest::qWait(1000);
+    qApp->exec();
 }
 
 //! Cleanup

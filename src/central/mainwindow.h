@@ -1,7 +1,7 @@
 /*!
  * \file
  * \author Pavel Lakiza
- * \date March 2021
+ * \date May 2021
  * \brief Declaration of the MainWindow class
  */
 
@@ -87,4 +87,11 @@ private:
 public:
     static LogWidget* pLogger;
 };
+
+//! Log all the messages
+inline void throwMessage(QtMsgType type, const QMessageLogContext& /*context*/, const QString& message)
+{
+    MainWindow::pLogger->log(type, message);
+}
+
 #endif // MAINWINDOW_H

@@ -1,7 +1,7 @@
 /*!
  * \file
  * \author Pavel Lakiza
- * \date April 2021
+ * \date May 2021
  * \brief Declaration of utilities
  */
 
@@ -20,6 +20,7 @@ namespace Utilities
 namespace File
 {
 QPair<QRS::DataObjectType, QSharedPointer<QFile>> getDataObjectFile(QString const& path, QString const& fileName);
+QString loadFileContent(QString const& path);
 }
 
 }

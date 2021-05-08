@@ -22,7 +22,7 @@ LogWidget::LogWidget(QWidget* parent)
 {
     setColumnCount(3);
     setSortingEnabled(false);
-    setSizeAdjustPolicy(AdjustToContents);
+    setSizeAdjustPolicy(AdjustToContentsOnFirstShow);
     horizontalHeader()->setStretchLastSection(true);
     setHorizontalHeaderLabels({tr("Time"), tr("Type"), tr("Message")});
     setEditTriggers(QAbstractItemView::NoEditTriggers);
@@ -65,6 +65,8 @@ void LogWidget::log(QtMsgType messageType, const QString& message)
     setItem(iRow, ColumnType::kTime, new QTableWidgetItem(time));
     setItem(iRow, ColumnType::kType, new QTableWidgetItem(icon, type));
     setItem(iRow, ColumnType::kMessage, new QTableWidgetItem(filterMessage));
-    resizeColumnsToContents();
+    // The last column is always maximized
+    resizeColumnToContents(0);
+    resizeColumnToContents(1);
     QTimer::singleShot(kWaitToScroll, this, &QTableWidget::scrollToBottom);
 }

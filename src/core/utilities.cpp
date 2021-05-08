@@ -1,7 +1,7 @@
 /*!
  * \file
  * \author Pavel Lakiza
- * \date April 2021
+ * \date May 2021
  * \brief Implementation of utilities
  */
 
@@ -42,4 +42,23 @@ QPair<QRS::DataObjectType, QSharedPointer<QFile>> Utilities::File::getDataObject
         return {type, nullptr};;
     }
     return {type, pFile};
+}
+
+//! Load a style sheet
+QString Utilities::File::loadFileContent(QString const& path)
+{
+    QFile fileStyleSheet(path);
+    QString content;
+    if (!fileStyleSheet.exists())
+    {
+        qDebug() << QString("File located at %1 was not found").arg(path) << Qt::endl;
+    }
+    else
+    {
+        fileStyleSheet.open(QFile::ReadOnly | QFile::Text);
+        QTextStream streamStyle(&fileStyleSheet);
+        content = streamStyle.readAll();
+        fileStyleSheet.close();
+    }
+    return content;
 }

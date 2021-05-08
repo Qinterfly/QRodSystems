@@ -24,7 +24,8 @@ INCLUDEPATH += ../../src
 INCLUDEPATH += ../../lib
 
 RESOURCES += \
-    ../../resources/icons/icons.qrc
+    ../../resources/icons/icons.qrc \
+    ../../resources/styles/styles.qrc
 
 # Distribution options
 PROJECT_AUTHOR = "Qinterfly"
