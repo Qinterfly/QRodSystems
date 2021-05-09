@@ -27,7 +27,6 @@ public:
     HierarchyNode(NodeType type, QVariant value);
     ~HierarchyNode() = default;
     void appendChild(HierarchyNode* node);
-    friend QDataStream& operator<<(QDataStream& stream, HierarchyNode const& node);
 
 private:
     HierarchyNode* mpParent = nullptr;
@@ -36,14 +35,6 @@ private:
     NodeType mType;
     QVariant mValue;
 };
-
-//! Write a node to a stream
-inline QDataStream& operator<<(QDataStream& stream, HierarchyNode const& node)
-{
-    stream << (quint32)node.mType;
-    stream << node.mValue;
-    return stream;
-}
 
 }
 

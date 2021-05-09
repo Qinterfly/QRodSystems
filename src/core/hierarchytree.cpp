@@ -213,7 +213,8 @@ void HierarchyTree::writeNode(HierarchyNode* pNode, QDataStream& stream) const
     {
         pNextNode = pNode->mpNextSibling;
         stream << reinterpret_cast<quint64>(pNode);
-        stream << *pNode;
+        stream << (quint32)pNode->mType;
+        stream << pNode->mValue;
         stream << reinterpret_cast<quint64>(pNode->mpParent);
         stream << reinterpret_cast<quint64>(pNode->mpFirstChild);
         stream << reinterpret_cast<quint64>(pNode->mpNextSibling);
