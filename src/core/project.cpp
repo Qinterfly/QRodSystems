@@ -1,7 +1,7 @@
 /*!
  * \file
  * \author Pavel Lakiza
- * \date April 2021
+ * \date May 2021
  * \brief Implementation of the QRS::Project class
  */
 
@@ -141,6 +141,9 @@ bool Project::save(QString const& path, QString const& fileName)
     out << (quint32)mDataObjects.size();                       // Number of object to be written/read
     for (auto& item : mDataObjects)
         out << *item.second;                                   // Data object content
+    // 4. Hierarchy of data objects
+    out << (qint32)mHierarchyDataObjects.size();               // Number of nodes in a hierarchy
+    out << mHierarchyDataObjects;                              // Hierarchy of data objects
     file.flush();
     file.close();
     // Renaming the project
@@ -224,6 +227,10 @@ Project::Project(QString const& path, QString const& fileName)
         }
         mDataObjects.emplace(pObject->id(), std::shared_ptr<AbstractDataObject>(pObject));
     }
+    // 4. Hierarchy of data objects
+    quint32 numNodes;
+    in >> numNodes;
+    mHierarchyDataObjects = HierarchyTree(in, numNodes);
     file.close();
     // Renaming the project
     mName = baseFileName;

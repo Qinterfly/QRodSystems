@@ -1,7 +1,7 @@
 /*!
  * \file
  * \author Pavel Lakiza
- * \date April 2021
+ * \date May 2021
  * \brief Implementation of the MainWindow class
  */
 
@@ -261,6 +261,8 @@ void MainWindow::openProject(QString const& filePath)
     if (filePath.isEmpty())
         return;
     QFileInfo info(filePath);
+    if (!info.exists() || !info.isFile())
+        return;
     QString path = info.path();
     QString baseName = info.baseName();
     delete mpProject;

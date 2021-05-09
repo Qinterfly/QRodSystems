@@ -1,7 +1,7 @@
 /*!
  * \file
  * \author Pavel Lakiza
- * \date April 2021
+ * \date May 2021
  * \brief Implementation of the HierarchyTree class
  */
 
@@ -28,6 +28,18 @@ HierarchyTree& HierarchyTree::operator=(HierarchyTree const& another)
 {
     removeNode(mpRootNode);
     mpRootNode = copyNode(another.mpRootNode, 0);
+    return *this;
+}
+
+//! Move assignment operator
+HierarchyTree& HierarchyTree::operator=(HierarchyTree&& another)
+{
+    if (this != &another)
+    {
+        removeNode(mpRootNode);
+        mpRootNode = another.mpRootNode;
+        another.mpRootNode = nullptr;
+    }
     return *this;
 }
 
@@ -132,6 +144,8 @@ HierarchyNode* HierarchyTree::copyNode(HierarchyNode* pBaseNode, uint relativeLe
 //! Remove a node and all its subnodes
 void HierarchyTree::removeNode(HierarchyNode* pNode)
 {
+    if (!pNode)
+        return;
     removeNodeSiblings(pNode->mpFirstChild);
     if (pNode->mpParent && pNode->mpParent->mpFirstChild == pNode)
         pNode->mpParent->mpFirstChild = pNode->mpNextSibling;
@@ -153,7 +167,7 @@ void HierarchyTree::removeNodeSiblings(HierarchyNode* pNode)
 }
 
 //! Print a current node and all its subnodes
-void HierarchyTree::printNode(uint level, HierarchyNode* pNode, QDebug stream)
+void HierarchyTree::printNode(uint level, HierarchyNode* pNode, QDebug stream) const
 {
     HierarchyNode* pNextNode;
     QString nodeIndentation;
@@ -169,4 +183,87 @@ void HierarchyTree::printNode(uint level, HierarchyNode* pNode, QDebug stream)
     }
 }
 
+//! Get a number of nodes
+int HierarchyTree::size() const
+{
+    int numNodes = 0;
+    return countNodes(mpRootNode, numNodes);
+}
 
+//! Count all nodes
+int HierarchyTree::countNodes(HierarchyNode* pNode, int& numNodes) const
+{
+    HierarchyNode* pNextNode;
+    while (pNode)
+    {
+        ++numNodes;
+        pNextNode = pNode->mpNextSibling;
+        if (pNode->mpFirstChild)
+            countNodes(pNode->mpFirstChild, numNodes);
+        pNode = pNextNode;
+    }
+    return numNodes;
+}
+
+//! Print a current node and all its subnodes
+void HierarchyTree::writeNode(HierarchyNode* pNode, QDataStream& stream) const
+{
+    HierarchyNode* pNextNode;
+    while (pNode)
+    {
+        pNextNode = pNode->mpNextSibling;
+        stream << reinterpret_cast<quint64>(pNode);
+        stream << *pNode;
+        stream << reinterpret_cast<quint64>(pNode->mpParent);
+        stream << reinterpret_cast<quint64>(pNode->mpFirstChild);
+        stream << reinterpret_cast<quint64>(pNode->mpNextSibling);
+        if (pNode->mpFirstChild)
+            writeNode(pNode->mpFirstChild, stream);
+        pNode = pNextNode;
+    }
+}
+
+//! Read a tree from a stream
+HierarchyTree::HierarchyTree(QDataStream& stream, int numNodes)
+{
+    std::map<HierarchyNode*, HierarchyNode*> mapNodes;
+    quint32 iType;
+    quint64 addressHolder;
+    auto retrieveAddress = [&stream, &addressHolder]()
+    {
+        stream >> addressHolder;
+        return reinterpret_cast<HierarchyNode*>(addressHolder);
+    };
+    // Read nodes with unresolved links between them
+    for (int i = 0; i != numNodes; ++i)
+    {
+        HierarchyNode* nodeAddress = retrieveAddress();
+        stream >> iType;
+        QVariant nodeValue;
+        stream >> nodeValue;
+        HierarchyNode* pNode = new HierarchyNode((HierarchyNode::NodeType)iType, nodeValue);
+        pNode->mpParent = retrieveAddress();
+        pNode->mpFirstChild = retrieveAddress();
+        pNode->mpNextSibling = retrieveAddress();
+        mapNodes.emplace(nodeAddress, pNode);
+    }
+    // Resolve references
+    for (auto& iter : mapNodes)
+    {
+        HierarchyNode* pCurrentNode = iter.second;
+        HierarchyNode* pLink = pCurrentNode->mpParent;
+        // Parent
+        if (!pLink)
+            mpRootNode = pCurrentNode;
+        else
+            pCurrentNode->mpParent = mapNodes[pLink];
+        // First child
+        pLink = pCurrentNode->mpFirstChild;
+        if (pLink)
+            pCurrentNode->mpFirstChild = mapNodes[pLink];
+        // Next sibling
+        pLink = pCurrentNode->mpNextSibling;
+        if (pLink)
+            pCurrentNode->mpNextSibling = mapNodes[pLink];
+    }
+}

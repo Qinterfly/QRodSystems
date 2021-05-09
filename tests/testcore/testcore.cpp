@@ -19,14 +19,14 @@ class TestCore : public QObject
     Q_OBJECT
 
 private slots:
-    void initTest();
+    void initTestCase();
     void createArray();
     void modifyArray();
     void importDataObjects();
     void saveProject();
     void readProject();
     void createHierarchyTree();
-    void cleanupTest();
+    void cleanupTestCase();
 
 private:
     Project* mpProject;
@@ -36,7 +36,7 @@ private:
 };
 
 //! Initialize data
-void TestCore::initTest()
+void TestCore::initTestCase()
 {
     const uint numObjects = 5;
     mpProject = new Project("test");
@@ -125,8 +125,10 @@ void TestCore::createHierarchyTree()
     rootNode.appendChild(pFolderNode1);
     rootNode.appendChild(pFolderNode2);
     rootNode.appendChild(pFolderNode3);
+    QCOMPARE(hierarchy.size(), 7);
     // Make a duplicate
     HierarchyTree duplicateHierarchy = hierarchy.clone();
+    QCOMPARE(duplicateHierarchy.size(), 7);
     // Print the hierarchy structure
     qDebug().noquote() << hierarchy;
     hierarchy.removeNode(HierarchyNode::NodeType::kDirectory, "Folder 1");
@@ -137,7 +139,7 @@ void TestCore::createHierarchyTree()
 }
 
 //! Cleanup
-void TestCore::cleanupTest()
+void TestCore::cleanupTestCase()
 {
     delete mpProject;
 }

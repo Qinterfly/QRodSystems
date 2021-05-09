@@ -21,7 +21,9 @@ class HierarchyTree
 public:
     HierarchyTree();
     HierarchyTree(HierarchyNode* pRootNode);
+    HierarchyTree(QDataStream& stream, int numNodes);
     HierarchyTree& operator=(HierarchyTree const& another);
+    HierarchyTree& operator=(HierarchyTree&& another);
     ~HierarchyTree();
     void clear();
     void appendNode(HierarchyNode* pNode);
@@ -30,22 +32,33 @@ public:
     HierarchyNode& root() { return *mpRootNode; }
     HierarchyTree clone() const;
     HierarchyNode* findNode(HierarchyNode* pBaseNode, HierarchyNode::NodeType type, QVariant const& value) const;
+    int size() const;
     friend QDebug operator<<(QDebug stream, HierarchyTree& tree);
+    friend QDataStream& operator<<(QDataStream& stream, HierarchyTree const& tree);
 
 private:
     HierarchyNode* copyNode(HierarchyNode* pBaseNode, uint relativeLevel) const;
     void removeNode(HierarchyNode* pNode);
     void removeNodeSiblings(HierarchyNode* pNode);
-    void printNode(uint level, HierarchyNode* pNode, QDebug stream);
+    void printNode(uint level, HierarchyNode* pNode, QDebug stream) const;
+    void writeNode(HierarchyNode* pNode, QDataStream& stream) const;
+    int countNodes(HierarchyNode* pNode, int& numNodes) const;
 
 private:
-    HierarchyNode* mpRootNode;
+    HierarchyNode* mpRootNode = nullptr;
 };
 
 //! Print a tree structure
 inline QDebug operator<<(QDebug stream, HierarchyTree& tree)
 {
     tree.printNode(0, tree.mpRootNode, stream);
+    return stream;
+}
+
+//! Write a tree structure to a stream
+inline QDataStream& operator<<(QDataStream& stream, HierarchyTree const& tree)
+{
+    tree.writeNode(tree.mpRootNode, stream);
     return stream;
 }
 
