@@ -28,7 +28,6 @@ public:
     ~HierarchyNode() = default;
     void appendChild(HierarchyNode* node);
     friend QDataStream& operator<<(QDataStream& stream, HierarchyNode const& node);
-    friend QDataStream& operator>>(QDataStream& stream, HierarchyNode& node);
 
 private:
     HierarchyNode* mpParent = nullptr;

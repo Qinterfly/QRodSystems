@@ -34,7 +34,7 @@ RESOURCES += \
 # Distribution options
 PROJECT_AUTHOR = "Qinterfly"
 PROJECT_NAME = "QRodSystems"
-PROJECT_VERSION = "0.0.4"
+PROJECT_VERSION = "0.0.5"
 PROJECT_DIST = $${PROJECT_NAME} (v$${PROJECT_VERSION})
 
 DEFINES += \
