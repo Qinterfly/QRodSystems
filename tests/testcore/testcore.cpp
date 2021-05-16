@@ -110,30 +110,36 @@ void TestCore::readProject()
 void TestCore::createHierarchyTree()
 {
     HierarchyTree hierarchy;
-    HierarchyNode& rootNode = hierarchy.root();
+    HierarchyNode* rootNode = hierarchy.root();
     // 0 - level
     HierarchyNode* pFolderNode1 = new HierarchyNode(HierarchyNode::NodeType::kDirectory, "Folder 1");
     HierarchyNode* pFolderNode2 = new HierarchyNode(HierarchyNode::NodeType::kDirectory, "Folder 2");
     HierarchyNode* pFolderNode3 = new HierarchyNode(HierarchyNode::NodeType::kDirectory, "Folder 3");
+    HierarchyNode* pFolderNode4 = new HierarchyNode(HierarchyNode::NodeType::kDirectory, "Folder 4");
     // 1 - level
     pFolderNode2->appendChild(new HierarchyNode(HierarchyNode::NodeType::kObject, "Object 1"));
-    HierarchyNode* pFolderNode4 = new HierarchyNode(HierarchyNode::NodeType::kDirectory, "Folder 4");
-    // 2 - level
+    HierarchyNode* pFolderNode5 = new HierarchyNode(HierarchyNode::NodeType::kDirectory, "Folder 5");
     pFolderNode4->appendChild(new HierarchyNode(HierarchyNode::NodeType::kObject, "Object 2"));
+    // 2 - level
+    pFolderNode5->appendChild(new HierarchyNode(HierarchyNode::NodeType::kObject, "Object 3"));
     // Appending all the leafs
-    pFolderNode2->appendChild(pFolderNode4);
-    rootNode.appendChild(pFolderNode1);
-    rootNode.appendChild(pFolderNode2);
-    rootNode.appendChild(pFolderNode3);
-    QCOMPARE(hierarchy.size(), 7);
+    pFolderNode2->appendChild(pFolderNode5);
+    rootNode->appendChild(pFolderNode1);
+    rootNode->appendChild(pFolderNode2);
+    rootNode->appendChild(pFolderNode3);
+    rootNode->appendChild(pFolderNode4);
+    QCOMPARE(hierarchy.size(), 9);
     // Make a duplicate
     HierarchyTree duplicateHierarchy = hierarchy.clone();
-    QCOMPARE(duplicateHierarchy.size(), 7);
+    QCOMPARE(duplicateHierarchy.size(), 9);
     // Print the hierarchy structure
     qDebug().noquote() << hierarchy;
+    // Modify the structure
     hierarchy.removeNode(HierarchyNode::NodeType::kDirectory, "Folder 1");
     hierarchy.removeNode(HierarchyNode::NodeType::kDirectory, "Folder 2");
     hierarchy.changeNodeValue(HierarchyNode::NodeType::kDirectory, "Folder 3", "Folder 1");
+    hierarchy.changeNodeValue(HierarchyNode::NodeType::kDirectory, "Folder 4", "Folder 2");
+    hierarchy.groupNodes(pFolderNode3, pFolderNode4);
     qDebug().noquote() << hierarchy;
     qDebug().noquote() << duplicateHierarchy;
 }

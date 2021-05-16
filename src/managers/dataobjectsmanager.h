@@ -25,10 +25,11 @@ class QListWidget;
 class QListWidgetItem;
 QT_END_NAMESPACE
 
-class InterfaceTableModel;
+class TableModelInterface;
 class BaseTableModel;
 class MatrixTableModel;
 class SurfaceTableModel;
+class DataObjectsHierarchyModel;
 
 namespace ads
 {
@@ -41,18 +42,18 @@ class Project;
 class AbstractDataObject;
 }
 
+using mapDataObjects = std::unordered_map<QRS::DataIDType, QRS::AbstractDataObject*>;
+
 //! Manager to create objects of different types: scalars, vectors, matroces and surfaces
 class DataObjectsManager : public QDialog
 {
     Q_OBJECT
 
-    using mapDataObjects = std::unordered_map<QRS::DataIDType, QRS::AbstractDataObject*>;
-
 public:
     explicit DataObjectsManager(QRS::Project& project, QSettings& settings, QString& lastPath, QWidget* parent = nullptr);
     ~DataObjectsManager();
     void closeEvent(QCloseEvent* event) override;
-    void selectDataObject(int index);
+    void selectDataObject(int iRow);
     mapDataObjects const& getDataObjects() { return mDataObjects; };
 
 public slots:
@@ -65,12 +66,9 @@ public slots:
     void insertLeadingItemAfterSelected();
     void removeSelectedItem();
     void removeSelectedLeadingItem();
-    void removeSelectedDataObject();
     void importDataObjects();
-
-private slots:
-    void representSelectedDataObject();
-    void renameDataObject(QListWidgetItem* item);
+    void representDataObject(QRS::DataIDType id);
+    void clearDataObjectRepresentation();
 
 private:
     // Content
@@ -84,8 +82,8 @@ private:
     void restoreSettings();
     void saveSettings();
     // Helpers
-    void emplaceDataObject(QRS::AbstractDataObject* dataObject);
-    void addListDataObjects(QRS::AbstractDataObject* dataObject);
+    void emplaceDataObject(QRS::AbstractDataObject* pDataObject);
+    void addListDataObjects(QRS::AbstractDataObject* pDataObject);
     bool isDataTableModifiable();
     void importDataObject(QString const& path, QString const& fileName);
 
@@ -94,7 +92,7 @@ private:
     // Docks
     ads::CDockManager* mpDockManager;
     // Widgets
-    QListWidget* mpListDataObjects;
+    QTreeView* mpTreeDataObjects;
     QTreeView* mpDataTable;
     // Data
     QRS::Project& mProject;
@@ -103,10 +101,11 @@ private:
     QRS::HierarchyTree mHierarchyDataObjects;
     QString& mLastPath;
     // Models
-    InterfaceTableModel* mpInterfaceTableModel = nullptr;
+    TableModelInterface* mpTableModelInterface = nullptr;
     BaseTableModel* mpBaseTableModel;
     MatrixTableModel* mpMatrixTableModel;
     SurfaceTableModel* mpSurfaceTableModel;
+    DataObjectsHierarchyModel* mpTreeDataObjectsModel;
 };
 
 #endif // DATAOBJECTSMANAGER_H

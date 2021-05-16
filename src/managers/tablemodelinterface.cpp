@@ -1,16 +1,16 @@
 /*!
  * \file
  * \author Pavel Lakiza
- * \date March 2021
- * \brief Implementation of static functions of InterfaceTableModel
+ * \date May 2021
+ * \brief Implementation of static functions of TableModelInterface
  */
 
 #include <QStandardItem>
-#include "interfacetablemodel.h"
+#include "tablemodelinterface.h"
 #include "array.h"
 
 //! Helper function to make an item which holds a double value
-QStandardItem* InterfaceTableModel::makeDoubleItem(double value)
+QStandardItem* TableModelInterface::makeDoubleItem(double value)
 {
     QStandardItem* item = new QStandardItem;
     item->setData(value, Qt::UserRole);
@@ -19,7 +19,7 @@ QStandardItem* InterfaceTableModel::makeDoubleItem(double value)
 }
 
 //! Helper function to create an item which holds a string and cannot be modfifed
-QStandardItem* InterfaceTableModel::makeLabelItem(QString const& name)
+QStandardItem* TableModelInterface::makeLabelItem(QString const& name)
 {
     QStandardItem* itemName = new QStandardItem(name);
     itemName->setFlags(Qt::NoItemFlags);
@@ -27,7 +27,7 @@ QStandardItem* InterfaceTableModel::makeLabelItem(QString const& name)
 }
 
 //! Helper function to copy a row from an array
-QList<QStandardItem*> InterfaceTableModel::prepareRow(QRS::Array<double>& array, uint iRow)
+QList<QStandardItem*> TableModelInterface::prepareRow(QRS::Array<double>& array, uint iRow)
 {
     QList<QStandardItem*> resultList;
     uint nCols = array.cols();
@@ -37,7 +37,7 @@ QList<QStandardItem*> InterfaceTableModel::prepareRow(QRS::Array<double>& array,
 }
 
 //! Helper function to copy a row from an array and associate it with an key
-QList<QStandardItem*> InterfaceTableModel::prepareRow(double const& key, QRS::Array<double>& array, uint iRow)
+QList<QStandardItem*> TableModelInterface::prepareRow(double const& key, QRS::Array<double>& array, uint iRow)
 {
     QList<QStandardItem*> resultList = prepareRow(array, iRow);
     resultList.push_front(makeDoubleItem(key));
@@ -45,7 +45,7 @@ QList<QStandardItem*> InterfaceTableModel::prepareRow(double const& key, QRS::Ar
 }
 
 //! Helper function to copy a row from an array and associate it with a name
-QList<QStandardItem*> InterfaceTableModel::prepareRow(QString const& name, QRS::Array<double>& array, uint iRow)
+QList<QStandardItem*> TableModelInterface::prepareRow(QString const& name, QRS::Array<double>& array, uint iRow)
 {
     QList<QStandardItem*> resultList = prepareRow(array, iRow);
     resultList.push_front(makeLabelItem(name));

@@ -41,7 +41,7 @@ void MatrixTableModel::updateContent()
     auto& mapMatrices = mpDataObject->getItems();
     for (auto& iterator : mapMatrices)
     {
-        QStandardItem* keyItem = InterfaceTableModel::makeDoubleItem(iterator.first);
+        QStandardItem* keyItem = TableModelInterface::makeDoubleItem(iterator.first);
         rootItem->appendRow(keyItem);
         DataItemType& array = iterator.second;
         uint nRows = array.rows();
@@ -104,9 +104,9 @@ bool MatrixTableModel::setData(const QModelIndex& indexEdit, const QVariant& val
 }
 
 //! Insert a new item after selected one
-void MatrixTableModel::insertItemAfterSelected(QItemSelectionModel* selectionModel)
+void MatrixTableModel::insertItemAfterSelected(QItemSelectionModel* pSelectionModel)
 {
-    QModelIndexList listSelected = selectionModel->selectedIndexes();
+    QModelIndexList listSelected = pSelectionModel->selectedIndexes();
     if (listSelected.isEmpty())
     {
         mpDataObject->addItem(0.0);
@@ -128,9 +128,9 @@ void MatrixTableModel::insertItemAfterSelected(QItemSelectionModel* selectionMod
 }
 
 //! Remove an array under selection
-void MatrixTableModel::removeSelectedItem(QItemSelectionModel* selectionModel)
+void MatrixTableModel::removeSelectedItem(QItemSelectionModel* pSelectionModel)
 {
-    QModelIndexList listSelected = selectionModel->selectedIndexes();
+    QModelIndexList listSelected = pSelectionModel->selectedIndexes();
     QStandardItem* itemTable;
     for (QModelIndex& currentIndex : listSelected)
     {

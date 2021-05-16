@@ -35,6 +35,8 @@ void HierarchyNode::appendChild(HierarchyNode* node)
         while (pLastNode->mpNextSibling)
             pLastNode = pLastNode->mpNextSibling;
         pLastNode->mpNextSibling = node;
+        node->mpPreviousSibling = pLastNode;
+        node->mpNextSibling = nullptr;
     }
     node->mpParent = this;
 }

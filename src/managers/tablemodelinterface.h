@@ -1,14 +1,14 @@
 /*!
  * \file
  * \author Pavel Lakiza
- * \date March 2021
- * \brief Interface of a table model
+ * \date May 2021
+ * \brief Declaration of the TableModelInterface
  */
 
-#ifndef INTERFACETABLEMODEL_H
-#define INTERFACETABLEMODEL_H
+#ifndef TABLEMODELINTERFACE_H
+#define TABLEMODELINTERFACE_H
 
-#include<QItemSelection>
+#include <QItemSelection>
 
 QT_BEGIN_NAMESPACE
 class QStandardItem;
@@ -23,14 +23,14 @@ class Array;
 static const short kNumShowPrecision = 6;
 
 //! User interface to add and remove items
-class InterfaceTableModel
+class TableModelInterface
 {
 public:
-    virtual void insertItemAfterSelected(QItemSelectionModel* selectionModel) = 0;
-    virtual void insertLeadingItemAfterSelected(QItemSelectionModel* selectionModel) = 0;
-    virtual void removeSelectedItem(QItemSelectionModel* selectionModel) = 0;
-    virtual void removeSelectedLeadingItem(QItemSelectionModel* selectionModel) = 0;
-    virtual ~InterfaceTableModel() { };
+    virtual void insertItemAfterSelected(QItemSelectionModel* pSelectionModel) = 0;
+    virtual void insertLeadingItemAfterSelected(QItemSelectionModel* pSelectionModel) = 0;
+    virtual void removeSelectedItem(QItemSelectionModel* pSelectionModel) = 0;
+    virtual void removeSelectedLeadingItem(QItemSelectionModel* pSelectionModel) = 0;
+    virtual ~TableModelInterface() { };
     static QStandardItem* makeDoubleItem(double value);
     static QList<QStandardItem*> prepareRow(QRS::Array<double>& array, uint iRow);
     static QList<QStandardItem*> prepareRow(double const& key, QRS::Array<double>& array, uint iRow);
@@ -38,4 +38,4 @@ public:
     static QStandardItem* makeLabelItem(QString const& name);
 };
 
-#endif // INTERFACETABLEMODEL_H
+#endif // TABLEMODELINTERFACE_H

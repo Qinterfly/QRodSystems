@@ -10,7 +10,7 @@
 
 #include <QStyledItemDelegate>
 
-//! Class to set how table values can be edited
+//! Class to specify how table values can be edited
 class DoubleSpinBoxItemDelegate : public QStyledItemDelegate
 {
     Q_OBJECT
@@ -19,9 +19,9 @@ public:
     DoubleSpinBoxItemDelegate(QObject* parent = nullptr);
     ~DoubleSpinBoxItemDelegate() = default;
     QWidget* createEditor(QWidget* parent, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
-    void setEditorData(QWidget* editor, const QModelIndex& index) const override;
-    void setModelData(QWidget* editor, QAbstractItemModel* model, const QModelIndex& index) const override;
-    void updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
+    void setEditorData(QWidget* pEditor, const QModelIndex& index) const override;
+    void setModelData(QWidget* pEditor, QAbstractItemModel* pModel, const QModelIndex& index) const override;
+    void updateEditorGeometry(QWidget* pEditor, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
 };
 
 #endif // DOUBLESPINBOXITEMDELEGATE_H

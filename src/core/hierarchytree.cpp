@@ -135,7 +135,10 @@ HierarchyNode* HierarchyTree::copyNode(HierarchyNode* pBaseNode, uint relativeLe
             break;
         pNode = pNode->mpNextSibling;
         if (pPrevNewNode)
+        {
             pPrevNewNode->mpNextSibling = pNewNode;
+            pNewNode->mpPreviousSibling = pPrevNewNode;
+        }
         pPrevNewNode = pNewNode;
     }
     return pFirstNewNode;
@@ -147,9 +150,21 @@ void HierarchyTree::removeNode(HierarchyNode* pNode)
     if (!pNode)
         return;
     removeNodeSiblings(pNode->mpFirstChild);
-    if (pNode->mpParent && pNode->mpParent->mpFirstChild == pNode)
-        pNode->mpParent->mpFirstChild = pNode->mpNextSibling;
+    excludeNodeFromHierarchy(pNode);
     delete pNode;
+}
+
+//! Remove all links to a given node
+void HierarchyTree::excludeNodeFromHierarchy(HierarchyNode* pNode)
+{
+    HierarchyNode* pPreviousNode = pNode->mpPreviousSibling;
+    HierarchyNode* pNextNode = pNode->mpNextSibling;
+    if (pNode->mpParent && pNode->mpParent->mpFirstChild == pNode)
+        pNode->mpParent->mpFirstChild = pNextNode;
+    if (pNextNode)
+        pNextNode->mpPreviousSibling = pNode->mpPreviousSibling;
+    if (pPreviousNode)
+        pPreviousNode->mpNextSibling = pNode->mpNextSibling;
 }
 
 //! Remove all subnodes
@@ -218,6 +233,7 @@ void HierarchyTree::writeNode(HierarchyNode* pNode, QDataStream& stream) const
         stream << reinterpret_cast<quintptr>(pNode->mpParent);
         stream << reinterpret_cast<quintptr>(pNode->mpFirstChild);
         stream << reinterpret_cast<quintptr>(pNode->mpNextSibling);
+        stream << reinterpret_cast<quintptr>(pNode->mpPreviousSibling);
         if (pNode->mpFirstChild)
             writeNode(pNode->mpFirstChild, stream);
         pNode = pNextNode;
@@ -246,6 +262,7 @@ HierarchyTree::HierarchyTree(QDataStream& stream, int numNodes)
         pNode->mpParent = retrieveAddress();
         pNode->mpFirstChild = retrieveAddress();
         pNode->mpNextSibling = retrieveAddress();
+        pNode->mpPreviousSibling = retrieveAddress();
         mapNodes.emplace(nodeAddress, pNode);
     }
     // Resolve references
@@ -266,5 +283,76 @@ HierarchyTree::HierarchyTree(QDataStream& stream, int numNodes)
         pLink = pCurrentNode->mpNextSibling;
         if (pLink)
             pCurrentNode->mpNextSibling = mapNodes[pLink];
+        // Previous sibling
+        pLink = pCurrentNode->mpPreviousSibling;
+        if (pLink)
+            pCurrentNode->mpPreviousSibling = mapNodes[pLink];
     }
+}
+
+//! Encompass two nodes
+HierarchyNode* HierarchyTree::groupNodes(HierarchyNode* pBaseNode, HierarchyNode* pChildNode)
+{
+    QString const kNameDirectory = "Group";
+    switch (pBaseNode->type())
+    {
+    case HierarchyNode::NodeType::kDirectory:
+        excludeNodeFromHierarchy(pChildNode);
+        pBaseNode->appendChild(pChildNode);
+        return pBaseNode;
+        break;
+    case HierarchyNode::NodeType::kObject:
+    {
+        HierarchyNode* pDirectory = new HierarchyNode(HierarchyNode::NodeType::kDirectory, kNameDirectory);
+        HierarchyNode* pParentNode = pBaseNode->mpParent;
+        HierarchyNode* pNextNode = pBaseNode->mpNextSibling;
+        HierarchyNode* pPreviousNode = pBaseNode->mpPreviousSibling;
+        // Initialize a directory by base node
+        pDirectory->mpParent = pParentNode;
+        pDirectory->mpNextSibling = pNextNode;
+        pDirectory->mpPreviousSibling = pPreviousNode;
+        // Switch the newly created directory with the base node
+        if (pParentNode && pParentNode->mpFirstChild == pBaseNode)
+            pParentNode->mpFirstChild = pDirectory;
+        if (pNextNode)
+            pNextNode->mpPreviousSibling = pDirectory;
+        if (pPreviousNode)
+            pPreviousNode->mpNextSibling = pDirectory;
+        // Insert the base node into the directory
+        pBaseNode->mpParent = nullptr;
+        pBaseNode->mpPreviousSibling = nullptr;
+        pBaseNode->mpNextSibling = nullptr;
+        pDirectory->appendChild(pBaseNode);
+        // Insert the child into the directory
+        excludeNodeFromHierarchy(pChildNode);
+        pDirectory->appendChild(pChildNode);
+        return pDirectory;
+        break;
+    }
+    default:
+        return nullptr;
+    }
+}
+
+//! Set a given node before a base one
+void HierarchyTree::setBefore(HierarchyNode* pBaseNode, HierarchyNode* pSetNode)
+{
+    excludeNodeFromHierarchy(pSetNode);
+    HierarchyNode* pParentNode = pBaseNode->mpParent;
+    if (pParentNode && pParentNode->mpFirstChild == pBaseNode)
+        pParentNode->mpFirstChild = pSetNode;
+    pSetNode->mpParent = pParentNode;
+    pSetNode->mpNextSibling = pBaseNode;
+    pSetNode->mpPreviousSibling = pBaseNode->mpPreviousSibling;
+    pBaseNode->mpPreviousSibling = pSetNode;
+}
+
+//! Set a given node after a base one
+void HierarchyTree::setAfter(HierarchyNode* pBaseNode, HierarchyNode* pSetNode)
+{
+    excludeNodeFromHierarchy(pSetNode);
+    pSetNode->mpParent = pBaseNode->mpParent;
+    pSetNode->mpPreviousSibling = pBaseNode;
+    pSetNode->mpNextSibling = pBaseNode->mpNextSibling;
+    pBaseNode->mpNextSibling = pSetNode;
 }

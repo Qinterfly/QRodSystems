@@ -9,7 +9,7 @@
 #define SURFACETABLEMODEL_H
 
 #include <QStandardItemModel>
-#include "interfacetablemodel.h"
+#include "tablemodelinterface.h"
 
 namespace QRS
 {
@@ -17,7 +17,7 @@ class SurfaceDataObject;
 }
 
 //! Table model to represent a surface data object
-class SurfaceTableModel : public QStandardItemModel, public InterfaceTableModel
+class SurfaceTableModel : public QStandardItemModel, public TableModelInterface
 {
     Q_OBJECT
 
@@ -26,10 +26,10 @@ public:
     ~SurfaceTableModel() = default;
     void setDataObject(QRS::SurfaceDataObject* pDataObject);
     bool setData(const QModelIndex& indexEdit, const QVariant& value, int role = Qt::EditRole) override;
-    void insertItemAfterSelected(QItemSelectionModel* selectionModel) override;
-    void removeSelectedItem(QItemSelectionModel* selectionModel) override;
-    void insertLeadingItemAfterSelected(QItemSelectionModel* selectionModel) override;
-    void removeSelectedLeadingItem(QItemSelectionModel* selectionModel) override;
+    void insertItemAfterSelected(QItemSelectionModel* pSelectionModel) override;
+    void removeSelectedItem(QItemSelectionModel* pSelectionModel) override;
+    void insertLeadingItemAfterSelected(QItemSelectionModel* pSelectionModel) override;
+    void removeSelectedLeadingItem(QItemSelectionModel* pSelectionModel) override;
 
 private:
     void updateContent();

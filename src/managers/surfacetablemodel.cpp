@@ -97,9 +97,9 @@ bool SurfaceTableModel::setData(const QModelIndex& indexEdit, const QVariant& va
 }
 
 //! Insert a new item after selected one
-void SurfaceTableModel::insertItemAfterSelected(QItemSelectionModel* selectionModel)
+void SurfaceTableModel::insertItemAfterSelected(QItemSelectionModel* pSelectionModel)
 {
-    QModelIndexList listSelected = selectionModel->selectedIndexes();
+    QModelIndexList listSelected = pSelectionModel->selectedIndexes();
     if (listSelected.isEmpty())
     {
         mpDataObject->addItem(0.0);
@@ -122,9 +122,9 @@ void SurfaceTableModel::insertItemAfterSelected(QItemSelectionModel* selectionMo
 }
 
 //! Remove an array under selection
-void SurfaceTableModel::removeSelectedItem(QItemSelectionModel* selectionModel)
+void SurfaceTableModel::removeSelectedItem(QItemSelectionModel* pSelectionModel)
 {
-    QModelIndexList listSelected = selectionModel->selectedIndexes();
+    QModelIndexList listSelected = pSelectionModel->selectedIndexes();
     uint iRow;
     double key;
     for (QModelIndex& currentIndex : listSelected)
@@ -140,9 +140,9 @@ void SurfaceTableModel::removeSelectedItem(QItemSelectionModel* selectionModel)
 }
 
 //! Add a new leading item after selected one
-void SurfaceTableModel::insertLeadingItemAfterSelected(QItemSelectionModel* selectionModel)
+void SurfaceTableModel::insertLeadingItemAfterSelected(QItemSelectionModel* pSelectionModel)
 {
-    QModelIndexList listSelected = selectionModel->selectedIndexes();
+    QModelIndexList listSelected = pSelectionModel->selectedIndexes();
     int iColumn;
     double key;
     for (QModelIndex& currentIndex : listSelected)
@@ -158,9 +158,9 @@ void SurfaceTableModel::insertLeadingItemAfterSelected(QItemSelectionModel* sele
 }
 
 //! Remove a selected leading item
-void SurfaceTableModel::removeSelectedLeadingItem(QItemSelectionModel* selectionModel)
+void SurfaceTableModel::removeSelectedLeadingItem(QItemSelectionModel* pSelectionModel)
 {
-    QModelIndexList listSelected = selectionModel->selectedIndexes();
+    QModelIndexList listSelected = pSelectionModel->selectedIndexes();
     uint iColumn;
     double key;
     for (QModelIndex& currentIndex : listSelected)

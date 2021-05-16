@@ -96,9 +96,9 @@ bool BaseTableModel::setData(const QModelIndex& indexEdit, const QVariant& value
 }
 
 //! Insert a new item after selected one
-void BaseTableModel::insertItemAfterSelected(QItemSelectionModel* selectionModel)
+void BaseTableModel::insertItemAfterSelected(QItemSelectionModel* pSelectionModel)
 {
-    QModelIndexList listSelected = selectionModel->selectedIndexes();
+    QModelIndexList listSelected = pSelectionModel->selectedIndexes();
     if (listSelected.isEmpty())
     {
         mpDataObject->addItem(0.0);
@@ -118,9 +118,9 @@ void BaseTableModel::insertItemAfterSelected(QItemSelectionModel* selectionModel
 }
 
 //! Remove an array under selection
-void BaseTableModel::removeSelectedItem(QItemSelectionModel* selectionModel)
+void BaseTableModel::removeSelectedItem(QItemSelectionModel* pSelectionModel)
 {
-    QModelIndexList listSelected = selectionModel->selectedIndexes();
+    QModelIndexList listSelected = pSelectionModel->selectedIndexes();
     uint iRow;
     double key;
     for (QModelIndex& ind : listSelected)

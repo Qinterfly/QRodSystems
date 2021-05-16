@@ -10,6 +10,7 @@
 
 #include <QVariant>
 #include <QDataStream>
+#include <QSharedPointer>
 
 namespace QRS
 {
@@ -17,6 +18,7 @@ namespace QRS
 //! Hierarchy representative
 class HierarchyNode
 {
+
 public:
     friend class HierarchyTree;
     enum NodeType
@@ -27,11 +29,20 @@ public:
     HierarchyNode(NodeType type, QVariant value);
     ~HierarchyNode() = default;
     void appendChild(HierarchyNode* node);
+    bool hasParent() const { return mpParent; }
+    bool hasChild() const { return mpFirstChild; }
+    bool hasNextSibling() const { return mpNextSibling; }
+    HierarchyNode* parent() { return mpParent; }
+    HierarchyNode* firstChild() { return mpFirstChild; }
+    HierarchyNode* nextSibling() { return mpNextSibling; }
+    NodeType type() const { return mType; }
+    QVariant& value() { return mValue; }
 
 private:
     HierarchyNode* mpParent = nullptr;
     HierarchyNode* mpFirstChild = nullptr;
     HierarchyNode* mpNextSibling = nullptr;
+    HierarchyNode* mpPreviousSibling = nullptr;
     NodeType mType;
     QVariant mValue;
 };
