@@ -34,7 +34,10 @@ void DataObjectsHierarchyItem::appendItems(mapDataObjects& dataObjects, QRS::Hie
             pItem = new DataObjectsHierarchyItem(pNode);
             break;
         case HierarchyNode::NodeType::kObject:
-            pItem = new DataObjectsHierarchyItem(pNode, dataObjects[pNode->value().toUInt()]);
+            DataIDType id = pNode->value().toUInt();
+            if (!dataObjects.contains(id))
+                return;
+            pItem = new DataObjectsHierarchyItem(pNode, dataObjects[id]);
             break;
         }
         if (pItem)

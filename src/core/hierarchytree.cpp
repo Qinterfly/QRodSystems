@@ -89,11 +89,9 @@ HierarchyTree HierarchyTree::clone() const
 //! Find a node by type and value
 HierarchyNode* HierarchyTree::findNode(HierarchyNode* pBaseNode, HierarchyNode::NodeType type, QVariant const& value) const
 {
-    HierarchyNode* pNextNode;
     HierarchyNode* pFoundNode = nullptr;
     while (pBaseNode)
     {
-        pNextNode = pBaseNode->mpNextSibling;
         if (pBaseNode->mpFirstChild)
         {
             pFoundNode = findNode(pBaseNode->mpFirstChild, type, value);
@@ -105,7 +103,7 @@ HierarchyNode* HierarchyTree::findNode(HierarchyNode* pBaseNode, HierarchyNode::
             pFoundNode = pBaseNode;
             break;
         }
-        pBaseNode = pNextNode;
+        pBaseNode = pBaseNode->mpNextSibling;
     }
     return pFoundNode;
 }
@@ -124,7 +122,12 @@ HierarchyNode* HierarchyTree::copyNode(HierarchyNode* pBaseNode, uint relativeLe
         if (pNode->mpFirstChild)
         {
             pNewNode->mpFirstChild = copyNode(pNode->mpFirstChild, relativeLevel + 1);
-            pNewNode->mpFirstChild->mpParent = pNewNode;
+            HierarchyNode* pChild = pNewNode->mpFirstChild;
+            while (pChild)
+            {
+                pChild->mpParent = pNewNode;
+                pChild = pChild->mpNextSibling;
+            }
         }
         if (isFirst)
         {
@@ -173,9 +176,9 @@ void HierarchyTree::removeNodeSiblings(HierarchyNode* pNode)
     HierarchyNode* pNextNode;
     while (pNode)
     {
-        pNextNode = pNode->mpNextSibling;
         if (pNode->mpFirstChild)
             removeNodeSiblings(pNode->mpFirstChild);
+        pNextNode = pNode->mpNextSibling;
         delete pNode;
         pNode = pNextNode;
     }
@@ -184,17 +187,15 @@ void HierarchyTree::removeNodeSiblings(HierarchyNode* pNode)
 //! Print a current node and all its subnodes
 void HierarchyTree::printNode(uint level, HierarchyNode* pNode, QDebug stream) const
 {
-    HierarchyNode* pNextNode;
     QString nodeIndentation;
     if (level > 0)
         nodeIndentation = '|' + QString('-').repeated(level);
     while (pNode)
     {
-        pNextNode = pNode->mpNextSibling;
         stream << nodeIndentation + pNode->mValue.toString() << Qt::endl;
         if (pNode->mpFirstChild)
             printNode(level + 1, pNode->mpFirstChild, stream);
-        pNode = pNextNode;
+        pNode = pNode->mpNextSibling;
     }
 }
 
@@ -208,14 +209,12 @@ int HierarchyTree::size() const
 //! Count all nodes
 int HierarchyTree::countNodes(HierarchyNode* pNode, int& numNodes) const
 {
-    HierarchyNode* pNextNode;
     while (pNode)
     {
         ++numNodes;
-        pNextNode = pNode->mpNextSibling;
         if (pNode->mpFirstChild)
             countNodes(pNode->mpFirstChild, numNodes);
-        pNode = pNextNode;
+        pNode = pNode->mpNextSibling;
     }
     return numNodes;
 }
@@ -223,10 +222,8 @@ int HierarchyTree::countNodes(HierarchyNode* pNode, int& numNodes) const
 //! Print a current node and all its subnodes
 void HierarchyTree::writeNode(HierarchyNode* pNode, QDataStream& stream) const
 {
-    HierarchyNode* pNextNode;
     while (pNode)
     {
-        pNextNode = pNode->mpNextSibling;
         stream << reinterpret_cast<quintptr>(pNode);
         stream << (quint32)pNode->mType;
         stream << pNode->mValue;
@@ -236,7 +233,7 @@ void HierarchyTree::writeNode(HierarchyNode* pNode, QDataStream& stream) const
         stream << reinterpret_cast<quintptr>(pNode->mpPreviousSibling);
         if (pNode->mpFirstChild)
             writeNode(pNode->mpFirstChild, stream);
-        pNode = pNextNode;
+        pNode = pNode->mpNextSibling;
     }
 }
 

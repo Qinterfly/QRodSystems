@@ -50,7 +50,7 @@ DataIDType Project::addDataObject(DataObjectType type)
     {
         DataIDType id = pObject->id();
         mDataObjects.emplace(id, std::shared_ptr<AbstractDataObject>(pObject));
-        mHierarchyDataObjects.appendNode(new HierarchyNode(HierarchyNode::NodeType::kObject, pObject->name()));
+        mHierarchyDataObjects.appendNode(new HierarchyNode(HierarchyNode::NodeType::kObject, id));
         emit dataObjectAdded(id);
         setModified(true);
         return id;
