@@ -20,6 +20,11 @@ AbstractDataObject::AbstractDataObject(DataObjectType type, QString const& name)
     mID = smNumObjects;
 }
 
+AbstractDataObject::~AbstractDataObject()
+{
+
+}
+
 //! Modify a key existed
 bool AbstractDataObject::changeItemKey(DataKeyType oldKey, DataKeyType newKey, DataHolder* items)
 {

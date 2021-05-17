@@ -26,7 +26,7 @@ class AbstractDataObject
 {
 public:
     AbstractDataObject(DataObjectType type, QString const& name);
-    virtual ~AbstractDataObject() = default;
+    virtual ~AbstractDataObject() = 0;
     virtual AbstractDataObject* clone() const = 0;
     virtual DataItemType& addItem(DataKeyType key) = 0;
     void removeItem(DataValueType key);

@@ -15,12 +15,11 @@
 
 using namespace QRS;
 
-static const QString skMimeType = "dataobjectsmanager/hierarchy";
 static uint sNumFolders = 0;
 static const QString skBaseFolderName = "Group ";
 
 DataObjectsHierarchyModel::DataObjectsHierarchyModel(mapDataObjects& dataObjects, QRS::HierarchyTree& hierarchyDataObjects, QTreeView* pView)
-    : QStandardItemModel(pView)
+    : AbstractHierarchyModel("dataobjectsmanager/hierarchy", pView)
     , mDataObjects(dataObjects)
     , mHierarchyDataObjects(hierarchyDataObjects)
 {
@@ -54,51 +53,14 @@ inline bool DataObjectsHierarchyModel::isEmpty() const
     return mDataObjects.size() == 0 || mHierarchyDataObjects.size() <= 1;
 }
 
-//! Specify allowed drop actions
-Qt::DropActions DataObjectsHierarchyModel::supportedDropActions() const
-{
-    return Qt::MoveAction;
-}
-
-//! Specify allowed drag actions
-Qt::DropActions DataObjectsHierarchyModel::supportedDragActions() const
-{
-    return Qt::MoveAction;
-}
-
-//! Retrieve the mime types
-QStringList DataObjectsHierarchyModel::mimeTypes() const
-{
-    return QStringList() << skMimeType;
-}
-
-//! Encode each item according to a given list of indicies
-QMimeData* DataObjectsHierarchyModel::mimeData(const QModelIndexList& indicies) const
-{
-    QByteArray encodedData;
-    QDataStream stream(&encodedData, QIODevice::WriteOnly);
-    stream << indicies.count();
-    for (QModelIndex const& index : indicies)
-    {
-        if (index.isValid())
-        {
-            DataObjectsHierarchyItem* pItem = (DataObjectsHierarchyItem*)itemFromIndex(index);
-            pItem->write(stream);
-        }
-    }
-    QMimeData* pMimeData = new QMimeData();
-    pMimeData->setData(skMimeType, encodedData);
-    return pMimeData;
-}
-
 //! Process the drop action
 bool DataObjectsHierarchyModel::dropMimeData(QMimeData const* pMimeData, Qt::DropAction action, int row, int /*column*/, const QModelIndex& indexParent)
 {
-    if (!pMimeData->hasFormat(skMimeType))
+    if (!pMimeData->hasFormat(kMimeType))
         return false;
     if (action == Qt::IgnoreAction)
         return true;
-    QByteArray encodedData = pMimeData->data(skMimeType);
+    QByteArray encodedData = pMimeData->data(kMimeType);
     QDataStream stream(&encodedData, QIODevice::ReadOnly);
     int numItems;
     stream >> numItems;

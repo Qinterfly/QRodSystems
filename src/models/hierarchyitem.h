@@ -5,8 +5,8 @@
  * \brief Declaration of the HierarchyItem class
  */
 
-#ifndef HIERACHYITEM_H
-#define HIERACHYITEM_H
+#ifndef HIERARCHYITEM_H
+#define HIERARCHYITEM_H
 
 #include <QStandardItem>
 
@@ -17,19 +17,21 @@ class HierarchyTree;
 class AbstractDataObject;
 }
 
-enum HierarchyItemType
-{
-    kBase = QStandardItem::UserType,
-    kDataObjects,
-};
-
 //! Item to represent a hierarchy of elements of the same type
 class HierarchyItem : public QStandardItem
 {
+    friend class AbstractHierarchyModel;
+
 public:
+    enum DataType
+    {
+        kBase = QStandardItem::UserType,
+        kDataObjects,
+    };
     HierarchyItem() = default;
     HierarchyItem(const QIcon& icon, const QString& text, QRS::HierarchyNode* pNode);
-    int type() const override { return HierarchyItemType::kBase; };
+    virtual ~HierarchyItem() = default;
+    int type() const override { return DataType::kBase; };
     void write(QDataStream& out) const override;
     void read(QDataStream& in) override;
 
@@ -37,4 +39,4 @@ protected:
     QRS::HierarchyNode* mpNode = nullptr;
 };
 
-#endif // HIERACHYITEM_H
+#endif // HIERARCHYITEM_H

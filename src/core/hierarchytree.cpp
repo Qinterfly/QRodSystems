@@ -291,6 +291,8 @@ HierarchyTree::HierarchyTree(QDataStream& stream, int numNodes)
 HierarchyNode* HierarchyTree::groupNodes(HierarchyNode* pBaseNode, HierarchyNode* pChildNode)
 {
     QString const kNameDirectory = "Group";
+    if (pBaseNode == pChildNode)
+        return nullptr;
     switch (pBaseNode->type())
     {
     case HierarchyNode::NodeType::kDirectory:
@@ -334,6 +336,8 @@ HierarchyNode* HierarchyTree::groupNodes(HierarchyNode* pBaseNode, HierarchyNode
 //! Set a given node before a base one
 void HierarchyTree::setBefore(HierarchyNode* pBaseNode, HierarchyNode* pSetNode)
 {
+    if (pBaseNode == pSetNode)
+        return;
     excludeNodeFromHierarchy(pSetNode);
     HierarchyNode* pParentNode = pBaseNode->mpParent;
     if (pParentNode && pParentNode->mpFirstChild == pBaseNode)
@@ -347,6 +351,8 @@ void HierarchyTree::setBefore(HierarchyNode* pBaseNode, HierarchyNode* pSetNode)
 //! Set a given node after a base one
 void HierarchyTree::setAfter(HierarchyNode* pBaseNode, HierarchyNode* pSetNode)
 {
+    if (pBaseNode == pSetNode)
+        return;
     excludeNodeFromHierarchy(pSetNode);
     pSetNode->mpParent = pBaseNode->mpParent;
     pSetNode->mpPreviousSibling = pBaseNode;

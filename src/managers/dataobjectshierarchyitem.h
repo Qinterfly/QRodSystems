@@ -9,7 +9,7 @@
 #define DATAOBJECTSHIERARCHYITEM_H
 
 #include <unordered_map>
-#include "hierachyitem.h"
+#include "models/hierarchyitem.h"
 #include "core/datatypes.h"
 
 namespace QRS
@@ -30,7 +30,7 @@ public:
     DataObjectsHierarchyItem(mapDataObjects& dataObjects, QRS::HierarchyTree& hierarchyDataObjects, QString const& name = "Root");
     DataObjectsHierarchyItem(QRS::HierarchyNode* pNode, QRS::AbstractDataObject* pDataObject);
     DataObjectsHierarchyItem(QRS::HierarchyNode* pNode);
-    int type() const override { return HierarchyItemType::kDataObjects; }
+    int type() const override { return HierarchyItem::DataType::kDataObjects; }
     void write(QDataStream& out) const override;
     void read(QDataStream& in) override;
 

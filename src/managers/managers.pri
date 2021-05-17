@@ -5,7 +5,6 @@ HEADERS += \
     $$PWD/dataobjectshierarchymodel.h \
     $$PWD/dataobjectsmanager.h \
     $$PWD/doublespinboxitemdelegate.h \
-    $$PWD/hierachyitem.h \
     $$PWD/basetablemodel.h  \
     $$PWD/matrixtablemodel.h \
     $$PWD/surfacetablemodel.h \
@@ -16,7 +15,6 @@ SOURCES += \
     $$PWD/dataobjectshierarchymodel.cpp \
     $$PWD/dataobjectsmanager.cpp \
     $$PWD/doublespinboxitemdelegate.cpp \
-    $$PWD/hierachyitem.cpp \
     $$PWD/basetablemodel.cpp  \
     $$PWD/matrixtablemodel.cpp \
     $$PWD/surfacetablemodel.cpp \

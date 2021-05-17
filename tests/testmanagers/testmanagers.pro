@@ -15,6 +15,7 @@ SOURCES +=  \
 LIBS += -L$${LIB_PATH}
 
 include(../../src/core/core.pri)
+include(../../src/models/models.pri)
 include(../../src/managers/managers.pri)
 include(../../lib/ADS/ads.pri)
 

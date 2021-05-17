@@ -5,7 +5,7 @@
  * \brief Definition of the HierarchyItem class
  */
 
-#include "hierachyitem.h"
+#include "hierarchyitem.h"
 #include "core/hierarchynode.h"
 
 using namespace QRS;

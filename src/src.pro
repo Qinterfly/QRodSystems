@@ -14,6 +14,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 include(core/core.pri)
 include(main/main.pri)
 include(central/central.pri)
+include(models/models.pri)
 include(managers/managers.pri)
 include(render/render.pri)
 
