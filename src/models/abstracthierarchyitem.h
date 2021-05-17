@@ -30,7 +30,7 @@ class AbstractHierarchyItem : public QStandardItem
 public:
     AbstractHierarchyItem(const QIcon& icon, const QString& text, QRS::HierarchyNode* pNode);
     virtual ~AbstractHierarchyItem() = 0;
-    void writePointer(QDataStream& out);
+    void writePointer(QDataStream& out) const;
     static AbstractHierarchyItem* readPointer(QDataStream& in);
 
 protected:

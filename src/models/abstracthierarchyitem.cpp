@@ -23,7 +23,7 @@ AbstractHierarchyItem::~AbstractHierarchyItem()
 }
 
 //! Write the pointer to the current item to a stream
-void AbstractHierarchyItem::writePointer(QDataStream& out)
+void AbstractHierarchyItem::writePointer(QDataStream& out) const
 {
     out << reinterpret_cast<quintptr>(this);
 }

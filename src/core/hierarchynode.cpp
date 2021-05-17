@@ -118,7 +118,7 @@ bool HierarchyNode::setAfter(HierarchyNode* pSetNode)
 }
 
 //! Check whether it is possible to place a given item before or after the current one
-inline bool HierarchyNode::isSetAllowed(HierarchyNode* pNode)
+inline bool HierarchyNode::isSetAllowed(HierarchyNode const* pNode) const
 {
     return pNode && this != pNode && !pNode->isParentOf(this);
 }
@@ -138,7 +138,7 @@ void HierarchyNode::excludeNodeFromHierarchy()
 }
 
 //! Check whether the current item containes a given node as a child
-bool HierarchyNode::isParentOf(HierarchyNode* pNode)
+bool HierarchyNode::isParentOf(HierarchyNode const* pNode) const
 {
     HierarchyNode* pParentNode = pNode->mpParent;
     while (pParentNode)

@@ -43,8 +43,8 @@ public:
 
 private:
     void excludeNodeFromHierarchy();
-    bool isSetAllowed(HierarchyNode* pNode);
-    bool isParentOf(HierarchyNode* pNode);
+    bool isSetAllowed(HierarchyNode const* pNode) const;
+    bool isParentOf(HierarchyNode const* pNode) const;
 
 private:
     HierarchyNode* mpParent = nullptr;
