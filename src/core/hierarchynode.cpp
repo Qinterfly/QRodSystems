@@ -31,6 +31,7 @@ void HierarchyNode::appendChild(HierarchyNode* node)
     }
     else
     {
+        node->excludeNodeFromHierarchy();
         HierarchyNode* pLastNode = mpFirstChild;
         while (pLastNode->mpNextSibling)
             pLastNode = pLastNode->mpNextSibling;
@@ -39,4 +40,112 @@ void HierarchyNode::appendChild(HierarchyNode* node)
         node->mpNextSibling = nullptr;
     }
     node->mpParent = this;
+}
+
+//! Merge two nodes into one entity
+HierarchyNode* HierarchyNode::groupNodes(HierarchyNode* pChildNode)
+{
+    QString const kNameDirectory = "Group";
+    if (!pChildNode || this == pChildNode || isParentOf(pChildNode) || pChildNode->isParentOf(this))
+        return nullptr;
+    switch (mType)
+    {
+    case HierarchyNode::NodeType::kDirectory:
+        pChildNode->excludeNodeFromHierarchy();
+        appendChild(pChildNode);
+        return this;
+        break;
+    case HierarchyNode::NodeType::kObject:
+    {
+        HierarchyNode* pDirectory = new HierarchyNode(HierarchyNode::NodeType::kDirectory, kNameDirectory);
+        // Initialize a directory by base node
+        pDirectory->mpParent = mpParent;
+        pDirectory->mpNextSibling = mpNextSibling;
+        pDirectory->mpPreviousSibling = mpPreviousSibling;
+        // Switch the newly created directory with the base node
+        if (mpParent && mpParent->mpFirstChild == this)
+            mpParent->mpFirstChild = pDirectory;
+        if (mpNextSibling)
+            mpNextSibling->mpPreviousSibling = pDirectory;
+        if (mpPreviousSibling)
+            mpPreviousSibling->mpNextSibling = pDirectory;
+        // Insert the base node into the directory
+        mpParent = nullptr;
+        mpPreviousSibling = nullptr;
+        mpNextSibling = nullptr;
+        pDirectory->appendChild(this);
+        // Insert the child into the directory
+        pChildNode->excludeNodeFromHierarchy();
+        pDirectory->appendChild(pChildNode);
+        return pDirectory;
+        break;
+    }
+    default:
+        return nullptr;
+    }
+}
+
+//! Set a given node before the current one
+bool HierarchyNode::setBefore(HierarchyNode* pSetNode)
+{
+    if (!isSetAllowed(pSetNode))
+        return false;
+    pSetNode->excludeNodeFromHierarchy();
+    if (mpParent && mpParent->mpFirstChild == this)
+        mpParent->mpFirstChild = pSetNode;
+    pSetNode->mpParent = mpParent;
+    pSetNode->mpNextSibling = this;
+    pSetNode->mpPreviousSibling = mpPreviousSibling;
+    if (mpPreviousSibling)
+        mpPreviousSibling->mpNextSibling = pSetNode;
+    mpPreviousSibling = pSetNode;
+    return true;
+}
+
+//! Set a given node after the current one
+bool HierarchyNode::setAfter(HierarchyNode* pSetNode)
+{
+    if (!isSetAllowed(pSetNode))
+        return false;
+    pSetNode->excludeNodeFromHierarchy();
+    pSetNode->mpParent = mpParent;
+    pSetNode->mpPreviousSibling = this;
+    pSetNode->mpNextSibling = mpNextSibling;
+    if (mpNextSibling)
+        mpNextSibling->mpPreviousSibling = pSetNode;
+    mpNextSibling = pSetNode;
+    return true;
+}
+
+//! Check whether it is possible to place a given item before or after the current one
+inline bool HierarchyNode::isSetAllowed(HierarchyNode* pNode)
+{
+    return pNode && this != pNode && !pNode->isParentOf(this);
+}
+
+//! Remove all links to the node
+void HierarchyNode::excludeNodeFromHierarchy()
+{
+    if (mpParent && mpParent->mpFirstChild == this)
+        mpParent->mpFirstChild = mpNextSibling;
+    if (mpNextSibling)
+        mpNextSibling->mpPreviousSibling = mpPreviousSibling;
+    if (mpPreviousSibling)
+        mpPreviousSibling->mpNextSibling = mpNextSibling;
+    mpParent = nullptr;
+    mpNextSibling = nullptr;
+    mpPreviousSibling = nullptr;
+}
+
+//! Check whether the current item containes a given node as a child
+bool HierarchyNode::isParentOf(HierarchyNode* pNode)
+{
+    HierarchyNode* pParentNode = pNode->mpParent;
+    while (pParentNode)
+    {
+        if (pParentNode == this)
+            return true;
+        pParentNode = pParentNode->mpParent;
+    }
+    return false;
 }

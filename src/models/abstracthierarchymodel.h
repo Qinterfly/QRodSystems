@@ -28,9 +28,14 @@ public:
     Qt::DropActions supportedDropActions() const override;
     QStringList mimeTypes() const override;
     QMimeData* mimeData(const QModelIndexList &indicies) const override;
+    bool dropMimeData(QMimeData const* pMimeData, Qt::DropAction action, int row, int column, const QModelIndex& parent) override;
 
 signals:
     void dataModified(bool flag);
+
+private:
+    bool processDropOnItem(QDataStream& stream, int& numItems, QModelIndex const& indexParent);
+    bool processDropBetweenItems(QDataStream& stream, int& numItems, QModelIndex const& indexParent, int row);
 
 protected:
     QString const kMimeType;

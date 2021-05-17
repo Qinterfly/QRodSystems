@@ -31,7 +31,6 @@ public:
     void updateContent() override;
     void clearContent() override;
     bool isEmpty() const;
-    bool dropMimeData(QMimeData const* pMimeData, Qt::DropAction action, int row, int column, const QModelIndex& parent) override;
     void selectItem(int iRow);
 
 signals:
@@ -41,10 +40,6 @@ signals:
 public slots:
     void retrieveSelectedDataObject();
     void removeSelectedItems();
-
-private:
-    bool processDropOnItem(QDataStream& stream, int& numItems, QModelIndex const& indexParent);
-    bool processDropBetweenItems(QDataStream& stream, int& numItems, QModelIndex const& indexParent, int row);
 
 private slots:
     void renameDataObject(QStandardItem* pStandardItem);

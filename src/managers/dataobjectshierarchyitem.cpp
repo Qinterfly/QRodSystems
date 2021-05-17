@@ -15,7 +15,7 @@ QIcon getDataObjectIcon(DataObjectType type);
 
 //! Create the representer of the structure of data objects
 DataObjectsHierarchyItem::DataObjectsHierarchyItem(mapDataObjects& dataObjects, QRS::HierarchyTree& hierarchyDataObjects, QString const& name)
-    : HierarchyItem(QIcon(), name, hierarchyDataObjects.root())
+    : AbstractHierarchyItem(QIcon(), name, hierarchyDataObjects.root())
 {
     if (!mpNode->hasChild())
         return;
@@ -53,7 +53,7 @@ void DataObjectsHierarchyItem::appendItems(mapDataObjects& dataObjects, QRS::Hie
 
 //! Construct an item to represent a data object
 DataObjectsHierarchyItem::DataObjectsHierarchyItem(QRS::HierarchyNode* pNode, QRS::AbstractDataObject* pDataObject)
-    : HierarchyItem(getDataObjectIcon(pDataObject->type()), pDataObject->name(), pNode)
+    : AbstractHierarchyItem(getDataObjectIcon(pDataObject->type()), pDataObject->name(), pNode)
     , mpDataObject(pDataObject)
 {
 
@@ -61,25 +61,9 @@ DataObjectsHierarchyItem::DataObjectsHierarchyItem(QRS::HierarchyNode* pNode, QR
 
 //! Construct an item to represent a directory
 DataObjectsHierarchyItem::DataObjectsHierarchyItem(QRS::HierarchyNode* pNode)
-    : HierarchyItem(QIcon(":/icons/folder.svg"), pNode->value().toString(), pNode)
+    : AbstractHierarchyItem(QIcon(":/icons/folder.svg"), pNode->value().toString(), pNode)
 {
 
-}
-
-//! Write a hierarchy item to a stream
-void DataObjectsHierarchyItem::write(QDataStream& out) const
-{
-    HierarchyItem::write(out);
-    out << reinterpret_cast<quintptr>(mpDataObject);
-}
-
-//! Read a hierarchy item from a stream
-void DataObjectsHierarchyItem::read(QDataStream& in)
-{
-    HierarchyItem::read(in);
-    quintptr dataObjectAddress;
-    in >> dataObjectAddress;
-    mpDataObject = reinterpret_cast<AbstractDataObject*>(dataObjectAddress);
 }
 
 //! Helper function to assign appropriate data object icon

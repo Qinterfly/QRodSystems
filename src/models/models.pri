@@ -1,10 +1,10 @@
 INCLUDEPATH += $$PWD
 
 HEADERS += \
-    $$PWD/hierarchyitem.h \
+    $$PWD/abstracthierarchyitem.h \
     $$PWD/abstracthierarchymodel.h
     
-SOURCES += \      
-    $$PWD/hierarchyitem.cpp \
+SOURCES += \  
+    $$PWD/abstracthierarchyitem.cpp \
     $$PWD/abstracthierarchymodel.cpp
     

@@ -37,6 +37,14 @@ public:
     HierarchyNode* nextSibling() { return mpNextSibling; }
     NodeType type() const { return mType; }
     QVariant& value() { return mValue; }
+    HierarchyNode* groupNodes(HierarchyNode* pChildNode);
+    bool setBefore(HierarchyNode* pSetNode);
+    bool setAfter(HierarchyNode* pSetNode);
+
+private:
+    void excludeNodeFromHierarchy();
+    bool isSetAllowed(HierarchyNode* pNode);
+    bool isParentOf(HierarchyNode* pNode);
 
 private:
     HierarchyNode* mpParent = nullptr;

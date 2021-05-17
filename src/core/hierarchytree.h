@@ -34,9 +34,6 @@ public:
     HierarchyTree clone() const;
     HierarchyNode* findNode(HierarchyNode* pBaseNode, HierarchyNode::NodeType type, QVariant const& value) const;
     int size() const;
-    HierarchyNode* groupNodes(HierarchyNode* pBaseNode, HierarchyNode* pChildNode);
-    void setBefore(HierarchyNode* pBaseNode, HierarchyNode* pSetNode);
-    void setAfter(HierarchyNode* pBaseNode, HierarchyNode* pSetNode);
     friend QDebug operator<<(QDebug stream, HierarchyTree& tree);
     friend QDataStream& operator<<(QDataStream& stream, HierarchyTree const& tree);
 
@@ -46,7 +43,6 @@ private:
     void printNode(uint level, HierarchyNode* pNode, QDebug stream) const;
     void writeNode(HierarchyNode* pNode, QDataStream& stream) const;
     int countNodes(HierarchyNode* pNode, int& numNodes) const;
-    void excludeNodeFromHierarchy(HierarchyNode* pNode);
 
 private:
     HierarchyNode* mpRootNode = nullptr;

@@ -26,6 +26,7 @@ private slots:
     void saveProject();
     void readProject();
     void createHierarchyTree();
+    void reorganizeHierarchyTree();
     void cleanupTestCase();
 
 private:
@@ -106,7 +107,7 @@ void TestCore::readProject()
     QCOMPARE(mpProject->numberDataObjects(), tempProject.numberDataObjects());
 }
 
-//! Try creating a hierarchy of data objects
+//! Try creating a hierarchial tree
 void TestCore::createHierarchyTree()
 {
     HierarchyTree hierarchy;
@@ -139,9 +140,34 @@ void TestCore::createHierarchyTree()
     hierarchy.removeNode(HierarchyNode::NodeType::kDirectory, "Folder 2");
     hierarchy.changeNodeValue(HierarchyNode::NodeType::kDirectory, "Folder 3", "Folder 1");
     hierarchy.changeNodeValue(HierarchyNode::NodeType::kDirectory, "Folder 4", "Folder 2");
-    hierarchy.groupNodes(pFolderNode3, pFolderNode4);
+    pFolderNode3->groupNodes(pFolderNode4);
     qDebug().noquote() << hierarchy;
     qDebug().noquote() << duplicateHierarchy;
+}
+
+//! Try reorganizing a hierarchial tree
+void TestCore::reorganizeHierarchyTree()
+{
+    const uint kNodes = 6;
+    const uint iStartMerge = 2;
+    HierarchyTree hierarchy;
+    HierarchyNode* pRootNode = hierarchy.root();
+    QVector<HierarchyNode*> nodes;
+    for (int i = 0; i != kNodes; ++i)
+    {
+        HierarchyNode* pNode = new HierarchyNode(HierarchyNode::NodeType::kObject, QString("Node %1").arg(i + 1));
+        pRootNode->appendChild(pNode);
+        nodes.push_back(pNode);
+    }
+    HierarchyNode* pGroup = nodes[iStartMerge]->groupNodes(nodes[iStartMerge + 1]);
+    for (int i = iStartMerge + 1; i != kNodes - 1; ++i)
+        pGroup->groupNodes(nodes[i + 1]);
+    pGroup->setAfter(nodes[2]);
+    pGroup->setBefore(nodes[2]);
+    nodes[1]->setAfter(nodes[2]);
+    nodes[0]->setBefore(nodes[2]);
+    hierarchy.removeNode(pGroup);
+    qDebug().noquote() << hierarchy;
 }
 
 //! Cleanup

@@ -9,7 +9,7 @@
 #define DATAOBJECTSHIERARCHYITEM_H
 
 #include <unordered_map>
-#include "models/hierarchyitem.h"
+#include "models/abstracthierarchyitem.h"
 #include "core/datatypes.h"
 
 namespace QRS
@@ -21,18 +21,15 @@ class AbstractDataObject;
 using mapDataObjects = std::unordered_map<QRS::DataIDType, QRS::AbstractDataObject*>;
 
 //! Item to represent a hierarchy of data objects
-class DataObjectsHierarchyItem : public HierarchyItem
+class DataObjectsHierarchyItem : public AbstractHierarchyItem
 {
     friend class DataObjectsHierarchyModel;
 
 public:
-    DataObjectsHierarchyItem() = default;
     DataObjectsHierarchyItem(mapDataObjects& dataObjects, QRS::HierarchyTree& hierarchyDataObjects, QString const& name = "Root");
     DataObjectsHierarchyItem(QRS::HierarchyNode* pNode, QRS::AbstractDataObject* pDataObject);
     DataObjectsHierarchyItem(QRS::HierarchyNode* pNode);
-    int type() const override { return HierarchyItem::DataType::kDataObjects; }
-    void write(QDataStream& out) const override;
-    void read(QDataStream& in) override;
+    int type() const override { return HierarchyItemType::kDataObjects; }
 
 private:
     void appendItems(mapDataObjects& dataObjects, QRS::HierarchyNode* pNode);
