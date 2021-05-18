@@ -100,6 +100,8 @@ bool AbstractHierarchyModel::processDropOnItem(QDataStream& stream, int& numItem
     --numItems;
     HierarchyNode* pDropNode = pDropItem->mpNode;
     AbstractHierarchyItem* pParentItem = (AbstractHierarchyItem*)itemFromIndex(indexParent);
+    if (pDropItem->type() != pParentItem->type())
+        return false;
     HierarchyNode* pParentNode = pParentItem->mpNode;
     HierarchyNode* pResNode = pParentNode->groupNodes(pDropNode);
     if (!pResNode)
@@ -118,8 +120,11 @@ bool AbstractHierarchyModel::processDropOnItem(QDataStream& stream, int& numItem
     while (numItems > 0)
     {
         pDropItem = AbstractHierarchyItem::readPointer(stream);
-        pDropNode = pDropItem->mpNode;
-        pResNode->groupNodes(pDropNode);
+        if (pResNode->type() == pDropItem->type())
+        {
+            pDropNode = pDropItem->mpNode;
+            pResNode->groupNodes(pDropNode);
+        }
         --numItems;
     }
     return true;
@@ -144,6 +149,8 @@ bool AbstractHierarchyModel::processDropBetweenItems(QDataStream& stream, int& n
     bool isSetAfter = row != 0;
     int iCurrentRow = isSetAfter ? row - 1 : 0;
     AbstractHierarchyItem* pCurrentItem = (AbstractHierarchyItem*)pParentItem->child(iCurrentRow);
+    if (pCurrentItem->type() != pDropItem->type())
+        return false;
     HierarchyNode* pCurrentNode = pCurrentItem->mpNode;
     bool isSuccess;
     if (isSetAfter)
@@ -157,9 +164,12 @@ bool AbstractHierarchyModel::processDropBetweenItems(QDataStream& stream, int& n
     while (numItems > 0)
     {
         pDropItem = AbstractHierarchyItem::readPointer(stream);
-        pDropNode = pDropItem->mpNode;
-        pCurrentNode->setAfter(pDropNode);
-        pCurrentNode = pDropNode;
+        if (pCurrentItem->type() == pDropItem->type())
+        {
+            pDropNode = pDropItem->mpNode;
+            pCurrentNode->setAfter(pDropNode);
+            pCurrentNode = pDropNode;
+        }
         --numItems;
     }
     return true;

@@ -19,7 +19,7 @@ class AbstractDataObject;
 
 enum HierarchyItemType
 {
-    kDataObjects = QStandardItem::UserType + 1
+    kDataObjects = QStandardItem::UserType
 };
 
 //! Item to represent a hierarchy of elements of the same type
@@ -32,6 +32,7 @@ public:
     virtual ~AbstractHierarchyItem() = 0;
     void writePointer(QDataStream& out) const;
     static AbstractHierarchyItem* readPointer(QDataStream& in);
+    virtual int type() const = 0;
 
 protected:
     QRS::HierarchyNode* mpNode = nullptr;
