@@ -7,7 +7,10 @@
 
 #include <QStandardItem>
 #include "tablemodelinterface.h"
-#include "array.h"
+#include "core/array.h"
+
+using namespace QRS::TableModels;
+using namespace QRS::Core;
 
 //! Helper function to make an item which holds a double value
 QStandardItem* TableModelInterface::makeDoubleItem(double value)
@@ -27,7 +30,7 @@ QStandardItem* TableModelInterface::makeLabelItem(QString const& name)
 }
 
 //! Helper function to copy a row from an array
-QList<QStandardItem*> TableModelInterface::prepareRow(QRS::Array<double>& array, uint iRow)
+QList<QStandardItem*> TableModelInterface::prepareRow(Array<double>& array, uint iRow)
 {
     QList<QStandardItem*> resultList;
     uint nCols = array.cols();
@@ -37,7 +40,7 @@ QList<QStandardItem*> TableModelInterface::prepareRow(QRS::Array<double>& array,
 }
 
 //! Helper function to copy a row from an array and associate it with an key
-QList<QStandardItem*> TableModelInterface::prepareRow(double const& key, QRS::Array<double>& array, uint iRow)
+QList<QStandardItem*> TableModelInterface::prepareRow(double const& key, Array<double>& array, uint iRow)
 {
     QList<QStandardItem*> resultList = prepareRow(array, iRow);
     resultList.push_front(makeDoubleItem(key));
@@ -45,7 +48,7 @@ QList<QStandardItem*> TableModelInterface::prepareRow(double const& key, QRS::Ar
 }
 
 //! Helper function to copy a row from an array and associate it with a name
-QList<QStandardItem*> TableModelInterface::prepareRow(QString const& name, QRS::Array<double>& array, uint iRow)
+QList<QStandardItem*> TableModelInterface::prepareRow(QString const& name, Array<double>& array, uint iRow)
 {
     QList<QStandardItem*> resultList = prepareRow(array, iRow);
     resultList.push_front(makeLabelItem(name));

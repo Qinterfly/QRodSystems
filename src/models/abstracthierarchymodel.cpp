@@ -11,7 +11,8 @@
 #include "abstracthierarchyitem.h"
 #include "core/hierarchynode.h"
 
-using namespace QRS;
+using namespace QRS::HierarchyModels;
+using namespace QRS::Core;
 
 static uint sNumFolders = 0;
 static const QString skBaseFolderName = "Group ";

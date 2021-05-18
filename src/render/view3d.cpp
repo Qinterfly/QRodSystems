@@ -10,6 +10,8 @@
 #include <QPainter>
 #include "view3d.h"
 
+using namespace QRS::Graph;
+
 View3D::View3D(QWidget* parent)
     : QOpenGLWidget(parent)
 {

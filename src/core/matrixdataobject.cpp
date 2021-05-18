@@ -7,7 +7,7 @@
 
 #include "matrixdataobject.h"
 
-using namespace QRS;
+using namespace QRS::Core;
 
 uint MatrixDataObject::smNumInstances = 0;
 const IndexType skNumElements = 3;

@@ -14,12 +14,11 @@
 #include "array.h"
 #include "datatypes.h"
 
-namespace QRS
+namespace QRS::Core
 {
 
 using DataItemType = Array<DataValueType>;
 using DataHolder = std::map<DataKeyType, DataItemType>;
-
 
 //! Data object which is designied in the way to be represented in a table easily
 class AbstractDataObject

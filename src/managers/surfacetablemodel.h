@@ -13,8 +13,14 @@
 
 namespace QRS
 {
+
+namespace Core
+{
 class SurfaceDataObject;
 }
+
+namespace TableModels
+{
 
 //! Table model to represent a surface data object
 class SurfaceTableModel : public QStandardItemModel, public TableModelInterface
@@ -24,7 +30,7 @@ class SurfaceTableModel : public QStandardItemModel, public TableModelInterface
 public:
     SurfaceTableModel(QWidget* parent = nullptr);
     ~SurfaceTableModel() = default;
-    void setDataObject(QRS::SurfaceDataObject* pDataObject);
+    void setDataObject(Core::SurfaceDataObject* pDataObject);
     bool setData(const QModelIndex& indexEdit, const QVariant& value, int role = Qt::EditRole) override;
     void insertItemAfterSelected(QItemSelectionModel* pSelectionModel) override;
     void removeSelectedItem(QItemSelectionModel* pSelectionModel) override;
@@ -36,7 +42,11 @@ private:
     void clearContent();
 
 private:
-    QRS::SurfaceDataObject* mpDataObject = nullptr;
+    Core::SurfaceDataObject* mpDataObject = nullptr;
 };
+
+}
+
+}
 
 #endif // SURFACETABLEMODEL_H

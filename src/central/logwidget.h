@@ -10,6 +10,9 @@
 
 #include <QTableWidget>
 
+namespace QRS::App
+{
+
 //! Log all the messages sent
 class LogWidget : public QTableWidget
 {
@@ -18,5 +21,8 @@ public:
     ~LogWidget() = default;
     void log(QtMsgType messageType, const QString& message);
 };
+
+}
+
 
 #endif // LOGWIDGET_H

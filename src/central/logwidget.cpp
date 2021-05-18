@@ -10,6 +10,8 @@
 #include <QTimer>
 #include "logwidget.h"
 
+using namespace QRS::App;
+
 enum ColumnType
 {
     kTime,

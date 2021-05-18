@@ -8,17 +8,20 @@
 #ifndef DATAOBJECTSHIERARCHYMODEL_H
 #define DATAOBJECTSHIERARCHYMODEL_H
 
-#include <unordered_map>
 #include "models/abstracthierarchymodel.h"
-#include "core/datatypes.h"
+#include "dataobjectshierarchyitem.h"
 
 namespace QRS
+{
+
+namespace Core
 {
 class HierarchyTree;
 class AbstractDataObject;
 }
 
-using mapDataObjects = std::unordered_map<QRS::DataIDType, QRS::AbstractDataObject*>;
+namespace HierarchyModels
+{
 
 //! Tree model to represent and modify a hierarchy of data objects
 class DataObjectsHierarchyModel : public AbstractHierarchyModel
@@ -26,7 +29,7 @@ class DataObjectsHierarchyModel : public AbstractHierarchyModel
     Q_OBJECT
 
 public:
-    DataObjectsHierarchyModel(mapDataObjects& dataObjects, QRS::HierarchyTree& hierarchyDataObjects, QTreeView* pView = nullptr);
+    DataObjectsHierarchyModel(mapDataObjects& dataObjects, Core::HierarchyTree& hierarchyDataObjects, QTreeView* pView = nullptr);
     ~DataObjectsHierarchyModel() = default;
     void updateContent() override;
     void clearContent() override;
@@ -34,7 +37,7 @@ public:
     void selectItem(int iRow);
 
 signals:
-    void dataObjectSelected(QRS::DataIDType id);
+    void dataObjectSelected(Core::DataIDType id);
     void selectionCleared();
 
 public slots:
@@ -46,7 +49,11 @@ private slots:
 
 private:
     mapDataObjects& mDataObjects;
-    QRS::HierarchyTree& mHierarchyDataObjects;
+    Core::HierarchyTree& mHierarchyDataObjects;
 };
+
+}
+
+}
 
 #endif // DATAOBJECTSHIERARCHYMODEL_H

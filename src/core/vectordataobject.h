@@ -10,7 +10,7 @@
 
 #include "abstractdataobject.h"
 
-namespace QRS
+namespace QRS::Core
 {
 
 //! Vector data object

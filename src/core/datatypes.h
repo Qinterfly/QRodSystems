@@ -8,7 +8,7 @@
 #ifndef DATATYPES_H
 #define DATATYPES_H
 
-namespace QRS
+namespace QRS::Core
 {
 
 using DataValueType = double;

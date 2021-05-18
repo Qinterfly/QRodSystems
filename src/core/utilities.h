@@ -14,12 +14,12 @@
 class QFile;
 class QString;
 
-namespace Utilities
+namespace QRS
 {
 
-namespace File
+namespace Utilities::File
 {
-QPair<QRS::DataObjectType, QSharedPointer<QFile>> getDataObjectFile(QString const& path, QString const& fileName);
+QPair<Core::DataObjectType, QSharedPointer<QFile>> getDataObjectFile(QString const& path, QString const& fileName);
 QString loadFileContent(QString const& path);
 }
 

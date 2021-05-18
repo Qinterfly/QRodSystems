@@ -10,6 +10,8 @@
 #include <QIcon>
 #include "controltabs.h"
 
+using namespace QRS::App;
+
 //! Managers tab constructor
 ManagersTab::ManagersTab(QWidget* parent)
     : QWidget(parent)

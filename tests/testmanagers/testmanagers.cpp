@@ -7,19 +7,19 @@
 
 #include <QtTest>
 #include <QCoreApplication>
-
 #include <QtWidgets>
+#include "core/project.h"
+#include "core/utilities.h"
+#include "core/abstractdataobject.h"
+#include "core/scalardataobject.h"
+#include "core/vectordataobject.h"
+#include "core/matrixdataobject.h"
+#include "core/surfacedataobject.h"
+#include "managers/dataobjectsmanager.h"
 
-#include "project.h"
-#include "utilities.h"
-#include "abstractdataobject.h"
-#include "scalardataobject.h"
-#include "vectordataobject.h"
-#include "matrixdataobject.h"
-#include "surfacedataobject.h"
-#include "dataobjectsmanager.h"
-
-using namespace QRS;
+using namespace QRS::Managers;
+using namespace QRS::Core;
+using namespace QRS::Utilities;
 
 //! Test managers while creating data objects and modifying them
 class TestManagers : public QObject
@@ -44,7 +44,7 @@ void TestManagers::initTestCase()
     mpProject = new Project("Test");
     mpSettings = new QSettings("Settings.ini", QSettings::IniFormat);
     qApp->setStyle("Fusion");
-    qApp->setStyleSheet(Utilities::File::loadFileContent(":/styles/modern.qss"));
+    qApp->setStyleSheet(File::loadFileContent(":/styles/modern.qss"));
     mpDataObjectsManager = new DataObjectsManager(*mpProject, *mpSettings, mLastPath);
 }
 

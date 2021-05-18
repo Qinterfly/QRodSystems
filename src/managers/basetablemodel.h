@@ -13,8 +13,14 @@
 
 namespace QRS
 {
+
+namespace Core
+{
 class AbstractDataObject;
 }
+
+namespace TableModels
+{
 
 //! Table model to represent either a scalar or vector data object
 class BaseTableModel : public QStandardItemModel, public TableModelInterface
@@ -24,7 +30,7 @@ class BaseTableModel : public QStandardItemModel, public TableModelInterface
 public:
     BaseTableModel(QWidget* parent = nullptr);
     ~BaseTableModel() = default;
-    void setDataObject(QRS::AbstractDataObject* pDataObject);
+    void setDataObject(Core::AbstractDataObject* pDataObject);
     bool setData(const QModelIndex& indexEdit, const QVariant& value, int role = Qt::EditRole) override;
     void insertItemAfterSelected(QItemSelectionModel* pSelectionModel) override;
     void insertLeadingItemAfterSelected(QItemSelectionModel* /*pSelectionModel*/) override { };
@@ -36,7 +42,11 @@ private:
     void clearContent();
 
 private:
-    QRS::AbstractDataObject* mpDataObject = nullptr;
+    Core::AbstractDataObject* mpDataObject = nullptr;
 };
+
+}
+
+}
 
 #endif // BASETABLEMODEL_H

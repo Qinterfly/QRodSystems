@@ -14,11 +14,17 @@
 
 namespace QRS
 {
+
+namespace Core
+{
 class HierarchyTree;
 class AbstractDataObject;
 }
 
-using mapDataObjects = std::unordered_map<QRS::DataIDType, QRS::AbstractDataObject*>;
+using mapDataObjects = std::unordered_map<Core::DataIDType, Core::AbstractDataObject*>;
+
+namespace HierarchyModels
+{
 
 //! Item to represent a hierarchy of data objects
 class DataObjectsHierarchyItem : public AbstractHierarchyItem
@@ -26,16 +32,20 @@ class DataObjectsHierarchyItem : public AbstractHierarchyItem
     friend class DataObjectsHierarchyModel;
 
 public:
-    DataObjectsHierarchyItem(mapDataObjects& dataObjects, QRS::HierarchyTree& hierarchyDataObjects, QString const& name = "Root");
-    DataObjectsHierarchyItem(QRS::HierarchyNode* pNode, QRS::AbstractDataObject* pDataObject);
-    DataObjectsHierarchyItem(QRS::HierarchyNode* pNode);
+    DataObjectsHierarchyItem(mapDataObjects& dataObjects, Core::HierarchyTree& hierarchyDataObjects, QString const& name = "Root");
+    DataObjectsHierarchyItem(Core::HierarchyNode* pNode, Core::AbstractDataObject* pDataObject);
+    DataObjectsHierarchyItem(Core::HierarchyNode* pNode);
     int type() const override { return HierarchyItemType::kDataObjects; }
 
 private:
-    void appendItems(mapDataObjects& dataObjects, QRS::HierarchyNode* pNode);
+    void appendItems(mapDataObjects& dataObjects, Core::HierarchyNode* pNode);
 
 private:
-    QRS::AbstractDataObject* mpDataObject = nullptr;
+    Core::AbstractDataObject* mpDataObject = nullptr;
 };
+
+}
+
+}
 
 #endif // DATAOBJECTSHIERARCHYITEM_H

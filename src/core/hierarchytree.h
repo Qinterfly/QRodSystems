@@ -9,10 +9,9 @@
 #define HIERARCHYTREE_H
 
 #include <QDebug>
-
 #include "hierarchynode.h"
 
-namespace QRS
+namespace QRS::Core
 {
 
 //! Hierarchy of data objects (n-aray tree)

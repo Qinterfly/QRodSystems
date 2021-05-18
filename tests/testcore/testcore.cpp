@@ -7,12 +7,12 @@
 
 #include <QtTest/QTest>
 
-#include "array.h"
-#include "project.h"
-#include "scalardataobject.h"
-#include "hierarchytree.h"
+#include "core/array.h"
+#include "core/project.h"
+#include "core/scalardataobject.h"
+#include "core/hierarchytree.h"
 
-using namespace QRS;
+using namespace QRS::Core;
 
 class TestCore : public QObject
 {

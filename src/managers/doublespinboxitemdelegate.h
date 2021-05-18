@@ -10,6 +10,9 @@
 
 #include <QStyledItemDelegate>
 
+namespace QRS::Managers
+{
+
 //! Class to specify how table values can be edited
 class DoubleSpinBoxItemDelegate : public QStyledItemDelegate
 {
@@ -23,5 +26,8 @@ public:
     void setModelData(QWidget* pEditor, QAbstractItemModel* pModel, const QModelIndex& index) const override;
     void updateEditorGeometry(QWidget* pEditor, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
 };
+
+}
+
 
 #endif // DOUBLESPINBOXITEMDELEGATE_H

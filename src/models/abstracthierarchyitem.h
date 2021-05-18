@@ -12,10 +12,16 @@
 
 namespace QRS
 {
+
+namespace Core
+{
 class HierarchyNode;
 class HierarchyTree;
 class AbstractDataObject;
 }
+
+namespace HierarchyModels
+{
 
 enum HierarchyItemType
 {
@@ -28,14 +34,18 @@ class AbstractHierarchyItem : public QStandardItem
     friend class AbstractHierarchyModel;
 
 public:
-    AbstractHierarchyItem(const QIcon& icon, const QString& text, QRS::HierarchyNode* pNode);
+    AbstractHierarchyItem(const QIcon& icon, const QString& text, Core::HierarchyNode* pNode);
     virtual ~AbstractHierarchyItem() = 0;
     void writePointer(QDataStream& out) const;
     static AbstractHierarchyItem* readPointer(QDataStream& in);
     virtual int type() const = 0;
 
 protected:
-    QRS::HierarchyNode* mpNode = nullptr;
+    Core::HierarchyNode* mpNode = nullptr;
 };
+
+}
+
+}
 
 #endif // ABSTRACTHIERARCHYITEM_H

@@ -37,7 +37,10 @@
 using ads::CDockManager;
 using ads::CDockWidget;
 using ads::CDockAreaWidget;
-using namespace QRS;
+using namespace QRS::Core;
+using namespace QRS::Managers;
+using namespace QRS::HierarchyModels;
+using namespace QRS::TableModels;
 
 const static QSize kIconSize = QSize(22, 22);
 const QString skDataObjectsWindow = "DataObjectsManager";
@@ -45,7 +48,7 @@ const QString skDataObjectsWindow = "DataObjectsManager";
 void setToolBarShortcutHints(QToolBar* pToolBar);
 QIcon getDataObjectIcon(DataObjectType type);
 
-DataObjectsManager::DataObjectsManager(QRS::Project& project, QSettings& settings, QString& lastPath, QWidget* parent)
+DataObjectsManager::DataObjectsManager(Project& project, QSettings& settings, QString& lastPath, QWidget* parent)
     : QDialog(parent)
     , mpUi(new Ui::DataObjectsManager)
     , mProject(project)

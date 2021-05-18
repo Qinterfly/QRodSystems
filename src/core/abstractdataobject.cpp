@@ -7,7 +7,7 @@
 
 #include "abstractdataobject.h"
 
-using namespace QRS;
+using namespace QRS::Core;
 
 uint AbstractDataObject::smNumObjects = 0;
 

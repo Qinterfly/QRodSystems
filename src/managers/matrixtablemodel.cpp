@@ -7,10 +7,11 @@
 
 #include <QTreeView>
 
+#include "core/abstractdataobject.h"
 #include "matrixtablemodel.h"
-#include "abstractdataobject.h"
 
-using namespace QRS;
+using namespace QRS::TableModels;
+using namespace QRS::Core;
 
 MatrixTableModel::MatrixTableModel(QWidget* parent)
     : QStandardItemModel(parent)

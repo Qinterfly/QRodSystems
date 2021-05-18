@@ -16,9 +16,15 @@ QT_END_NAMESPACE
 
 namespace QRS
 {
+
+namespace Core
+{
 template <typename T>
 class Array;
 }
+
+namespace TableModels
+{
 
 static const short kNumShowPrecision = 6;
 
@@ -32,10 +38,14 @@ public:
     virtual void removeSelectedLeadingItem(QItemSelectionModel* pSelectionModel) = 0;
     virtual ~TableModelInterface() { };
     static QStandardItem* makeDoubleItem(double value);
-    static QList<QStandardItem*> prepareRow(QRS::Array<double>& array, uint iRow);
-    static QList<QStandardItem*> prepareRow(double const& key, QRS::Array<double>& array, uint iRow);
-    static QList<QStandardItem*> prepareRow(QString const& name, QRS::Array<double>& array, uint iRow);
+    static QList<QStandardItem*> prepareRow(Core::Array<double>& array, uint iRow);
+    static QList<QStandardItem*> prepareRow(double const& key, Core::Array<double>& array, uint iRow);
+    static QList<QStandardItem*> prepareRow(QString const& name, Core::Array<double>& array, uint iRow);
     static QStandardItem* makeLabelItem(QString const& name);
 };
+
+}
+
+}
 
 #endif // TABLEMODELINTERFACE_H

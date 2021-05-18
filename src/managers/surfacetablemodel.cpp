@@ -7,10 +7,11 @@
 
 #include <QTreeView>
 
-#include "surfacedataobject.h"
 #include "surfacetablemodel.h"
+#include "core/surfacedataobject.h"
 
-using namespace QRS;
+using namespace QRS::TableModels;
+using namespace QRS::Core;
 
 SurfaceTableModel::SurfaceTableModel(QWidget* parent)
     : QStandardItemModel(parent)

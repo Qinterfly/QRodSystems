@@ -14,6 +14,12 @@ QT_BEGIN_NAMESPACE
 class QTreeView;
 QT_END_NAMESPACE
 
+namespace QRS
+{
+
+namespace HierarchyModels
+{
+
 //! Hierarchy model which enables one to drag and drop elements of the same type
 class AbstractHierarchyModel : public QStandardItemModel
 {
@@ -40,5 +46,9 @@ private:
 protected:
     QString const kMimeType;
 };
+
+}
+
+}
 
 #endif // ABSTRACTHIERARCHYMODEL_H

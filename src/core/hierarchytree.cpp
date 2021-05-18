@@ -7,7 +7,7 @@
 
 #include "hierarchytree.h"
 
-using namespace QRS;
+using namespace QRS::Core;
 
 static const QString kRootName = "Root";
 

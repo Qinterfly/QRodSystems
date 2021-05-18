@@ -5,9 +5,10 @@
  * \brief Implementation of the DoubleSpinBoxItemDelegate class
  */
 
+#include <QDoubleSpinBox>
 #include "doublespinboxitemdelegate.h"
 
-#include <QDoubleSpinBox>
+using namespace QRS::Managers;
 
 DoubleSpinBoxItemDelegate::DoubleSpinBoxItemDelegate(QObject* parent)
     : QStyledItemDelegate(parent)

@@ -7,7 +7,7 @@
 
 #include "surfacedataobject.h"
 
-using namespace QRS;
+using namespace QRS::Core;
 
 uint SurfaceDataObject::smNumInstances = 0;
 

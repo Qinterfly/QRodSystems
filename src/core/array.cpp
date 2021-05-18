@@ -7,8 +7,8 @@
 
 #include "array.h"
 
-template class QRS::Array<double>;
-using namespace QRS;
+template class QRS::Core::Array<double>;
+using namespace QRS::Core;
 
 template<typename T>
 Array<T>::Array(IndexType numRows, IndexType numCols)

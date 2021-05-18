@@ -12,6 +12,9 @@
 #include "mainwindow.h"
 #include "utilities.h"
 
+using namespace QRS::Utilities;
+using namespace QRS::App;
+
 //! Test the central window
 class TestCentral : public QObject
 {
@@ -40,7 +43,7 @@ void TestCentral::initTestCase()
     QGuiApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
     qInstallMessageHandler(throwMessage);
     qApp->setStyle("Fusion");
-    qApp->setStyleSheet(Utilities::File::loadFileContent(":/styles/modern.qss"));
+    qApp->setStyleSheet(File::loadFileContent(":/styles/modern.qss"));
     // Window
     mWindow = new MainWindow();
     mWindow->openProject("../../../../examples/simple.qrs");

@@ -10,7 +10,7 @@
 
 #include <QDebug>
 
-namespace QRS
+namespace QRS::Core
 {
 
 using IndexType = unsigned int;

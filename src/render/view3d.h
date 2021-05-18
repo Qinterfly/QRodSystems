@@ -11,6 +11,9 @@
 #include <QOpenGLWidget>
 #include <QOpenGLFunctions>
 
+namespace QRS::Graph
+{
+
 //! A widget to represent the resulted rod system
 class View3D : public QOpenGLWidget, protected QOpenGLFunctions
 {
@@ -27,5 +30,7 @@ protected:
 private:
     bool mCore;
 };
+
+}
 
 #endif // VIEW3D_H

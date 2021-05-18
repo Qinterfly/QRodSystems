@@ -26,7 +26,17 @@ namespace ads
 class CDockManager;
 class CDockWidget;
 }
+
+namespace QRS
+{
+
+namespace Managers
+{
 class DataObjectsManager;
+}
+
+namespace App
+{
 
 //! The main window of the program
 class MainWindow : public QMainWindow
@@ -79,8 +89,8 @@ private:
     ads::CDockManager* mpDockManager;
     QLabel* mpStatusLabel;
     QSharedPointer<QSettings> mpSettings;
-    DataObjectsManager* mpDataObjectsManager = nullptr;
-    QRS::Project* mpProject;
+    Managers::DataObjectsManager* mpDataObjectsManager = nullptr;
+    Core::Project* mpProject;
     QString mLastPath;
     QList<QString> mPathRecentProjects;
 
@@ -92,6 +102,10 @@ public:
 inline void throwMessage(QtMsgType type, const QMessageLogContext& /*context*/, const QString& message)
 {
     MainWindow::pLogger->log(type, message);
+}
+
+}
+
 }
 
 #endif // MAINWINDOW_H

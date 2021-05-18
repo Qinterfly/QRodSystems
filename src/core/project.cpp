@@ -2,7 +2,7 @@
  * \file
  * \author Pavel Lakiza
  * \date May 2021
- * \brief Implementation of the QRS::Project class
+ * \brief Implementation of the Project class
  */
 
 #include <QDebug>
@@ -19,7 +19,7 @@
 #include "surfacedataobject.h"
 #include "utilities.h"
 
-using namespace QRS;
+using namespace QRS::Core;
 
 const QString Project::skProjectExtension = ".qrs";
 

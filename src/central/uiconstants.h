@@ -10,7 +10,7 @@
 
 #include <QString>
 
-namespace UiConstants
+namespace QRS::UiConstants
 {
 
 namespace Settings

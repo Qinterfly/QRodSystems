@@ -7,7 +7,7 @@
 
 #include "vectordataobject.h"
 
-using namespace QRS;
+using namespace QRS::Core;
 
 uint VectorDataObject::smNumInstances = 0;
 const IndexType skNumElements = 3;

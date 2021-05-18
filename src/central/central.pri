@@ -4,12 +4,14 @@ HEADERS += \
     $$PWD/controltabs.h \
     $$PWD/logwidget.h \
     $$PWD/mainwindow.h \
+    $$PWD/projecthierarchymodel.h  \
     $$PWD/uiconstants.h
 
-SOURCES += \      
+SOURCES += \       
     $$PWD/controltabs.cpp \
     $$PWD/logwidget.cpp \
     $$PWD/mainwindow.cpp \
+    $$PWD/projecthierarchymodel.cpp
     
 FORMS += \
     $$PWD/mainwindow.ui \

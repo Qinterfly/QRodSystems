@@ -7,7 +7,7 @@
 
 #include "scalardataobject.h"
 
-using namespace QRS;
+using namespace QRS::Core;
 
 uint ScalarDataObject::smNumInstances = 0;
 

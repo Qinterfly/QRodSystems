@@ -13,25 +13,26 @@
 
 #include "utilities.h"
 
-using namespace Utilities;
+using namespace QRS::Utilities;
+using namespace QRS::Core;
 
 //! Retrieve a pair consisted of a data object file and its type
-QPair<QRS::DataObjectType, QSharedPointer<QFile>> Utilities::File::getDataObjectFile(QString const& path, QString const& fileName)
+QPair<DataObjectType, QSharedPointer<QFile>> File::getDataObjectFile(QString const& path, QString const& fileName)
 {
     const QString kScalarFileName = "w1.prn";
     const QString kVectorFileName = "w3.prn";
     const QString kMatrixFileName = "w9.prn";
     const QString kSurfaceFileName = "xy.prn";
     std::function <bool(QString const&)> isNameEqual = [&fileName](QString const& name) { return !fileName.compare(name, Qt::CaseInsensitive); };
-    QRS::DataObjectType type;
+    DataObjectType type;
     if (isNameEqual(kScalarFileName))
-        type = QRS::kScalar;
+        type = kScalar;
     else if (isNameEqual(kVectorFileName))
-        type = QRS::kVector;
+        type = kVector;
     else if (isNameEqual(kMatrixFileName))
-        type = QRS::kMatrix;
+        type = kMatrix;
     else if (isNameEqual(kSurfaceFileName))
-        type = QRS::kSurface;
+        type = kSurface;
     else
         return {type, nullptr};
     QString filePath = path + QDir::separator() + fileName;
@@ -45,7 +46,7 @@ QPair<QRS::DataObjectType, QSharedPointer<QFile>> Utilities::File::getDataObject
 }
 
 //! Load a style sheet
-QString Utilities::File::loadFileContent(QString const& path)
+QString File::loadFileContent(QString const& path)
 {
     QFile fileStyleSheet(path);
     QString content;

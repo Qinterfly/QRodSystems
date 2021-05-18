@@ -7,7 +7,7 @@
 
 #include "hierarchynode.h"
 
-using namespace QRS;
+using namespace QRS::Core;
 
 //! Node constructor
 HierarchyNode::HierarchyNode(NodeType type, QVariant value)

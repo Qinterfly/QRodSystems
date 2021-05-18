@@ -12,7 +12,7 @@
 #include <QDataStream>
 #include <QSharedPointer>
 
-namespace QRS
+namespace QRS::Core
 {
 
 //! Hierarchy representative

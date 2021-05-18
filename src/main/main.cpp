@@ -19,9 +19,9 @@ int main(int argc, char *argv[])
     QGuiApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
     QApplication app(argc, argv);
     qApp->setStyle("Fusion");
-    qApp->setStyleSheet(Utilities::File::loadFileContent(":/styles/modern.qss"));
-    qInstallMessageHandler(throwMessage);
-    MainWindow window;
+    qApp->setStyleSheet(QRS::Utilities::File::loadFileContent(":/styles/modern.qss"));
+    qInstallMessageHandler(QRS::App::throwMessage);
+    QRS::App::MainWindow window;
     window.show();
     return app.exec();
 }

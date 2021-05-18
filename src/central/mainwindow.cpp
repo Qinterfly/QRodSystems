@@ -23,18 +23,23 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "controltabs.h"
-#include "view3d.h"
 #include "logwidget.h"
-#include "../managers/dataobjectsmanager.h"
 #include "uiconstants.h"
+#include "managers/dataobjectsmanager.h"
+#include "render/view3d.h"
 
 using ads::CDockManager;
 using ads::CDockWidget;
 using ads::CDockAreaWidget;
 
+using namespace QRS::App;
+using namespace QRS::Core;
+using namespace QRS::Managers;
+using namespace QRS::Graph;
+
 LogWidget* MainWindow::pLogger = nullptr;
 const static QString skDefaultProjectName = "Default";
-static QString const& skProjectExtension = QRS::Project::getFileExtension();
+static QString const& skProjectExtension = Project::getFileExtension();
 const static QString skSettingsFileName = "Settings.ini";
 const static QString skMainWindow = "MainWindow";
 const static QString skRecentProjects = "RecentProjects";
@@ -69,7 +74,7 @@ void MainWindow::initializeWindow()
 void MainWindow::createContent()
 {
     mLastPath = '.' + QDir::separator();
-    mpProject = new QRS::Project(skDefaultProjectName);
+    mpProject = new Project(skDefaultProjectName);
     mpSettings = QSharedPointer<QSettings>(new QSettings(skSettingsFileName, QSettings::IniFormat));
     setProjectTitle();
     // Configuration
@@ -178,7 +183,7 @@ void MainWindow::specifyMenuConnections()
     connect(mpUi->actionSaveProject, &QAction::triggered, this, &MainWindow::saveProject);
     connect(mpUi->actionSaveAsProject, &QAction::triggered, this, &MainWindow::saveAsProject);
     connect(mpUi->actionExit, &QAction::triggered, this, &QMainWindow::close);
-    connect(mpProject, &QRS::Project::modified, this, &MainWindow::projectModified);
+    connect(mpProject, &Project::modified, this, &MainWindow::projectModified);
     // Help
     connect(mpUi->actionAboutQt, &QAction::triggered, qApp, &QApplication::aboutQt);
     connect(mpUi->actionAboutProgram, &QAction::triggered, this, &MainWindow::aboutProgram);
@@ -239,8 +244,8 @@ void MainWindow::createProject()
     if (!saveProjectChangesDialog())
         return;
     delete mpProject;
-    mpProject = new QRS::Project(skDefaultProjectName);
-    connect(mpProject, &QRS::Project::modified, this, &MainWindow::projectModified);
+    mpProject = new Project(skDefaultProjectName);
+    connect(mpProject, &Project::modified, this, &MainWindow::projectModified);
     setWindowModified(false);
     setProjectTitle();
 }
@@ -266,8 +271,8 @@ void MainWindow::openProject(QString const& filePath)
     QString path = info.path();
     QString baseName = info.baseName();
     delete mpProject;
-    mpProject = new QRS::Project(path, baseName);
-    connect(mpProject, &QRS::Project::modified, this, &MainWindow::projectModified);
+    mpProject = new Project(path, baseName);
+    connect(mpProject, &Project::modified, this, &MainWindow::projectModified);
     setWindowModified(false);
     mLastPath = path;
     setProjectTitle();

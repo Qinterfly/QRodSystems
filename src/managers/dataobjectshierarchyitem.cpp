@@ -9,12 +9,13 @@
 #include "core/abstractdataobject.h"
 #include "core/hierarchytree.h"
 
-using namespace QRS;
+using namespace QRS::HierarchyModels;
+using namespace QRS::Core;
 
 QIcon getDataObjectIcon(DataObjectType type);
 
 //! Create the representer of the structure of data objects
-DataObjectsHierarchyItem::DataObjectsHierarchyItem(mapDataObjects& dataObjects, QRS::HierarchyTree& hierarchyDataObjects, QString const& name)
+DataObjectsHierarchyItem::DataObjectsHierarchyItem(mapDataObjects& dataObjects, HierarchyTree& hierarchyDataObjects, QString const& name)
     : AbstractHierarchyItem(QIcon(), name, hierarchyDataObjects.root())
 {
     if (!mpNode->hasChild())
@@ -22,7 +23,7 @@ DataObjectsHierarchyItem::DataObjectsHierarchyItem(mapDataObjects& dataObjects, 
     appendItems(dataObjects, mpNode->firstChild());
 }
 
-void DataObjectsHierarchyItem::appendItems(mapDataObjects& dataObjects, QRS::HierarchyNode* pNode)
+void DataObjectsHierarchyItem::appendItems(mapDataObjects& dataObjects, HierarchyNode* pNode)
 {
     HierarchyNode* pNextNode;
     while (pNode)
@@ -52,7 +53,7 @@ void DataObjectsHierarchyItem::appendItems(mapDataObjects& dataObjects, QRS::Hie
 }
 
 //! Construct an item to represent a data object
-DataObjectsHierarchyItem::DataObjectsHierarchyItem(QRS::HierarchyNode* pNode, QRS::AbstractDataObject* pDataObject)
+DataObjectsHierarchyItem::DataObjectsHierarchyItem(HierarchyNode* pNode, AbstractDataObject* pDataObject)
     : AbstractHierarchyItem(getDataObjectIcon(pDataObject->type()), pDataObject->name(), pNode)
     , mpDataObject(pDataObject)
 {
@@ -60,7 +61,7 @@ DataObjectsHierarchyItem::DataObjectsHierarchyItem(QRS::HierarchyNode* pNode, QR
 }
 
 //! Construct an item to represent a directory
-DataObjectsHierarchyItem::DataObjectsHierarchyItem(QRS::HierarchyNode* pNode)
+DataObjectsHierarchyItem::DataObjectsHierarchyItem(HierarchyNode* pNode)
     : AbstractHierarchyItem(QIcon(":/icons/folder.svg"), pNode->value().toString(), pNode)
 {
 

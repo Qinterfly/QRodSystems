@@ -10,6 +10,9 @@
 
 #include <QWidget>
 
+namespace QRS::App
+{
+
 //! A toolbar consisted of object designers
 class ManagersTab : public QWidget
 {
@@ -25,6 +28,7 @@ signals:
     void actionRodConstructorTriggered();
 };
 
+}
 
 
 #endif // CONTROLTABS_H

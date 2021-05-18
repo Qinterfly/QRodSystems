@@ -2,7 +2,7 @@
  * \file
  * \author Pavel Lakiza
  * \date May 2021
- * \brief Declaration of the QRS::Project class
+ * \brief Declaration of the Project class
  */
 
 #ifndef PROJECT_H
@@ -19,7 +19,12 @@ QT_BEGIN_NAMESPACE
 class QString;
 QT_END_NAMESPACE
 
-namespace QRS
+namespace QRS::HierarchyModels
+{
+class ProjectHierarchyModel;
+}
+
+namespace QRS::Core
 {
 
 using DataObjects = std::unordered_map<DataIDType, std::shared_ptr<AbstractDataObject>>;
@@ -28,6 +33,7 @@ using DataObjects = std::unordered_map<DataIDType, std::shared_ptr<AbstractDataO
 class Project : public QObject
 {
     Q_OBJECT
+    friend class QRS::HierarchyModels::ProjectHierarchyModel;
 
 public:
     Project(QString const& name);
@@ -51,8 +57,8 @@ public:
     void importDataObjects(QString const& path, QString const& fileName);
 
 signals:
-    void dataObjectAdded(QRS::DataIDType id);
-    void dataObjectRemoved(QRS::DataIDType id);
+    void dataObjectAdded(DataIDType id);
+    void dataObjectRemoved(DataIDType id);
     void allDataObjectsChanged();
     void modified(bool modifiedState);
 

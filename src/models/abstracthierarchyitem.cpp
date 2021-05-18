@@ -8,7 +8,8 @@
 #include "abstracthierarchyitem.h"
 #include "core/hierarchynode.h"
 
-using namespace QRS;
+using namespace QRS::HierarchyModels;
+using namespace QRS::Core;
 
 AbstractHierarchyItem::AbstractHierarchyItem(const QIcon& icon, const QString& text, HierarchyNode* pNode)
     : QStandardItem(icon, text)

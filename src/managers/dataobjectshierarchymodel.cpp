@@ -7,15 +7,15 @@
 
 #include <QTreeView>
 #include <QMimeData>
-#include <QCoreApplication>
 #include "dataobjectshierarchymodel.h"
 #include "dataobjectshierarchyitem.h"
 #include "core/abstractdataobject.h"
 #include "core/hierarchytree.h"
 
-using namespace QRS;
+using namespace QRS::HierarchyModels;
+using namespace QRS::Core;
 
-DataObjectsHierarchyModel::DataObjectsHierarchyModel(mapDataObjects& dataObjects, QRS::HierarchyTree& hierarchyDataObjects, QTreeView* pView)
+DataObjectsHierarchyModel::DataObjectsHierarchyModel(mapDataObjects& dataObjects, HierarchyTree& hierarchyDataObjects, QTreeView* pView)
     : AbstractHierarchyModel("dataobjectsmanager/hierarchy", pView)
     , mDataObjects(dataObjects)
     , mHierarchyDataObjects(hierarchyDataObjects)

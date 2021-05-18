@@ -10,7 +10,8 @@
 #include "basetablemodel.h"
 #include "abstractdataobject.h"
 
-using namespace QRS;
+using namespace QRS::TableModels;
+using namespace QRS::Core;
 
 BaseTableModel::BaseTableModel(QWidget* parent)
     : QStandardItemModel(parent)
