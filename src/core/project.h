@@ -57,8 +57,8 @@ public:
     void importDataObjects(QString const& path, QString const& fileName);
 
 signals:
-    void dataObjectAdded(DataIDType id);
-    void dataObjectRemoved(DataIDType id);
+    void dataObjectAdded(QRS::Core::DataIDType id);
+    void dataObjectRemoved(QRS::Core::DataIDType id);
     void allDataObjectsChanged();
     void modified(bool modifiedState);
 

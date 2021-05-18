@@ -38,7 +38,7 @@ void DataObjectsHierarchyModel::updateContent()
     delete pHierarchyItem;
 }
 
-//! Clear all
+//! Clear all the items
 void DataObjectsHierarchyModel::clearContent()
 {
     removeRows(0, rowCount());

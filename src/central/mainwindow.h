@@ -35,6 +35,11 @@ namespace Managers
 class DataObjectsManager;
 }
 
+namespace HierarchyModels
+{
+class ProjectHierarchyModel;
+}
+
 namespace App
 {
 
@@ -53,7 +58,7 @@ private:
     // Content
     void initializeWindow();
     void createContent();
-    void closeEvent(QCloseEvent* event) override;
+    void closeEvent(QCloseEvent* pEvent) override;
     ads::CDockWidget* createProjectHierarchyWidget();
     ads::CDockWidget* createGLWidget();
     ads::CDockWidget* createLogWidget();
@@ -81,16 +86,23 @@ private slots:
     void createDataObjectsManager();
     void createRodPropertiesManager();
     void createRodConstructorManager();
+    void deleteDataObjectsManager();
     // Help
     void aboutProgram();
 
 private:
+    // UI
     Ui::MainWindow* mpUi;
     ads::CDockManager* mpDockManager;
     QLabel* mpStatusLabel;
-    QSharedPointer<QSettings> mpSettings;
+    // Models
+    HierarchyModels::ProjectHierarchyModel* mpProjectHierarchyModel = nullptr;
+    // Managers
     Managers::DataObjectsManager* mpDataObjectsManager = nullptr;
+    // Project data
     Core::Project* mpProject;
+    // Settings
+    QSharedPointer<QSettings> mpSettings;
     QString mLastPath;
     QList<QString> mPathRecentProjects;
 

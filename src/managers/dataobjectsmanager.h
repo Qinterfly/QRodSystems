@@ -56,6 +56,8 @@ class DataObjectsHierarchyModel;
 namespace Managers
 {
 
+class DoubleSpinBoxItemDelegate;
+
 using mapDataObjects = std::unordered_map<Core::DataIDType, Core::AbstractDataObject*>;
 
 //! Manager to create objects of different types: scalars, vectors, matroces and surfaces
@@ -66,9 +68,11 @@ class DataObjectsManager : public QDialog
 public:
     explicit DataObjectsManager(Core::Project& project, QSettings& settings, QString& lastPath, QWidget* parent = nullptr);
     ~DataObjectsManager();
-    void closeEvent(QCloseEvent* event) override;
     void selectDataObject(int iRow);
     mapDataObjects const& getDataObjects() { return mDataObjects; };
+
+signals:
+    void closed();
 
 public slots:
     void apply();
@@ -85,6 +89,7 @@ public slots:
     void clearDataObjectRepresentation();
 
 private:
+    void closeEvent(QCloseEvent* pEvent) override;
     // Content
     void createContent();
     ads::CDockWidget* createDataTableWidget();
@@ -108,6 +113,8 @@ private:
     // Widgets
     QTreeView* mpTreeDataObjects;
     QTreeView* mpDataTable;
+    // Delegates
+    DoubleSpinBoxItemDelegate* mpItemDelegate = nullptr;
     // Data
     Core::Project& mProject;
     QSettings& mSettings;

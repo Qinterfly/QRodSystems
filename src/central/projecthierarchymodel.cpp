@@ -19,11 +19,13 @@ ProjectHierarchyModel::ProjectHierarchyModel(Project& project, QTreeView* pView)
 
 }
 
+//! Update all the content
 void ProjectHierarchyModel::updateContent()
 {
 
 }
 
+//! Clear all the items
 void ProjectHierarchyModel::clearContent()
 {
 

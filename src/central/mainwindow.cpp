@@ -9,7 +9,6 @@
 #include <QToolBar>
 #include <QTableWidget>
 #include <QTreeView>
-#include <QFileSystemModel>
 #include <QTextEdit>
 #include <QVBoxLayout>
 #include <QSettings>
@@ -18,6 +17,7 @@
 #include <QLabel>
 #include "DockManager.h"
 #include "DockWidget.h"
+#include "DockAreaWidget.h"
 #include "ads_globals.h"
 
 #include "mainwindow.h"
@@ -25,6 +25,7 @@
 #include "controltabs.h"
 #include "logwidget.h"
 #include "uiconstants.h"
+#include "projecthierarchymodel.h"
 #include "managers/dataobjectsmanager.h"
 #include "render/view3d.h"
 
@@ -36,6 +37,7 @@ using namespace QRS::App;
 using namespace QRS::Core;
 using namespace QRS::Managers;
 using namespace QRS::Graph;
+using namespace QRS::HierarchyModels;
 
 LogWidget* MainWindow::pLogger = nullptr;
 const static QString skDefaultProjectName = "Default";
@@ -58,6 +60,7 @@ MainWindow::MainWindow(QWidget* parent)
 
 MainWindow::~MainWindow()
 {
+    delete mpProjectHierarchyModel;
     delete mpProject;
     delete mpUi;
 }
@@ -132,9 +135,8 @@ CDockWidget* MainWindow::createProjectHierarchyWidget()
 {
     QTreeView* pWidget = new QTreeView();
     pWidget->setFrameShape(QFrame::NoFrame);
-    QFileSystemModel* pModel = new QFileSystemModel(pWidget);
-    pModel->setRootPath(QDir::currentPath());
-    pWidget->setModel(pModel);
+    mpProjectHierarchyModel = new ProjectHierarchyModel(*mpProject, pWidget);
+    pWidget->setModel(mpProjectHierarchyModel);
     CDockWidget* pDockWidget = new CDockWidget(tr("Project Hierarchy"));
     pDockWidget->setWidget(pWidget);
     mpUi->menuWindow->addAction(pDockWidget->toggleViewAction());
@@ -224,6 +226,14 @@ void MainWindow::createDataObjectsManager()
     mpDataObjectsManager = new DataObjectsManager(*mpProject, *mpSettings, mLastPath, mpUi->centralWidget);
     moveToCenter(mpDataObjectsManager);
     mpDataObjectsManager->show();
+    connect(mpDataObjectsManager, &DataObjectsManager::closed, this, &MainWindow::deleteDataObjectsManager);
+}
+
+//! Delete a manager of data objects after being used
+void MainWindow::deleteDataObjectsManager()
+{
+    delete mpDataObjectsManager;
+    mpDataObjectsManager = nullptr;
 }
 
 //! Show a manager to set rod properties based on the created data objects
@@ -356,12 +366,12 @@ bool MainWindow::saveProjectChangesDialog()
 }
 
 //! Save project and settings before exit
-void MainWindow::closeEvent(QCloseEvent* event)
+void MainWindow::closeEvent(QCloseEvent* pEvent)
 {
     if (saveProjectChangesDialog())
-        event->accept();
+        pEvent->accept();
     else
-        event->ignore();
+        pEvent->ignore();
 }
 
 //! Show information a name of a project

@@ -18,6 +18,7 @@
 #include <QFileDialog>
 #include "DockManager.h"
 #include "DockWidget.h"
+#include "DockAreaWidget.h"
 
 #include "dataobjectsmanager.h"
 #include "ui_dataobjectsmanager.h"
@@ -64,6 +65,7 @@ DataObjectsManager::DataObjectsManager(Project& project, QSettings& settings, QS
 
 DataObjectsManager::~DataObjectsManager()
 {
+    delete mpItemDelegate;
     delete mpUi;
     for (auto iter = mDataObjects.begin(); iter != mDataObjects.end(); ++iter)
         delete iter->second;
@@ -71,9 +73,9 @@ DataObjectsManager::~DataObjectsManager()
 }
 
 //! Save settings and delete handling widgets before closing the window
-void DataObjectsManager::closeEvent(QCloseEvent* event)
+void DataObjectsManager::closeEvent(QCloseEvent* pEvent)
 {
-    event->ignore();
+    pEvent->ignore();
     bool isClosed = false;
     if (isWindowModified())
     {
@@ -90,8 +92,8 @@ void DataObjectsManager::closeEvent(QCloseEvent* event)
     if (isClosed)
     {
         saveSettings();
-        mpDockManager->deleteLater();
-        event->accept();
+        emit closed();
+        pEvent->accept();
     }
 }
 
@@ -126,8 +128,8 @@ CDockWidget* DataObjectsManager::createDataTableWidget()
     mpDataTable->setHeaderHidden(false);
     pDockWidget->setWidget(mpDataTable);
     // Editor of table values
-    DoubleSpinBoxItemDelegate* itemDelegate = new DoubleSpinBoxItemDelegate();
-    mpDataTable->setItemDelegate(itemDelegate);
+    mpItemDelegate = new DoubleSpinBoxItemDelegate();
+    mpDataTable->setItemDelegate(mpItemDelegate);
     // Models
     mpBaseTableModel = new BaseTableModel(pDockWidget);
     mpMatrixTableModel = new MatrixTableModel(pDockWidget);
