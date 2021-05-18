@@ -19,4 +19,9 @@ echo $listArchive | xargs zip -r "$dirArchive/$tempNameArchive"
 # Set the archive name
 cd $dirArchive
 nameArchive="$(date +"%Y.%m.%d") - v$version.zip"
-mv $tempNameArchive "$nameArchive"
+if [[ ! -f $nameArchive ]]; then
+    mv $tempNameArchive "$nameArchive"
+    echo "$nameArchive was successfully created"
+else
+    echo "$nameArchive already exists. The name of the created archive is $tempNameArchive"
+fi
