@@ -60,7 +60,6 @@ MainWindow::MainWindow(QWidget* parent)
 
 MainWindow::~MainWindow()
 {
-    delete mpProjectHierarchyModel;
     delete mpProject;
     delete mpUi;
 }
@@ -135,8 +134,8 @@ CDockWidget* MainWindow::createProjectHierarchyWidget()
 {
     QTreeView* pWidget = new QTreeView();
     pWidget->setFrameShape(QFrame::NoFrame);
-    mpProjectHierarchyModel = new ProjectHierarchyModel(*mpProject, pWidget);
-    pWidget->setModel(mpProjectHierarchyModel);
+    ProjectHierarchyModel* pModel = new ProjectHierarchyModel(*mpProject, pWidget);
+    pWidget->setModel(pModel);
     CDockWidget* pDockWidget = new CDockWidget(tr("Project Hierarchy"));
     pDockWidget->setWidget(pWidget);
     mpUi->menuWindow->addAction(pDockWidget->toggleViewAction());
