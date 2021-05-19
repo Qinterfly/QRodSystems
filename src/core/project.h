@@ -43,7 +43,6 @@ public:
     bool isModified() const { return mIsModified; }
     // Data objects
     DataIDType numberDataObjects() const { return mDataObjects.size(); }
-    std::shared_ptr<AbstractDataObject> getDataObject(DataIDType id);
     std::unordered_map<DataIDType, AbstractDataObject*> cloneDataObjects() const;
     DataIDType addDataObject(DataObjectType type);
     void removeDataObject(DataIDType id);

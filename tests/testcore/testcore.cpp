@@ -132,7 +132,7 @@ void TestCore::createHierarchyTree()
     QCOMPARE(hierarchy.size(), 9);
     // Make a duplicate
     HierarchyTree duplicateHierarchy = hierarchy.clone();
-    QCOMPARE(duplicateHierarchy.size(), 9);
+    QCOMPARE(duplicateHierarchy.size(), hierarchy.size());
     // Print the hierarchy structure
     qDebug().noquote() << hierarchy;
     // Modify the structure
@@ -142,7 +142,6 @@ void TestCore::createHierarchyTree()
     hierarchy.changeNodeValue(HierarchyNode::NodeType::kDirectory, "Folder 4", "Folder 2");
     pFolderNode3->groupNodes(pFolderNode4);
     qDebug().noquote() << hierarchy;
-    qDebug().noquote() << duplicateHierarchy;
 }
 
 //! Try reorganizing a hierarchial tree
@@ -162,10 +161,10 @@ void TestCore::reorganizeHierarchyTree()
     HierarchyNode* pGroup = nodes[iStartMerge]->groupNodes(nodes[iStartMerge + 1]);
     for (int i = iStartMerge + 1; i != kNodes - 1; ++i)
         pGroup->groupNodes(nodes[i + 1]);
-    pGroup->setAfter(nodes[2]);
-    pGroup->setBefore(nodes[2]);
-    nodes[1]->setAfter(nodes[2]);
-    nodes[0]->setBefore(nodes[2]);
+    QVERIFY(pGroup->setAfter(nodes[2]));
+    QVERIFY(pGroup->setBefore(nodes[2]));
+    QVERIFY(nodes[1]->setAfter(nodes[2]));
+    QVERIFY(nodes[0]->setBefore(nodes[2]));
     hierarchy.removeNode(pGroup);
     qDebug().noquote() << hierarchy;
 }

@@ -34,14 +34,6 @@ Project::Project(QString const& name)
 
 }
 
-//! Retrieve a data object by identificator
-std::shared_ptr<AbstractDataObject> Project::getDataObject(DataIDType id)
-{
-    if (mDataObjects.find(id) == mDataObjects.end())
-        return nullptr;
-    return mDataObjects[id];
-}
-
 //! Create a data object with the specified type
 DataIDType Project::addDataObject(DataObjectType type)
 {
