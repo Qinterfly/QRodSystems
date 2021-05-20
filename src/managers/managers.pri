@@ -1,24 +1,12 @@
 INCLUDEPATH += $$PWD
 
 HEADERS += \
-    $$PWD/dataobjectshierarchyitem.h \
-    $$PWD/dataobjectshierarchymodel.h \
     $$PWD/dataobjectsmanager.h \
-    $$PWD/doublespinboxitemdelegate.h \
-    $$PWD/basetablemodel.h  \
-    $$PWD/matrixtablemodel.h \
-    $$PWD/surfacetablemodel.h \
-    $$PWD/tablemodelinterface.h
+    $$PWD/doublespinboxitemdelegate.h 
 
 SOURCES += \
-    $$PWD/dataobjectshierarchyitem.cpp \
-    $$PWD/dataobjectshierarchymodel.cpp \
     $$PWD/dataobjectsmanager.cpp \
-    $$PWD/doublespinboxitemdelegate.cpp \
-    $$PWD/basetablemodel.cpp  \
-    $$PWD/matrixtablemodel.cpp \
-    $$PWD/surfacetablemodel.cpp \
-    $$PWD/tablemodelinterface.cpp
+    $$PWD/doublespinboxitemdelegate.cpp 
 
 FORMS += \
 	$$PWD/dataobjectsmanager.ui

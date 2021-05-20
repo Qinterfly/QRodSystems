@@ -25,7 +25,7 @@
 #include "controltabs.h"
 #include "logwidget.h"
 #include "uiconstants.h"
-#include "projecthierarchymodel.h"
+#include "models/projecthierarchymodel.h"
 #include "managers/dataobjectsmanager.h"
 #include "render/view3d.h"
 

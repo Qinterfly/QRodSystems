@@ -7,6 +7,7 @@
 
 #include <QTreeView>
 #include <QMimeData>
+#include <unordered_map>
 #include "abstracthierarchymodel.h"
 #include "abstracthierarchyitem.h"
 #include "core/hierarchynode.h"
@@ -87,7 +88,13 @@ bool AbstractHierarchyModel::dropMimeData(QMimeData const* pMimeData, Qt::DropAc
         isProcessed = processDropOnItem(stream, numItems, indexParent);
     if (isProcessed)
     {
+        // Since items are destroyed whenever the content is updated,
+        // an expanded state of each directory is saved and then set again
+        QTreeView* pView = (QTreeView*)parent();
+        NodesState nodesState;
+        retrieveExpandedState(nodesState, invisibleRootItem()->index(), pView);
         updateContent();
+        setExpandedState(nodesState, invisibleRootItem()->index(), pView);
         emit dataModified(true);
     }
     return false;
@@ -174,4 +181,35 @@ bool AbstractHierarchyModel::processDropBetweenItems(QDataStream& stream, int& n
         --numItems;
     }
     return true;
+}
+
+//! Retrieve information about whether each directory is expanded
+void AbstractHierarchyModel::retrieveExpandedState(NodesState& nodesState, QModelIndex const& indexParent, QTreeView const* pView)
+{
+    for (int iRow = 0; iRow < rowCount(indexParent); ++iRow)
+    {
+        QModelIndex currentIndex = index(iRow, 0, indexParent);
+        AbstractHierarchyItem* pCurrentItem = (AbstractHierarchyItem*)itemFromIndex(currentIndex);
+        HierarchyNode* pNode = pCurrentItem->mpNode;
+        if (pNode && pNode->type() == HierarchyNode::NodeType::kDirectory)
+            nodesState.emplace(pNode, pView->isExpanded(currentIndex));
+        if (hasChildren(currentIndex))
+            retrieveExpandedState(nodesState, currentIndex, pView);
+    }
+}
+
+//! Set an expanded state of each directory
+void AbstractHierarchyModel::setExpandedState(NodesState& nodesState, QModelIndex const& indexParent, QTreeView* pView)
+{
+    for (int iRow = 0; iRow < rowCount(indexParent); ++iRow)
+    {
+        QModelIndex currentIndex = index(iRow, 0, indexParent);
+        AbstractHierarchyItem* pCurrentItem = (AbstractHierarchyItem*)itemFromIndex(currentIndex);
+        if (hasChildren(currentIndex))
+            setExpandedState(nodesState, currentIndex, pView);
+        HierarchyNode* pNode = pCurrentItem->mpNode;
+        bool isDir = pNode && pNode->type() == HierarchyNode::NodeType::kDirectory;
+        if (isDir && nodesState.contains(pNode))
+            pView->setExpanded(currentIndex, nodesState[pNode]);
+    }
 }

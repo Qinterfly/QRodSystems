@@ -17,8 +17,15 @@ QT_END_NAMESPACE
 namespace QRS
 {
 
+namespace Core
+{
+class HierarchyNode;
+}
+
 namespace HierarchyModels
 {
+
+using NodesState = std::unordered_map<Core::HierarchyNode*, bool>;
 
 //! Hierarchy model which enables one to drag and drop elements of the same type
 class AbstractHierarchyModel : public QStandardItemModel
@@ -42,9 +49,12 @@ signals:
 private:
     bool processDropOnItem(QDataStream& stream, int& numItems, QModelIndex const& indexParent);
     bool processDropBetweenItems(QDataStream& stream, int& numItems, QModelIndex const& indexParent, int row);
+    void retrieveExpandedState(NodesState& nodesState, QModelIndex const& indexParent, QTreeView const* pView);
+    void setExpandedState(NodesState& nodesState, QModelIndex const& indexParent, QTreeView* pView);
 
 protected:
     QString const kMimeType;
+
 };
 
 }

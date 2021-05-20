@@ -10,7 +10,7 @@
 
 #include <QMainWindow>
 #include "logwidget.h"
-#include "../core/project.h"
+#include "core/project.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui

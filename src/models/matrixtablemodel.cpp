@@ -7,8 +7,8 @@
 
 #include <QTreeView>
 
-#include "core/abstractdataobject.h"
 #include "matrixtablemodel.h"
+#include "core/abstractdataobject.h"
 
 using namespace QRS::TableModels;
 using namespace QRS::Core;

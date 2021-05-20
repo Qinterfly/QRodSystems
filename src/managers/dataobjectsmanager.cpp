@@ -29,11 +29,11 @@
 #include "core/matrixdataobject.h"
 #include "core/surfacedataobject.h"
 #include "core/utilities.h"
-#include "basetablemodel.h"
-#include "matrixtablemodel.h"
-#include "surfacetablemodel.h"
+#include "models/basetablemodel.h"
+#include "models/matrixtablemodel.h"
+#include "models/surfacetablemodel.h"
+#include "models/dataobjectshierarchymodel.h"
 #include "doublespinboxitemdelegate.h"
-#include "dataobjectshierarchymodel.h"
 
 using ads::CDockManager;
 using ads::CDockWidget;

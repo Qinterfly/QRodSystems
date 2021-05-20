@@ -8,7 +8,7 @@
 #include <QTreeView>
 
 #include "basetablemodel.h"
-#include "abstractdataobject.h"
+#include "core/abstractdataobject.h"
 
 using namespace QRS::TableModels;
 using namespace QRS::Core;

@@ -29,7 +29,7 @@ class DataObjectsHierarchyModel : public AbstractHierarchyModel
     Q_OBJECT
 
 public:
-    DataObjectsHierarchyModel(mapDataObjects& dataObjects, Core::HierarchyTree& hierarchyDataObjects, QTreeView* pView = nullptr);
+    DataObjectsHierarchyModel(DataObjects& dataObjects, Core::HierarchyTree& hierarchyDataObjects, QTreeView* pView = nullptr);
     ~DataObjectsHierarchyModel() = default;
     void updateContent() override;
     void clearContent() override;
@@ -48,7 +48,7 @@ private slots:
     void renameDataObject(QStandardItem* pStandardItem);
 
 private:
-    mapDataObjects& mDataObjects;
+    DataObjects& mDataObjects;
     Core::HierarchyTree& mHierarchyDataObjects;
 };
 
