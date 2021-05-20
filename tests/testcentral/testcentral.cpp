@@ -46,7 +46,7 @@ void TestCentral::initTestCase()
     qApp->setStyleSheet(File::loadFileContent(":/styles/modern.qss"));
     // Window
     mWindow = new MainWindow();
-    mWindow->openProject("../../../../examples/simple.qrs");
+    mWindow->openProject("../../../../examples/base.qrs");
 }
 
 //! Test run

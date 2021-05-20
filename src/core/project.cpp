@@ -34,6 +34,13 @@ Project::Project(QString const& name)
 
 }
 
+Project::~Project()
+{
+    for (auto iter = mDataObjects.begin(); iter != mDataObjects.end(); ++iter)
+        delete iter->second;
+    mDataObjects.clear();
+}
+
 //! Create a data object with the specified type
 DataIDType Project::addDataObject(DataObjectType type)
 {
@@ -41,7 +48,7 @@ DataIDType Project::addDataObject(DataObjectType type)
     if (pObject)
     {
         DataIDType id = pObject->id();
-        mDataObjects.emplace(id, std::shared_ptr<AbstractDataObject>(pObject));
+        mDataObjects.emplace(id, pObject);
         mHierarchyDataObjects.appendNode(new HierarchyNode(HierarchyNode::NodeType::kObject, id));
         emit dataObjectAdded(id);
         setModified(true);
@@ -51,9 +58,9 @@ DataIDType Project::addDataObject(DataObjectType type)
 }
 
 //! Clone data objects
-std::unordered_map<DataIDType, AbstractDataObject*> Project::cloneDataObjects() const
+DataObjects Project::cloneDataObjects() const
 {
-    std::unordered_map<DataIDType, AbstractDataObject*> result;
+    DataObjects result;
     for (auto& pItem : mDataObjects)
     {
         AbstractDataObject* obj = pItem.second->clone();
@@ -81,17 +88,17 @@ void Project::removeDataObject(DataIDType id)
 }
 
 //! Substitute current data objects with new ones
-void Project::setDataObjects(std::unordered_map<DataIDType, AbstractDataObject*> dataObjects, HierarchyTree const& hierarchyDataObjects)
+void Project::setDataObjects(DataObjects dataObjects, HierarchyTree const& hierarchyDataObjects)
 {
     mDataObjects.clear();
     AbstractDataObject* pDataObject;
     for (auto& item : dataObjects)
     {
         pDataObject = item.second;
-        mDataObjects.emplace(pDataObject->id(), std::shared_ptr<AbstractDataObject>(pDataObject->clone()));
+        mDataObjects.emplace(pDataObject->id(), pDataObject->clone());
     }
     mHierarchyDataObjects = hierarchyDataObjects;
-    emit allDataObjectsChanged();
+    emit dataObjectsChanged();
     setModified(true);
 }
 
@@ -217,7 +224,7 @@ Project::Project(QString const& path, QString const& fileName)
             pObject = pSurface;
             break;
         }
-        mDataObjects.emplace(pObject->id(), std::shared_ptr<AbstractDataObject>(pObject));
+        mDataObjects.emplace(pObject->id(), pObject);
     }
     // 4. Hierarchy of data objects
     quint32 numNodes;
@@ -245,7 +252,7 @@ void Project::importDataObjects(QString const& path, QString const& fileName)
     for (quint32 iDataObject = 0; iDataObject != numDataObjects; ++iDataObject)
     {
         id = addDataObject(type);
-        std::shared_ptr<AbstractDataObject> pDataObject = mDataObjects[id];
+        AbstractDataObject* pDataObject = mDataObjects[id];
         pDataObject->import(stream);
     }
     pFile->close();
@@ -277,9 +284,3 @@ AbstractDataObject* createDataObject(DataObjectType type)
     }
     return pObject;
 }
-
-
-
-
-
-

@@ -20,6 +20,7 @@ DataObjectsHierarchyItem::DataObjectsHierarchyItem(mapDataObjects& dataObjects, 
 {
     if (!mpNode->hasChild())
         return;
+    setFlags(Qt::ItemIsEnabled);
     appendItems(dataObjects, mpNode->firstChild());
 }
 
@@ -57,14 +58,14 @@ DataObjectsHierarchyItem::DataObjectsHierarchyItem(HierarchyNode* pNode, Abstrac
     : AbstractHierarchyItem(getDataObjectIcon(pDataObject->type()), pDataObject->name(), pNode)
     , mpDataObject(pDataObject)
 {
-
+    setFlags(flags() | Qt::ItemIsEditable);
 }
 
 //! Construct an item to represent a directory
 DataObjectsHierarchyItem::DataObjectsHierarchyItem(HierarchyNode* pNode)
     : AbstractHierarchyItem(QIcon(":/icons/folder.svg"), pNode->value().toString(), pNode)
 {
-
+    setFlags(flags() | Qt::ItemIsEditable);
 }
 
 //! Helper function to assign appropriate data object icon

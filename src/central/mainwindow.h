@@ -68,6 +68,7 @@ private:
     void addToRecentProjects();
     // Signals & Slots
     void specifyMenuConnections();
+    void specifyProjectConnections();
     // Project
     bool saveProjectChangesDialog();
     bool saveProjectHelper(QString const& filePath);
@@ -95,6 +96,8 @@ private:
     Ui::MainWindow* mpUi;
     ads::CDockManager* mpDockManager;
     QLabel* mpStatusLabel;
+    // Models
+    HierarchyModels::ProjectHierarchyModel* mpProjectHierarchyModel = nullptr;
     // Managers
     Managers::DataObjectsManager* mpDataObjectsManager = nullptr;
     // Project data

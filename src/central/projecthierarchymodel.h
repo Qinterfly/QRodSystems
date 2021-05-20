@@ -19,13 +19,13 @@ namespace QRS::HierarchyModels
 class ProjectHierarchyModel : public AbstractHierarchyModel
 {
 public:
-    ProjectHierarchyModel(Core::Project& project, QTreeView* pView = nullptr);
+    ProjectHierarchyModel(QTreeView* pView = nullptr);
     void updateContent() override;
     void clearContent() override;
+    void setProject(Core::Project* pProject);
 
 private:
-    Core::DataObjects& mDataObjects;
-    Core::HierarchyTree& mHierarchyDataObjects;
+    Core::Project* mpProject = nullptr;
 };
 
 }

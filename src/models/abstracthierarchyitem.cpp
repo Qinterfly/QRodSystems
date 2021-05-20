@@ -15,7 +15,7 @@ AbstractHierarchyItem::AbstractHierarchyItem(const QIcon& icon, const QString& t
     : QStandardItem(icon, text)
     , mpNode(pNode)
 {
-    setFlags(flags() | Qt::ItemIsEditable);
+
 }
 
 AbstractHierarchyItem::~AbstractHierarchyItem()

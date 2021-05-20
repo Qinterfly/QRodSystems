@@ -55,6 +55,7 @@ MainWindow::MainWindow(QWidget* parent)
     initializeWindow();
     createContent();
     specifyMenuConnections();
+    specifyProjectConnections();
     restoreSettings();
 }
 
@@ -133,10 +134,21 @@ void MainWindow::createContent()
 CDockWidget* MainWindow::createProjectHierarchyWidget()
 {
     QTreeView* pWidget = new QTreeView();
-    pWidget->setFrameShape(QFrame::NoFrame);
-    ProjectHierarchyModel* pModel = new ProjectHierarchyModel(*mpProject, pWidget);
-    pWidget->setModel(pModel);
+    // Specify properties
+    pWidget->setSelectionMode(QAbstractItemView::ExtendedSelection);
+    pWidget->setSelectionBehavior(QAbstractItemView::SelectItems);
+    pWidget->setEditTriggers(QAbstractItemView::DoubleClicked);
+    pWidget->setHeaderHidden(true);
+    pWidget->setAcceptDrops(true);
+    pWidget->setDragEnabled(true);
+    pWidget->setStyleSheet("padding: 3px 0px 0px 0px");
+    // Set the hierarchy model
+    mpProjectHierarchyModel = new ProjectHierarchyModel(pWidget);
+    mpProjectHierarchyModel->setProject(mpProject);
+    pWidget->setModel(mpProjectHierarchyModel);
+    // Create a dock widget
     CDockWidget* pDockWidget = new CDockWidget(tr("Project Hierarchy"));
+    pDockWidget->setStyleSheet("background-color: white");
     pDockWidget->setWidget(pWidget);
     mpUi->menuWindow->addAction(pDockWidget->toggleViewAction());
     return pDockWidget;
@@ -184,10 +196,16 @@ void MainWindow::specifyMenuConnections()
     connect(mpUi->actionSaveProject, &QAction::triggered, this, &MainWindow::saveProject);
     connect(mpUi->actionSaveAsProject, &QAction::triggered, this, &MainWindow::saveAsProject);
     connect(mpUi->actionExit, &QAction::triggered, this, &QMainWindow::close);
-    connect(mpProject, &Project::modified, this, &MainWindow::projectModified);
     // Help
     connect(mpUi->actionAboutQt, &QAction::triggered, qApp, &QApplication::aboutQt);
     connect(mpUi->actionAboutProgram, &QAction::triggered, this, &MainWindow::aboutProgram);
+}
+
+//! Set signals and slots for a project
+void MainWindow::specifyProjectConnections()
+{
+    connect(mpProject, &Project::modified, this, &MainWindow::projectModified);
+    connect(mpProject, &Project::dataObjectsChanged, mpProjectHierarchyModel, &ProjectHierarchyModel::updateContent);
 }
 
 //! Save the current window settings
@@ -272,6 +290,7 @@ void MainWindow::openProjectDialog()
 //! Open the specific project
 void MainWindow::openProject(QString const& filePath)
 {
+    // Read a project from a file
     if (filePath.isEmpty())
         return;
     QFileInfo info(filePath);
@@ -281,9 +300,12 @@ void MainWindow::openProject(QString const& filePath)
     QString baseName = info.baseName();
     delete mpProject;
     mpProject = new Project(path, baseName);
-    connect(mpProject, &Project::modified, this, &MainWindow::projectModified);
-    setWindowModified(false);
+    specifyProjectConnections();
+    // Update the models of the project
+    mpProjectHierarchyModel->setProject(mpProject);
+    // Modify GUI
     mLastPath = path;
+    setWindowModified(false);
     setProjectTitle();
     addToRecentProjects();
 }
@@ -433,7 +455,7 @@ void MainWindow::aboutProgram()
                                  "You can download the code from <a href='https://github.com/qinterfly/QRodSystems'>GitHub</a>. If you find any "
                                  "bug or problem, please report it in <a href='https://github.com/qinterfly/QRodSystems/issues'>the issues "
                                  "page</a> so I can fix it as soon as possible.<br><br>"
-                                 "Copyright &copy; 2021 QRodSystems (Pavel Lakiza) "
+                                 "Copyright &copy; 2021 QRodSystems (Pavel Lakiza)\n"
                                  "Copyright &copy; 2021 KLPALGSYS (Dmitriy Krasnorutskiy)"
                              );
     QMessageBox::about(this, tr("About QRodSystems v%1").arg(APP_VERSION), aboutMsg);

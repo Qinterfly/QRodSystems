@@ -27,7 +27,7 @@ class ProjectHierarchyModel;
 namespace QRS::Core
 {
 
-using DataObjects = std::unordered_map<DataIDType, std::shared_ptr<AbstractDataObject>>;
+using DataObjects = std::unordered_map<DataIDType, AbstractDataObject*>;
 
 //! Project class to interact with a created system of rods
 class Project : public QObject
@@ -38,7 +38,7 @@ class Project : public QObject
 public:
     Project(QString const& name);
     Project(QString const& path, QString const& fileName);
-    virtual ~Project() = default;
+    virtual ~Project();
     // State
     bool isModified() const { return mIsModified; }
     // Data objects
@@ -58,7 +58,7 @@ public:
 signals:
     void dataObjectAdded(QRS::Core::DataIDType id);
     void dataObjectRemoved(QRS::Core::DataIDType id);
-    void allDataObjectsChanged();
+    void dataObjectsChanged();
     void modified(bool modifiedState);
 
 public slots:
