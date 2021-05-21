@@ -33,7 +33,8 @@ class DataObjectsHierarchyItem : public AbstractHierarchyItem
     friend class DataObjectsHierarchyModel;
 
 public:
-    DataObjectsHierarchyItem(DataObjects& dataObjects, Core::HierarchyTree& hierarchyDataObjects, QString const& name = "Root");
+    DataObjectsHierarchyItem(DataObjects& dataObjects, Core::HierarchyTree& hierarchyDataObjects,
+                             QString const& text = "Root", QIcon const& icon = QIcon());
     DataObjectsHierarchyItem(Core::HierarchyNode* pNode, Core::AbstractDataObject* pDataObject);
     DataObjectsHierarchyItem(Core::HierarchyNode* pNode);
     int type() const override { return HierarchyItemType::kDataObjects; }

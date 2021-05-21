@@ -11,7 +11,7 @@
 using namespace QRS::HierarchyModels;
 using namespace QRS::Core;
 
-AbstractHierarchyItem::AbstractHierarchyItem(const QIcon& icon, const QString& text, HierarchyNode* pNode)
+AbstractHierarchyItem::AbstractHierarchyItem(QIcon const& icon, QString const& text, HierarchyNode* pNode)
     : QStandardItem(icon, text)
     , mpNode(pNode)
 {

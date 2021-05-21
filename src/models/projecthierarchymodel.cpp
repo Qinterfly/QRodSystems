@@ -36,7 +36,9 @@ void ProjectHierarchyModel::updateContent()
     // Add a representative of data objects
     DataObjects& dataObjects = mpProject->mDataObjects;
     HierarchyTree& hierarchyDataObjects = mpProject->mHierarchyDataObjects;
-    DataObjectsHierarchyItem* pHierachyDataObjects = new DataObjectsHierarchyItem(dataObjects, hierarchyDataObjects, "Data Objects");
+    QString text = "Data Objects";
+    QIcon icon(":/icons/database.svg");
+    DataObjectsHierarchyItem* pHierachyDataObjects = new DataObjectsHierarchyItem(dataObjects, hierarchyDataObjects, text, icon);
     // Insert all the base items linked to each category
     pRootItem->appendRow(pHierachyDataObjects);
 }

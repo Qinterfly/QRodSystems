@@ -133,6 +133,7 @@ void MainWindow::createContent()
 //! Create a widget to represent a project hierarchy
 CDockWidget* MainWindow::createProjectHierarchyWidget()
 {
+    QSize const kIconSize = QSize(16, 16);
     QTreeView* pWidget = new QTreeView();
     // Specify properties
     pWidget->setSelectionMode(QAbstractItemView::ExtendedSelection);
@@ -142,6 +143,7 @@ CDockWidget* MainWindow::createProjectHierarchyWidget()
     pWidget->setAcceptDrops(true);
     pWidget->setDragEnabled(true);
     pWidget->setStyleSheet("padding: 3px 0px 0px 0px");
+    pWidget->setIconSize(kIconSize);
     // Set the hierarchy model
     mpProjectHierarchyModel = new ProjectHierarchyModel(pWidget);
     mpProjectHierarchyModel->setProject(mpProject);

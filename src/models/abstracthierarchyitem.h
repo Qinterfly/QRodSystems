@@ -34,7 +34,7 @@ class AbstractHierarchyItem : public QStandardItem
     friend class AbstractHierarchyModel;
 
 public:
-    AbstractHierarchyItem(const QIcon& icon, const QString& text, Core::HierarchyNode* pNode);
+    AbstractHierarchyItem(QIcon const& icon, QString const& text, Core::HierarchyNode* pNode);
     virtual ~AbstractHierarchyItem() = 0;
     void writePointer(QDataStream& out) const;
     static AbstractHierarchyItem* readPointer(QDataStream& in);

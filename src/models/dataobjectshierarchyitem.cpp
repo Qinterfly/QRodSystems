@@ -15,8 +15,8 @@ using namespace QRS::Core;
 QIcon getDataObjectIcon(DataObjectType type);
 
 //! Create the representer of the structure of data objects
-DataObjectsHierarchyItem::DataObjectsHierarchyItem(DataObjects& dataObjects, HierarchyTree& hierarchyDataObjects, QString const& name)
-    : AbstractHierarchyItem(QIcon(), name, hierarchyDataObjects.root())
+DataObjectsHierarchyItem::DataObjectsHierarchyItem(DataObjects& dataObjects, HierarchyTree& hierarchyDataObjects, QString const& text, QIcon const& icon)
+    : AbstractHierarchyItem(icon, text, hierarchyDataObjects.root())
 {
     if (!mpNode->hasChild())
         return;

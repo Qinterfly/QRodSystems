@@ -43,7 +43,7 @@ using namespace QRS::Managers;
 using namespace QRS::HierarchyModels;
 using namespace QRS::TableModels;
 
-const static QSize kIconSize = QSize(22, 22);
+const static QSize kToolBarIconSize = QSize(22, 22);
 const QString skDataObjectsWindow = "DataObjectsManager";
 
 void setToolBarShortcutHints(QToolBar* pToolBar);
@@ -137,7 +137,7 @@ CDockWidget* DataObjectsManager::createDataTableWidget()
     // ToolBar
     QToolBar* pToolBar = pDockWidget->createDefaultToolBar();
     pToolBar->setToolButtonStyle(Qt::ToolButtonStyle::ToolButtonIconOnly);
-    pDockWidget->setToolBarIconSize(kIconSize, CDockWidget::StateDocked);
+    pDockWidget->setToolBarIconSize(kToolBarIconSize, CDockWidget::StateDocked);
     QAction* pAction;
     // Expanding actions
     pAction = pToolBar->addAction(QIcon(":/icons/arrows-expand.svg"), tr("Expand"), mpDataTable, &QTreeView::expandAll);
@@ -166,11 +166,12 @@ CDockWidget* DataObjectsManager::createDataTableWidget()
 //! Create an object to present all data objects
 CDockWidget* DataObjectsManager::createDataObjectsWidget()
 {
+    QSize const kIconSize = QSize(16, 16);
     CDockWidget* pDockWidget = new CDockWidget("Objects");
     pDockWidget->setFeature(CDockWidget::DockWidgetClosable, false);
     // Tree widget
     mpTreeDataObjects = new QTreeView();
-    mpTreeDataObjects->setIconSize(QSize(11, 11));
+    mpTreeDataObjects->setIconSize(kIconSize);
     mpTreeDataObjects->setSelectionMode(QAbstractItemView::ExtendedSelection);
     mpTreeDataObjects->setSelectionBehavior(QAbstractItemView::SelectItems);
     mpTreeDataObjects->setEditTriggers(QAbstractItemView::DoubleClicked);
@@ -188,7 +189,7 @@ CDockWidget* DataObjectsManager::createDataObjectsWidget()
     // ToolBar
     QToolBar* pToolBar = pDockWidget->createDefaultToolBar();
     pToolBar->setToolButtonStyle(Qt::ToolButtonStyle::ToolButtonIconOnly);
-    pDockWidget->setToolBarIconSize(kIconSize, CDockWidget::StateDocked);
+    pDockWidget->setToolBarIconSize(kToolBarIconSize, CDockWidget::StateDocked);
     // Actions
     QAction* pAction;
     pAction = pToolBar->addAction(QIcon(":/icons/letter-s.svg"), tr("Scalar"), this, &DataObjectsManager::addScalar);
@@ -216,7 +217,7 @@ CDockWidget* DataObjectsManager::createCodeWidget()
     // ToolBar
     QToolBar* pToolBar = pDockWidget->createDefaultToolBar();
     pToolBar->setToolButtonStyle(Qt::ToolButtonStyle::ToolButtonIconOnly);
-    pDockWidget->setToolBarIconSize(kIconSize, CDockWidget::StateDocked);
+    pDockWidget->setToolBarIconSize(kToolBarIconSize, CDockWidget::StateDocked);
     pToolBar->addAction(QIcon(":/icons/debug-start.svg"), tr("Start"));
     pToolBar->addAction(QIcon(":/icons/debug-stop.svg"), tr("Stop"));
     return pDockWidget;
