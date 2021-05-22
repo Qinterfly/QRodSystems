@@ -130,7 +130,7 @@ bool AbstractHierarchyModel::processDropOnItem(QDataStream& stream, int& numItem
     while (numItems > 0)
     {
         pDropItem = AbstractHierarchyItem::readPointer(stream);
-        if (pResNode->type() == pDropItem->type())
+        if (pParentItem->type() == pDropItem->type())
         {
             pDropNode = pDropItem->mpNode;
             pResNode->groupNodes(pDropNode);
