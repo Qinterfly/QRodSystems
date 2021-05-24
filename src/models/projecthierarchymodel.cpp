@@ -15,7 +15,7 @@ using namespace QRS::Core;
 ProjectHierarchyModel::ProjectHierarchyModel(QTreeView* pView)
     : AbstractHierarchyModel("central/projectHierarchy", pView)
 {
-
+    connect(this, &ProjectHierarchyModel::itemChanged, this, &ProjectHierarchyModel::renameItem);
 }
 
 //! Set a project to represent
@@ -78,3 +78,24 @@ void ProjectHierarchyModel::validateItemSelection()
         emit selectionValidated(validatedItems);
     }
 }
+
+//! Rename an item
+void ProjectHierarchyModel::renameItem(QStandardItem* pStandardItem)
+{
+    switch (pStandardItem->type())
+    {
+    case kDataObjects:
+    {
+        DataObjectsHierarchyItem* pItem = (DataObjectsHierarchyItem*)pStandardItem;
+        QString newName = pItem->data(Qt::DisplayRole).toString();
+        if (pItem->mpDataObject)
+            pItem->mpDataObject->setName(newName);
+        else if (pItem->mpNode->type() == HierarchyNode::NodeType::kDirectory)
+            pItem->mpNode->value() = newName;
+        emit dataModified(true);
+        emit selectionValidated({(AbstractHierarchyItem*)pItem});
+        break;
+    }
+    }
+}
+

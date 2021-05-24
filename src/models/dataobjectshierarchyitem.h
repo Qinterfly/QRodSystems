@@ -32,6 +32,7 @@ class DataObjectsHierarchyItem : public AbstractHierarchyItem
 {
     friend class DataObjectsHierarchyModel;
     friend class DataObjectsPropertiesModel;
+    friend class ProjectHierarchyModel;
 
 public:
     DataObjectsHierarchyItem(DataObjects& dataObjects, Core::HierarchyTree& hierarchyDataObjects,

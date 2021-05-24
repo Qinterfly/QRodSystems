@@ -31,66 +31,73 @@ DataObjectsPropertiesModel::DataObjectsPropertiesModel(QTableView* pView, QVecto
             return;
     }
     // Specify properties for all directories or objects
-    bool isSingle = numItems == 1;
     if (nodeType == HierarchyNode::NodeType::kDirectory)
-        setDirectoryAttributes(isSingle);
+        setDirectoryAttributes();
     else
-        setObjectAttributes(isSingle);
+        setObjectAttributes();
 }
 
 //! Set directory characteristic attributes
-void DataObjectsPropertiesModel::setDirectoryAttributes(bool isSingle)
+void DataObjectsPropertiesModel::setDirectoryAttributes()
 {
     // TODO
 }
 
 //! Set objects characteristic attributes
-void DataObjectsPropertiesModel::setObjectAttributes(bool isSingle)
+void DataObjectsPropertiesModel::setObjectAttributes()
 {
-    QStandardItem* pRoot = invisibleRootItem();
-    QString name;
-    QString objectType;
-    QString numberItems;
-    QString numberEntities;
-    QString identifier;
-    if (isSingle)
+    // Create the intersection flags
+    bool isIntersectName = true;
+    bool isIntersectType = true;
+    bool isIntersectNumberItems = true;
+    bool isIntersectIdentifier = true;
+    // Check if properties intersect
+    int numItems = mItems.size();
+    AbstractDataObject* pCurrentDataObject = mItems[0]->mpDataObject;
+    AbstractDataObject* pNextDataObject;
+    for (int i = 0; i != numItems - 1; ++i)
     {
-        DataObjectsHierarchyItem* pItem = mItems[0];
-        AbstractDataObject* pDataObject = pItem->mpDataObject;
-        // Name
-        name = pDataObject->name();
-        // Object type and number of entities in each item
-        switch (pDataObject->type())
+        pNextDataObject = mItems[i + 1]->mpDataObject;
+        isIntersectName = isIntersectName && pCurrentDataObject->name() == pNextDataObject->name();
+        isIntersectType = isIntersectType && pCurrentDataObject->type() == pNextDataObject->type();
+        isIntersectNumberItems = isIntersectNumberItems && pCurrentDataObject->numberItems() == pNextDataObject->numberItems();
+        isIntersectIdentifier = isIntersectIdentifier && pCurrentDataObject->id() == pNextDataObject->id();
+        pCurrentDataObject = pNextDataObject;
+    }
+    // Set only common properties by flags
+    QString const kNoCommon = "";
+    QString name = isIntersectName ? pCurrentDataObject->name() : kNoCommon;
+    QString type;
+    QString numberEntities;
+    if (isIntersectType)
+    {
+        switch (pCurrentDataObject->type())
         {
         case DataObjectType::kScalar:
-            objectType = tr("Scalar");
+            type = tr("Scalar");
             numberEntities = QString::number(1);
             break;
         case DataObjectType::kVector:
-            objectType = tr("Vector");
+            type = tr("Vector");
             numberEntities = QString::number(3);
             break;
         case DataObjectType::kMatrix:
-            objectType = tr("Matrix");
+            type = tr("Matrix");
             numberEntities = QString::number(9);
             break;
         case DataObjectType::kSurface:
-            objectType = tr("Surface");
-            SurfaceDataObject* pSurfaceObject = (SurfaceDataObject*)pDataObject;
+            type = tr("Surface");
+            SurfaceDataObject* pSurfaceObject = (SurfaceDataObject*)pCurrentDataObject;
             numberEntities = QString::number(pSurfaceObject->numberLeadingItems());
             break;
         }
-        // Number of items
-        numberItems = QString::number(pDataObject->numberItems());
-        // Identifier
-        identifier = QString::number(pDataObject->id());
     }
-    else
-    {
-        // TODO
-    }
+    QString numberItems = isIntersectNumberItems ? QString::number(pCurrentDataObject->numberItems()) : kNoCommon;
+    QString identifier = isIntersectIdentifier ? QString::number(pCurrentDataObject->id()) : kNoCommon;
+    // Insert the properties into the table
+    QStandardItem* pRoot = invisibleRootItem();
     pRoot->appendRow(preparePropertyRow(kName, tr("Name"), name, true));
-    pRoot->appendRow(preparePropertyRow(kType, tr("Type"), objectType, false));
+    pRoot->appendRow(preparePropertyRow(kType, tr("Type"), type, false));
     pRoot->appendRow(preparePropertyRow(kNumberItems, tr("Number of items"), numberItems, false));
     pRoot->appendRow(preparePropertyRow(kNumberEntities, tr("Number of entities"), numberEntities, false));
     pRoot->appendRow(preparePropertyRow(kID, tr("Identifier"), identifier, false));

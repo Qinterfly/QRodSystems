@@ -39,8 +39,8 @@ public:
     DataObjectsPropertiesModel(QTableView* pView, QVector<HierarchyModels::AbstractHierarchyItem*> items);
 
 private:
-    void setDirectoryAttributes(bool isSingle);
-    void setObjectAttributes(bool isSingle);
+    void setDirectoryAttributes();
+    void setObjectAttributes();
     QList<QStandardItem*> preparePropertyRow(AttributeType type, QString const& title, QVariant const& value, bool isValueEditable) const;
 
 private:

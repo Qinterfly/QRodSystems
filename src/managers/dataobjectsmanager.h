@@ -102,7 +102,6 @@ private:
     void saveSettings();
     // Helpers
     void emplaceDataObject(Core::AbstractDataObject* pDataObject);
-    void addListDataObjects(Core::AbstractDataObject* pDataObject);
     bool isDataTableModifiable();
     void importDataObject(QString const& path, QString const& fileName);
 
