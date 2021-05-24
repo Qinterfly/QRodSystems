@@ -40,11 +40,13 @@ public:
     HierarchyNode* groupNodes(HierarchyNode* pChildNode);
     bool setBefore(HierarchyNode* pSetNode);
     bool setAfter(HierarchyNode* pSetNode);
+    uint numberChildren() const;
 
 private:
     void excludeNodeFromHierarchy();
     bool isSetAllowed(HierarchyNode const* pNode) const;
     bool isParentOf(HierarchyNode const* pNode) const;
+    uint countNodes(HierarchyNode* pNode, uint& numNodes) const;
 
 private:
     HierarchyNode* mpParent = nullptr;

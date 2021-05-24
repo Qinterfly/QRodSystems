@@ -141,7 +141,7 @@ bool Project::save(QString const& path, QString const& fileName)
     for (auto& item : mDataObjects)
         out << *item.second;                                   // Data object content
     // 4. Hierarchy of data objects
-    out << (qint32)mHierarchyDataObjects.size();               // Number of nodes in a hierarchy
+    out << (quint32)mHierarchyDataObjects.size();              // Number of nodes in a hierarchy
     out << mHierarchyDataObjects;                              // Hierarchy of data objects
     file.flush();
     file.close();

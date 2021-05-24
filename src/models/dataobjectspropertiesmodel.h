@@ -32,7 +32,8 @@ class DataObjectsPropertiesModel : public QStandardItemModel
         kType,
         kNumberItems,
         kNumberEntities,
-        kID
+        kID,
+        kNumberChildren
     };
 
 public:

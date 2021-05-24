@@ -117,8 +117,15 @@ bool HierarchyNode::setAfter(HierarchyNode* pSetNode)
     return true;
 }
 
+//! Retrieve a number of children of the current node
+uint HierarchyNode::numberChildren() const
+{
+    uint numberNodes = 0;
+    return countNodes(mpFirstChild, numberNodes);
+}
+
 //! Check whether it is possible to place a given item before or after the current one
-inline bool HierarchyNode::isSetAllowed(HierarchyNode const* pNode) const
+bool HierarchyNode::isSetAllowed(HierarchyNode const* pNode) const
 {
     return pNode && this != pNode && !pNode->isParentOf(this);
 }
@@ -148,4 +155,17 @@ bool HierarchyNode::isParentOf(HierarchyNode const* pNode) const
         pParentNode = pParentNode->mpParent;
     }
     return false;
+}
+
+//! Count all children and siblings of a given node
+uint HierarchyNode::countNodes(HierarchyNode* pNode, uint& numNodes) const
+{
+    while (pNode)
+    {
+        ++numNodes;
+        if (pNode->mpFirstChild)
+            countNodes(pNode->mpFirstChild, numNodes);
+        pNode = pNode->mpNextSibling;
+    }
+    return numNodes;
 }

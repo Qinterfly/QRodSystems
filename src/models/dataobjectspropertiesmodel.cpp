@@ -15,6 +15,8 @@
 using namespace QRS::HierarchyModels;
 using namespace QRS::Core;
 
+static QString const skEmptyProperty = "";
+
 DataObjectsPropertiesModel::DataObjectsPropertiesModel(QTableView* pView, QVector<AbstractHierarchyItem*> items)
     : QStandardItemModel(pView)
 {
@@ -40,17 +42,37 @@ DataObjectsPropertiesModel::DataObjectsPropertiesModel(QTableView* pView, QVecto
 //! Set directory characteristic attributes
 void DataObjectsPropertiesModel::setDirectoryAttributes()
 {
-    // TODO
+    // Create the intersection flags
+    bool isSameName = true;
+    bool isSameNumberChildren = true;
+    // Check if properties intersect
+    int numItems = mItems.size();
+    HierarchyNode* pCurrentNode = mItems[0]->mpNode;
+    HierarchyNode* pNextNode;
+    for (int i = 0; i != numItems - 1; ++i)
+    {
+        pNextNode = mItems[i + 1]->mpNode;
+        isSameName = isSameName && pCurrentNode->value() == pNextNode->value();
+        isSameNumberChildren = isSameNumberChildren && pCurrentNode->numberChildren() == pNextNode->numberChildren();
+        pCurrentNode = pNextNode;
+    }
+    // Set only common properties by flags
+    QString name = isSameName ? pCurrentNode->value().toString() : skEmptyProperty;
+    QString numberChildren = isSameNumberChildren ? QString::number(pCurrentNode->numberChildren()) : skEmptyProperty;
+    // Insert the properties into the table
+    QStandardItem* pRoot = invisibleRootItem();
+    pRoot->appendRow(preparePropertyRow(kName, tr("Name"), name, true));
+    pRoot->appendRow(preparePropertyRow(kNumberChildren, tr("Number of children"), numberChildren, false));
 }
 
 //! Set objects characteristic attributes
 void DataObjectsPropertiesModel::setObjectAttributes()
 {
     // Create the intersection flags
-    bool isIntersectName = true;
-    bool isIntersectType = true;
-    bool isIntersectNumberItems = true;
-    bool isIntersectIdentifier = true;
+    bool isSameName = true;
+    bool isSameType = true;
+    bool isSameNumberItems = true;
+    bool isSameIdentifier = true;
     // Check if properties intersect
     int numItems = mItems.size();
     AbstractDataObject* pCurrentDataObject = mItems[0]->mpDataObject;
@@ -58,18 +80,17 @@ void DataObjectsPropertiesModel::setObjectAttributes()
     for (int i = 0; i != numItems - 1; ++i)
     {
         pNextDataObject = mItems[i + 1]->mpDataObject;
-        isIntersectName = isIntersectName && pCurrentDataObject->name() == pNextDataObject->name();
-        isIntersectType = isIntersectType && pCurrentDataObject->type() == pNextDataObject->type();
-        isIntersectNumberItems = isIntersectNumberItems && pCurrentDataObject->numberItems() == pNextDataObject->numberItems();
-        isIntersectIdentifier = isIntersectIdentifier && pCurrentDataObject->id() == pNextDataObject->id();
+        isSameName = isSameName && pCurrentDataObject->name() == pNextDataObject->name();
+        isSameType = isSameType && pCurrentDataObject->type() == pNextDataObject->type();
+        isSameNumberItems = isSameNumberItems && pCurrentDataObject->numberItems() == pNextDataObject->numberItems();
+        isSameIdentifier = isSameIdentifier && pCurrentDataObject->id() == pNextDataObject->id();
         pCurrentDataObject = pNextDataObject;
     }
     // Set only common properties by flags
-    QString const kNoCommon = "";
-    QString name = isIntersectName ? pCurrentDataObject->name() : kNoCommon;
+    QString name = isSameName ? pCurrentDataObject->name() : skEmptyProperty;
     QString type;
     QString numberEntities;
-    if (isIntersectType)
+    if (isSameType)
     {
         switch (pCurrentDataObject->type())
         {
@@ -92,8 +113,8 @@ void DataObjectsPropertiesModel::setObjectAttributes()
             break;
         }
     }
-    QString numberItems = isIntersectNumberItems ? QString::number(pCurrentDataObject->numberItems()) : kNoCommon;
-    QString identifier = isIntersectIdentifier ? QString::number(pCurrentDataObject->id()) : kNoCommon;
+    QString numberItems = isSameNumberItems ? QString::number(pCurrentDataObject->numberItems()) : skEmptyProperty;
+    QString identifier = isSameIdentifier ? QString::number(pCurrentDataObject->id()) : skEmptyProperty;
     // Insert the properties into the table
     QStandardItem* pRoot = invisibleRootItem();
     pRoot->appendRow(preparePropertyRow(kName, tr("Name"), name, true));

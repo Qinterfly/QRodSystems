@@ -187,23 +187,9 @@ void HierarchyTree::printNode(uint level, HierarchyNode* pNode, QDebug stream) c
 }
 
 //! Get a number of nodes
-int HierarchyTree::size() const
+uint HierarchyTree::size() const
 {
-    int numNodes = 0;
-    return countNodes(mpRootNode, numNodes);
-}
-
-//! Count all nodes
-int HierarchyTree::countNodes(HierarchyNode* pNode, int& numNodes) const
-{
-    while (pNode)
-    {
-        ++numNodes;
-        if (pNode->mpFirstChild)
-            countNodes(pNode->mpFirstChild, numNodes);
-        pNode = pNode->mpNextSibling;
-    }
-    return numNodes;
+    return mpRootNode->numberChildren() + 1;
 }
 
 //! Print a current node and all its subnodes
