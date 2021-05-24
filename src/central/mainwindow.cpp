@@ -241,8 +241,8 @@ void MainWindow::restoreSettings()
 {
     mpSettings->beginGroup(skMainWindow);
     bool isOk = restoreGeometry(mpSettings->value(UiConstants::Settings::skGeometry).toByteArray())
-        && restoreState(mpSettings->value(UiConstants::Settings::skState).toByteArray())
-        && mpDockManager->restoreState(mpSettings->value(UiConstants::Settings::skDockingState).toByteArray());
+                && restoreState(mpSettings->value(UiConstants::Settings::skState).toByteArray())
+                && mpDockManager->restoreState(mpSettings->value(UiConstants::Settings::skDockingState).toByteArray());
     mpSettings->endGroup();
     retrieveRecentProjects();
     if (isOk)
@@ -299,7 +299,7 @@ void MainWindow::openProjectDialog()
     if (!saveProjectChangesDialog())
         return;
     QString filePath = QFileDialog::getOpenFileName(this, tr("Open Project"),
-            mLastPath, tr("Project file format (*%1)").arg(skProjectExtension));
+                       mLastPath, tr("Project file format (*%1)").arg(skProjectExtension));
     openProject(filePath);
 }
 
@@ -356,7 +356,7 @@ bool MainWindow::saveProject()
 bool MainWindow::saveAsProject()
 {
     QString filePath = QFileDialog::getSaveFileName(this, tr("Save Project"), mLastPath,
-            tr("Project file format (*%1)").arg(skProjectExtension));
+                       tr("Project file format (*%1)").arg(skProjectExtension));
     bool isSaved = saveProjectHelper(filePath);
     if (isSaved)
         addToRecentProjects();
@@ -383,11 +383,11 @@ bool MainWindow::saveProjectChangesDialog()
     if (isWindowModified())
     {
         const QMessageBox::StandardButton res = QMessageBox::warning(this, tr("Save project changes"),
-                tr(
-                    "The project containes unsaved changes.\n"
-                    "Would you like to save it?"
-                ),
-                QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
+                                                tr(
+                                                        "The project containes unsaved changes.\n"
+                                                        "Would you like to save it?"
+                                                ),
+                                                QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
         switch (res)
         {
         case QMessageBox::Yes:
@@ -483,13 +483,13 @@ void MainWindow::addToRecentProjects()
 void MainWindow::aboutProgram()
 {
     const QString aboutMsg = tr(
-            "QRodSystems is a multiplatform wrapper to create rod systems by means of the KLPALGSYS core. "
-            "You can download the code from <a href='https://github.com/qinterfly/QRodSystems'>GitHub</a>. If you find any "
-            "bug or problem, please report it in <a href='https://github.com/qinterfly/QRodSystems/issues'>the issues "
-            "page</a> so I can fix it as soon as possible.<br><br>"
-            "Copyright &copy; 2021 QRodSystems (Pavel Lakiza)\n"
-            "Copyright &copy; 2021 KLPALGSYS (Dmitriy Krasnorutskiy)"
-        );
+                                 "QRodSystems is a multiplatform wrapper to create rod systems by means of the KLPALGSYS core. "
+                                 "You can download the code from <a href='https://github.com/qinterfly/QRodSystems'>GitHub</a>. If you find any "
+                                 "bug or problem, please report it in <a href='https://github.com/qinterfly/QRodSystems/issues'>the issues "
+                                 "page</a> so I can fix it as soon as possible.<br><br>"
+                                 "Copyright &copy; 2021 QRodSystems (Pavel Lakiza)\n"
+                                 "Copyright &copy; 2021 KLPALGSYS (Dmitriy Krasnorutskiy)"
+                             );
     QMessageBox::about(this, tr("About QRodSystems v%1").arg(APP_VERSION), aboutMsg);
 }
 

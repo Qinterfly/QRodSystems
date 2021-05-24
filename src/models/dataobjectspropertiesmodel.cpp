@@ -6,7 +6,6 @@
  */
 
 #include <QTableView>
-#include <QHeaderView>
 #include "core/abstractdataobject.h"
 #include "core/surfacedataobject.h"
 #include "core/hierarchynode.h"
@@ -99,8 +98,8 @@ void DataObjectsPropertiesModel::setObjectAttributes(bool isSingle)
 
 
 QList<QStandardItem*> DataObjectsPropertiesModel::preparePropertyRow(AttributeType type, QString const& title, QVariant const& value, bool isValueEditable) const
-
 {
+    QColor const kAlternateColor = QColor(236, 236, 236);
     QList<QStandardItem*> result;
     // Title
     QStandardItem* pTitleItem = new QStandardItem(title);
@@ -113,7 +112,7 @@ QList<QStandardItem*> DataObjectsPropertiesModel::preparePropertyRow(AttributeTy
     if (!isValueEditable)
     {
         pValueItem->setFlags(pValueItem->flags() & (~Qt::ItemFlag::ItemIsEditable));
-        pValueItem->setBackground(QColor("#ececec"));
+        pValueItem->setBackground(kAlternateColor);
     }
     result.push_back(pValueItem);
     return result;
