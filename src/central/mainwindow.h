@@ -19,6 +19,7 @@ class MainWindow;
 }
 class QSettings;
 class QLabel;
+class QTreeView;
 QT_END_NAMESPACE
 
 namespace ads
@@ -37,6 +38,7 @@ class DataObjectsManager;
 
 namespace HierarchyModels
 {
+class AbstractHierarchyItem;
 class ProjectHierarchyModel;
 }
 
@@ -80,6 +82,8 @@ private slots:
     void openRecentProject();
     bool saveAsProject();
     void projectModified();
+    // Properties
+    void representHierarchyProperties(QVector<HierarchyModels::AbstractHierarchyItem*> items);
     // Settings
     void saveSettings();
     void restoreSettings();
@@ -96,6 +100,7 @@ private:
     Ui::MainWindow* mpUi;
     ads::CDockManager* mpDockManager;
     QLabel* mpStatusLabel;
+    QTreeView* mpPropertiesWidget;
     // Models
     HierarchyModels::ProjectHierarchyModel* mpProjectHierarchyModel = nullptr;
     // Managers

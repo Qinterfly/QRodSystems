@@ -9,6 +9,7 @@
 #define ABSTRACTHIERARCHYMODEL_H
 
 #include <QStandardItemModel>
+#include "abstracthierarchyitem.h"
 
 QT_BEGIN_NAMESPACE
 class QTreeView;

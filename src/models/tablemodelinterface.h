@@ -26,7 +26,7 @@ class Array;
 namespace TableModels
 {
 
-static const short kNumShowPrecision = 6;
+static const short kNumShowPrecision = 9;
 
 //! User interface to add and remove items
 class TableModelInterface

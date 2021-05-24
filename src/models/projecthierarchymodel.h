@@ -18,11 +18,19 @@ namespace QRS::HierarchyModels
 //! Project hierarchy representative
 class ProjectHierarchyModel : public AbstractHierarchyModel
 {
+    Q_OBJECT
+
 public:
     ProjectHierarchyModel(QTreeView* pView = nullptr);
     void updateContent() override;
     void clearContent() override;
     void setProject(Core::Project* pProject);
+
+signals:
+    void selectionValidated(QVector<QRS::HierarchyModels::AbstractHierarchyItem*> validatedItems);
+
+public slots:
+    void validateItemSelection();
 
 private:
     Core::Project* mpProject = nullptr;

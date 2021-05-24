@@ -9,7 +9,6 @@
 #include <QMimeData>
 #include <unordered_map>
 #include "abstracthierarchymodel.h"
-#include "abstracthierarchyitem.h"
 #include "core/hierarchynode.h"
 
 using namespace QRS::HierarchyModels;

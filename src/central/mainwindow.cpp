@@ -7,7 +7,6 @@
 
 #include <QDesktopWidget>
 #include <QToolBar>
-#include <QTableWidget>
 #include <QTreeView>
 #include <QTextEdit>
 #include <QVBoxLayout>
@@ -26,6 +25,7 @@
 #include "logwidget.h"
 #include "uiconstants.h"
 #include "models/projecthierarchymodel.h"
+#include "models/dataobjectspropertiesmodel.h"
 #include "managers/dataobjectsmanager.h"
 #include "render/view3d.h"
 
@@ -38,6 +38,7 @@ using namespace QRS::Core;
 using namespace QRS::Managers;
 using namespace QRS::Graph;
 using namespace QRS::HierarchyModels;
+using namespace QRS::PropertiesModels;
 
 LogWidget* MainWindow::pLogger = nullptr;
 const static QString skDefaultProjectName = "Default";
@@ -148,6 +149,8 @@ CDockWidget* MainWindow::createProjectHierarchyWidget()
     mpProjectHierarchyModel = new ProjectHierarchyModel(pWidget);
     mpProjectHierarchyModel->setProject(mpProject);
     pWidget->setModel(mpProjectHierarchyModel);
+    connect(pWidget->selectionModel(), &QItemSelectionModel::selectionChanged, mpProjectHierarchyModel, &ProjectHierarchyModel::validateItemSelection);
+    connect(mpProjectHierarchyModel, &ProjectHierarchyModel::selectionValidated, this, &MainWindow::representHierarchyProperties);
     // Create a dock widget
     CDockWidget* pDockWidget = new CDockWidget(tr("Project Hierarchy"));
     pDockWidget->setStyleSheet("background-color: white");
@@ -179,11 +182,12 @@ CDockWidget* MainWindow::createLogWidget()
 //! Create a window to modify properies of selected objercts
 CDockWidget* MainWindow::createPropertiesWidget()
 {
-    QTableWidget* pWidget = new QTableWidget();
-    pWidget->setColumnCount(3);
-    pWidget->setRowCount(50);
+    mpPropertiesWidget = new QTreeView();
+    mpPropertiesWidget->setSelectionMode(QAbstractItemView::SingleSelection);
+    mpPropertiesWidget->setSelectionBehavior(QAbstractItemView::SelectItems);
+    mpPropertiesWidget->setEditTriggers(QAbstractItemView::DoubleClicked);
     CDockWidget* pDockWidget = new CDockWidget(tr("Properties"));
-    pDockWidget->setWidget(pWidget);
+    pDockWidget->setWidget(mpPropertiesWidget);
     pDockWidget->setMinimumSizeHintMode(CDockWidget::MinimumSizeHintFromContent);
     mpUi->menuWindow->addAction(pDockWidget->toggleViewAction());
     return pDockWidget;
@@ -386,6 +390,22 @@ bool MainWindow::saveProjectChangesDialog()
         }
     }
     return true;
+}
+
+//! Show information about the selected project items
+void MainWindow::representHierarchyProperties(QVector<AbstractHierarchyItem*> items)
+{
+    delete mpPropertiesWidget->model();
+    mpPropertiesWidget->setModel(nullptr);
+    if (items.isEmpty())
+        return;
+    HierarchyItemType itemType = (HierarchyItemType)items[0]->type();
+    switch (itemType)
+    {
+    case HierarchyItemType::kDataObjects:
+        mpPropertiesWidget->setModel(new DataObjectsPropertiesModel(mpPropertiesWidget, items));
+        break;
+    }
 }
 
 //! Save project and settings before exit
