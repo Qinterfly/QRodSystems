@@ -32,6 +32,7 @@ public:
     bool changeItemKey(DataKeyType oldKey, DataKeyType newKey, DataHolder* items = nullptr);
     DataValueType getAvailableItemKey(DataValueType key, DataHolder const* items = nullptr) const;
     bool setArrayValue(DataKeyType key, DataValueType newValue, uint iRow = 0, uint iColumn = 0);
+    uint numberItems() const { return mItems.size(); }
     DataHolder& getItems() { return mItems; }
     DataItemType& getItem(DataValueType keyParameter) { return mItems.at(keyParameter); }
     DataIDType id() const { return mID; }

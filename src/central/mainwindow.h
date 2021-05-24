@@ -19,7 +19,7 @@ class MainWindow;
 }
 class QSettings;
 class QLabel;
-class QTreeView;
+class QTableView;
 QT_END_NAMESPACE
 
 namespace ads
@@ -100,7 +100,7 @@ private:
     Ui::MainWindow* mpUi;
     ads::CDockManager* mpDockManager;
     QLabel* mpStatusLabel;
-    QTreeView* mpPropertiesWidget;
+    QTableView* mpPropertiesWidget;
     // Models
     HierarchyModels::ProjectHierarchyModel* mpProjectHierarchyModel = nullptr;
     // Managers

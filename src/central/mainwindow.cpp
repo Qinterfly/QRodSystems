@@ -8,6 +8,8 @@
 #include <QDesktopWidget>
 #include <QToolBar>
 #include <QTreeView>
+#include <QTableView>
+#include <QHeaderView>
 #include <QTextEdit>
 #include <QVBoxLayout>
 #include <QSettings>
@@ -38,7 +40,6 @@ using namespace QRS::Core;
 using namespace QRS::Managers;
 using namespace QRS::Graph;
 using namespace QRS::HierarchyModels;
-using namespace QRS::PropertiesModels;
 
 LogWidget* MainWindow::pLogger = nullptr;
 const static QString skDefaultProjectName = "Default";
@@ -182,10 +183,19 @@ CDockWidget* MainWindow::createLogWidget()
 //! Create a window to modify properies of selected objercts
 CDockWidget* MainWindow::createPropertiesWidget()
 {
-    mpPropertiesWidget = new QTreeView();
+    mpPropertiesWidget = new QTableView();
     mpPropertiesWidget->setSelectionMode(QAbstractItemView::SingleSelection);
     mpPropertiesWidget->setSelectionBehavior(QAbstractItemView::SelectItems);
     mpPropertiesWidget->setEditTriggers(QAbstractItemView::DoubleClicked);
+    mpPropertiesWidget->setSortingEnabled(false);
+    mpPropertiesWidget->setSizeAdjustPolicy(QAbstractItemView::AdjustToContents);
+    // Specify headers
+    QHeaderView* pHeader = mpPropertiesWidget->horizontalHeader();
+    pHeader->setStretchLastSection(true);
+    pHeader->setHidden(true);
+    pHeader->setSectionResizeMode(QHeaderView::ResizeMode::ResizeToContents);
+    mpPropertiesWidget->verticalHeader()->setHidden(true);
+    // Create a dock widget
     CDockWidget* pDockWidget = new CDockWidget(tr("Properties"));
     pDockWidget->setWidget(mpPropertiesWidget);
     pDockWidget->setMinimumSizeHintMode(CDockWidget::MinimumSizeHintFromContent);
@@ -231,8 +241,8 @@ void MainWindow::restoreSettings()
 {
     mpSettings->beginGroup(skMainWindow);
     bool isOk = restoreGeometry(mpSettings->value(UiConstants::Settings::skGeometry).toByteArray())
-                && restoreState(mpSettings->value(UiConstants::Settings::skState).toByteArray())
-                && mpDockManager->restoreState(mpSettings->value(UiConstants::Settings::skDockingState).toByteArray());
+        && restoreState(mpSettings->value(UiConstants::Settings::skState).toByteArray())
+        && mpDockManager->restoreState(mpSettings->value(UiConstants::Settings::skDockingState).toByteArray());
     mpSettings->endGroup();
     retrieveRecentProjects();
     if (isOk)
@@ -289,7 +299,7 @@ void MainWindow::openProjectDialog()
     if (!saveProjectChangesDialog())
         return;
     QString filePath = QFileDialog::getOpenFileName(this, tr("Open Project"),
-                       mLastPath, tr("Project file format (*%1)").arg(skProjectExtension));
+            mLastPath, tr("Project file format (*%1)").arg(skProjectExtension));
     openProject(filePath);
 }
 
@@ -346,7 +356,7 @@ bool MainWindow::saveProject()
 bool MainWindow::saveAsProject()
 {
     QString filePath = QFileDialog::getSaveFileName(this, tr("Save Project"), mLastPath,
-                       tr("Project file format (*%1)").arg(skProjectExtension));
+            tr("Project file format (*%1)").arg(skProjectExtension));
     bool isSaved = saveProjectHelper(filePath);
     if (isSaved)
         addToRecentProjects();
@@ -373,11 +383,11 @@ bool MainWindow::saveProjectChangesDialog()
     if (isWindowModified())
     {
         const QMessageBox::StandardButton res = QMessageBox::warning(this, tr("Save project changes"),
-                                                tr(
-                                                        "The project containes unsaved changes.\n"
-                                                        "Would you like to save it?"
-                                                ),
-                                                QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
+                tr(
+                    "The project containes unsaved changes.\n"
+                    "Would you like to save it?"
+                ),
+                QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
         switch (res)
         {
         case QMessageBox::Yes:
@@ -473,13 +483,13 @@ void MainWindow::addToRecentProjects()
 void MainWindow::aboutProgram()
 {
     const QString aboutMsg = tr(
-                                 "QRodSystems is a multiplatform wrapper to create rod systems by means of the KLPALGSYS core. "
-                                 "You can download the code from <a href='https://github.com/qinterfly/QRodSystems'>GitHub</a>. If you find any "
-                                 "bug or problem, please report it in <a href='https://github.com/qinterfly/QRodSystems/issues'>the issues "
-                                 "page</a> so I can fix it as soon as possible.<br><br>"
-                                 "Copyright &copy; 2021 QRodSystems (Pavel Lakiza)\n"
-                                 "Copyright &copy; 2021 KLPALGSYS (Dmitriy Krasnorutskiy)"
-                             );
+            "QRodSystems is a multiplatform wrapper to create rod systems by means of the KLPALGSYS core. "
+            "You can download the code from <a href='https://github.com/qinterfly/QRodSystems'>GitHub</a>. If you find any "
+            "bug or problem, please report it in <a href='https://github.com/qinterfly/QRodSystems/issues'>the issues "
+            "page</a> so I can fix it as soon as possible.<br><br>"
+            "Copyright &copy; 2021 QRodSystems (Pavel Lakiza)\n"
+            "Copyright &copy; 2021 KLPALGSYS (Dmitriy Krasnorutskiy)"
+        );
     QMessageBox::about(this, tr("About QRodSystems v%1").arg(APP_VERSION), aboutMsg);
 }
 

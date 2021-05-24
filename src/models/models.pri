@@ -12,7 +12,7 @@ HEADERS += \
     $$PWD/surfacetablemodel.h \
     $$PWD/tablemodelinterface.h 
     
-SOURCES += \  
+SOURCES += \ 
     $$PWD/abstracthierarchyitem.cpp \
     $$PWD/abstracthierarchymodel.cpp \
     $$PWD/basetablemodel.cpp \

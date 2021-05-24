@@ -31,6 +31,7 @@ using DataObjects = std::unordered_map<Core::DataIDType, Core::AbstractDataObjec
 class DataObjectsHierarchyItem : public AbstractHierarchyItem
 {
     friend class DataObjectsHierarchyModel;
+    friend class DataObjectsPropertiesModel;
 
 public:
     DataObjectsHierarchyItem(DataObjects& dataObjects, Core::HierarchyTree& hierarchyDataObjects,

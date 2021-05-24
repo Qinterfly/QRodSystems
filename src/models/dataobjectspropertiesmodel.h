@@ -11,7 +11,7 @@
 #include <QStandardItemModel>
 
 QT_BEGIN_NAMESPACE
-class QTreeView;
+class QTableView;
 QT_END_NAMESPACE
 
 namespace QRS
@@ -19,20 +19,32 @@ namespace QRS
 
 namespace HierarchyModels
 {
-class AbstractHierarchyItem;
-}
 
-namespace PropertiesModels
-{
+class AbstractHierarchyItem;
+class DataObjectsHierarchyItem;
 
 //! Model to represent properties of selected data objects
 class DataObjectsPropertiesModel : public QStandardItemModel
 {
+    enum AttributeType
+    {
+        kName,
+        kType,
+        kNumberItems,
+        kNumberEntities,
+        kID
+    };
+
 public:
-    DataObjectsPropertiesModel(QTreeView* pView, QVector<HierarchyModels::AbstractHierarchyItem*> items);
+    DataObjectsPropertiesModel(QTableView* pView, QVector<HierarchyModels::AbstractHierarchyItem*> items);
 
 private:
-    QVector<HierarchyModels::AbstractHierarchyItem*> mItems;
+    void setDirectoryAttributes(bool isSingle);
+    void setObjectAttributes(bool isSingle);
+    QList<QStandardItem*> preparePropertyRow(AttributeType type, QString const& title, QVariant const& value, bool isValueEditable) const;
+
+private:
+    QVector<HierarchyModels::DataObjectsHierarchyItem*> mItems;
 };
 
 }

@@ -24,6 +24,7 @@ public:
     DataKeyType addLeadingItem(DataValueType key);
     void removeLeadingItem(DataValueType key);
     bool changeLeadingItemKey(DataKeyType oldKey, DataKeyType newKey);
+    uint numberLeadingItems() const { return mLeadingItems.size(); }
     DataHolder& getLeadingItems() { return mLeadingItems; }
     static uint numberInstances() { return smNumInstances; }
     static void setNumberInstances(uint numInstances) { smNumInstances = numInstances; }
