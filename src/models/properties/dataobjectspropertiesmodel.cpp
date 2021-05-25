@@ -6,12 +6,13 @@
  */
 
 #include <QTableView>
+#include "dataobjectspropertiesmodel.h"
 #include "core/abstractdataobject.h"
 #include "core/surfacedataobject.h"
 #include "core/hierarchynode.h"
-#include "dataobjectspropertiesmodel.h"
-#include "dataobjectshierarchyitem.h"
+#include "models/hierarchy/dataobjectshierarchyitem.h"
 
+using namespace QRS::PropertiesModels;
 using namespace QRS::HierarchyModels;
 using namespace QRS::Core;
 

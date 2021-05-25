@@ -8,7 +8,7 @@
 #ifndef PROJECTHIERARCHYMODEL_H
 #define PROJECTHIERARCHYMODEL_H
 
-#include "models/abstracthierarchymodel.h"
+#include "models/hierarchy/abstracthierarchymodel.h"
 #include "core/datatypes.h"
 #include "core/project.h"
 

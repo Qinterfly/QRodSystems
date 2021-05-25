@@ -8,7 +8,7 @@
 #ifndef DATAOBJECTSHIERARCHYMODEL_H
 #define DATAOBJECTSHIERARCHYMODEL_H
 
-#include "models/abstracthierarchymodel.h"
+#include "models/hierarchy/abstracthierarchymodel.h"
 #include "dataobjectshierarchyitem.h"
 
 namespace QRS

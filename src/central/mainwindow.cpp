@@ -26,8 +26,8 @@
 #include "controltabs.h"
 #include "logwidget.h"
 #include "uiconstants.h"
-#include "models/projecthierarchymodel.h"
-#include "models/dataobjectspropertiesmodel.h"
+#include "models/hierarchy/projecthierarchymodel.h"
+#include "models/properties/dataobjectspropertiesmodel.h"
 #include "managers/dataobjectsmanager.h"
 #include "render/view3d.h"
 
@@ -40,6 +40,7 @@ using namespace QRS::Core;
 using namespace QRS::Managers;
 using namespace QRS::Graph;
 using namespace QRS::HierarchyModels;
+using namespace QRS::PropertiesModels;
 
 LogWidget* MainWindow::pLogger = nullptr;
 const static QString skDefaultProjectName = "Default";

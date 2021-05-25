@@ -9,7 +9,7 @@
 #define DATAOBJECTSHIERARCHYITEM_H
 
 #include <unordered_map>
-#include "models/abstracthierarchyitem.h"
+#include "models/hierarchy/abstracthierarchyitem.h"
 #include "core/datatypes.h"
 
 namespace QRS
@@ -21,6 +21,10 @@ class HierarchyTree;
 class AbstractDataObject;
 }
 
+namespace PropertiesModels
+{
+class DataObjectsPropertiesModel;
+}
 
 namespace HierarchyModels
 {
@@ -31,8 +35,8 @@ using DataObjects = std::unordered_map<Core::DataIDType, Core::AbstractDataObjec
 class DataObjectsHierarchyItem : public AbstractHierarchyItem
 {
     friend class DataObjectsHierarchyModel;
-    friend class DataObjectsPropertiesModel;
     friend class ProjectHierarchyModel;
+    friend class PropertiesModels::DataObjectsPropertiesModel;
 
 public:
     DataObjectsHierarchyItem(DataObjects& dataObjects, Core::HierarchyTree& hierarchyDataObjects,

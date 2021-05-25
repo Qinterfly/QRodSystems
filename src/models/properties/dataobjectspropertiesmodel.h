@@ -19,9 +19,12 @@ namespace QRS
 
 namespace HierarchyModels
 {
-
 class AbstractHierarchyItem;
 class DataObjectsHierarchyItem;
+}
+
+namespace PropertiesModels
+{
 
 //! Model to represent properties of selected data objects
 class DataObjectsPropertiesModel : public QStandardItemModel

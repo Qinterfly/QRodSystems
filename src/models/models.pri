@@ -1,26 +1,26 @@
 INCLUDEPATH += $$PWD
 
 HEADERS += \
-    $$PWD/abstracthierarchyitem.h \
-    $$PWD/abstracthierarchymodel.h \
-    $$PWD/basetablemodel.h \
-    $$PWD/dataobjectshierarchyitem.h \
-    $$PWD/dataobjectshierarchymodel.h \
-    $$PWD/dataobjectspropertiesmodel.h \
-    $$PWD/matrixtablemodel.h \
-    $$PWD/projecthierarchymodel.h \
-    $$PWD/surfacetablemodel.h \
-    $$PWD/tablemodelinterface.h 
+    $$PWD/hierarchy/abstracthierarchyitem.h \
+    $$PWD/hierarchy/abstracthierarchymodel.h \
+    $$PWD/hierarchy/dataobjectshierarchyitem.h \
+    $$PWD/hierarchy/dataobjectshierarchymodel.h \
+    $$PWD/hierarchy/projecthierarchymodel.h \
+    $$PWD/properties/dataobjectspropertiesmodel.h \
+    $$PWD/table/matrixtablemodel.h \
+    $$PWD/table/basetablemodel.h \
+    $$PWD/table/surfacetablemodel.h \
+    $$PWD/table/tablemodelinterface.h 
     
-SOURCES += \ 
-    $$PWD/abstracthierarchyitem.cpp \
-    $$PWD/abstracthierarchymodel.cpp \
-    $$PWD/basetablemodel.cpp \
-    $$PWD/dataobjectshierarchyitem.cpp \
-    $$PWD/dataobjectshierarchymodel.cpp \
-    $$PWD/dataobjectspropertiesmodel.cpp \
-    $$PWD/matrixtablemodel.cpp \
-    $$PWD/projecthierarchymodel.cpp \
-    $$PWD/surfacetablemodel.cpp \
-    $$PWD/tablemodelinterface.cpp 
+SOURCES += \
+    $$PWD/hierarchy/abstracthierarchyitem.cpp \
+    $$PWD/hierarchy/abstracthierarchymodel.cpp \
+    $$PWD/hierarchy/dataobjectshierarchyitem.cpp \
+    $$PWD/hierarchy/dataobjectshierarchymodel.cpp \
+    $$PWD/hierarchy/projecthierarchymodel.cpp \
+    $$PWD/properties/dataobjectspropertiesmodel.cpp \
+    $$PWD/table/matrixtablemodel.cpp \
+    $$PWD/table/basetablemodel.cpp \
+    $$PWD/table/surfacetablemodel.cpp \
+    $$PWD/table/tablemodelinterface.cpp 
     
