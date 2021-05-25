@@ -24,7 +24,7 @@ ManagersTab::ManagersTab(QWidget* parent)
     pToolBar->addAction(QIcon(":/icons/edit-table.svg"), tr("Data Objects"), this, &ManagersTab::actionDataObjectsTriggered);
     pToolBar->addSeparator();
     // Rod Properties
-    pToolBar->addAction(QIcon(":/icons/packet.svg"), tr("Rod Properties"), this, &ManagersTab::actionRodPropertiesTriggered);
+    pToolBar->addAction(QIcon(":/icons/packet.svg"), tr("Rod Components"), this, &ManagersTab::actionRodPropertiesTriggered);
     // Rod Contructor
     pToolBar->addAction(QIcon(":/icons/std-placement.svg"), tr("Rod Constructor"), this, &ManagersTab::actionRodConstructorTriggered);
     pToolBar->addSeparator();

@@ -113,6 +113,9 @@ void MainWindow::createContent()
     // OpenGL window
     pDockWidget = createGLWidget();
     mpDockManager->addDockWidget(ads::TopDockWidgetArea, pDockWidget);
+    // Code Widget
+    pDockWidget = createCodeWidget();
+    mpDockManager->addDockWidgetTab(ads::TopDockWidgetArea, pDockWidget);
     // Log window
     pDockWidget = createLogWidget();
     mpDockManager->addDockWidget(ads::BottomDockWidgetArea, pDockWidget);
@@ -166,6 +169,23 @@ CDockWidget* MainWindow::createGLWidget()
     View3D* pWidget = new View3D();
     CDockWidget* pDockWidget = new CDockWidget(tr("Rod System"));
     pDockWidget->setWidget(pWidget);
+    mpUi->menuWindow->addAction(pDockWidget->toggleViewAction());
+    return pDockWidget;
+}
+
+//! Create a widget enables to code
+CDockWidget* MainWindow::createCodeWidget()
+{
+    QSize const kToolBarIconSize(18, 18);
+    CDockWidget* pDockWidget = new CDockWidget(tr("Code"));
+    QTextEdit* pWidget = new QTextEdit();
+    pDockWidget->setWidget(pWidget);
+    // ToolBar
+    QToolBar* pToolBar = pDockWidget->createDefaultToolBar();
+    pToolBar->setToolButtonStyle(Qt::ToolButtonStyle::ToolButtonIconOnly);
+    pDockWidget->setToolBarIconSize(kToolBarIconSize, CDockWidget::StateDocked);
+    pToolBar->addAction(QIcon(":/icons/debug-start.svg"), tr("Start"));
+    pToolBar->addAction(QIcon(":/icons/debug-stop.svg"), tr("Stop"));
     mpUi->menuWindow->addAction(pDockWidget->toggleViewAction());
     return pDockWidget;
 }

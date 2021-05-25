@@ -109,9 +109,7 @@ void DataObjectsManager::createContent()
     // Tables
     mpDockManager->addDockWidget(ads::LeftDockWidgetArea, createDataTableWidget());
     // Objects
-    CDockAreaWidget* pArea = mpDockManager->addDockWidget(ads::RightDockWidgetArea, createDataObjectsWidget());
-    // Code
-    mpDockManager->addDockWidget(ads::BottomDockWidgetArea, createCodeWidget(), pArea);
+    mpDockManager->addDockWidget(ads::RightDockWidgetArea, createDataObjectsWidget());
     // Buttons
     pMainLayout->addLayout(createDialogControls());
 }
@@ -204,22 +202,6 @@ CDockWidget* DataObjectsManager::createDataObjectsWidget()
     pAction = pToolBar->addAction(QIcon(":/icons/delete.svg"), tr("Remove"), mpTreeDataObjectsModel, &DataObjectsHierarchyModel::removeSelectedItems);
     pAction->setShortcut(Qt::Key_R);
     setToolBarShortcutHints(pToolBar);
-    return pDockWidget;
-}
-
-//! Create a widget enables to code data objects
-CDockWidget* DataObjectsManager::createCodeWidget()
-{
-    CDockWidget* pDockWidget = new CDockWidget(tr("Code"));
-    pDockWidget->setFeature(CDockWidget::DockWidgetClosable, false);
-    QTextEdit* pWidget = new QTextEdit();
-    pDockWidget->setWidget(pWidget);
-    // ToolBar
-    QToolBar* pToolBar = pDockWidget->createDefaultToolBar();
-    pToolBar->setToolButtonStyle(Qt::ToolButtonStyle::ToolButtonIconOnly);
-    pDockWidget->setToolBarIconSize(kToolBarIconSize, CDockWidget::StateDocked);
-    pToolBar->addAction(QIcon(":/icons/debug-start.svg"), tr("Start"));
-    pToolBar->addAction(QIcon(":/icons/debug-stop.svg"), tr("Stop"));
     return pDockWidget;
 }
 

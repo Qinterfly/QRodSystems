@@ -94,7 +94,6 @@ private:
     void createContent();
     ads::CDockWidget* createDataTableWidget();
     ads::CDockWidget* createDataObjectsWidget();
-    ads::CDockWidget* createCodeWidget();
     QLayout* createDialogControls();
     void retrieveDataObjects();
     // Settings

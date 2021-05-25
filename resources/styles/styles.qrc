@@ -1,8 +1,7 @@
 <RCC>
-	<qresource prefix="styles">
-		<file>simple.qss</file>
-		<file>modern.qss</file>
-		<file>macOS.qss</file>
-		<file>manjaroMix.qss</file>
-	</qresource>
+    <qresource prefix="/styles">
+        <file>modern.qss</file>
+        <file>macOS.qss</file>
+        <file>manjaroMix.qss</file>
+    </qresource>
 </RCC>

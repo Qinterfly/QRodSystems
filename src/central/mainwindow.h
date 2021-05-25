@@ -63,6 +63,7 @@ private:
     void closeEvent(QCloseEvent* pEvent) override;
     ads::CDockWidget* createProjectHierarchyWidget();
     ads::CDockWidget* createGLWidget();
+    ads::CDockWidget* createCodeWidget();
     ads::CDockWidget* createLogWidget();
     ads::CDockWidget* createPropertiesWidget();
     void setProjectTitle();
