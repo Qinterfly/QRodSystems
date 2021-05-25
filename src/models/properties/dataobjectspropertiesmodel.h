@@ -29,7 +29,10 @@ namespace PropertiesModels
 //! Model to represent properties of selected data objects
 class DataObjectsPropertiesModel : public QStandardItemModel
 {
-    enum AttributeType
+    Q_OBJECT
+
+public:
+    enum PropertyType
     {
         kName,
         kType,
@@ -39,13 +42,18 @@ class DataObjectsPropertiesModel : public QStandardItemModel
         kNumberChildren
     };
 
-public:
     DataObjectsPropertiesModel(QTableView* pView, QVector<HierarchyModels::AbstractHierarchyItem*> items);
+
+signals:
+    void propertyChanged(bool flag);
 
 private:
     void setDirectoryAttributes();
     void setObjectAttributes();
-    QList<QStandardItem*> preparePropertyRow(AttributeType type, QString const& title, QVariant const& value, bool isValueEditable) const;
+    QList<QStandardItem*> preparePropertyRow(PropertyType type, QString const& title, QVariant const& value, bool isValueEditable) const;
+
+private slots:
+    void modifyProperty(QStandardItem* pChangedProperty);
 
 private:
     QVector<HierarchyModels::DataObjectsHierarchyItem*> mItems;

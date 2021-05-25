@@ -63,8 +63,6 @@ signals:
 
 public slots:
     bool save(QString const& dir, QString const& fileName);
-
-private slots:
     void setModified(bool modifiedState = true);
 
 private:

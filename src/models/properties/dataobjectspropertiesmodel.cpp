@@ -38,6 +38,8 @@ DataObjectsPropertiesModel::DataObjectsPropertiesModel(QTableView* pView, QVecto
         setDirectoryAttributes();
     else
         setObjectAttributes();
+    // Create connections
+    connect(this, &DataObjectsPropertiesModel::itemChanged, this, &DataObjectsPropertiesModel::modifyProperty);
 }
 
 //! Set directory characteristic attributes
@@ -125,8 +127,36 @@ void DataObjectsPropertiesModel::setObjectAttributes()
     pRoot->appendRow(preparePropertyRow(kID, tr("Identifier"), identifier, false));
 }
 
+//! Modify the selected property of all items
+void DataObjectsPropertiesModel::modifyProperty(QStandardItem* pChangedProperty)
+{
+    PropertyType propertyType = (PropertyType)pChangedProperty->data(Qt::UserRole).toInt();
+    // Only the name is modifiable
+    if (propertyType != kName)
+        return;
+    // Since all nodes of items have the same type we apply changes to all of them
+    DataObjectsHierarchyItem* pFirstItem = mItems[0];
+    QString newName = pChangedProperty->data(Qt::DisplayRole).toString();
+    bool isDataObject = pFirstItem->mpNode->type() == HierarchyNode::NodeType::kObject;
+    // Set the new hierarchial name
+    QStandardItemModel* pModel = pFirstItem->model();
+    QVector<QModelIndex> indices;
+    for (DataObjectsHierarchyItem* pItem : qAsConst(mItems))
+    {
+        indices.push_back(pItem->index());
+        if (isDataObject)
+            pItem->mpDataObject->setName(newName);
+        else
+            pItem->mpNode->value() = newName;
+    }
+    // Modify names of items
+    for (QModelIndex const& index : indices)
+        pModel->setData(index, newName, Qt::DisplayRole);
+    emit propertyChanged(true);
+}
 
-QList<QStandardItem*> DataObjectsPropertiesModel::preparePropertyRow(AttributeType type, QString const& title, QVariant const& value, bool isValueEditable) const
+//! Prepare a row to insert into the table
+QList<QStandardItem*> DataObjectsPropertiesModel::preparePropertyRow(PropertyType type, QString const& title, QVariant const& value, bool isValueEditable) const
 {
     QColor const kAlternateColor = QColor(236, 236, 236);
     QList<QStandardItem*> result;

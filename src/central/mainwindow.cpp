@@ -148,6 +148,7 @@ CDockWidget* MainWindow::createProjectHierarchyWidget()
     pWidget->setHeaderHidden(true);
     pWidget->setAcceptDrops(true);
     pWidget->setDragEnabled(true);
+    pWidget->setSortingEnabled(false);
     pWidget->setStyleSheet("padding: 3px 0px 0px 0px");
     pWidget->setIconSize(kIconSize);
     // Set the hierarchy model
@@ -434,7 +435,9 @@ void MainWindow::representHierarchyProperties(QVector<AbstractHierarchyItem*> it
     switch (itemType)
     {
     case HierarchyItemType::kDataObjects:
-        mpPropertiesWidget->setModel(new DataObjectsPropertiesModel(mpPropertiesWidget, items));
+        DataObjectsPropertiesModel* pModel = new DataObjectsPropertiesModel(mpPropertiesWidget, items);
+        connect(pModel, &DataObjectsPropertiesModel::propertyChanged, mpProject, &Project::setModified);
+        mpPropertiesWidget->setModel(pModel);
         break;
     }
 }
