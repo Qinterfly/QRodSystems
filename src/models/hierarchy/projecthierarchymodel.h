@@ -32,9 +32,6 @@ signals:
 public slots:
     void validateItemSelection();
 
-private slots:
-    void renameItem(QStandardItem* pStandardItem);
-
 private:
     Core::Project* mpProject = nullptr;
 };

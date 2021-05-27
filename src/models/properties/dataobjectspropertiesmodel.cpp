@@ -139,19 +139,16 @@ void DataObjectsPropertiesModel::modifyProperty(QStandardItem* pChangedProperty)
     DataObjectsHierarchyItem* pItem = mItems[0];
     QString newName = pChangedProperty->data(Qt::DisplayRole).toString();
     bool isDataObject = pItem->mpNode->type() == HierarchyNode::NodeType::kObject;
+    // Set the new hierarchial name
+    int numItems = mItems.size();
+    for (int i = 0; i != numItems; ++i)
     {
-        QStandardItemModel* pModel = pItem->model();
-        QSignalBlocker const blocker(pModel->parent());
-        // Set the new hierarchial name
-        int numItems = mItems.size();
-        for (int i = 0; i != numItems; ++i)
-        {
-            pItem = mItems[i];
-            if (isDataObject)
-                pItem->mpDataObject->setName(newName);
-            else
-                pItem->mpNode->value() = newName;
-        }
+        pItem = mItems[i];
+        if (isDataObject)
+            pItem->mpDataObject->setName(newName);
+        else
+            pItem->mpNode->value() = newName;
+        pItem->setText(newName);
     }
     emit propertyChanged(true);
 }

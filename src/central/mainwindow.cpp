@@ -144,7 +144,7 @@ CDockWidget* MainWindow::createProjectHierarchyWidget()
     // Specify properties
     pWidget->setSelectionMode(QAbstractItemView::ExtendedSelection);
     pWidget->setSelectionBehavior(QAbstractItemView::SelectItems);
-    pWidget->setEditTriggers(QAbstractItemView::DoubleClicked);
+    pWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
     pWidget->setHeaderHidden(true);
     pWidget->setAcceptDrops(true);
     pWidget->setDragDropMode(QAbstractItemView::DragDrop);
