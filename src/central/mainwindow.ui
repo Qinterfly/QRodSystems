@@ -10,11 +10,6 @@
     <height>600</height>
    </rect>
   </property>
-  <property name="font">
-   <font>
-    <pointsize>12</pointsize>
-   </font>
-  </property>
   <property name="windowTitle">
    <string>QRodSystems[*]</string>
   </property>
@@ -22,43 +17,22 @@
    <iconset resource="../../resources/icons/icons.qrc">
     <normaloff>:/icons/3d-modeling.svg</normaloff>:/icons/3d-modeling.svg</iconset>
   </property>
-  <widget class="QWidget" name="centralWidget">
-   <property name="font">
-    <font>
-     <pointsize>12</pointsize>
-    </font>
-   </property>
-  </widget>
+  <widget class="QWidget" name="centralWidget"/>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>28</height>
+     <height>27</height>
     </rect>
    </property>
-   <property name="font">
-    <font>
-     <pointsize>12</pointsize>
-    </font>
-   </property>
    <widget class="QMenu" name="menuWindow">
-    <property name="font">
-     <font>
-      <pointsize>12</pointsize>
-     </font>
-    </property>
     <property name="title">
      <string>&amp;Window</string>
     </property>
    </widget>
    <widget class="QMenu" name="menuFile">
-    <property name="font">
-     <font>
-      <pointsize>12</pointsize>
-     </font>
-    </property>
     <property name="title">
      <string>&amp;File</string>
     </property>
@@ -78,11 +52,6 @@
     <addaction name="actionExit"/>
    </widget>
    <widget class="QMenu" name="menuEdit">
-    <property name="font">
-     <font>
-      <pointsize>12</pointsize>
-     </font>
-    </property>
     <property name="title">
      <string>&amp;Edit</string>
     </property>
@@ -97,11 +66,6 @@
     <addaction name="actionRebuild"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
-    <property name="font">
-     <font>
-      <pointsize>12</pointsize>
-     </font>
-    </property>
     <property name="title">
      <string>&amp;Help</string>
     </property>
@@ -122,11 +86,6 @@
    <property name="text">
     <string>&amp;New</string>
    </property>
-   <property name="font">
-    <font>
-     <pointsize>12</pointsize>
-    </font>
-   </property>
    <property name="shortcut">
     <string>Ctrl+N</string>
    </property>
@@ -139,11 +98,6 @@
    <property name="text">
     <string>&amp;Open...</string>
    </property>
-   <property name="font">
-    <font>
-     <pointsize>12</pointsize>
-    </font>
-   </property>
    <property name="shortcut">
     <string>Ctrl+O</string>
    </property>
@@ -151,11 +105,6 @@
   <action name="actionSaveProject">
    <property name="text">
     <string>Save</string>
-   </property>
-   <property name="font">
-    <font>
-     <pointsize>12</pointsize>
-    </font>
    </property>
    <property name="shortcut">
     <string>Ctrl+S</string>
@@ -169,11 +118,6 @@
    <property name="text">
     <string>Save &amp;As...</string>
    </property>
-   <property name="font">
-    <font>
-     <pointsize>12</pointsize>
-    </font>
-   </property>
    <property name="shortcut">
     <string>Ctrl+Shift+S</string>
    </property>
@@ -181,11 +125,6 @@
   <action name="actionExit">
    <property name="text">
     <string>&amp;Exit</string>
-   </property>
-   <property name="font">
-    <font>
-     <pointsize>12</pointsize>
-    </font>
    </property>
    <property name="shortcut">
     <string>Ctrl+Q</string>
@@ -195,30 +134,15 @@
    <property name="text">
     <string>About &amp;Qt</string>
    </property>
-   <property name="font">
-    <font>
-     <pointsize>12</pointsize>
-    </font>
-   </property>
   </action>
   <action name="actionAboutProgram">
    <property name="text">
     <string>About &amp;Program</string>
    </property>
-   <property name="font">
-    <font>
-     <pointsize>12</pointsize>
-    </font>
-   </property>
   </action>
   <action name="actionUndo">
    <property name="text">
     <string>&amp;Undo</string>
-   </property>
-   <property name="font">
-    <font>
-     <pointsize>12</pointsize>
-    </font>
    </property>
    <property name="shortcut">
     <string>Ctrl+Z</string>
@@ -228,11 +152,6 @@
    <property name="text">
     <string>&amp;Redo</string>
    </property>
-   <property name="font">
-    <font>
-     <pointsize>12</pointsize>
-    </font>
-   </property>
    <property name="shortcut">
     <string>Ctrl+Shift+Z</string>
    </property>
@@ -240,11 +159,6 @@
   <action name="actionRepeatLastCommand">
    <property name="text">
     <string>&amp;Repeat Last Command</string>
-   </property>
-   <property name="font">
-    <font>
-     <pointsize>12</pointsize>
-    </font>
    </property>
   </action>
   <action name="actionCut">
@@ -254,11 +168,6 @@
    </property>
    <property name="text">
     <string>&amp;Cut</string>
-   </property>
-   <property name="font">
-    <font>
-     <pointsize>12</pointsize>
-    </font>
    </property>
    <property name="shortcut">
     <string>Ctrl+X</string>
@@ -272,11 +181,6 @@
    <property name="text">
     <string>&amp;Copy</string>
    </property>
-   <property name="font">
-    <font>
-     <pointsize>12</pointsize>
-    </font>
-   </property>
    <property name="shortcut">
     <string>Ctrl+C</string>
    </property>
@@ -289,11 +193,6 @@
    <property name="text">
     <string>&amp;Paste</string>
    </property>
-   <property name="font">
-    <font>
-     <pointsize>12</pointsize>
-    </font>
-   </property>
    <property name="shortcut">
     <string>Ctrl+V</string>
    </property>
@@ -301,11 +200,6 @@
   <action name="actionRebuild">
    <property name="text">
     <string>&amp;Rebuild</string>
-   </property>
-   <property name="font">
-    <font>
-     <pointsize>12</pointsize>
-    </font>
    </property>
    <property name="shortcut">
     <string>Ctrl+B</string>

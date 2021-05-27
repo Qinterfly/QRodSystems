@@ -10,11 +10,6 @@
     <height>800</height>
    </rect>
   </property>
-  <property name="font">
-   <font>
-    <pointsize>10</pointsize>
-   </font>
-  </property>
   <property name="windowTitle">
    <string>Data Objects Manager[*]</string>
   </property>

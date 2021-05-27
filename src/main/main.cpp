@@ -20,7 +20,11 @@ int main(int argc, char* argv[])
     QGuiApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
     QApplication app(argc, argv);
     QFontDatabase::addApplicationFont(":/fonts/SourceSansPro-Regular.ttf");
-    qApp->setFont(QFont("Source Sans Pro"));
+    uint fontSize = 12;
+#ifdef Q_OS_WIN
+    fontSize = 10;
+#endif
+    qApp->setFont(QFont("Source Sans Pro", fontSize));
     qApp->setStyle("Fusion");
     qApp->setStyleSheet(QRS::Utilities::File::loadFileContent(":/styles/modern.qss"));
     qInstallMessageHandler(QRS::App::throwMessage);

@@ -46,7 +46,11 @@ void TestManagers::initTestCase()
     qApp->setStyle("Fusion");
     qApp->setStyleSheet(File::loadFileContent(":/styles/modern.qss"));
     QFontDatabase::addApplicationFont(":/fonts/SourceSansPro-Regular.ttf");
-    qApp->setFont(QFont("Source Sans Pro"));
+    uint fontSize = 12;
+#ifdef Q_OS_WIN
+    fontSize = 10;
+#endif
+    qApp->setFont(QFont("Source Sans Pro", fontSize));
     mpDataObjectsManager = new DataObjectsManager(*mpProject, *mpSettings, mLastPath);
 }
 
