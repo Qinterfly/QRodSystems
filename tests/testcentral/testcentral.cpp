@@ -7,6 +7,7 @@
 
 #include <QtTest>
 #include <QCoreApplication>
+#include <QtWidgets>
 
 #include "ui_mainwindow.h"
 #include "mainwindow.h"
@@ -44,6 +45,8 @@ void TestCentral::initTestCase()
     qInstallMessageHandler(throwMessage);
     qApp->setStyle("Fusion");
     qApp->setStyleSheet(File::loadFileContent(":/styles/modern.qss"));
+    QFontDatabase::addApplicationFont(":/fonts/SourceSansPro-Regular.ttf");
+    qApp->setFont(QFont("Source Sans Pro", 12));
     // Window
     mWindow = new MainWindow();
     mWindow->openProject("../../../../examples/base.qrs");

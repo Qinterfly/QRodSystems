@@ -31,7 +31,8 @@ include($${ADS_PATH}/ads.pri) # Advanced Docking System
 # Resources
 RESOURCES += \
     ../resources/icons/icons.qrc \
-    ../resources/styles/styles.qrc
+    ../resources/styles/styles.qrc \
+    ../resources/fonts/fonts.qrc
 
 # Distribution options
 PROJECT_AUTHOR = "Qinterfly"

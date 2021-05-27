@@ -45,6 +45,8 @@ void TestManagers::initTestCase()
     mpSettings = new QSettings("Settings.ini", QSettings::IniFormat);
     qApp->setStyle("Fusion");
     qApp->setStyleSheet(File::loadFileContent(":/styles/modern.qss"));
+    QFontDatabase::addApplicationFont(":/fonts/SourceSansPro-Regular.ttf");
+    qApp->setFont(QFont("Source Sans Pro", 12));
     mpDataObjectsManager = new DataObjectsManager(*mpProject, *mpSettings, mLastPath);
 }
 
