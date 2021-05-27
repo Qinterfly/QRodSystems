@@ -5,7 +5,8 @@ QT += testlib gui widgets
 CONFIG += qt warn_on depend_includepath testcase
 
 CONFIG += c++20
-QMAKE_CXXFLAGS += -std=c++20
+unix: QMAKE_CXXFLAGS += -std=c++20
+else: win32: QMAKE_CXXFLAGS += /std:c++latest
 
 TEMPLATE = app
 
