@@ -10,6 +10,7 @@
 #include "core/abstractdataobject.h"
 #include "core/surfacedataobject.h"
 #include "core/hierarchynode.h"
+#include "models/hierarchy/abstracthierarchymodel.h"
 #include "models/hierarchy/dataobjectshierarchyitem.h"
 
 using namespace QRS::PropertiesModels;
@@ -135,23 +136,23 @@ void DataObjectsPropertiesModel::modifyProperty(QStandardItem* pChangedProperty)
     if (propertyType != kName)
         return;
     // Since all nodes of items have the same type we apply changes to all of them
-    DataObjectsHierarchyItem* pFirstItem = mItems[0];
+    DataObjectsHierarchyItem* pItem = mItems[0];
     QString newName = pChangedProperty->data(Qt::DisplayRole).toString();
-    bool isDataObject = pFirstItem->mpNode->type() == HierarchyNode::NodeType::kObject;
-    // Set the new hierarchial name
-    QStandardItemModel* pModel = pFirstItem->model();
-    QVector<QModelIndex> indices;
-    for (DataObjectsHierarchyItem* pItem : qAsConst(mItems))
+    bool isDataObject = pItem->mpNode->type() == HierarchyNode::NodeType::kObject;
     {
-        indices.push_back(pItem->index());
-        if (isDataObject)
-            pItem->mpDataObject->setName(newName);
-        else
-            pItem->mpNode->value() = newName;
+        QStandardItemModel* pModel = pItem->model();
+        QSignalBlocker const blocker(pModel->parent());
+        // Set the new hierarchial name
+        int numItems = mItems.size();
+        for (int i = 0; i != numItems; ++i)
+        {
+            pItem = mItems[i];
+            if (isDataObject)
+                pItem->mpDataObject->setName(newName);
+            else
+                pItem->mpNode->value() = newName;
+        }
     }
-    // Modify names of items
-    for (QModelIndex const& index : indices)
-        pModel->setData(index, newName, Qt::DisplayRole);
     emit propertyChanged(true);
 }
 

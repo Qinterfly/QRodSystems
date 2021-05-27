@@ -33,13 +33,15 @@ void ProjectHierarchyModel::updateContent()
     if (!mpProject)
         return;
     QStandardItem* pRootItem = invisibleRootItem();
+    // Moving groups of objects is not allowed
+    pRootItem->setFlags(Qt::ItemIsEnabled);
     // Add a representative of data objects
     DataObjects& dataObjects = mpProject->mDataObjects;
     HierarchyTree& hierarchyDataObjects = mpProject->mHierarchyDataObjects;
     QString text = "Data Objects";
     QIcon icon(":/icons/database.svg");
     DataObjectsHierarchyItem* pHierachyDataObjects = new DataObjectsHierarchyItem(dataObjects, hierarchyDataObjects, text, icon);
-    pHierachyDataObjects->setFlags(Qt::ItemIsEnabled);
+    pHierachyDataObjects->setFlags(Qt::ItemIsEnabled | Qt::ItemIsDropEnabled | Qt::ItemIsDragEnabled);
     // Insert all the base items linked to each category
     pRootItem->appendRow(pHierachyDataObjects);
 }

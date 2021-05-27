@@ -129,7 +129,7 @@ void TestCore::createHierarchyTree()
     rootNode->appendChild(pFolderNode2);
     rootNode->appendChild(pFolderNode3);
     rootNode->appendChild(pFolderNode4);
-    QCOMPARE(hierarchy.size(), 9);
+    QCOMPARE(hierarchy.size(), uint(9));
     // Make a duplicate
     HierarchyTree duplicateHierarchy = hierarchy.clone();
     QCOMPARE(duplicateHierarchy.size(), hierarchy.size());

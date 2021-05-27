@@ -87,18 +87,27 @@ bool AbstractHierarchyModel::dropMimeData(QMimeData const* pMimeData, Qt::DropAc
         isProcessed = processDropOnItem(stream, numItems, indexParent);
     if (isProcessed)
     {
-        /*
-         Since items are destroyed whenever the content is updated,
-         an expanded state of each directory is saved and then set again.
-         */
-        QTreeView* pView = (QTreeView*)parent();
-        NodesState nodesState;
-        retrieveExpandedState(nodesState, invisibleRootItem()->index(), pView);
-        updateContent();
-        setExpandedState(nodesState, invisibleRootItem()->index(), pView);
+        updateContentExpanded();
         emit dataModified(true);
     }
     return false;
+}
+
+/*!
+ * Since items are destroyed whenever the content is updated,
+ * an expanded state of each directory is saved and then set again.
+ */
+void AbstractHierarchyModel::updateContentExpanded()
+{
+    QTreeView* pView = (QTreeView*)parent();
+    // Preserve an expanded state
+    NodesState nodesState;
+    retrieveExpandedState(nodesState, invisibleRootItem()->index(), pView);
+    // Update data
+    updateContent();
+    // Restore an expanded state
+    const QSignalBlocker blocker(pView);
+    setExpandedState(nodesState, invisibleRootItem()->index(), pView);
 }
 
 //! Merge several items into one entity

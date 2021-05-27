@@ -20,7 +20,6 @@ DataObjectsHierarchyItem::DataObjectsHierarchyItem(DataObjects& dataObjects, Hie
 {
     if (!mpNode->hasChild())
         return;
-    setFlags(Qt::ItemIsEnabled);
     appendItems(dataObjects, mpNode->firstChild());
 }
 

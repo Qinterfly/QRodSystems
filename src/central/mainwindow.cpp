@@ -147,7 +147,7 @@ CDockWidget* MainWindow::createProjectHierarchyWidget()
     pWidget->setEditTriggers(QAbstractItemView::DoubleClicked);
     pWidget->setHeaderHidden(true);
     pWidget->setAcceptDrops(true);
-    pWidget->setDragEnabled(true);
+    pWidget->setDragDropMode(QAbstractItemView::DragDrop);
     pWidget->setSortingEnabled(false);
     pWidget->setStyleSheet("padding: 3px 0px 0px 0px");
     pWidget->setIconSize(kIconSize);

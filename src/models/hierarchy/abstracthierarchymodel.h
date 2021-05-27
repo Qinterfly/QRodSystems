@@ -41,7 +41,7 @@ public:
     Qt::DropActions supportedDragActions() const override;
     Qt::DropActions supportedDropActions() const override;
     QStringList mimeTypes() const override;
-    QMimeData* mimeData(const QModelIndexList &indicies) const override;
+    QMimeData* mimeData(const QModelIndexList& indicies) const override;
     bool dropMimeData(QMimeData const* pMimeData, Qt::DropAction action, int row, int column, const QModelIndex& parent) override;
 
 signals:
@@ -52,6 +52,7 @@ private:
     bool processDropBetweenItems(QDataStream& stream, int& numItems, QModelIndex const& indexParent, int row);
     void retrieveExpandedState(NodesState& nodesState, QModelIndex const& indexParent, QTreeView const* pView);
     void setExpandedState(NodesState& nodesState, QModelIndex const& indexParent, QTreeView* pView);
+    void updateContentExpanded();
 
 protected:
     QString const kMimeType;
