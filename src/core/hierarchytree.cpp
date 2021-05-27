@@ -109,7 +109,7 @@ HierarchyNode* HierarchyTree::findNode(HierarchyNode* pBaseNode, HierarchyNode::
 }
 
 //! Copy a node
-HierarchyNode* HierarchyTree::copyNode(HierarchyNode* pBaseNode, uint relativeLevel) const
+HierarchyNode* HierarchyTree::copyNode(HierarchyNode* pBaseNode, quint32 relativeLevel) const
 {
     HierarchyNode* pNewNode;
     HierarchyNode* pFirstNewNode = nullptr;
@@ -172,7 +172,7 @@ void HierarchyTree::removeNodeSiblings(HierarchyNode* pNode)
 }
 
 //! Print a current node and all its subnodes
-void HierarchyTree::printNode(uint level, HierarchyNode* pNode, QDebug stream) const
+void HierarchyTree::printNode(quint32 level, HierarchyNode* pNode, QDebug stream) const
 {
     QString nodeIndentation;
     if (level > 0)
@@ -187,7 +187,7 @@ void HierarchyTree::printNode(uint level, HierarchyNode* pNode, QDebug stream) c
 }
 
 //! Get a number of nodes
-uint HierarchyTree::size() const
+quint32 HierarchyTree::size() const
 {
     return mpRootNode->numberChildren() + 1;
 }
@@ -215,7 +215,7 @@ HierarchyTree::HierarchyTree(QDataStream& stream, int numNodes)
 {
     std::map<HierarchyNode*, HierarchyNode*> mapNodes;
     quint32 iType;
-    quint64 addressHolder;
+    quintptr addressHolder;
     auto retrieveAddress = [&stream, &addressHolder]()
     {
         stream >> addressHolder;

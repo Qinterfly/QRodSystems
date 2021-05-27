@@ -24,16 +24,16 @@ public:
     DataKeyType addLeadingItem(DataValueType key);
     void removeLeadingItem(DataValueType key);
     bool changeLeadingItemKey(DataKeyType oldKey, DataKeyType newKey);
-    uint numberLeadingItems() const { return mLeadingItems.size(); }
+    quint32 numberLeadingItems() const { return mLeadingItems.size(); }
     DataHolder& getLeadingItems() { return mLeadingItems; }
-    static uint numberInstances() { return smNumInstances; }
-    static void setNumberInstances(uint numInstances) { smNumInstances = numInstances; }
+    static quint32 numberInstances() { return smNumInstances; }
+    static void setNumberInstances(quint32 numInstances) { smNumInstances = numInstances; }
     void serialize(QDataStream& stream) const override;
     virtual void deserialize(QDataStream& stream) override;
     virtual void import(QTextStream& stream) override;
 
 private:
-    static uint smNumInstances;
+    static quint32 smNumInstances;
     DataHolder mLeadingItems;
 };
 

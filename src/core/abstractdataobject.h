@@ -31,16 +31,16 @@ public:
     void removeItem(DataValueType key);
     bool changeItemKey(DataKeyType oldKey, DataKeyType newKey, DataHolder* items = nullptr);
     DataValueType getAvailableItemKey(DataValueType key, DataHolder const* items = nullptr) const;
-    bool setArrayValue(DataKeyType key, DataValueType newValue, uint iRow = 0, uint iColumn = 0);
-    uint numberItems() const { return mItems.size(); }
+    bool setArrayValue(DataKeyType key, DataValueType newValue, quint32 iRow = 0, quint32 iColumn = 0);
+    quint32 numberItems() const { return mItems.size(); }
     DataHolder& getItems() { return mItems; }
     DataItemType& getItem(DataValueType keyParameter) { return mItems.at(keyParameter); }
     DataIDType id() const { return mID; }
     DataObjectType type() const { return mType; }
     QString const& name() const { return mName; }
     void setName(QString const& name) { mName = name; }
-    static uint numberObjects() { return smNumObjects; }
-    static void setNumberObjects(uint numObjects) { smNumObjects = numObjects; }
+    static quint32 numberObjects() { return smNumObjects; }
+    static void setNumberObjects(quint32 numObjects) { smNumObjects = numObjects; }
     virtual void serialize(QDataStream& stream) const;
     virtual void deserialize(QDataStream& stream);
     friend QDataStream& operator<<(QDataStream& stream, AbstractDataObject const& obj);
@@ -59,7 +59,7 @@ protected:
 
 private:
     //! Number of all objects created
-    static uint smNumObjects;
+    static quint32 smNumObjects;
 };
 
 //! Print a data object to a stream

@@ -32,14 +32,14 @@ public:
     HierarchyNode* root() { return mpRootNode; }
     HierarchyTree clone() const;
     HierarchyNode* findNode(HierarchyNode* pBaseNode, HierarchyNode::NodeType type, QVariant const& value) const;
-    uint size() const;
+    quint32 size() const;
     friend QDebug operator<<(QDebug stream, HierarchyTree& tree);
     friend QDataStream& operator<<(QDataStream& stream, HierarchyTree const& tree);
 
 private:
-    HierarchyNode* copyNode(HierarchyNode* pBaseNode, uint relativeLevel) const;
+    HierarchyNode* copyNode(HierarchyNode* pBaseNode, quint32 relativeLevel) const;
     void removeNodeSiblings(HierarchyNode* pNode);
-    void printNode(uint level, HierarchyNode* pNode, QDebug stream) const;
+    void printNode(quint32 level, HierarchyNode* pNode, QDebug stream) const;
     void writeNode(HierarchyNode* pNode, QDataStream& stream) const;
 
 private:

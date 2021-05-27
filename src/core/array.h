@@ -13,7 +13,7 @@
 namespace QRS::Core
 {
 
-using IndexType = unsigned int;
+using IndexType = quint32;
 
 //! Numerical array class
 template<typename T>

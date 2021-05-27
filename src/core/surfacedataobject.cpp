@@ -9,7 +9,7 @@
 
 using namespace QRS::Core;
 
-uint SurfaceDataObject::smNumInstances = 0;
+quint32 SurfaceDataObject::smNumInstances = 0;
 
 //! Construct a surface data object
 SurfaceDataObject::SurfaceDataObject(QString const& name)
@@ -43,7 +43,7 @@ DataKeyType SurfaceDataObject::addLeadingItem(DataValueType key)
 {
     DataValueType rightKey = getAvailableItemKey(key, &mLeadingItems);
     mLeadingItems.emplace(rightKey, Array<double>());
-    uint numLeadingItems = mLeadingItems.size();
+    quint32 numLeadingItems = mLeadingItems.size();
     for (auto& item : mItems)
         item.second.resize(1, numLeadingItems);
     return rightKey;

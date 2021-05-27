@@ -21,12 +21,12 @@ public:
     ~MatrixDataObject() {};
     AbstractDataObject* clone() const override;
     DataItemType& addItem(DataValueType key) override;
-    static uint numberInstances() { return smNumInstances; }
-    static void setNumberInstances(uint numInstances) { smNumInstances = numInstances; }
+    static quint32 numberInstances() { return smNumInstances; }
+    static void setNumberInstances(quint32 numInstances) { smNumInstances = numInstances; }
     virtual void import(QTextStream& stream) override;
 
 private:
-    static uint smNumInstances;
+    static quint32 smNumInstances;
 };
 
 }

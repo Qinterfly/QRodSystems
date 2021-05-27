@@ -9,7 +9,7 @@
 
 using namespace QRS::Core;
 
-uint ScalarDataObject::smNumInstances = 0;
+quint32 ScalarDataObject::smNumInstances = 0;
 
 //! Construct a scalar data object
 ScalarDataObject::ScalarDataObject(QString const& name)

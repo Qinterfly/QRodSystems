@@ -14,7 +14,7 @@
 using namespace QRS::HierarchyModels;
 using namespace QRS::Core;
 
-static uint sNumFolders = 0;
+static quint32 sNumFolders = 0;
 static const QString skBaseFolderName = "Group ";
 
 AbstractHierarchyModel::AbstractHierarchyModel(QString const& mimeType, QTreeView* pView)

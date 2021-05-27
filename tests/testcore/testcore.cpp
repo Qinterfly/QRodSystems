@@ -39,9 +39,9 @@ private:
 //! Initialize data
 void TestCore::initTestCase()
 {
-    const uint numObjects = 5;
+    const quint32 numObjects = 5;
     mpProject = new Project("test");
-    for (uint i = 0; i != numObjects; ++i)
+    for (quint32 i = 0; i != numObjects; ++i)
     {
         mpProject->addDataObject(kScalar);
         mpProject->addDataObject(kVector);
@@ -66,7 +66,7 @@ void TestCore::createArray()
     matrix.resize(1, 1);
     QCOMPARE(matrix[0][0], 1);
     matrix.resize(0, 1);
-    QCOMPARE(matrix.cols(), uint(0));
+    QCOMPARE(matrix.cols(), quint32(0));
 }
 
 //! Test how an array object can be modified
@@ -129,7 +129,7 @@ void TestCore::createHierarchyTree()
     rootNode->appendChild(pFolderNode2);
     rootNode->appendChild(pFolderNode3);
     rootNode->appendChild(pFolderNode4);
-    QCOMPARE(hierarchy.size(), uint(9));
+    QCOMPARE(hierarchy.size(), quint32(9));
     // Make a duplicate
     HierarchyTree duplicateHierarchy = hierarchy.clone();
     QCOMPARE(duplicateHierarchy.size(), hierarchy.size());
@@ -147,8 +147,8 @@ void TestCore::createHierarchyTree()
 //! Try reorganizing a hierarchial tree
 void TestCore::reorganizeHierarchyTree()
 {
-    const uint kNodes = 6;
-    const uint iStartMerge = 2;
+    const quint32 kNodes = 6;
+    const quint32 iStartMerge = 2;
     HierarchyTree hierarchy;
     HierarchyNode* pRootNode = hierarchy.root();
     QVector<HierarchyNode*> nodes;

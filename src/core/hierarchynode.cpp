@@ -118,9 +118,9 @@ bool HierarchyNode::setAfter(HierarchyNode* pSetNode)
 }
 
 //! Retrieve a number of children of the current node
-uint HierarchyNode::numberChildren() const
+quint32 HierarchyNode::numberChildren() const
 {
-    uint numberNodes = 0;
+    quint32 numberNodes = 0;
     return countNodes(mpFirstChild, numberNodes);
 }
 
@@ -158,7 +158,7 @@ bool HierarchyNode::isParentOf(HierarchyNode const* pNode) const
 }
 
 //! Count all children and siblings of a given node
-uint HierarchyNode::countNodes(HierarchyNode* pNode, uint& numNodes) const
+quint32 HierarchyNode::countNodes(HierarchyNode* pNode, quint32& numNodes) const
 {
     while (pNode)
     {

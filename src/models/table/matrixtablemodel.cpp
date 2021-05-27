@@ -45,12 +45,12 @@ void MatrixTableModel::updateContent()
         QStandardItem* keyItem = TableModelInterface::makeDoubleItem(iterator.first);
         rootItem->appendRow(keyItem);
         DataItemType& array = iterator.second;
-        uint nRows = array.rows();
-        uint iRow = keyItem->row();
-        for (uint i = 0; i != nRows; ++i)
+        quint32 nRows = array.rows();
+        quint32 iRow = keyItem->row();
+        for (quint32 i = 0; i != nRows; ++i)
             keyItem->appendRow(prepareRow(QString(), array, i));
         // Forbid to modify an array header
-        for (uint j = 1; j != 4; ++j)
+        for (quint32 j = 1; j != 4; ++j)
         {
             QStandardItem* arrayHeaderItem = new QStandardItem();
             arrayHeaderItem->setFlags(Qt::NoItemFlags);
@@ -119,7 +119,7 @@ void MatrixTableModel::insertItemAfterSelected(QItemSelectionModel* pSelectionMo
             // If it is a parent
             if (currentIndex.parent().row() < 0)
             {
-                uint iRow = currentIndex.row();
+                quint32 iRow = currentIndex.row();
                 double key = index(iRow, 0).data(Qt::UserRole).toDouble();
                 mpDataObject->addItem(key);
             }
@@ -139,7 +139,7 @@ void MatrixTableModel::removeSelectedItem(QItemSelectionModel* pSelectionModel)
         // If it is a parent
         if (itemTable->rowCount() > 0)
         {
-            uint iRow = currentIndex.row();
+            quint32 iRow = currentIndex.row();
             double key = index(iRow, 0).data(Qt::UserRole).toDouble();
             mpDataObject->removeItem(key);
         }

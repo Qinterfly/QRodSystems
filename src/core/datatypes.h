@@ -8,12 +8,14 @@
 #ifndef DATATYPES_H
 #define DATATYPES_H
 
+#include <QtGlobal>
+
 namespace QRS::Core
 {
 
 using DataValueType = double;
 using DataKeyType = double;
-using DataIDType = unsigned int;
+using DataIDType = quint32;
 
 enum DataObjectType
 {

@@ -9,7 +9,7 @@
 
 using namespace QRS::Core;
 
-uint MatrixDataObject::smNumInstances = 0;
+quint32 MatrixDataObject::smNumInstances = 0;
 const IndexType skNumElements = 3;
 
 //! Construct a matrix data object

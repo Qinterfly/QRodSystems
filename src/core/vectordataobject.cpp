@@ -9,7 +9,7 @@
 
 using namespace QRS::Core;
 
-uint VectorDataObject::smNumInstances = 0;
+quint32 VectorDataObject::smNumInstances = 0;
 const IndexType skNumElements = 3;
 
 //! Construct a vector data object

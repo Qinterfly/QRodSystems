@@ -107,7 +107,7 @@ void SurfaceTableModel::insertItemAfterSelected(QItemSelectionModel* pSelectionM
     }
     else
     {
-        uint iRow;
+        quint32 iRow;
         double key;
         for (QModelIndex& currentIndex : listSelected)
         {
@@ -126,7 +126,7 @@ void SurfaceTableModel::insertItemAfterSelected(QItemSelectionModel* pSelectionM
 void SurfaceTableModel::removeSelectedItem(QItemSelectionModel* pSelectionModel)
 {
     QModelIndexList listSelected = pSelectionModel->selectedIndexes();
-    uint iRow;
+    quint32 iRow;
     double key;
     for (QModelIndex& currentIndex : listSelected)
     {
@@ -162,7 +162,7 @@ void SurfaceTableModel::insertLeadingItemAfterSelected(QItemSelectionModel* pSel
 void SurfaceTableModel::removeSelectedLeadingItem(QItemSelectionModel* pSelectionModel)
 {
     QModelIndexList listSelected = pSelectionModel->selectedIndexes();
-    uint iColumn;
+    quint32 iColumn;
     double key;
     for (QModelIndex& currentIndex : listSelected)
     {

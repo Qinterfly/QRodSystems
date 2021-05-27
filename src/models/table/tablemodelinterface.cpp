@@ -30,17 +30,17 @@ QStandardItem* TableModelInterface::makeLabelItem(QString const& name)
 }
 
 //! Helper function to copy a row from an array
-QList<QStandardItem*> TableModelInterface::prepareRow(Array<double>& array, uint iRow)
+QList<QStandardItem*> TableModelInterface::prepareRow(Array<double>& array, quint32 iRow)
 {
     QList<QStandardItem*> resultList;
-    uint nCols = array.cols();
-    for (uint j = 0; j != nCols; ++j)
+    quint32 nCols = array.cols();
+    for (quint32 j = 0; j != nCols; ++j)
         resultList.push_back(makeDoubleItem(array[iRow][j]));
     return resultList;
 }
 
 //! Helper function to copy a row from an array and associate it with an key
-QList<QStandardItem*> TableModelInterface::prepareRow(double const& key, Array<double>& array, uint iRow)
+QList<QStandardItem*> TableModelInterface::prepareRow(double const& key, Array<double>& array, quint32 iRow)
 {
     QList<QStandardItem*> resultList = prepareRow(array, iRow);
     resultList.push_front(makeDoubleItem(key));
@@ -48,7 +48,7 @@ QList<QStandardItem*> TableModelInterface::prepareRow(double const& key, Array<d
 }
 
 //! Helper function to copy a row from an array and associate it with a name
-QList<QStandardItem*> TableModelInterface::prepareRow(QString const& name, Array<double>& array, uint iRow)
+QList<QStandardItem*> TableModelInterface::prepareRow(QString const& name, Array<double>& array, quint32 iRow)
 {
     QList<QStandardItem*> resultList = prepareRow(array, iRow);
     resultList.push_front(makeLabelItem(name));

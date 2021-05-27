@@ -9,7 +9,7 @@
 
 using namespace QRS::Core;
 
-uint AbstractDataObject::smNumObjects = 0;
+quint32 AbstractDataObject::smNumObjects = 0;
 
 //! Base constructor
 AbstractDataObject::AbstractDataObject(DataObjectType type, QString const& name)
@@ -46,7 +46,7 @@ void AbstractDataObject::removeItem(DataKeyType key)
 }
 
 //! Set an array value with the specified indices
-bool AbstractDataObject::setArrayValue(DataKeyType key, DataValueType newValue, uint iRow, uint iColumn)
+bool AbstractDataObject::setArrayValue(DataKeyType key, DataValueType newValue, quint32 iRow, quint32 iColumn)
 {
     if (mItems.find(key) == mItems.end())
         return false;

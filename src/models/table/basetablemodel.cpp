@@ -106,7 +106,7 @@ void BaseTableModel::insertItemAfterSelected(QItemSelectionModel* pSelectionMode
     }
     else
     {
-        uint iRow;
+        quint32 iRow;
         double key;
         for (QModelIndex& currentIndex : listSelected)
         {
@@ -122,7 +122,7 @@ void BaseTableModel::insertItemAfterSelected(QItemSelectionModel* pSelectionMode
 void BaseTableModel::removeSelectedItem(QItemSelectionModel* pSelectionModel)
 {
     QModelIndexList listSelected = pSelectionModel->selectedIndexes();
-    uint iRow;
+    quint32 iRow;
     double key;
     for (QModelIndex& ind : listSelected)
     {
