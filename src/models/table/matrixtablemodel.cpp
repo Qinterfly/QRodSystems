@@ -16,6 +16,7 @@ using namespace QRS::Core;
 MatrixTableModel::MatrixTableModel(QWidget* parent)
     : QStandardItemModel(parent)
 {
+    setSortRole(Qt::UserRole);
     setColumnCount(3);
     setHorizontalHeaderLabels({"Key", "Column 1", "Column 2", "Column 3"});
 }

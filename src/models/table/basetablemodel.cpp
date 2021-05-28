@@ -16,7 +16,7 @@ using namespace QRS::Core;
 BaseTableModel::BaseTableModel(QWidget* parent)
     : QStandardItemModel(parent)
 {
-
+    setSortRole(Qt::UserRole);
 }
 
 //! Set a data object to represent

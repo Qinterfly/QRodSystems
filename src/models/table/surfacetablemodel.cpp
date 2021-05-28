@@ -16,7 +16,7 @@ using namespace QRS::Core;
 SurfaceTableModel::SurfaceTableModel(QWidget* parent)
     : QStandardItemModel(parent)
 {
-
+    setSortRole(Qt::UserRole);
 }
 
 //! Set a surface data object to represent

@@ -120,7 +120,7 @@ CDockWidget* DataObjectsManager::createDataTableWidget()
     CDockWidget* pDockWidget = new CDockWidget("Data Table");
     pDockWidget->setFeature(CDockWidget::DockWidgetClosable, false);
     mpDataTable = new QTreeView();
-    mpDataTable->sortByColumn(0, Qt::SortOrder::AscendingOrder);
+    mpDataTable->sortByColumn(-1, Qt::AscendingOrder);
     mpDataTable->setSelectionMode(QAbstractItemView::ExtendedSelection);
     mpDataTable->setSelectionBehavior(QAbstractItemView::SelectItems);
     mpDataTable->setHeaderHidden(false);
@@ -129,9 +129,9 @@ CDockWidget* DataObjectsManager::createDataTableWidget()
     mpItemDelegate = new DoubleSpinBoxItemDelegate();
     mpDataTable->setItemDelegate(mpItemDelegate);
     // Models
-    mpBaseTableModel = new BaseTableModel(pDockWidget);
-    mpMatrixTableModel = new MatrixTableModel(pDockWidget);
-    mpSurfaceTableModel = new SurfaceTableModel(pDockWidget);
+    mpBaseTableModel = new BaseTableModel(mpDataTable);
+    mpMatrixTableModel = new MatrixTableModel(mpDataTable);
+    mpSurfaceTableModel = new SurfaceTableModel(mpDataTable);
     // ToolBar
     QToolBar* pToolBar = pDockWidget->createDefaultToolBar();
     pToolBar->setToolButtonStyle(Qt::ToolButtonStyle::ToolButtonIconOnly);
