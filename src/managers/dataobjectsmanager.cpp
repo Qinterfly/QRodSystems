@@ -21,7 +21,6 @@
 #include "DockAreaWidget.h"
 
 #include "dataobjectsmanager.h"
-#include "ui_dataobjectsmanager.h"
 #include "central/uiconstants.h"
 #include "core/project.h"
 #include "core/scalardataobject.h"
@@ -43,20 +42,20 @@ using namespace QRS::Managers;
 using namespace QRS::HierarchyModels;
 using namespace QRS::TableModels;
 
-const static QSize kToolBarIconSize = QSize(22, 22);
-const QString skDataObjectsWindow = "DataObjectsManager";
+const static QSize skToolBarIconSize = QSize(22, 22);
+const static QString skDataObjectsWindow = "DataObjectsManager";
 
 void setToolBarShortcutHints(QToolBar* pToolBar);
 QIcon getDataObjectIcon(AbstractDataObject::ObjectType type);
 
 DataObjectsManager::DataObjectsManager(Project& project, QSettings& settings, QString& lastPath, QWidget* parent)
     : QDialog(parent)
-    , mpUi(new Ui::DataObjectsManager)
     , mProject(project)
     , mSettings(settings)
     , mLastPath(lastPath)
 {
-    mpUi->setupUi(this);
+    setWindowTitle("Data Objects Manager[*]");
+    setGeometry(0, 0, 700, 700);
     setWindowModified(false);
     createContent();
     restoreSettings();
@@ -66,7 +65,6 @@ DataObjectsManager::DataObjectsManager(Project& project, QSettings& settings, QS
 DataObjectsManager::~DataObjectsManager()
 {
     delete mpItemDelegate;
-    delete mpUi;
     for (auto iter = mDataObjects.begin(); iter != mDataObjects.end(); ++iter)
         delete iter->second;
     mDataObjects.clear();
@@ -135,7 +133,7 @@ CDockWidget* DataObjectsManager::createDataTableWidget()
     // ToolBar
     QToolBar* pToolBar = pDockWidget->createDefaultToolBar();
     pToolBar->setToolButtonStyle(Qt::ToolButtonStyle::ToolButtonIconOnly);
-    pDockWidget->setToolBarIconSize(kToolBarIconSize, CDockWidget::StateDocked);
+    pDockWidget->setToolBarIconSize(skToolBarIconSize, CDockWidget::StateDocked);
     QAction* pAction;
     // Expanding actions
     pAction = pToolBar->addAction(QIcon(":/icons/arrows-expand.svg"), tr("Expand"), mpDataTable, &QTreeView::expandAll);
@@ -187,7 +185,7 @@ CDockWidget* DataObjectsManager::createDataObjectsWidget()
     // ToolBar
     QToolBar* pToolBar = pDockWidget->createDefaultToolBar();
     pToolBar->setToolButtonStyle(Qt::ToolButtonStyle::ToolButtonIconOnly);
-    pDockWidget->setToolBarIconSize(kToolBarIconSize, CDockWidget::StateDocked);
+    pDockWidget->setToolBarIconSize(skToolBarIconSize, CDockWidget::StateDocked);
     // Actions
     QAction* pAction;
     pAction = pToolBar->addAction(QIcon(":/icons/letter-s.svg"), tr("Scalar"), this, &DataObjectsManager::addScalar);

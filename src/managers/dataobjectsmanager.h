@@ -15,10 +15,6 @@
 #include "../core/hierarchytree.h"
 
 QT_BEGIN_NAMESPACE
-namespace Ui
-{
-class DataObjectsManager;
-}
 class QTreeView;
 class QSettings;
 class QListWidget;
@@ -105,7 +101,6 @@ private:
     void importDataObject(QString const& path, QString const& fileName);
 
 private:
-    Ui::DataObjectsManager* mpUi;
     // Docks
     ads::CDockManager* mpDockManager;
     // Widgets

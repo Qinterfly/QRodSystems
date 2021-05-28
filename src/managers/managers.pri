@@ -7,6 +7,3 @@ HEADERS += \
 SOURCES += \
     $$PWD/dataobjectsmanager.cpp \
     $$PWD/doublespinboxitemdelegate.cpp 
-
-FORMS += \
-	$$PWD/dataobjectsmanager.ui
