@@ -17,6 +17,7 @@ int main(int argc, char* argv[])
     QCoreApplication::setOrganizationName(APP_AUTHOR);
     QCoreApplication::setApplicationName(APP_NAME);
     QCoreApplication::setApplicationVersion(APP_VERSION);
+    QGuiApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QGuiApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
     QApplication app(argc, argv);
     QFontDatabase::addApplicationFont(":/fonts/SourceSansPro-Regular.ttf");
