@@ -19,7 +19,7 @@ class RodComponentsManager : public AbstractProjectManager
     Q_OBJECT
 
 public:
-    RodComponentsManager(Core::Project& project, QSettings& settings, QString& lastPath, QWidget* parent = nullptr);
+    RodComponentsManager(Core::Project& project, QString& lastPath, QSettings& settings, QWidget* parent = nullptr);
     ~RodComponentsManager();
 };
 

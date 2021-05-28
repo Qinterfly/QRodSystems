@@ -11,8 +11,8 @@
 using namespace QRS::Managers;
 using namespace QRS::Core;
 
-RodComponentsManager::RodComponentsManager(Project& project, QSettings& settings, QString& lastPath, QWidget* parent)
-    : AbstractProjectManager(project, settings, lastPath, "RodComponentsManager", parent)
+RodComponentsManager::RodComponentsManager(Project& project, QString& lastPath, QSettings& settings, QWidget* parent)
+    : AbstractProjectManager(project, lastPath, settings, kRodComponents, "RodComponentsManager", parent)
 {
     setWindowTitle("Rod Components Manager[*]");
     setGeometry(0, 0, 700, 700);

@@ -33,8 +33,7 @@ namespace QRS
 
 namespace Managers
 {
-class DataObjectsManager;
-class RodComponentsManager;
+class ManagersFactory;
 }
 
 namespace HierarchyModels
@@ -93,8 +92,6 @@ private slots:
     void createDataObjectsManager();
     void createRodComponentsManager();
     void createRodConstructorManager();
-    void deleteDataObjectsManager();
-    void deleteRodComponentsManager();
     // Help
     void aboutProgram();
 
@@ -107,8 +104,7 @@ private:
     // Models
     HierarchyModels::ProjectHierarchyModel* mpProjectHierarchyModel = nullptr;
     // Managers
-    Managers::DataObjectsManager* mpDataObjectsManager = nullptr;
-    Managers::RodComponentsManager* mpRodComponentsManager = nullptr;
+    Managers::ManagersFactory* mpManagersFactory = nullptr;
     // Project data
     Core::Project* mpProject;
     // Settings

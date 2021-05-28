@@ -36,13 +36,20 @@ class AbstractProjectManager : public QDialog
     Q_OBJECT
 
 public:
-    AbstractProjectManager(Core::Project& project, QSettings& settings, QString& lastPath, QString nameManager, QWidget* parent = nullptr);
+    enum ManagerType
+    {
+        kDataObjects,
+        kRodComponents,
+        kRodConstructor
+    };
+    AbstractProjectManager(Core::Project& project, QString& lastPath, QSettings& settings,
+                           ManagerType type, QString groupName, QWidget* parent = nullptr);
     virtual ~AbstractProjectManager() = 0;
     void saveSettings();
     void restoreSettings();
 
 signals:
-    void closed();
+    void closed(QRS::Managers::AbstractProjectManager::ManagerType type);
 
 protected:
     void closeEvent(QCloseEvent* pEvent) override;
@@ -52,9 +59,12 @@ protected:
     ads::CDockManager* mpDockManager = nullptr;
     // Data
     Core::Project& mProject;
-    QSettings& mSettings;
     QString& mLastPath;
-    QString mNameManager;
+
+private:
+    QSettings& mSettings;
+    ManagerType const mType;
+    QString const mGroupName;
 };
 
 }

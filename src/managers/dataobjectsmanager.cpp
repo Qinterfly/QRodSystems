@@ -46,8 +46,8 @@ const static QSize skToolBarIconSize = QSize(22, 22);
 void setToolBarShortcutHints(QToolBar* pToolBar);
 QIcon getDataObjectIcon(AbstractDataObject::ObjectType type);
 
-DataObjectsManager::DataObjectsManager(Project& project, QSettings& settings, QString& lastPath, QWidget* parent)
-    : AbstractProjectManager(project, settings, lastPath, "DataObjectsManager", parent)
+DataObjectsManager::DataObjectsManager(Project& project, QString& lastPath, QSettings& settings, QWidget* parent)
+    : AbstractProjectManager(project, lastPath, settings, kDataObjects, "DataObjectsManager", parent)
 {
     setWindowTitle("Data Objects Manager[*]");
     setGeometry(0, 0, 700, 700);

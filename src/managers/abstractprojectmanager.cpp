@@ -17,12 +17,14 @@ using namespace QRS::Managers;
 using namespace QRS::Core;
 using ads::CDockManager;
 
-AbstractProjectManager::AbstractProjectManager(Core::Project& project, QSettings& settings, QString& lastPath, QString nameManager, QWidget* parent)
+AbstractProjectManager::AbstractProjectManager(Core::Project& project, QString& lastPath, QSettings& settings,
+                                               ManagerType type, QString groupName, QWidget* parent)
     : QDialog(parent)
     , mProject(project)
-    , mSettings(settings)
     , mLastPath(lastPath)
-    , mNameManager(nameManager)
+    , mSettings(settings)
+    , mType(type)
+    , mGroupName(groupName)
 {
     mpDockManager = new CDockManager();
     mpDockManager->setStyleSheet("");
@@ -40,7 +42,7 @@ AbstractProjectManager::~AbstractProjectManager()
 //! Save settings to a file
 void AbstractProjectManager::saveSettings()
 {
-    mSettings.beginGroup(mNameManager);
+    mSettings.beginGroup(mGroupName);
     mSettings.setValue(UiConstants::Settings::skGeometry, saveGeometry());
     mSettings.setValue(UiConstants::Settings::skDockingState, mpDockManager->saveState());
     mSettings.endGroup();
@@ -49,7 +51,7 @@ void AbstractProjectManager::saveSettings()
 //! Restore settings from a file
 void AbstractProjectManager::restoreSettings()
 {
-    mSettings.beginGroup(mNameManager);
+    mSettings.beginGroup(mGroupName);
     restoreGeometry(mSettings.value(UiConstants::Settings::skGeometry).toByteArray());
     mpDockManager->restoreState(mSettings.value(UiConstants::Settings::skDockingState).toByteArray());
     mSettings.endGroup();
@@ -63,9 +65,9 @@ void AbstractProjectManager::closeEvent(QCloseEvent* pEvent)
     if (isWindowModified())
     {
         auto dialogResult = QMessageBox::question(this
-                            , tr("Close confirmation")
-                            , tr("Manager containes unsaved changes. Would you like to close it anyway?")
-                            , QMessageBox::Yes | QMessageBox::No);
+                                                  , tr("Close confirmation")
+                                                  , tr("Manager containes unsaved changes. Would you like to close it anyway?")
+                                                  , QMessageBox::Yes | QMessageBox::No);
         isClosed = QMessageBox::Yes == dialogResult;
     }
     else
@@ -75,7 +77,7 @@ void AbstractProjectManager::closeEvent(QCloseEvent* pEvent)
     if (isClosed)
     {
         saveSettings();
-        emit closed();
+        emit closed(mType);
         pEvent->accept();
     }
 }

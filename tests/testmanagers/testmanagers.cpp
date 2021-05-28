@@ -54,8 +54,8 @@ void TestManagers::initTestCase()
     fontSize = 10;
 #endif
     qApp->setFont(QFont("Source Sans Pro", fontSize));
-    mpDataObjectsManager = new DataObjectsManager(*mpProject, *mpSettings, mLastPath);
-    mpRodComponentsManager = new RodComponentsManager(*mpProject, *mpSettings, mLastPath);
+    mpDataObjectsManager = new DataObjectsManager(*mpProject, mLastPath, *mpSettings);
+    mpRodComponentsManager = new RodComponentsManager(*mpProject, mLastPath, *mpSettings);
 }
 
 //! Test how the data objects manager handles with data

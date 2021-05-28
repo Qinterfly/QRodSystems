@@ -5,7 +5,6 @@
  * \brief Implementation of the MainWindow class
  */
 
-#include <QDesktopWidget>
 #include <QToolBar>
 #include <QTreeView>
 #include <QTableView>
@@ -28,8 +27,7 @@
 #include "uiconstants.h"
 #include "models/hierarchy/projecthierarchymodel.h"
 #include "models/properties/dataobjectspropertiesmodel.h"
-#include "managers/dataobjectsmanager.h"
-#include "managers/rodcomponentsmanager.h"
+#include "managers/managersfactory.h"
 #include "render/view3d.h"
 
 using ads::CDockManager;
@@ -50,8 +48,6 @@ const static QString skSettingsFileName = "Settings.ini";
 const static QString skMainWindow = "MainWindow";
 const static QString skRecentProjects = "RecentProjects";
 
-void moveToCenter(QWidget*);
-
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent)
     , mpUi(new Ui::MainWindow)
@@ -65,6 +61,7 @@ MainWindow::MainWindow(QWidget* parent)
 
 MainWindow::~MainWindow()
 {
+    delete mpManagersFactory;
     delete mpProject;
     delete mpUi;
 }
@@ -84,6 +81,7 @@ void MainWindow::createContent()
     mpProject = new Project(skDefaultProjectName);
     mpSettings = QSharedPointer<QSettings>(new QSettings(skSettingsFileName, QSettings::IniFormat));
     setProjectTitle();
+    mpManagersFactory = new ManagersFactory(*mpProject, mLastPath, *mpSettings, this);
     // Configuration
     CDockManager::setConfigFlag(CDockManager::FocusHighlighting, true);
     QVBoxLayout* pLayout = new QVBoxLayout(mpUi->centralWidget);
@@ -156,8 +154,10 @@ CDockWidget* MainWindow::createProjectHierarchyWidget()
     mpProjectHierarchyModel = new ProjectHierarchyModel(pWidget);
     mpProjectHierarchyModel->setProject(mpProject);
     pWidget->setModel(mpProjectHierarchyModel);
-    connect(pWidget->selectionModel(), &QItemSelectionModel::selectionChanged, mpProjectHierarchyModel, &ProjectHierarchyModel::validateItemSelection);
-    connect(mpProjectHierarchyModel, &ProjectHierarchyModel::selectionValidated, this, &MainWindow::representHierarchyProperties);
+    connect(pWidget->selectionModel(), &QItemSelectionModel::selectionChanged,
+            mpProjectHierarchyModel, &ProjectHierarchyModel::validateItemSelection);
+    connect(mpProjectHierarchyModel, &ProjectHierarchyModel::selectionValidated,
+            this, &MainWindow::representHierarchyProperties);
     // Create a dock widget
     CDockWidget* pDockWidget = new CDockWidget(tr("Project Hierarchy"));
     pDockWidget->setStyleSheet("background-color: white");
@@ -277,43 +277,22 @@ void MainWindow::restoreSettings()
 //! Show a manager for designing data objects
 void MainWindow::createDataObjectsManager()
 {
-    if (mpDataObjectsManager && mpDataObjectsManager->isVisible())
-        return;
-    mpDataObjectsManager = new DataObjectsManager(*mpProject, *mpSettings, mLastPath, mpUi->centralWidget);
-    moveToCenter(mpDataObjectsManager);
-    mpDataObjectsManager->show();
-    connect(mpDataObjectsManager, &DataObjectsManager::closed, this, &MainWindow::deleteDataObjectsManager);
+    if (!mpManagersFactory->createManager(AbstractProjectManager::ManagerType::kDataObjects))
+        qWarning() << tr("Failed to open a manager to create data objects");
 }
 
 //! Show a manager to set rod components based on the created data objects
 void MainWindow::createRodComponentsManager()
 {
-    if (mpRodComponentsManager && mpRodComponentsManager->isVisible())
-        return;
-    mpRodComponentsManager = new RodComponentsManager(*mpProject, *mpSettings, mLastPath, mpUi->centralWidget);
-    moveToCenter(mpRodComponentsManager);
-    mpRodComponentsManager->show();
-    connect(mpRodComponentsManager, &RodComponentsManager::closed, this, &MainWindow::deleteRodComponentsManager);
+    if (!mpManagersFactory->createManager(AbstractProjectManager::ManagerType::kRodComponents))
+        qWarning() << tr("Failed to open a manager to produce rod components");
 }
 
-//! Delete a manager of data objects after being used
-void MainWindow::deleteDataObjectsManager()
-{
-    delete mpDataObjectsManager;
-    mpDataObjectsManager = nullptr;
-}
-
-//! Delete a manager of rod components after being used
-void MainWindow::deleteRodComponentsManager()
-{
-    delete mpRodComponentsManager;
-    mpRodComponentsManager = nullptr;
-}
-
-//! Show a manager to create a rod with assigned data properties
+//! Show a manager to assemble a rod by using rod components
 void MainWindow::createRodConstructorManager()
 {
-    // TODO
+    if (!mpManagersFactory->createManager(AbstractProjectManager::ManagerType::kRodConstructor))
+        qWarning() << tr("Failed to open a manager to construct rods");
 }
 
 //! Create a project and substitute the current one with it
@@ -326,6 +305,8 @@ void MainWindow::createProject()
     connect(mpProject, &Project::modified, this, &MainWindow::projectModified);
     setWindowModified(false);
     setProjectTitle();
+    delete mpManagersFactory;
+    mpManagersFactory = new ManagersFactory(*mpProject, mLastPath, *mpSettings, this);
 }
 
 //! Open a project by using a dialog
@@ -333,8 +314,8 @@ void MainWindow::openProjectDialog()
 {
     if (!saveProjectChangesDialog())
         return;
-    QString filePath = QFileDialog::getOpenFileName(this, tr("Open Project"),
-                       mLastPath, tr("Project file format (*%1)").arg(skProjectExtension));
+    QString filePath = QFileDialog::getOpenFileName(this, tr("Open Project"), mLastPath,
+                                                    tr("Project file format (*%1)").arg(skProjectExtension));
     openProject(filePath);
 }
 
@@ -359,6 +340,9 @@ void MainWindow::openProject(QString const& filePath)
     setWindowModified(false);
     setProjectTitle();
     addToRecentProjects();
+    // Update managers
+    delete mpManagersFactory;
+    mpManagersFactory = new ManagersFactory(*mpProject, mLastPath, *mpSettings, this);
 }
 
 //! Open the project which was selected from the Recent Projects menu
@@ -391,7 +375,7 @@ bool MainWindow::saveProject()
 bool MainWindow::saveAsProject()
 {
     QString filePath = QFileDialog::getSaveFileName(this, tr("Save Project"), mLastPath,
-                       tr("Project file format (*%1)").arg(skProjectExtension));
+                                                    tr("Project file format (*%1)").arg(skProjectExtension));
     bool isSaved = saveProjectHelper(filePath);
     if (isSaved)
         addToRecentProjects();
@@ -418,11 +402,11 @@ bool MainWindow::saveProjectChangesDialog()
     if (isWindowModified())
     {
         const QMessageBox::StandardButton res = QMessageBox::warning(this, tr("Save project changes"),
-                                                tr(
-                                                        "The project containes unsaved changes.\n"
-                                                        "Would you like to save it?"
-                                                ),
-                                                QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
+                                                                     tr(
+                                                                         "The project containes unsaved changes.\n"
+                                                                         "Would you like to save it?"
+                                                                     ),
+                                                                     QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
         switch (res)
         {
         case QMessageBox::Yes:
@@ -528,13 +512,4 @@ void MainWindow::aboutProgram()
                                  "Copyright &copy; 2021 KLPALGSYS (Dmitriy Krasnorutskiy)"
                              );
     QMessageBox::about(this, tr("About QRodSystems v%1").arg(APP_VERSION), aboutMsg);
-}
-
-//! Helper function to situate widgets at the center of their parent widgets
-void moveToCenter(QWidget* pWidget)
-{
-    const QRect screenGeometry = QApplication::desktop()->screenGeometry(pWidget->parentWidget());
-    int x = (screenGeometry.width() - pWidget->width()) / 2;
-    int y = (screenGeometry.height() - pWidget->height()) / 2;
-    pWidget->move(x, y);
 }

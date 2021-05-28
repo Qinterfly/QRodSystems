@@ -59,7 +59,7 @@ class DataObjectsManager : public AbstractProjectManager
     Q_OBJECT
 
 public:
-    explicit DataObjectsManager(Core::Project& project, QSettings& settings, QString& lastPath, QWidget* parent = nullptr);
+    explicit DataObjectsManager(Core::Project& project, QString& lastPath, QSettings& settings, QWidget* parent = nullptr);
     ~DataObjectsManager();
     void selectDataObject(int iRow);
     mapDataObjects const& getDataObjects() { return mDataObjects; };
