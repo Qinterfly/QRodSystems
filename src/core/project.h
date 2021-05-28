@@ -44,7 +44,7 @@ public:
     // Data objects
     DataIDType numberDataObjects() const { return mDataObjects.size(); }
     std::unordered_map<DataIDType, AbstractDataObject*> cloneDataObjects() const;
-    DataIDType addDataObject(DataObjectType type);
+    DataIDType addDataObject(AbstractDataObject::ObjectType type);
     void removeDataObject(DataIDType id);
     void setDataObjects(std::unordered_map<DataIDType, AbstractDataObject*> dataObjects, HierarchyTree const& hierarchyDataObjects);
     // Hierarchy of data objects

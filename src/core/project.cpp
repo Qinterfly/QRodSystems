@@ -23,7 +23,7 @@ using namespace QRS::Core;
 
 const QString Project::skProjectExtension = ".qrs";
 
-AbstractDataObject* createDataObject(DataObjectType type);
+AbstractDataObject* createDataObject(AbstractDataObject::ObjectType type);
 
 //! Construct a clean project with the user specified name
 Project::Project(QString const& name)
@@ -42,7 +42,7 @@ Project::~Project()
 }
 
 //! Create a data object with the specified type
-DataIDType Project::addDataObject(DataObjectType type)
+DataIDType Project::addDataObject(AbstractDataObject::ObjectType type)
 {
     AbstractDataObject* pObject = createDataObject(type);
     if (pObject)
@@ -189,7 +189,7 @@ Project::Project(QString const& path, QString const& fileName)
     in >> numObjects;
     SurfaceDataObject::setNumberInstances(numObjects);
     mDataObjects.clear();
-    DataObjectType type;
+    AbstractDataObject::ObjectType type;
     QString name;
     ScalarDataObject* pScalar;
     VectorDataObject* pVector;
@@ -203,22 +203,22 @@ Project::Project(QString const& path, QString const& fileName)
         AbstractDataObject* pObject = nullptr;
         switch (type)
         {
-        case (kScalar):
+        case (AbstractDataObject::ObjectType::kScalar):
             pScalar = new ScalarDataObject(name);
             in >> *pScalar;
             pObject = pScalar;
             break;
-        case (kVector):
+        case (AbstractDataObject::ObjectType::kVector):
             pVector = new VectorDataObject(name);
             in >> *pVector;
             pObject = pVector;
             break;
-        case (kMatrix):
+        case (AbstractDataObject::ObjectType::kMatrix):
             pMatrix = new MatrixDataObject(name);
             in >> *pMatrix;
             pObject = pMatrix;
             break;
-        case (kSurface):
+        case (AbstractDataObject::ObjectType::kSurface):
             pSurface = new SurfaceDataObject(name);
             in >> *pSurface;
             pObject = pSurface;
@@ -259,25 +259,25 @@ void Project::importDataObjects(QString const& path, QString const& fileName)
 }
 
 //! Helper function to create DataObject instance by a type and name
-AbstractDataObject* createDataObject(DataObjectType type)
+AbstractDataObject* createDataObject(AbstractDataObject::ObjectType type)
 {
     AbstractDataObject* pObject = nullptr;
     QString name;
     switch (type)
     {
-    case DataObjectType::kScalar:
+    case AbstractDataObject::ObjectType::kScalar:
         name = "Scalar " + QString::number(ScalarDataObject::numberInstances() + 1);
         pObject = new ScalarDataObject(name);
         break;
-    case DataObjectType::kVector:
+    case AbstractDataObject::ObjectType::kVector:
         name = "Vector " + QString::number(VectorDataObject::numberInstances() + 1);
         pObject = new VectorDataObject(name);
         break;
-    case DataObjectType::kMatrix:
+    case AbstractDataObject::ObjectType::kMatrix:
         name = "Matrix " + QString::number(MatrixDataObject::numberInstances() + 1);
         pObject = new MatrixDataObject(name);
         break;
-    case DataObjectType::kSurface:
+    case AbstractDataObject::ObjectType::kSurface:
         name = "Surface " + QString::number(SurfaceDataObject::numberInstances() + 1);
         pObject = new SurfaceDataObject(name);
         break;

@@ -47,7 +47,7 @@ const static QSize kToolBarIconSize = QSize(22, 22);
 const QString skDataObjectsWindow = "DataObjectsManager";
 
 void setToolBarShortcutHints(QToolBar* pToolBar);
-QIcon getDataObjectIcon(DataObjectType type);
+QIcon getDataObjectIcon(AbstractDataObject::ObjectType type);
 
 DataObjectsManager::DataObjectsManager(Project& project, QSettings& settings, QString& lastPath, QWidget* parent)
     : QDialog(parent)
@@ -315,15 +315,15 @@ void DataObjectsManager::representDataObject(DataIDType id)
     AbstractDataObject* pObject = mDataObjects[id];
     switch (pObject->type())
     {
-    case kScalar:
-    case kVector:
+    case AbstractDataObject::ObjectType::kScalar:
+    case AbstractDataObject::ObjectType::kVector:
         mpDataTable->setSortingEnabled(false);
         mpBaseTableModel->setDataObject(pObject);
         mpDataTable->setSortingEnabled(true);
         mpDataTable->setModel(mpBaseTableModel);
         mpTableModelInterface = mpBaseTableModel;
         break;
-    case kMatrix:
+    case AbstractDataObject::ObjectType::kMatrix:
         mpDataTable->setSortingEnabled(false);
         mpMatrixTableModel->setDataObject(pObject);
         mpDataTable->setSortingEnabled(true);
@@ -331,7 +331,7 @@ void DataObjectsManager::representDataObject(DataIDType id)
         mpTableModelInterface = mpMatrixTableModel;
         mpDataTable->expandAll();
         break;
-    case kSurface:
+    case AbstractDataObject::ObjectType::kSurface:
         mpDataTable->setSortingEnabled(false);
         mpSurfaceTableModel->setDataObject((SurfaceDataObject*)pObject);
         mpDataTable->setModel(mpSurfaceTableModel);
@@ -423,16 +423,16 @@ void DataObjectsManager::importDataObject(QString const& path, QString const& fi
     {
         switch (type)
         {
-        case kScalar:
+        case AbstractDataObject::ObjectType::kScalar:
             id = addScalar();
             break;
-        case kVector:
+        case AbstractDataObject::ObjectType::kVector:
             id = addVector();
             break;
-        case kMatrix:
+        case AbstractDataObject::ObjectType::kMatrix:
             id = addMatrix();
             break;
-        case kSurface:
+        case AbstractDataObject::ObjectType::kSurface:
             id = addSurface();
             break;
         }

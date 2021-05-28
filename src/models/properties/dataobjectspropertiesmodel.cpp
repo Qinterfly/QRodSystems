@@ -98,19 +98,19 @@ void DataObjectsPropertiesModel::setObjectAttributes()
     {
         switch (pCurrentDataObject->type())
         {
-        case DataObjectType::kScalar:
+        case AbstractDataObject::ObjectType::kScalar:
             type = tr("Scalar");
             numberEntities = QString::number(1);
             break;
-        case DataObjectType::kVector:
+        case AbstractDataObject::ObjectType::kVector:
             type = tr("Vector");
             numberEntities = QString::number(3);
             break;
-        case DataObjectType::kMatrix:
+        case AbstractDataObject::ObjectType::kMatrix:
             type = tr("Matrix");
             numberEntities = QString::number(9);
             break;
-        case DataObjectType::kSurface:
+        case AbstractDataObject::ObjectType::kSurface:
             type = tr("Surface");
             SurfaceDataObject* pSurfaceObject = (SurfaceDataObject*)pCurrentDataObject;
             numberEntities = QString::number(pSurfaceObject->numberLeadingItems());

@@ -12,7 +12,7 @@ using namespace QRS::Core;
 quint32 AbstractDataObject::smNumObjects = 0;
 
 //! Base constructor
-AbstractDataObject::AbstractDataObject(DataObjectType type, QString const& name)
+AbstractDataObject::AbstractDataObject(ObjectType type, QString const& name)
     : mType(type)
     , mName(name)
 {

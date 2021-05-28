@@ -9,7 +9,7 @@
 #define UTILITIES_H
 
 #include <QSharedPointer>
-#include "datatypes.h"
+#include "abstractdataobject.h"
 
 class QFile;
 class QString;
@@ -19,7 +19,7 @@ namespace QRS
 
 namespace Utilities::File
 {
-QPair<Core::DataObjectType, QSharedPointer<QFile>> getDataObjectFile(QString const& path, QString const& fileName);
+QPair<Core::AbstractDataObject::ObjectType, QSharedPointer<QFile>> getDataObjectFile(QString const& path, QString const& fileName);
 QString loadFileContent(QString const& path);
 }
 

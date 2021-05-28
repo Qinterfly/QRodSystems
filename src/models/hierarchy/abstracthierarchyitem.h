@@ -23,17 +23,16 @@ class AbstractDataObject;
 namespace HierarchyModels
 {
 
-enum HierarchyItemType
-{
-    kDataObjects = QStandardItem::UserType
-};
-
 //! Item to represent a hierarchy of elements of the same type
 class AbstractHierarchyItem : public QStandardItem
 {
     friend class AbstractHierarchyModel;
 
 public:
+    enum ItemType
+    {
+        kDataObjects = QStandardItem::UserType
+    };
     AbstractHierarchyItem(QIcon const& icon, QString const& text, Core::HierarchyNode* pNode);
     virtual ~AbstractHierarchyItem() = 0;
     void writePointer(QDataStream& out) const;

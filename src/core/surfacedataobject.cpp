@@ -13,7 +13,7 @@ quint32 SurfaceDataObject::smNumInstances = 0;
 
 //! Construct a surface data object
 SurfaceDataObject::SurfaceDataObject(QString const& name)
-    : AbstractDataObject(DataObjectType::kSurface, name)
+    : AbstractDataObject(kSurface, name)
 {
     ++smNumInstances;
     mLeadingItems.emplace(0.0, Array<double>());

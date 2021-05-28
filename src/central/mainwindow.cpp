@@ -431,10 +431,10 @@ void MainWindow::representHierarchyProperties(QVector<AbstractHierarchyItem*> it
     mpPropertiesWidget->setModel(nullptr);
     if (items.isEmpty())
         return;
-    HierarchyItemType itemType = (HierarchyItemType)items[0]->type();
+    AbstractHierarchyItem::ItemType itemType = (AbstractHierarchyItem::ItemType)items[0]->type();
     switch (itemType)
     {
-    case HierarchyItemType::kDataObjects:
+    case AbstractHierarchyItem::ItemType::kDataObjects:
         DataObjectsPropertiesModel* pModel = new DataObjectsPropertiesModel(mpPropertiesWidget, items);
         connect(pModel, &DataObjectsPropertiesModel::propertyChanged, mpProject, &Project::setModified);
         mpPropertiesWidget->setModel(pModel);

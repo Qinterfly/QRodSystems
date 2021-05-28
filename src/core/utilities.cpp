@@ -17,22 +17,22 @@ using namespace QRS::Utilities;
 using namespace QRS::Core;
 
 //! Retrieve a pair consisted of a data object file and its type
-QPair<DataObjectType, QSharedPointer<QFile>> File::getDataObjectFile(QString const& path, QString const& fileName)
+QPair<AbstractDataObject::ObjectType, QSharedPointer<QFile>> File::getDataObjectFile(QString const& path, QString const& fileName)
 {
     const QString kScalarFileName = "w1.prn";
     const QString kVectorFileName = "w3.prn";
     const QString kMatrixFileName = "w9.prn";
     const QString kSurfaceFileName = "xy.prn";
     std::function <bool(QString const&)> isNameEqual = [&fileName](QString const& name) { return !fileName.compare(name, Qt::CaseInsensitive); };
-    DataObjectType type;
+    AbstractDataObject::ObjectType type;
     if (isNameEqual(kScalarFileName))
-        type = kScalar;
+        type = AbstractDataObject::ObjectType::kScalar;
     else if (isNameEqual(kVectorFileName))
-        type = kVector;
+        type = AbstractDataObject::ObjectType::kVector;
     else if (isNameEqual(kMatrixFileName))
-        type = kMatrix;
+        type = AbstractDataObject::ObjectType::kMatrix;
     else if (isNameEqual(kSurfaceFileName))
-        type = kSurface;
+        type = AbstractDataObject::ObjectType::kSurface;
     else
         return {type, nullptr};
     QString filePath = path + QDir::separator() + fileName;

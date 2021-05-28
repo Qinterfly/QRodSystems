@@ -30,11 +30,11 @@ void BaseTableModel::setDataObject(AbstractDataObject* pDataObject)
     }
     switch (mpDataObject->type())
     {
-    case kScalar:
+    case AbstractDataObject::ObjectType::kScalar:
         setColumnCount(2);
         setHorizontalHeaderLabels({"Key", "Value"});
         break;
-    case kVector:
+    case AbstractDataObject::ObjectType::kVector:
         setColumnCount(4);
         setHorizontalHeaderLabels({"Key", "Value 1", "Value 2", "Value 3"});
         break;

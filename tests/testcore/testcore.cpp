@@ -43,10 +43,10 @@ void TestCore::initTestCase()
     mpProject = new Project("test");
     for (quint32 i = 0; i != numObjects; ++i)
     {
-        mpProject->addDataObject(kScalar);
-        mpProject->addDataObject(kVector);
-        mpProject->addDataObject(kMatrix);
-        mpProject->addDataObject(kSurface);
+        mpProject->addDataObject(AbstractDataObject::ObjectType::kScalar);
+        mpProject->addDataObject(AbstractDataObject::ObjectType::kVector);
+        mpProject->addDataObject(AbstractDataObject::ObjectType::kMatrix);
+        mpProject->addDataObject(AbstractDataObject::ObjectType::kSurface);
     }
 }
 

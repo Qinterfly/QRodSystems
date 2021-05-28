@@ -73,16 +73,16 @@ void TestManagers::testDataObjectsManager()
         AbstractDataObject* obj = mapObj.second;
         switch (obj->type())
         {
-        case (kScalar):
+        case (AbstractDataObject::ObjectType::kScalar):
             pScalar = (ScalarDataObject*)obj;
             break;
-        case (kVector):
+        case (AbstractDataObject::ObjectType::kVector):
             pVector = (VectorDataObject*)obj;
             break;
-        case (kMatrix):
+        case (AbstractDataObject::ObjectType::kMatrix):
             pMatrix = (MatrixDataObject*)obj;
             break;
-        case (kSurface):
+        case (AbstractDataObject::ObjectType::kSurface):
             pSurface = (SurfaceDataObject*)obj;
             break;
         }

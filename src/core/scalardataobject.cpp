@@ -13,7 +13,7 @@ quint32 ScalarDataObject::smNumInstances = 0;
 
 //! Construct a scalar data object
 ScalarDataObject::ScalarDataObject(QString const& name)
-    : AbstractDataObject(DataObjectType::kScalar, name)
+    : AbstractDataObject(kScalar, name)
 {
     ++smNumInstances;
 }

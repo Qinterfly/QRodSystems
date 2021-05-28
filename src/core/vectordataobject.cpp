@@ -14,7 +14,7 @@ const IndexType skNumElements = 3;
 
 //! Construct a vector data object
 VectorDataObject::VectorDataObject(QString const& name)
-    : AbstractDataObject(DataObjectType::kVector, name)
+    : AbstractDataObject(kVector, name)
 {
     ++smNumInstances;
 }

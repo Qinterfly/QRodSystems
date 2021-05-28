@@ -24,7 +24,14 @@ using DataHolder = std::map<DataKeyType, DataItemType>;
 class AbstractDataObject
 {
 public:
-    AbstractDataObject(DataObjectType type, QString const& name);
+    enum ObjectType
+    {
+        kScalar,
+        kVector,
+        kMatrix,
+        kSurface
+    };
+    AbstractDataObject(ObjectType type, QString const& name);
     virtual ~AbstractDataObject() = 0;
     virtual AbstractDataObject* clone() const = 0;
     virtual DataItemType& addItem(DataKeyType key) = 0;
@@ -36,7 +43,7 @@ public:
     DataHolder& getItems() { return mItems; }
     DataItemType& getItem(DataValueType keyParameter) { return mItems.at(keyParameter); }
     DataIDType id() const { return mID; }
-    DataObjectType type() const { return mType; }
+    ObjectType type() const { return mType; }
     QString const& name() const { return mName; }
     void setName(QString const& name) { mName = name; }
     static quint32 numberObjects() { return smNumObjects; }
@@ -49,7 +56,7 @@ public:
 
 protected:
     //! Object type
-    const DataObjectType mType;
+    const ObjectType mType;
     //! Name of an object
     QString mName;
     //! Unique object identificator

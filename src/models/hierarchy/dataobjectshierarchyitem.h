@@ -43,7 +43,7 @@ public:
                              QString const& text = "Root", QIcon const& icon = QIcon());
     DataObjectsHierarchyItem(Core::HierarchyNode* pNode, Core::AbstractDataObject* pDataObject);
     DataObjectsHierarchyItem(Core::HierarchyNode* pNode);
-    int type() const override { return HierarchyItemType::kDataObjects; }
+    int type() const override { return AbstractHierarchyItem::ItemType::kDataObjects; }
 
 private:
     void appendItems(DataObjects& dataObjects, Core::HierarchyNode* pNode);

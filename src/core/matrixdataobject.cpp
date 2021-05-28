@@ -14,7 +14,7 @@ const IndexType skNumElements = 3;
 
 //! Construct a matrix data object
 MatrixDataObject::MatrixDataObject(QString const& name)
-    : AbstractDataObject(DataObjectType::kMatrix, name)
+    : AbstractDataObject(kMatrix, name)
 {
     ++smNumInstances;
 }

@@ -12,7 +12,7 @@
 using namespace QRS::HierarchyModels;
 using namespace QRS::Core;
 
-QIcon getDataObjectIcon(DataObjectType type);
+QIcon getDataObjectIcon(AbstractDataObject::ObjectType type);
 
 //! Create the representer of the structure of data objects
 DataObjectsHierarchyItem::DataObjectsHierarchyItem(DataObjects& dataObjects, HierarchyTree& hierarchyDataObjects, QString const& text, QIcon const& icon)
@@ -68,17 +68,17 @@ DataObjectsHierarchyItem::DataObjectsHierarchyItem(HierarchyNode* pNode)
 }
 
 //! Helper function to assign appropriate data object icon
-QIcon getDataObjectIcon(DataObjectType type)
+QIcon getDataObjectIcon(AbstractDataObject::ObjectType type)
 {
     switch(type)
     {
-    case kScalar:
+    case AbstractDataObject::ObjectType::kScalar:
         return QIcon(":/icons/letter-s.svg");
-    case kVector:
+    case AbstractDataObject::ObjectType::kVector:
         return QIcon(":/icons/letter-v.svg");
-    case kMatrix:
+    case AbstractDataObject::ObjectType::kMatrix:
         return QIcon(":/icons/letter-m.svg");
-    case kSurface:
+    case AbstractDataObject::ObjectType::kSurface:
         return QIcon(":/icons/letter-xy.svg");
     default:
         return QIcon();
