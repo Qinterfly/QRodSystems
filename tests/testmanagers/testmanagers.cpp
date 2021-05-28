@@ -16,6 +16,7 @@
 #include "core/matrixdataobject.h"
 #include "core/surfacedataobject.h"
 #include "managers/dataobjectsmanager.h"
+#include "managers/rodcomponentsmanager.h"
 
 using namespace QRS::Managers;
 using namespace QRS::Core;
@@ -29,12 +30,14 @@ class TestManagers : public QObject
 private slots:
     void initTestCase();
     void testDataObjectsManager();
+    void testRodComponentsManager();
     void cleanupTestCase();
 
 private:
     Project* mpProject;
     QSettings* mpSettings;
     DataObjectsManager* mpDataObjectsManager;
+    RodComponentsManager* mpRodComponentsManager;
     QString mLastPath;
 };
 
@@ -52,12 +55,12 @@ void TestManagers::initTestCase()
 #endif
     qApp->setFont(QFont("Source Sans Pro", fontSize));
     mpDataObjectsManager = new DataObjectsManager(*mpProject, *mpSettings, mLastPath);
+    mpRodComponentsManager = new RodComponentsManager(*mpProject, *mpSettings, mLastPath);
 }
 
 //! Test how the data objects manager handles with data
 void TestManagers::testDataObjectsManager()
 {
-    mpDataObjectsManager->show();
     // Creating data objects of different types
     mpDataObjectsManager->addScalar();
     mpDataObjectsManager->addVector();
@@ -107,7 +110,12 @@ void TestManagers::testDataObjectsManager()
     pScalar->addItem(endValue); // Already existed key
     // Selecting
     mpDataObjectsManager->selectDataObject(3);
-    QTest::qWait(10000);
+}
+
+//! Test how to create components of a rod
+void TestManagers::testRodComponentsManager()
+{
+    // TODO
 }
 
 //! Cleanup
@@ -116,6 +124,7 @@ void TestManagers::cleanupTestCase()
     delete mpProject;
     delete mpSettings;
     delete mpDataObjectsManager;
+    delete mpRodComponentsManager;
 }
 
 QTEST_MAIN(TestManagers)

@@ -29,6 +29,7 @@
 #include "models/hierarchy/projecthierarchymodel.h"
 #include "models/properties/dataobjectspropertiesmodel.h"
 #include "managers/dataobjectsmanager.h"
+#include "managers/rodcomponentsmanager.h"
 #include "render/view3d.h"
 
 using ads::CDockManager;
@@ -97,7 +98,7 @@ void MainWindow::createContent()
     ManagersTab* pManagersTab = new ManagersTab();
     pTabControlWidget->addTab(pManagersTab, tr("Managers"));
     connect(pManagersTab, &ManagersTab::actionDataObjectsTriggered, this, &MainWindow::createDataObjectsManager);
-    connect(pManagersTab, &ManagersTab::actionRodPropertiesTriggered, this, &MainWindow::createRodPropertiesManager);
+    connect(pManagersTab, &ManagersTab::actionRodPropertiesTriggered, this, &MainWindow::createRodComponentsManager);
     connect(pManagersTab, &ManagersTab::actionRodConstructorTriggered, this, &MainWindow::createRodConstructorManager);
     // Other
     pTabControlWidget->addTab(new QWidget(), tr("Model"));
@@ -284,6 +285,17 @@ void MainWindow::createDataObjectsManager()
     connect(mpDataObjectsManager, &DataObjectsManager::closed, this, &MainWindow::deleteDataObjectsManager);
 }
 
+//! Show a manager to set rod components based on the created data objects
+void MainWindow::createRodComponentsManager()
+{
+    if (mpRodComponentsManager && mpRodComponentsManager->isVisible())
+        return;
+    mpRodComponentsManager = new RodComponentsManager(*mpProject, *mpSettings, mLastPath, mpUi->centralWidget);
+    moveToCenter(mpRodComponentsManager);
+    mpRodComponentsManager->show();
+    connect(mpRodComponentsManager, &RodComponentsManager::closed, this, &MainWindow::deleteRodComponentsManager);
+}
+
 //! Delete a manager of data objects after being used
 void MainWindow::deleteDataObjectsManager()
 {
@@ -291,10 +303,11 @@ void MainWindow::deleteDataObjectsManager()
     mpDataObjectsManager = nullptr;
 }
 
-//! Show a manager to set rod properties based on the created data objects
-void MainWindow::createRodPropertiesManager()
+//! Delete a manager of rod components after being used
+void MainWindow::deleteRodComponentsManager()
 {
-    // TODO
+    delete mpRodComponentsManager;
+    mpRodComponentsManager = nullptr;
 }
 
 //! Show a manager to create a rod with assigned data properties

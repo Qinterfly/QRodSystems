@@ -1,7 +1,7 @@
 /*!
  * \file
  * \author Pavel Lakiza
- * \date March 2021
+ * \date May 2021
  * \brief Implementation of the DataObjectsManager class
  */
 
@@ -13,7 +13,6 @@
 #include <QTextEdit>
 #include <QPushButton>
 #include <QSpacerItem>
-#include <QMessageBox>
 #include <QShortcut>
 #include <QFileDialog>
 #include "DockManager.h"
@@ -43,16 +42,12 @@ using namespace QRS::HierarchyModels;
 using namespace QRS::TableModels;
 
 const static QSize skToolBarIconSize = QSize(22, 22);
-const static QString skDataObjectsWindow = "DataObjectsManager";
 
 void setToolBarShortcutHints(QToolBar* pToolBar);
 QIcon getDataObjectIcon(AbstractDataObject::ObjectType type);
 
 DataObjectsManager::DataObjectsManager(Project& project, QSettings& settings, QString& lastPath, QWidget* parent)
-    : QDialog(parent)
-    , mProject(project)
-    , mSettings(settings)
-    , mLastPath(lastPath)
+    : AbstractProjectManager(project, settings, lastPath, "DataObjectsManager", parent)
 {
     setWindowTitle("Data Objects Manager[*]");
     setGeometry(0, 0, 700, 700);
@@ -70,39 +65,12 @@ DataObjectsManager::~DataObjectsManager()
     mDataObjects.clear();
 }
 
-//! Save settings and delete handling widgets before closing the window
-void DataObjectsManager::closeEvent(QCloseEvent* pEvent)
-{
-    pEvent->ignore();
-    bool isClosed = false;
-    if (isWindowModified())
-    {
-        auto dialogResult = QMessageBox::question(this
-                            , tr("Close confirmation")
-                            , tr("Data objects manager contains unsaved changes. Would you like to close it anyway?")
-                            , QMessageBox::Yes | QMessageBox::No);
-        isClosed = QMessageBox::Yes == dialogResult;
-    }
-    else
-    {
-        isClosed = true;
-    }
-    if (isClosed)
-    {
-        saveSettings();
-        emit closed();
-        pEvent->accept();
-    }
-}
-
 //! Create all the widgets
 void DataObjectsManager::createContent()
 {
-    // Dock manager
+    // Main layout
     QVBoxLayout* pMainLayout = new QVBoxLayout(this);
     pMainLayout->setContentsMargins(0, 0, 0, 0);
-    mpDockManager = new CDockManager();
-    mpDockManager->setStyleSheet("");
     pMainLayout->addWidget(mpDockManager);
     // Tables
     mpDockManager->addDockWidget(ads::LeftDockWidgetArea, createDataTableWidget());
@@ -213,24 +181,6 @@ QLayout* DataObjectsManager::createDialogControls()
     pLayout->addStretch();
     pLayout->addWidget(pAcceptButton);
     return pLayout;
-}
-
-//! Save settings to a file
-void DataObjectsManager::saveSettings()
-{
-    mSettings.beginGroup(skDataObjectsWindow);
-    mSettings.setValue(UiConstants::Settings::skGeometry, saveGeometry());
-    mSettings.setValue(UiConstants::Settings::skDockingState, mpDockManager->saveState());
-    mSettings.endGroup();
-}
-
-//! Restore settings from a file
-void DataObjectsManager::restoreSettings()
-{
-    mSettings.beginGroup(skDataObjectsWindow);
-    restoreGeometry(mSettings.value(UiConstants::Settings::skGeometry).toByteArray());
-    mpDockManager->restoreState(mSettings.value(UiConstants::Settings::skDockingState).toByteArray());
-    mSettings.endGroup();
 }
 
 //! Apply all the changes made by user
