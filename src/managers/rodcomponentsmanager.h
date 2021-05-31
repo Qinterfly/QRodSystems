@@ -9,11 +9,20 @@
 #define RODCOMPONENTSMANAGER_H
 
 #include "managers/abstractprojectmanager.h"
+#include "core/hierarchytree.h"
 
-namespace QRS::Managers
+namespace ads
+{
+class CDockWidget;
+}
+
+namespace QRS
 {
 
-//! Manager to construct components of a rod
+namespace Managers
+{
+
+//! Manager to create rod components, such as a geometry, cross section and force
 class RodComponentsManager : public AbstractProjectManager
 {
     Q_OBJECT
@@ -21,7 +30,20 @@ class RodComponentsManager : public AbstractProjectManager
 public:
     RodComponentsManager(Core::Project& project, QString& lastPath, QSettings& settings, QWidget* parent = nullptr);
     ~RodComponentsManager();
+
+public slots:
+    void apply() override;
+
+private:
+    void createContent();
+    QLayout* createDialogControls();
+
+private:
+    ads::CDockWidget* mpComponentDockWidget;
+    Core::HierarchyTree mHierarchyRodComponents;
 };
+
+}
 
 }
 

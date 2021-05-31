@@ -51,6 +51,9 @@ public:
 signals:
     void closed(QRS::Managers::AbstractProjectManager::ManagerType type);
 
+public slots:
+    virtual void apply() = 0;
+
 protected:
     void closeEvent(QCloseEvent* pEvent) override;
 

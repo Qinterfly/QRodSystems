@@ -65,7 +65,7 @@ public:
     mapDataObjects const& getDataObjects() { return mDataObjects; };
 
 public slots:
-    void apply();
+    void apply() override;
     Core::DataIDType addScalar();
     Core::DataIDType addVector();
     Core::DataIDType addMatrix();

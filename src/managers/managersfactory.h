@@ -26,7 +26,7 @@ class Project;
 namespace Managers
 {
 
-//! Fabric to create managers which utilize and modify project data
+//! Factory to create managers which utilize and modify project data
 class ManagersFactory : public QObject
 {
     Q_OBJECT
