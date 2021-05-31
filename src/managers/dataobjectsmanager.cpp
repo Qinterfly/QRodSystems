@@ -116,11 +116,11 @@ CDockWidget* DataObjectsManager::createDataTableWidget()
     pAction->setShortcut(Qt::Key_D);
     pToolBar->addSeparator();
     // Columns actions
-    pAction = pToolBar->addAction(QIcon(":/icons/table-column-add.svg"), tr("Add Column"), this,
-                                  &DataObjectsManager::insertLeadingItemAfterSelected);
+    pAction = pToolBar->addAction(QIcon(":/icons/table-column-add.svg"), tr("Add Column"),
+                                  this, &DataObjectsManager::insertLeadingItemAfterSelected);
     pAction->setShortcut(QKeySequence("Ctrl+A"));
-    pAction = pToolBar->addAction(QIcon(":/icons/table-column-delete.svg"), tr("Remove Column"), this,
-                                  &DataObjectsManager::removeSelectedLeadingItem);
+    pAction = pToolBar->addAction(QIcon(":/icons/table-column-delete.svg"), tr("Remove Column"),
+                                  this, &DataObjectsManager::removeSelectedLeadingItem);
     pAction->setShortcut(QKeySequence("Ctrl+D"));
     // Import action
     pToolBar->addSeparator();
@@ -148,11 +148,14 @@ CDockWidget* DataObjectsManager::createDataObjectsWidget()
     // Hierarchy model
     mpTreeDataObjectsModel = new DataObjectsHierarchyModel(mDataObjects, mHierarchyDataObjects, mpTreeDataObjects);
     mpTreeDataObjects->setModel(mpTreeDataObjectsModel);
-    connect(mpTreeDataObjectsModel, &DataObjectsHierarchyModel::dataModified, this, &DataObjectsManager::setWindowModified);
-    connect(mpTreeDataObjectsModel, &DataObjectsHierarchyModel::dataObjectSelected, this, &DataObjectsManager::representDataObject);
-    connect(mpTreeDataObjects->selectionModel(), &QItemSelectionModel::selectionChanged, mpTreeDataObjectsModel,
-            &DataObjectsHierarchyModel::retrieveSelectedDataObject);
-    connect(mpTreeDataObjectsModel, &DataObjectsHierarchyModel::selectionCleared, this, &DataObjectsManager::clearDataObjectRepresentation);
+    connect(mpTreeDataObjectsModel, &DataObjectsHierarchyModel::dataModified,
+            this, &DataObjectsManager::setWindowModified);
+    connect(mpTreeDataObjectsModel, &DataObjectsHierarchyModel::dataObjectSelected,
+            this, &DataObjectsManager::representDataObject);
+    connect(mpTreeDataObjects->selectionModel(), &QItemSelectionModel::selectionChanged,
+            mpTreeDataObjectsModel, &DataObjectsHierarchyModel::retrieveSelectedDataObject);
+    connect(mpTreeDataObjectsModel, &DataObjectsHierarchyModel::selectionCleared,
+            this, &DataObjectsManager::clearDataObjectRepresentation);
     // ToolBar
     QToolBar* pToolBar = pDockWidget->createDefaultToolBar();
     pToolBar->setToolButtonStyle(Qt::ToolButtonStyle::ToolButtonIconOnly);
@@ -168,8 +171,8 @@ CDockWidget* DataObjectsManager::createDataObjectsWidget()
     pAction = pToolBar->addAction(QIcon(":/icons/letter-xy.svg"), tr("Surface"), this, &DataObjectsManager::addSurface);
     pAction->setShortcut(QKeySequence("Ctrl+4"));
     pToolBar->addSeparator();
-    pAction = pToolBar->addAction(QIcon(":/icons/delete.svg"), tr("Remove"), mpTreeDataObjectsModel,
-                                  &DataObjectsHierarchyModel::removeSelectedItems);
+    pAction = pToolBar->addAction(QIcon(":/icons/delete.svg"), tr("Remove"),
+                                  mpTreeDataObjectsModel, &DataObjectsHierarchyModel::removeSelectedItems);
     pAction->setShortcut(Qt::Key_R);
     setToolBarShortcutHints(pToolBar);
     return pDockWidget;
