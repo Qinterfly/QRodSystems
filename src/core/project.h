@@ -10,7 +10,6 @@
 
 #include <QObject>
 #include <unordered_map>
-#include <memory>
 #include "abstractdataobject.h"
 #include "array.h"
 #include "hierarchytree.h"
@@ -43,10 +42,11 @@ public:
     bool isModified() const { return mIsModified; }
     // Data objects
     DataIDType numberDataObjects() const { return mDataObjects.size(); }
-    std::unordered_map<DataIDType, AbstractDataObject*> cloneDataObjects() const;
+    DataObjects cloneDataObjects() const;
     DataIDType addDataObject(AbstractDataObject::ObjectType type);
     void removeDataObject(DataIDType id);
-    void setDataObjects(std::unordered_map<DataIDType, AbstractDataObject*> dataObjects, HierarchyTree const& hierarchyDataObjects);
+    void setDataObjects(DataObjects dataObjects, HierarchyTree const& hierarchyDataObjects);
+    void clearDataObjects();
     // Hierarchy of data objects
     HierarchyTree cloneHierarchyDataObjects() const;
     // Getters and setters
@@ -56,8 +56,6 @@ public:
     void importDataObjects(QString const& path, QString const& fileName);
 
 signals:
-    void dataObjectAdded(QRS::Core::DataIDType id);
-    void dataObjectRemoved(QRS::Core::DataIDType id);
     void dataObjectsChanged();
     void modified(bool modifiedState);
 

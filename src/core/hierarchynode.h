@@ -10,7 +10,6 @@
 
 #include <QVariant>
 #include <QDataStream>
-#include <QSharedPointer>
 
 namespace QRS::Core
 {

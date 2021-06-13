@@ -36,9 +36,7 @@ Project::Project(QString const& name)
 
 Project::~Project()
 {
-    for (auto iter = mDataObjects.begin(); iter != mDataObjects.end(); ++iter)
-        delete iter->second;
-    mDataObjects.clear();
+    clearDataObjects();
 }
 
 //! Create a data object with the specified type
@@ -50,7 +48,6 @@ DataIDType Project::addDataObject(AbstractDataObject::ObjectType type)
         DataIDType id = pObject->id();
         mDataObjects.emplace(id, pObject);
         mHierarchyDataObjects.appendNode(new HierarchyNode(HierarchyNode::NodeType::kObject, id));
-        emit dataObjectAdded(id);
         setModified(true);
         return id;
     }
@@ -80,9 +77,9 @@ void Project::removeDataObject(DataIDType id)
 {
     if (mDataObjects.find(id) != mDataObjects.end())
     {
+        delete mDataObjects[id];
         mDataObjects.erase(id);
         mHierarchyDataObjects.removeNode(HierarchyNode::NodeType::kObject, id);
-        emit dataObjectRemoved(id);
         setModified(true);
     }
 }
@@ -90,7 +87,7 @@ void Project::removeDataObject(DataIDType id)
 //! Substitute current data objects with new ones
 void Project::setDataObjects(DataObjects dataObjects, HierarchyTree const& hierarchyDataObjects)
 {
-    mDataObjects.clear();
+    clearDataObjects();
     AbstractDataObject* pDataObject;
     for (auto& item : dataObjects)
     {
@@ -100,6 +97,14 @@ void Project::setDataObjects(DataObjects dataObjects, HierarchyTree const& hiera
     mHierarchyDataObjects = hierarchyDataObjects;
     emit dataObjectsChanged();
     setModified(true);
+}
+
+//! Remove all data objects
+void Project::clearDataObjects()
+{
+    for (auto iter = mDataObjects.begin(); iter != mDataObjects.end(); ++iter)
+        delete iter->second;
+    mDataObjects.clear();
 }
 
 //! Set a modification state
