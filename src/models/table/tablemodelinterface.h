@@ -1,7 +1,7 @@
 /*!
  * \file
  * \author Pavel Lakiza
- * \date May 2021
+ * \date June 2021
  * \brief Declaration of the TableModelInterface
  */
 
@@ -38,9 +38,9 @@ public:
     virtual void removeSelectedLeadingItem(QItemSelectionModel* pSelectionModel) = 0;
     virtual ~TableModelInterface() { };
     static QStandardItem* makeDoubleItem(double value);
-    static QList<QStandardItem*> prepareRow(Core::Array<double>& array, quint32 iRow);
-    static QList<QStandardItem*> prepareRow(double const& key, Core::Array<double>& array, quint32 iRow);
-    static QList<QStandardItem*> prepareRow(QString const& name, Core::Array<double>& array, quint32 iRow);
+    static QList<QStandardItem*> prepareRow(Core::Array<double> const& array, quint32 iRow);
+    static QList<QStandardItem*> prepareRow(double const& key, Core::Array<double> const& array, quint32 iRow);
+    static QList<QStandardItem*> prepareRow(QString const& name, Core::Array<double> const& array, quint32 iRow);
     static QStandardItem* makeLabelItem(QString const& name);
 };
 

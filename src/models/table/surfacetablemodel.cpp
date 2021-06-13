@@ -1,7 +1,7 @@
 /*!
  * \file
  * \author Pavel Lakiza
- * \date March 2021
+ * \date June 2021
  * \brief Implementation of the SurfaceTableModel class
  */
 
@@ -51,7 +51,7 @@ void SurfaceTableModel::updateContent()
     auto& mapItems = mpDataObject->getItems();
     for (auto& rowItem : mapItems)
     {
-        DataItemType& array = rowItem.second;
+        DataItemType const& array = rowItem.second;
         rootItem->appendRow(prepareRow(rowItem.first, array, 0));
     }
 }

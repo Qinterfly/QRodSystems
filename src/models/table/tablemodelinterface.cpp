@@ -1,7 +1,7 @@
 /*!
  * \file
  * \author Pavel Lakiza
- * \date May 2021
+ * \date June 2021
  * \brief Implementation of static functions of TableModelInterface
  */
 
@@ -30,7 +30,7 @@ QStandardItem* TableModelInterface::makeLabelItem(QString const& name)
 }
 
 //! Helper function to copy a row from an array
-QList<QStandardItem*> TableModelInterface::prepareRow(Array<double>& array, quint32 iRow)
+QList<QStandardItem*> TableModelInterface::prepareRow(Array<double> const& array, quint32 iRow)
 {
     QList<QStandardItem*> resultList;
     quint32 nCols = array.cols();
@@ -40,7 +40,7 @@ QList<QStandardItem*> TableModelInterface::prepareRow(Array<double>& array, quin
 }
 
 //! Helper function to copy a row from an array and associate it with an key
-QList<QStandardItem*> TableModelInterface::prepareRow(double const& key, Array<double>& array, quint32 iRow)
+QList<QStandardItem*> TableModelInterface::prepareRow(double const& key, Array<double> const& array, quint32 iRow)
 {
     QList<QStandardItem*> resultList = prepareRow(array, iRow);
     resultList.push_front(makeDoubleItem(key));
@@ -48,7 +48,7 @@ QList<QStandardItem*> TableModelInterface::prepareRow(double const& key, Array<d
 }
 
 //! Helper function to copy a row from an array and associate it with a name
-QList<QStandardItem*> TableModelInterface::prepareRow(QString const& name, Array<double>& array, quint32 iRow)
+QList<QStandardItem*> TableModelInterface::prepareRow(QString const& name, Array<double> const& array, quint32 iRow)
 {
     QList<QStandardItem*> resultList = prepareRow(array, iRow);
     resultList.push_front(makeLabelItem(name));

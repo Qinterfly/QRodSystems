@@ -1,7 +1,7 @@
 /*!
  * \file
  * \author Pavel Lakiza
- * \date April 2021
+ * \date June 2021
  * \brief Declaration of the AbstractDataObject class
  */
 
@@ -40,8 +40,7 @@ public:
     DataValueType getAvailableItemKey(DataValueType key, DataHolder const* items = nullptr) const;
     bool setArrayValue(DataKeyType key, DataValueType newValue, quint32 iRow = 0, quint32 iColumn = 0);
     quint32 numberItems() const { return mItems.size(); }
-    DataHolder& getItems() { return mItems; }
-    DataItemType& getItem(DataValueType keyParameter) { return mItems.at(keyParameter); }
+    DataHolder const& getItems() { return mItems; }
     DataIDType id() const { return mID; }
     ObjectType type() const { return mType; }
     QString const& name() const { return mName; }

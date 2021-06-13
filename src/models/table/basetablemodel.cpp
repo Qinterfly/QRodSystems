@@ -1,7 +1,7 @@
 /*!
  * \file
  * \author Pavel Lakiza
- * \date March 2021
+ * \date June 2021
  * \brief Implementation of the BaseTableModel class
  */
 
@@ -54,7 +54,7 @@ void BaseTableModel::updateContent()
     auto& map = mpDataObject->getItems();
     for (auto& iterator : map)
     {
-        DataItemType& array = iterator.second;
+        DataItemType const& array = iterator.second;
         rootItem->appendRow(prepareRow(iterator.first, array, 0));
     }
 }

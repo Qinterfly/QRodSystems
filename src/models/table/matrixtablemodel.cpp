@@ -1,7 +1,7 @@
 /*!
  * \file
  * \author Pavel Lakiza
- * \date March 2021
+ * \date June 2021
  * \brief Implementation of the MatrixTableModel class
  */
 
@@ -45,7 +45,7 @@ void MatrixTableModel::updateContent()
     {
         QStandardItem* keyItem = TableModelInterface::makeDoubleItem(iterator.first);
         rootItem->appendRow(keyItem);
-        DataItemType& array = iterator.second;
+        DataItemType const& array = iterator.second;
         quint32 nRows = array.rows();
         quint32 iRow = keyItem->row();
         for (quint32 i = 0; i != nRows; ++i)

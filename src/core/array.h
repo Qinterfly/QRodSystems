@@ -1,7 +1,7 @@
 /*!
  * \file
  * \author Pavel Lakiza
- * \date March 2021
+ * \date June 2021
  * \brief Declaration of the Array class
  */
 
@@ -35,6 +35,7 @@ public:
     IndexType cols() const { return mNumCols; };
     IndexType size() const { return mNumRows * mNumCols; }
     Row<T> operator[](IndexType iRow) { return Row<T>(&mpData[mNumCols * iRow]); };
+    Row<T> operator[](IndexType iRow) const { return Row<T>(&mpData[mNumCols * iRow]); };
     template<typename K> friend QDebug operator<<(QDebug stream, Array<K>& array);
     template<typename K> friend QDataStream& operator<<(QDataStream& stream, Array<K> const& array);
     template<typename K> friend QDataStream& operator>>(QDataStream& stream, Array<K>& array);
@@ -54,6 +55,7 @@ private:
         Row(T* pData) : pRow(pData) { };
         ~Row() { }
         T& operator[](IndexType iCol) { return pRow[iCol]; }
+        T const& operator[](IndexType iCol) const { return pRow[iCol]; }
         T* pRow;
     };
 };
