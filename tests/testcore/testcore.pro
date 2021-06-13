@@ -7,6 +7,7 @@ CONFIG -= app_bundle
 CONFIG += c++20
 unix: QMAKE_CXXFLAGS += -std=c++20
 else: win32: QMAKE_CXXFLAGS += /std:c++latest
+QMAKE_CXXFLAGS += -Wno-deprecated-enum-enum-conversion
 
 TEMPLATE = app
 
