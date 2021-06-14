@@ -13,6 +13,7 @@
 #include "abstractdataobject.h"
 #include "array.h"
 #include "hierarchytree.h"
+#include "abstractrodcomponent.h"
 
 QT_BEGIN_NAMESPACE
 class QString;
@@ -27,6 +28,7 @@ namespace QRS::Core
 {
 
 using DataObjects = std::unordered_map<DataIDType, AbstractDataObject*>;
+using RodComponents = std::unordered_map<DataIDType, AbstractRodComponent*>;
 
 //! Project class to interact with a created system of rods
 class Project : public QObject
@@ -44,11 +46,11 @@ public:
     DataIDType numberDataObjects() const { return mDataObjects.size(); }
     DataObjects cloneDataObjects() const;
     DataIDType addDataObject(AbstractDataObject::ObjectType type);
-    void removeDataObject(DataIDType id);
     void setDataObjects(DataObjects dataObjects, HierarchyTree const& hierarchyDataObjects);
-    void clearDataObjects();
-    // Hierarchy of data objects
     HierarchyTree cloneHierarchyDataObjects() const;
+    // Rod components
+    RodComponents cloneRodComponents() const;
+    HierarchyTree cloneHierarchyRodComponents() const;
     // Getters and setters
     QString const& name() const { return mName; }
     QString const& filePath() const { return mFilePath; }
@@ -76,6 +78,10 @@ private:
     DataObjects mDataObjects;
     //! Hierarchy of data objects
     HierarchyTree mHierarchyDataObjects;
+    //! Rod components
+    RodComponents mRodComponents;
+    //! Hierarchy of rod components
+    HierarchyTree mHierarchyRodComponents;
     //! File extensionn
     static const QString skProjectExtension;
 };

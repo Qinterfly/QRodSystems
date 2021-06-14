@@ -10,7 +10,10 @@
 #include "core/array.h"
 #include "core/project.h"
 #include "core/scalardataobject.h"
+#include "core/vectordataobject.h"
+#include "core/matrixdataobject.h"
 #include "core/hierarchytree.h"
+#include "core/geometryrodcomponent.h"
 
 using namespace QRS::Core;
 
@@ -27,6 +30,7 @@ private slots:
     void readProject();
     void createHierarchyTree();
     void reorganizeHierarchyTree();
+    void createRodGeometry();
     void cleanupTestCase();
 
 private:
@@ -167,6 +171,20 @@ void TestCore::reorganizeHierarchyTree()
     QVERIFY(nodes[0]->setBefore(nodes[2]));
     hierarchy.removeNode(pGroup);
     qDebug().noquote() << hierarchy;
+}
+
+//! Try creating a geometrical configuration of a rod
+void TestCore::createRodGeometry()
+{
+    VectorDataObject* pRadiusVector = new VectorDataObject("Radius");
+    MatrixDataObject* pRotationMatrix = new MatrixDataObject("Rotation");
+    GeometryRodComponent pGeometry("Geometry");
+    pGeometry.setRadiusVector(pRadiusVector);
+    pGeometry.setRotationMatrix(pRotationMatrix);
+    QVERIFY(pGeometry.isDataComplete());
+    delete pRadiusVector;
+    QVERIFY(!pGeometry.isDataComplete());
+    delete pRotationMatrix;
 }
 
 //! Cleanup

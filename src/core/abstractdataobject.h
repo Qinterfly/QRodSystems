@@ -8,6 +8,7 @@
 #ifndef ABSTRACTDATAOBJECT_H
 #define ABSTRACTDATAOBJECT_H
 
+#include <QObject>
 #include <QString>
 #include <QDataStream>
 #include <unordered_map>
@@ -21,8 +22,10 @@ using DataItemType = Array<DataValueType>;
 using DataHolder = std::map<DataKeyType, DataItemType>;
 
 //! Data object which is designied in the way to be represented in a table easily
-class AbstractDataObject
+class AbstractDataObject : public QObject
 {
+    Q_OBJECT
+
 public:
     enum ObjectType
     {
@@ -54,17 +57,12 @@ public:
     virtual void import(QTextStream& stream) = 0;
 
 protected:
-    //! Object type
     const ObjectType mType;
-    //! Name of an object
     QString mName;
-    //! Unique object identificator
     DataIDType mID;
-    //! Map contains all created entities
     DataHolder mItems;
 
 private:
-    //! Number of all objects created
     static quint32 smNumObjects;
 };
 

@@ -1,8 +1,10 @@
 INCLUDEPATH += $$PWD
 
 HEADERS += \
+    $$PWD/abstractrodcomponent.h \
     $$PWD/datatypes.h \
     $$PWD/array.h \
+    $$PWD/geometryrodcomponent.h \
     $$PWD/project.h \
     $$PWD/abstractdataobject.h \
     $$PWD/scalardataobject.h \
@@ -14,7 +16,9 @@ HEADERS += \
     $$PWD/utilities.h
 
 SOURCES += \
+    $$PWD/abstractrodcomponent.cpp \
     $$PWD/array.cpp \
+    $$PWD/geometryrodcomponent.cpp \
     $$PWD/project.cpp \
     $$PWD/abstractdataobject.cpp \
     $$PWD/scalardataobject.cpp \

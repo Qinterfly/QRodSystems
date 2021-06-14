@@ -16,8 +16,7 @@ AbstractDataObject::AbstractDataObject(ObjectType type, QString const& name)
     : mType(type)
     , mName(name)
 {
-    ++smNumObjects;
-    mID = smNumObjects;
+    mID = ++smNumObjects;
 }
 
 AbstractDataObject::~AbstractDataObject()

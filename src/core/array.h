@@ -36,6 +36,7 @@ public:
     IndexType size() const { return mNumRows * mNumCols; }
     Row<T> operator[](IndexType iRow) { return Row<T>(&mpData[mNumCols * iRow]); };
     Row<T> operator[](IndexType iRow) const { return Row<T>(&mpData[mNumCols * iRow]); };
+    Array& operator=(Array<T> const& another);
     template<typename K> friend QDebug operator<<(QDebug stream, Array<K>& array);
     template<typename K> friend QDataStream& operator<<(QDataStream& stream, Array<K> const& array);
     template<typename K> friend QDataStream& operator>>(QDataStream& stream, Array<K>& array);

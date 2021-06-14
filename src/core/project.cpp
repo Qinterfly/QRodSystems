@@ -24,6 +24,8 @@ using namespace QRS::Core;
 const QString Project::skProjectExtension = ".qrs";
 
 AbstractDataObject* createDataObject(AbstractDataObject::ObjectType type);
+template<typename T>
+void clearDataMap(std::unordered_map<DataIDType, T*>& dataMap);
 
 //! Construct a clean project with the user specified name
 Project::Project(QString const& name)
@@ -36,7 +38,8 @@ Project::Project(QString const& name)
 
 Project::~Project()
 {
-    clearDataObjects();
+    clearDataMap(mDataObjects);
+    clearDataMap(mRodComponents);
 }
 
 //! Create a data object with the specified type
@@ -60,34 +63,16 @@ DataObjects Project::cloneDataObjects() const
     DataObjects result;
     for (auto& pItem : mDataObjects)
     {
-        AbstractDataObject* obj = pItem.second->clone();
-        result.emplace(obj->id(), obj);
+        AbstractDataObject* pObject = pItem.second->clone();
+        result.emplace(pObject->id(), pObject);
     }
     return result;
-}
-
-//! Clone a hierarchy of data objects
-HierarchyTree Project::cloneHierarchyDataObjects() const
-{
-    return mHierarchyDataObjects.clone();
-}
-
-//! Remove a data object by id
-void Project::removeDataObject(DataIDType id)
-{
-    if (mDataObjects.find(id) != mDataObjects.end())
-    {
-        delete mDataObjects[id];
-        mDataObjects.erase(id);
-        mHierarchyDataObjects.removeNode(HierarchyNode::NodeType::kObject, id);
-        setModified(true);
-    }
 }
 
 //! Substitute current data objects with new ones
 void Project::setDataObjects(DataObjects dataObjects, HierarchyTree const& hierarchyDataObjects)
 {
-    clearDataObjects();
+    clearDataMap(mDataObjects);
     AbstractDataObject* pDataObject;
     for (auto& item : dataObjects)
     {
@@ -99,12 +84,28 @@ void Project::setDataObjects(DataObjects dataObjects, HierarchyTree const& hiera
     setModified(true);
 }
 
-//! Remove all data objects
-void Project::clearDataObjects()
+//! Clone a hierarchy of data objects
+HierarchyTree Project::cloneHierarchyDataObjects() const
 {
-    for (auto iter = mDataObjects.begin(); iter != mDataObjects.end(); ++iter)
-        delete iter->second;
-    mDataObjects.clear();
+    return mHierarchyDataObjects.clone();
+}
+
+//! Clone rod components
+RodComponents Project::cloneRodComponents() const
+{
+    RodComponents result;
+    for (auto& pItem : mRodComponents)
+    {
+        AbstractRodComponent* pComponent = pItem.second->clone();
+        result.emplace(pComponent->id(), pComponent);
+    }
+    return result;
+}
+
+//! Clone a hierarchy of rod components
+HierarchyTree Project::cloneHierarchyRodComponents() const
+{
+    return mHierarchyRodComponents.clone();
 }
 
 //! Set a modification state
@@ -288,4 +289,13 @@ AbstractDataObject* createDataObject(AbstractDataObject::ObjectType type)
         break;
     }
     return pObject;
+}
+
+//! Clear a map consisted of data pointers
+template<typename T>
+void clearDataMap(std::unordered_map<DataIDType, T*>& dataMap)
+{
+    for (auto iter = dataMap.begin(); iter != dataMap.end(); ++iter)
+        delete iter->second;
+    dataMap.clear();
 }

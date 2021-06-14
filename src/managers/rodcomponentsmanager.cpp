@@ -10,6 +10,7 @@
 #include "DockManager.h"
 #include "DockWidget.h"
 #include "DockAreaWidget.h"
+
 #include "rodcomponentsmanager.h"
 #include "core/project.h"
 #include "managers/geometrycomponentwidget.h"
@@ -32,7 +33,9 @@ RodComponentsManager::RodComponentsManager(Project& project, QString& lastPath, 
 
 RodComponentsManager::~RodComponentsManager()
 {
-    // TODO
+    for (auto iter = mRodComponents.begin(); iter != mRodComponents.end(); ++iter)
+        delete iter->second;
+    mRodComponents.clear();
 }
 
 //! Create all the widgets
@@ -69,4 +72,12 @@ void RodComponentsManager::apply()
     // TODO: Project data substitution
     setWindowModified(false);
     qInfo() << tr("Rod components were modified by means of the manager");
+}
+
+//! Make a copy of existed rod components
+void RodComponentsManager::retrieveRodComponents()
+{
+    mRodComponents = mProject.cloneRodComponents();
+    mHierarchyRodComponents = mProject.cloneHierarchyRodComponents();
+    // TODO: Update content
 }

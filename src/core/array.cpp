@@ -25,7 +25,6 @@ Array<T>::Array(IndexType numRows, IndexType numCols)
 template<typename T>
 Array<T>::Array(Array<T> const& another)
 {
-    delete[] mpData;
     const IndexType& newSize = another.size();
     mpData = new T[newSize];
     for (IndexType i = 0; i != newSize; ++i)
@@ -41,6 +40,23 @@ Array<T>::Array(Array<T>&& another)
     std::swap(mpData, another.mpData);
     mNumRows = std::exchange(another.mNumRows, 0);
     mNumCols = std::exchange(another.mNumCols, 0);
+}
+
+//! Assignment operator
+template<typename T>
+Array<T>& Array<T>::operator=(Array<T> const& another)
+{
+    if (this != &another)
+    {
+        delete[] mpData;
+        const IndexType& newSize = another.size();
+        mpData = new T[newSize];
+        for (IndexType i = 0; i != newSize; ++i)
+            mpData[i] = another.mpData[i];
+        mNumRows = another.mNumRows;
+        mNumCols = another.mNumCols;
+    }
+    return *this;
 }
 
 template<typename T>
