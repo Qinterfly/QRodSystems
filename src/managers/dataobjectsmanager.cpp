@@ -1,7 +1,7 @@
 /*!
  * \file
  * \author Pavel Lakiza
- * \date May 2021
+ * \date June 2021
  * \brief Implementation of the DataObjectsManager class
  */
 
@@ -75,7 +75,7 @@ void DataObjectsManager::createContent()
     // Tables
     mpDockManager->addDockWidget(ads::LeftDockWidgetArea, createDataTableWidget());
     // Objects
-    mpDockManager->addDockWidget(ads::RightDockWidgetArea, createDataObjectsWidget());
+    mpDockManager->addDockWidget(ads::RightDockWidgetArea, createHierarchyWidget());
     // Buttons
     pMainLayout->addLayout(createDialogControls());
 }
@@ -100,7 +100,6 @@ CDockWidget* DataObjectsManager::createDataTableWidget()
     mpSurfaceTableModel = new SurfaceTableModel(mpDataTable);
     // ToolBar
     QToolBar* pToolBar = pDockWidget->createDefaultToolBar();
-    pToolBar->setToolButtonStyle(Qt::ToolButtonStyle::ToolButtonIconOnly);
     pDockWidget->setToolBarIconSize(skToolBarIconSize, CDockWidget::StateDocked);
     QAction* pAction;
     // Expanding actions
@@ -129,8 +128,8 @@ CDockWidget* DataObjectsManager::createDataTableWidget()
     return pDockWidget;
 }
 
-//! Create an object to present all data objects
-CDockWidget* DataObjectsManager::createDataObjectsWidget()
+//! Create an object to represent a hierarchy of data objects
+CDockWidget* DataObjectsManager::createHierarchyWidget()
 {
     QSize const kIconSize = QSize(16, 16);
     CDockWidget* pDockWidget = new CDockWidget("Objects");
@@ -158,7 +157,6 @@ CDockWidget* DataObjectsManager::createDataObjectsWidget()
             this, &DataObjectsManager::clearDataObjectRepresentation);
     // ToolBar
     QToolBar* pToolBar = pDockWidget->createDefaultToolBar();
-    pToolBar->setToolButtonStyle(Qt::ToolButtonStyle::ToolButtonIconOnly);
     pDockWidget->setToolBarIconSize(skToolBarIconSize, CDockWidget::StateDocked);
     // Actions
     QAction* pAction;
@@ -401,19 +399,4 @@ void DataObjectsManager::importDataObject(QString const& path, QString const& fi
 bool DataObjectsManager::isDataTableModifiable()
 {
     return mpTableModelInterface;
-}
-
-//! Helper function to add a shortcut hint to all actions which a toolbar contains
-void setToolBarShortcutHints(QToolBar* pToolBar)
-{
-    QList<QAction*> listActions = pToolBar->actions();
-    QString shortCut;
-    for (auto& action : listActions)
-    {
-        shortCut = action->shortcut().toString();
-        if (shortCut.isEmpty())
-            action->setText(QString(action->text()));
-        else
-            action->setText(QString(action->text() + " (%1)").arg(shortCut));
-    }
 }

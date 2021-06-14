@@ -1,14 +1,13 @@
 /*!
  * \file
  * \author Pavel Lakiza
- * \date March 2021
+ * \date June 2021
  * \brief Declaration of the DataObjectsManager class
  */
 
 #ifndef DATAOBJECTSMANAGER_H
 #define DATAOBJECTSMANAGER_H
 
-#include <QSignalMapper>
 #include <unordered_map>
 #include "abstractprojectmanager.h"
 #include "core/datatypes.h"
@@ -82,7 +81,7 @@ private:
     // Content
     void createContent();
     ads::CDockWidget* createDataTableWidget();
-    ads::CDockWidget* createDataObjectsWidget();
+    ads::CDockWidget* createHierarchyWidget();
     QLayout* createDialogControls();
     void retrieveDataObjects();
     // Helpers

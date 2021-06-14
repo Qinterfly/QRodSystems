@@ -25,20 +25,21 @@ public:
     {
         kGeometry
     };
-    AbstractRodComponent(ComponentType type, QString name);
+    AbstractRodComponent(ComponentType componentType, QString name);
     virtual ~AbstractRodComponent() = 0;
     virtual AbstractRodComponent* clone() const = 0;
     virtual bool isDataComplete() const = 0;
     DataIDType id() const { return mID; }
-    ComponentType type() const { return mType; }
+    ComponentType componentType() const { return mComponentType; }
+    static quint32 numberComponents() { return smNumComponents; }
 
 protected:
-    const ComponentType mType;
+    const ComponentType mComponentType;
     QString mName;
     DataIDType mID;
 
 private:
-    static quint32 smNumObjects;
+    static quint32 smNumComponents;
 };
 
 }

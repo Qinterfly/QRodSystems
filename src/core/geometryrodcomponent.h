@@ -30,8 +30,8 @@ public:
 
 private:
     static quint32 smNumInstances;
-    QPointer<VectorDataObject const> mpRadiusVector = nullptr;
-    QPointer<MatrixDataObject const> mpRotationMatrix = nullptr;
+    QPointer<VectorDataObject const> mpRadiusVector;
+    QPointer<MatrixDataObject const> mpRotationMatrix;
 };
 
 }

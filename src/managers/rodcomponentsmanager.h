@@ -12,6 +12,10 @@
 #include "core/datatypes.h"
 #include "core/hierarchytree.h"
 
+QT_BEGIN_NAMESPACE
+class QTreeView;
+QT_END_NAMESPACE
+
 namespace ads
 {
 class CDockWidget;
@@ -47,9 +51,13 @@ private:
     void createContent();
     QLayout* createDialogControls();
     void retrieveRodComponents();
+    ads::CDockWidget* createHierarchyWidget();
+    ads::CDockWidget* createComponentsDockWidget();
 
 private:
+    // Widgets
     ads::CDockWidget* mpComponentDockWidget;
+    QTreeView* mpTreeRodComponents;
     // Data
     Core::HierarchyTree mHierarchyRodComponents;
     mapRodComponents mRodComponents;

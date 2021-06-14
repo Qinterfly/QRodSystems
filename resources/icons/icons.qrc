@@ -96,5 +96,10 @@
         <file>restore-button.svg</file>
         <file>restore-button-focused.svg</file>
         <file>tabs-menu-button.svg</file>
+        <file>axis.svg</file>
+        <file>material.svg</file>
+        <file>tubes.svg</file>
+        <file>force.svg</file>
+        <file>clamp.svg</file>
     </qresource>
 </RCC>

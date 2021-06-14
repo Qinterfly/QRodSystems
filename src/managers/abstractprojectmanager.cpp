@@ -7,6 +7,7 @@
 
 #include <QMessageBox>
 #include <QSettings>
+#include <QToolBar>
 
 #include "abstractprojectmanager.h"
 #include "central/uiconstants.h"
@@ -79,5 +80,20 @@ void AbstractProjectManager::closeEvent(QCloseEvent* pEvent)
         saveSettings();
         emit closed(mType);
         pEvent->accept();
+    }
+}
+
+//! Helper function to add a shortcut hint to all actions which a toolbar contains
+void AbstractProjectManager::setToolBarShortcutHints(QToolBar* pToolBar)
+{
+    QList<QAction*> listActions = pToolBar->actions();
+    QString shortCut;
+    for (auto& action : listActions)
+    {
+        shortCut = action->shortcut().toString();
+        if (shortCut.isEmpty())
+            action->setText(QString(action->text()));
+        else
+            action->setText(QString(action->text() + " (%1)").arg(shortCut));
     }
 }

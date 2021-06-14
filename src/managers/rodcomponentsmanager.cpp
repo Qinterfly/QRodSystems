@@ -7,6 +7,8 @@
 
 #include <QVBoxLayout>
 #include <QPushButton>
+#include <QTreeView>
+#include <QToolBar>
 #include "DockManager.h"
 #include "DockWidget.h"
 #include "DockAreaWidget.h"
@@ -45,13 +47,62 @@ void RodComponentsManager::createContent()
     QVBoxLayout* pMainLayout = new QVBoxLayout(this);
     pMainLayout->setContentsMargins(0, 0, 0, 0);
     pMainLayout->addWidget(mpDockManager);
-    // Widget holder to present components of different types
-    mpComponentDockWidget = new CDockWidget("Component Constructor");
-    mpComponentDockWidget->setFeature(CDockWidget::DockWidgetClosable, false);
+    // Components dock widget
+    mpComponentDockWidget = createComponentsDockWidget();
     mpDockManager->addDockWidget(ads::LeftDockWidgetArea, mpComponentDockWidget);
-    // TODO : Hierarchy of components
+    // Hierarchy of components
+    mpDockManager->addDockWidget(ads::RightDockWidgetArea, createHierarchyWidget());
     // Buttons
     pMainLayout->addLayout(createDialogControls());
+}
+
+//! Create a widget to show a hierarchy of rod components
+CDockWidget* RodComponentsManager::createHierarchyWidget()
+{
+    QSize const kIconSize = QSize(16, 16);
+    QSize const kToolBarIconSize = QSize(27, 27);
+    CDockWidget* pDockWidget = new CDockWidget("Components");
+    pDockWidget->setFeature(CDockWidget::DockWidgetClosable, false);
+    // Tree widget
+    mpTreeRodComponents = new QTreeView();
+    mpTreeRodComponents->setIconSize(kIconSize);
+    mpTreeRodComponents->setSelectionMode(QAbstractItemView::ExtendedSelection);
+    mpTreeRodComponents->setSelectionBehavior(QAbstractItemView::SelectItems);
+    mpTreeRodComponents->setEditTriggers(QAbstractItemView::DoubleClicked);
+    mpTreeRodComponents->setHeaderHidden(true);
+    mpTreeRodComponents->setAcceptDrops(true);
+    mpTreeRodComponents->setDragEnabled(true);
+    // ToolBar
+    QToolBar* pToolBar = pDockWidget->createDefaultToolBar();
+    pDockWidget->setToolBarIconSize(kToolBarIconSize, CDockWidget::StateDocked);
+    // Actions
+    QAction* pAction;
+    pAction = pToolBar->addAction(QIcon(":/icons/axis.svg"), tr("Geometry"));
+    pAction->setShortcut(QKeySequence("Ctrl+1"));
+    pAction = pToolBar->addAction(QIcon(":/icons/tubes.svg"), tr("Cross section"));
+    pAction->setShortcut(QKeySequence("Ctrl+2"));
+    pAction = pToolBar->addAction(QIcon(":/icons/clamp.svg"), tr("Boundary condition"));
+    pAction->setShortcut(QKeySequence("Ctrl+3"));
+    pAction = pToolBar->addAction(QIcon(":/icons/force.svg"), tr("Force"));
+    pAction->setShortcut(QKeySequence("Ctrl+4"));
+    pAction = pToolBar->addAction(QIcon(":/icons/material.svg"), tr("Material"));
+    pAction->setShortcut(QKeySequence("Ctrl+5"));
+    pToolBar->addSeparator();
+    pAction = pToolBar->addAction(QIcon(":/icons/delete.svg"), tr("Remove"));
+    pAction->setShortcut(Qt::Key_R);
+    // TODO: Hierarchy model
+    // ...
+    setToolBarShortcutHints(pToolBar);
+    pDockWidget->setWidget(mpTreeRodComponents);
+    return pDockWidget;
+}
+
+//! Create a dock widget to contain constructors of rod components
+ads::CDockWidget* RodComponentsManager::createComponentsDockWidget()
+{
+    CDockWidget* pDockWidget = new CDockWidget("Component Constructor");
+    pDockWidget->setFeature(CDockWidget::DockWidgetClosable, false);
+    return pDockWidget;
 }
 
 //! Create dialog controls

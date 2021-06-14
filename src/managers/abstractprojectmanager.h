@@ -12,6 +12,7 @@
 
 QT_BEGIN_NAMESPACE
 class QSettings;
+class QToolBar;
 QT_END_NAMESPACE
 
 namespace ads
@@ -56,6 +57,7 @@ public slots:
 
 protected:
     void closeEvent(QCloseEvent* pEvent) override;
+    void setToolBarShortcutHints(QToolBar* pToolBar);
 
 protected:
     // Dock manager
