@@ -5,7 +5,6 @@
  * \brief Definition of the AbstractRodComponent class
  */
 
-#include <QPointer>
 #include "abstractrodcomponent.h"
 #include "abstractdataobject.h"
 
