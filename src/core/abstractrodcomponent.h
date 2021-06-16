@@ -10,10 +10,16 @@
 
 #include <QObject>
 #include <QString>
+#include <QDataStream>
 #include "datatypes.h"
 
 namespace QRS::Core
 {
+
+class AbstractDataObject;
+class AbstractRodComponent;
+
+using DataObjectGetter = std::function<AbstractDataObject const*(DataIDType id)>;
 
 //! Component of the rod structure which characterizes one of its properties
 class AbstractRodComponent : public QObject
@@ -32,6 +38,14 @@ public:
     DataIDType id() const { return mID; }
     ComponentType componentType() const { return mComponentType; }
     static quint32 numberComponents() { return smNumComponents; }
+    static void setNumberComponents(quint32 numComponents) { smNumComponents = numComponents; }
+    virtual void serialize(QDataStream& stream) const;
+    virtual void deserialize(QDataStream& stream, DataObjectGetter const& getDataObject) = 0;
+    friend QDataStream& operator<<(QDataStream& stream, AbstractRodComponent const& component);
+
+protected:
+    void writeDataObjectPointer(QDataStream& stream, AbstractDataObject const* pDataObject) const;
+    AbstractDataObject const* readDataObjectPointer(QDataStream& stream, DataObjectGetter const& getDataObject) const;
 
 protected:
     const ComponentType mComponentType;
@@ -41,6 +55,13 @@ protected:
 private:
     static quint32 smNumComponents;
 };
+
+//! Print a rod component to a stream
+inline QDataStream& operator<<(QDataStream& stream, AbstractRodComponent const& component)
+{
+    component.serialize(stream);
+    return stream;
+}
 
 }
 

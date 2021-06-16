@@ -43,14 +43,22 @@ private:
 //! Initialize data
 void TestCore::initTestCase()
 {
-    const quint32 numObjects = 5;
     mpProject = new Project("test");
-    for (quint32 i = 0; i != numObjects; ++i)
+    const quint32 numSets = 5;
+    VectorDataObject* pVector;
+    MatrixDataObject* pMatrix;
+    GeometryRodComponent* pGeometry;
+    for (quint32 i = 0; i != numSets; ++i)
     {
+        // Creating data objects
         mpProject->addDataObject(AbstractDataObject::ObjectType::kScalar);
-        mpProject->addDataObject(AbstractDataObject::ObjectType::kVector);
-        mpProject->addDataObject(AbstractDataObject::ObjectType::kMatrix);
+        pVector = (VectorDataObject*)mpProject->addDataObject(AbstractDataObject::ObjectType::kVector);
+        pMatrix = (MatrixDataObject*)mpProject->addDataObject(AbstractDataObject::ObjectType::kMatrix);
         mpProject->addDataObject(AbstractDataObject::ObjectType::kSurface);
+        // Creating rod components
+        pGeometry = (GeometryRodComponent*)mpProject->addRodComponent(AbstractRodComponent::ComponentType::kGeometry);
+        pGeometry->setRadiusVector(pVector);
+        pGeometry->setRotationMatrix(pMatrix);
     }
 }
 
@@ -109,6 +117,7 @@ void TestCore::readProject()
     Project tempProject(mExamplesPath, mpProject->name());
     QCOMPARE(mpProject->name(), tempProject.name());
     QCOMPARE(mpProject->numberDataObjects(), tempProject.numberDataObjects());
+    QCOMPARE(mpProject->numberRodComponents(), tempProject.numberRodComponents());
 }
 
 //! Try creating a hierarchial tree

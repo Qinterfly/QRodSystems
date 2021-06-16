@@ -19,7 +19,8 @@ SOURCES += \
     $$PWD/abstractrodcomponent.cpp \
     $$PWD/array.cpp \
     $$PWD/geometryrodcomponent.cpp \
-    $$PWD/project.cpp \
+    $$PWD/project-base.cpp \
+    $$PWD/project-io.cpp \
     $$PWD/abstractdataobject.cpp \
     $$PWD/scalardataobject.cpp \
     $$PWD/vectordataobject.cpp \

@@ -27,3 +27,21 @@ AbstractRodComponent* GeometryRodComponent::clone() const
     pComponent->mpRotationMatrix = mpRotationMatrix;
     return pComponent;
 }
+
+//! Serialize all properties of a geometrical component
+void GeometryRodComponent::serialize(QDataStream& stream) const
+{
+    AbstractRodComponent::serialize(stream);
+    writeDataObjectPointer(stream, mpRadiusVector);
+    writeDataObjectPointer(stream, mpRotationMatrix);
+}
+
+//! Deserialize a geometrical component
+void GeometryRodComponent::deserialize(QDataStream& stream, DataObjectGetter const& getDataObject)
+{
+    stream >> mID;
+    mpRadiusVector = (VectorDataObject const*)readDataObjectPointer(stream, getDataObject);
+    mpRotationMatrix = (MatrixDataObject const*)readDataObjectPointer(stream, getDataObject);
+}
+
+

@@ -23,7 +23,7 @@ QPair<AbstractDataObject::ObjectType, QSharedPointer<QFile>> File::getDataObject
     const QString kVectorFileName = "w3.prn";
     const QString kMatrixFileName = "w9.prn";
     const QString kSurfaceFileName = "xy.prn";
-    std::function <bool(QString const&)> isNameEqual = [&fileName](QString const& name) { return !fileName.compare(name, Qt::CaseInsensitive); };
+    std::function <bool(QString const&)> isNameEqual = [&fileName](QString const & name) { return !fileName.compare(name, Qt::CaseInsensitive); };
     AbstractDataObject::ObjectType type;
     if (isNameEqual(kScalarFileName))
         type = AbstractDataObject::ObjectType::kScalar;

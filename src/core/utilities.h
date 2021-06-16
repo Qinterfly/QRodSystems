@@ -17,10 +17,17 @@ class QString;
 namespace QRS
 {
 
-namespace Utilities::File
+namespace Utilities
 {
+
+namespace File
+{
+
 QPair<Core::AbstractDataObject::ObjectType, QSharedPointer<QFile>> getDataObjectFile(QString const& path, QString const& fileName);
 QString loadFileContent(QString const& path);
+
+}
+
 }
 
 }

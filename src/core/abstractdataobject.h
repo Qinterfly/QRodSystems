@@ -53,7 +53,6 @@ public:
     virtual void serialize(QDataStream& stream) const;
     virtual void deserialize(QDataStream& stream);
     friend QDataStream& operator<<(QDataStream& stream, AbstractDataObject const& obj);
-    friend QDataStream& operator>>(QDataStream& stream, AbstractDataObject& obj);
     virtual void import(QTextStream& stream) = 0;
 
 protected:
@@ -70,13 +69,6 @@ private:
 inline QDataStream& operator<<(QDataStream& stream, AbstractDataObject const& obj)
 {
     obj.serialize(stream);
-    return stream;
-}
-
-//! Read a data object from a stream
-inline QDataStream& operator>>(QDataStream& stream, AbstractDataObject& obj)
-{
-    obj.deserialize(stream);
     return stream;
 }
 

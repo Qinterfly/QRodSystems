@@ -27,6 +27,10 @@ public:
     bool isDataComplete() const override { return mpRadiusVector && mpRotationMatrix; };
     void setRadiusVector(VectorDataObject const* pRadiusVector) { mpRadiusVector = pRadiusVector; }
     void setRotationMatrix(MatrixDataObject const* pRotationMatrix) { mpRotationMatrix = pRotationMatrix; }
+    static quint32 numberInstances() { return smNumInstances; }
+    static void setNumberInstances(quint32 numInstances) { smNumInstances = numInstances; }
+    void serialize(QDataStream& stream) const override;
+    void deserialize(QDataStream& stream, DataObjectGetter const& getDataObject) override;
 
 private:
     static quint32 smNumInstances;

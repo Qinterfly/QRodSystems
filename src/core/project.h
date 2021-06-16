@@ -44,13 +44,15 @@ public:
     bool isModified() const { return mIsModified; }
     // Data objects
     DataIDType numberDataObjects() const { return mDataObjects.size(); }
-    DataObjects cloneDataObjects() const;
-    DataIDType addDataObject(AbstractDataObject::ObjectType type);
+    AbstractDataObject* addDataObject(AbstractDataObject::ObjectType type);
     void setDataObjects(DataObjects dataObjects, HierarchyTree const& hierarchyDataObjects);
-    HierarchyTree cloneHierarchyDataObjects() const;
+    DataObjects cloneDataObjects() const;
+    HierarchyTree cloneHierarchyDataObjects() const { return mHierarchyDataObjects.clone(); }
     // Rod components
+    DataIDType numberRodComponents() const { return mRodComponents.size(); }
+    AbstractRodComponent* addRodComponent(AbstractRodComponent::ComponentType type);
     RodComponents cloneRodComponents() const;
-    HierarchyTree cloneHierarchyRodComponents() const;
+    HierarchyTree cloneHierarchyRodComponents() const { return mHierarchyRodComponents.clone(); }
     // Getters and setters
     QString const& name() const { return mName; }
     QString const& filePath() const { return mFilePath; }
@@ -64,6 +66,10 @@ signals:
 public slots:
     bool save(QString const& dir, QString const& fileName);
     void setModified(bool modifiedState = true);
+
+private:
+    template<typename T>
+    void clearDataMap(std::unordered_map<DataIDType, T*>& dataMap);
 
 private:
     //! Unique project identifier
