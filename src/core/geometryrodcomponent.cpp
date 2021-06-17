@@ -19,6 +19,12 @@ GeometryRodComponent::GeometryRodComponent(QString const& name)
     ++smNumInstances;
 }
 
+//! Decrease a number of instances while being destroyed
+GeometryRodComponent::~GeometryRodComponent()
+{
+    --smNumInstances;
+}
+
 //! Clone a geometrical component
 AbstractRodComponent* GeometryRodComponent::clone() const
 {
@@ -39,7 +45,7 @@ void GeometryRodComponent::serialize(QDataStream& stream) const
 //! Deserialize a geometrical component
 void GeometryRodComponent::deserialize(QDataStream& stream, DataObjectGetter const& getDataObject)
 {
-    stream >> mID;
+    AbstractRodComponent::deserialize(stream);
     mpRadiusVector = (VectorDataObject const*)readDataObjectPointer(stream, getDataObject);
     mpRotationMatrix = (MatrixDataObject const*)readDataObjectPointer(stream, getDataObject);
 }

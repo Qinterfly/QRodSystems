@@ -51,11 +51,7 @@ bool Project::save(QString const& path, QString const& fileName)
     // 2. Project info
     out << mID;                                                // Unique identificator
     // 3. Data objects
-    out << (quint32)AbstractDataObject::maxObjectID();         // Maximal object identifier
-    out << (quint32)ScalarDataObject::numberInstances();       // Raw number of scalars
-    out << (quint32)VectorDataObject::numberInstances();       // Raw number of vectors
-    out << (quint32)MatrixDataObject::numberInstances();       // Raw number of matrices
-    out << (quint32)SurfaceDataObject::numberInstances();      // Raw number of surface
+    out << AbstractDataObject::maxObjectID();                  // Maximal object identifier
     out << (quint32)mDataObjects.size();                       // Number of objects to be written/read
     for (auto& item : mDataObjects)
         out << *item.second;                                   // Data object content
@@ -63,8 +59,7 @@ bool Project::save(QString const& path, QString const& fileName)
     out << (quint32)mHierarchyDataObjects.size();              // Number of nodes in a hierarchy
     out << mHierarchyDataObjects;                              // Hierarchy of data objects
     // 5. Rod components
-    out << (quint32)AbstractRodComponent::maxComponentID();    // Maximal component identifier
-    out << (quint32)GeometryRodComponent::numberInstances();   // Raw number of geometrical components
+    out << AbstractRodComponent::maxComponentID();             // Maximal component identifier
     out << (quint32)mRodComponents.size();                     // Number of components to be written
     for (auto& item : mRodComponents)
         out << *item.second;
@@ -144,19 +139,9 @@ void Project::importDataObjects(QString const& path, QString const& fileName)
 void readDataObjects(QDataStream& inputStream, DataObjects& dataObjects)
 {
     // Maximal object identifier
-    quint32 maxID;
+    DataIDType maxID;
     inputStream >> maxID;
     AbstractDataObject::setMaxObjectID(maxID);
-    // Number of instances
-    quint32 numInstances;
-    inputStream >> numInstances;
-    ScalarDataObject::setNumberInstances(numInstances);
-    inputStream >> numInstances;
-    VectorDataObject::setNumberInstances(numInstances);
-    inputStream >> numInstances;
-    MatrixDataObject::setNumberInstances(numInstances);
-    inputStream >> numInstances;
-    SurfaceDataObject::setNumberInstances(numInstances);
     // Data objects
     AbstractDataObject::ObjectType type;
     QString name;
@@ -191,13 +176,9 @@ void readDataObjects(QDataStream& inputStream, DataObjects& dataObjects)
 void readRodComponents(QDataStream& inputStream, DataObjects const& dataObjects, RodComponents& rodComponents)
 {
     // Maximal component identifier
-    quint32 maxID;
+    DataIDType maxID;
     inputStream >> maxID;
     AbstractRodComponent::setMaxComponentID(maxID);
-    // Number of instances
-    quint32 numInstances;
-    inputStream >> numInstances;
-    GeometryRodComponent::setNumberInstances(numInstances);
     // Rod components
     quint32 numComponents;
     inputStream >> numComponents;

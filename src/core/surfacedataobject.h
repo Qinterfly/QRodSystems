@@ -27,7 +27,6 @@ public:
     quint32 numberLeadingItems() const { return mLeadingItems.size(); }
     DataHolder& getLeadingItems() { return mLeadingItems; }
     static quint32 numberInstances() { return smNumInstances; }
-    static void setNumberInstances(quint32 numInstances) { smNumInstances = numInstances; }
     void serialize(QDataStream& stream) const override;
     virtual void deserialize(QDataStream& stream) override;
     virtual void import(QTextStream& stream) override;

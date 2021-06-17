@@ -114,7 +114,10 @@ void DataObjectsHierarchyModel::removeSelectedItems()
         DataObjectsHierarchyItem* pItem = (DataObjectsHierarchyItem*)itemFromIndex(index);
         AbstractDataObject* pDataObject = pItem->mpDataObject;
         if (pDataObject)
+        {
             mDataObjects.erase(pDataObject->id());
+            delete pDataObject;
+        }
         mHierarchyDataObjects.removeNode(pItem->mpNode);
     }
     updateContent();

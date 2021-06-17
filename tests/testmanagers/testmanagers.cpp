@@ -54,41 +54,18 @@ void TestManagers::initTestCase()
     fontSize = 10;
 #endif
     qApp->setFont(QFont("Source Sans Pro", fontSize));
+    mpDataObjectsManager = new DataObjectsManager(*mpProject, mLastPath, *mpSettings);
+    mpRodComponentsManager = new RodComponentsManager(*mpProject, mLastPath, *mpSettings);
 }
 
 //! Test how the data objects manager handles with data
 void TestManagers::testDataObjectsManager()
 {
-    mpDataObjectsManager = new DataObjectsManager(*mpProject, mLastPath, *mpSettings);
     // Creating data objects of different types
-    mpDataObjectsManager->addScalar();
-    mpDataObjectsManager->addVector();
-    mpDataObjectsManager->addMatrix();
-    mpDataObjectsManager->addSurface();
-    auto dataObjects = mpDataObjectsManager->getDataObjects();
-    ScalarDataObject* pScalar;
-    VectorDataObject* pVector;
-    MatrixDataObject* pMatrix;
-    SurfaceDataObject* pSurface;
-    for (auto& mapObj : dataObjects)
-    {
-        AbstractDataObject* obj = mapObj.second;
-        switch (obj->type())
-        {
-        case (AbstractDataObject::ObjectType::kScalar):
-            pScalar = (ScalarDataObject*)obj;
-            break;
-        case (AbstractDataObject::ObjectType::kVector):
-            pVector = (VectorDataObject*)obj;
-            break;
-        case (AbstractDataObject::ObjectType::kMatrix):
-            pMatrix = (MatrixDataObject*)obj;
-            break;
-        case (AbstractDataObject::ObjectType::kSurface):
-            pSurface = (SurfaceDataObject*)obj;
-            break;
-        }
-    }
+    ScalarDataObject* pScalar = (ScalarDataObject*)mpDataObjectsManager->addScalar();
+    VectorDataObject* pVector = (VectorDataObject*)mpDataObjectsManager->addVector();
+    MatrixDataObject* pMatrix = (MatrixDataObject*)mpDataObjectsManager->addMatrix();
+    SurfaceDataObject* pSurface = (SurfaceDataObject*)mpDataObjectsManager->addSurface();
     // Inserting itmes into the object
     int nStep = 10;
     double startValue = 0.1;
@@ -110,14 +87,19 @@ void TestManagers::testDataObjectsManager()
     // Selecting
     mpDataObjectsManager->selectDataObject(3);
     mpDataObjectsManager->apply();
+    QCOMPARE(mpProject->getDataObjects().size(), uint(4));
 }
 
 //! Test how to create components of a rod
 void TestManagers::testRodComponentsManager()
 {
-    mpRodComponentsManager = new RodComponentsManager(*mpProject, mLastPath, *mpSettings);
+    // Create sample objects
+    VectorDataObject* pVector = (VectorDataObject*)mpProject->addDataObject(AbstractDataObject::kVector);
+    MatrixDataObject* pMatrix = (MatrixDataObject*)mpProject->addDataObject(AbstractDataObject::kMatrix);
     // Add a geometrical component
     GeometryRodComponent* pGeometry = (GeometryRodComponent*)mpRodComponentsManager->addGeometry();
+    pGeometry->setRadiusVector(pVector);
+    pGeometry->setRotationMatrix(pMatrix);
 }
 
 //! Cleanup

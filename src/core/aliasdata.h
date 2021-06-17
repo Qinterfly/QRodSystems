@@ -15,7 +15,7 @@ namespace QRS::Core
 
 using DataValueType = double;
 using DataKeyType = double;
-using DataIDType = quint32;
+using DataIDType = quint64;
 
 }
 

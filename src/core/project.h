@@ -42,7 +42,7 @@ public:
     // Data objects
     DataIDType numberDataObjects() const { return mDataObjects.size(); }
     AbstractDataObject* addDataObject(AbstractDataObject::ObjectType type);
-    void setDataObjects(DataObjects dataObjects, HierarchyTree const& hierarchyDataObjects);
+    void setDataObjects(DataObjects const& dataObjects, HierarchyTree const& hierarchyDataObjects);
     DataObjects cloneDataObjects() const;
     HierarchyTree cloneHierarchyDataObjects() const { return mHierarchyDataObjects.clone(); }
     DataObjects const& getDataObjects() const { return mDataObjects; }

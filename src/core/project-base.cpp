@@ -51,7 +51,7 @@ AbstractDataObject* Project::addDataObject(AbstractDataObject::ObjectType type)
 }
 
 //! Substitute current data objects with new ones
-void Project::setDataObjects(DataObjects dataObjects, HierarchyTree const& hierarchyDataObjects)
+void Project::setDataObjects(DataObjects const& dataObjects, HierarchyTree const& hierarchyDataObjects)
 {
     clearDataMap(mDataObjects);
     AbstractDataObject* pDataObject;

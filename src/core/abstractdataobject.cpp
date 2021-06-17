@@ -9,7 +9,7 @@
 
 using namespace QRS::Core;
 
-quint32 AbstractDataObject::smMaxObjectID = 0;
+DataIDType AbstractDataObject::smMaxObjectID = 0;
 
 //! Base constructor
 AbstractDataObject::AbstractDataObject(ObjectType type, QString const& name)
@@ -21,7 +21,8 @@ AbstractDataObject::AbstractDataObject(ObjectType type, QString const& name)
 
 AbstractDataObject::~AbstractDataObject()
 {
-
+    if (mID == smMaxObjectID)
+        --smMaxObjectID;
 }
 
 //! Modify a key existed
@@ -45,7 +46,7 @@ void AbstractDataObject::removeItem(DataKeyType key)
 }
 
 //! Set an array value with the specified indices
-bool AbstractDataObject::setArrayValue(DataKeyType key, DataValueType newValue, quint32 iRow, quint32 iColumn)
+bool AbstractDataObject::setArrayValue(DataKeyType key, DataValueType newValue, IndexType iRow, IndexType iColumn)
 {
     if (mItems.find(key) == mItems.end())
         return false;
@@ -90,7 +91,7 @@ void AbstractDataObject::serialize(QDataStream& stream) const
 {
     stream << (quint32)mType;
     stream << mName;
-    stream << (quint32)mID;
+    stream << (DataIDType)mID;
     stream << (quint32)mItems.size();
     for (auto& item : mItems)
     {

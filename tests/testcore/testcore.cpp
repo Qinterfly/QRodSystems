@@ -202,7 +202,6 @@ void TestCore::cleanupTestCase()
     delete mpProject;
 }
 
-
 QTEST_APPLESS_MAIN(TestCore)
 
 #include "testcore.moc"

@@ -22,13 +22,12 @@ class GeometryRodComponent : public AbstractRodComponent
 {
 public:
     GeometryRodComponent(QString const& name);
-    ~GeometryRodComponent() {};
+    ~GeometryRodComponent();
     AbstractRodComponent* clone() const override;
     bool isDataComplete() const override { return mpRadiusVector && mpRotationMatrix; };
     void setRadiusVector(VectorDataObject const* pRadiusVector) { mpRadiusVector = pRadiusVector; }
     void setRotationMatrix(MatrixDataObject const* pRotationMatrix) { mpRotationMatrix = pRotationMatrix; }
     static quint32 numberInstances() { return smNumInstances; }
-    static void setNumberInstances(quint32 numInstances) { smNumInstances = numInstances; }
     void serialize(QDataStream& stream) const override;
     void deserialize(QDataStream& stream, DataObjectGetter const& getDataObject) override;
 

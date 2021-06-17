@@ -10,7 +10,7 @@
 
 using namespace QRS::Core;
 
-quint32 AbstractRodComponent::smMaxComponentID = 0;
+DataIDType AbstractRodComponent::smMaxComponentID = 0;
 
 AbstractRodComponent::AbstractRodComponent(ComponentType componentType, QString name)
     : mComponentType(componentType)
@@ -21,7 +21,8 @@ AbstractRodComponent::AbstractRodComponent(ComponentType componentType, QString 
 
 AbstractRodComponent::~AbstractRodComponent()
 {
-
+    if (mID == smMaxComponentID)
+        --smMaxComponentID;
 }
 
 //! Serialize only a header data of a rod component
@@ -29,7 +30,18 @@ void AbstractRodComponent::serialize(QDataStream& stream) const
 {
     stream << (quint32)mComponentType;
     stream << mName;
-    stream << (quint32)mID;
+    stream << (DataIDType)mID;
+}
+
+/*!
+ * \brief Partly deserialize an abstract rod component
+ *
+ * It is assumed that a type and name have already been assigned.
+ * So, only an identifier needs to be set.
+ */
+void AbstractRodComponent::deserialize(QDataStream& stream)
+{
+    stream >> mID;
 }
 
 //! Helper function to write the identifier of a data object

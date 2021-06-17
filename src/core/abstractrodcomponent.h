@@ -32,13 +32,13 @@ public:
         kGeometry
     };
     AbstractRodComponent(ComponentType componentType, QString name);
-    virtual ~AbstractRodComponent() = 0;
+    virtual ~AbstractRodComponent();
     virtual AbstractRodComponent* clone() const = 0;
     virtual bool isDataComplete() const = 0;
     DataIDType id() const { return mID; }
     ComponentType componentType() const { return mComponentType; }
-    static quint32 maxComponentID() { return smMaxComponentID; }
-    static void setMaxComponentID(quint32 iMaxComponentID) { smMaxComponentID = iMaxComponentID; }
+    static DataIDType maxComponentID() { return smMaxComponentID; }
+    static void setMaxComponentID(DataIDType iMaxComponentID) { smMaxComponentID = iMaxComponentID; }
     virtual void serialize(QDataStream& stream) const;
     virtual void deserialize(QDataStream& stream, DataObjectGetter const& getDataObject) = 0;
     friend QDataStream& operator<<(QDataStream& stream, AbstractRodComponent const& component);
@@ -46,6 +46,7 @@ public:
 protected:
     void writeDataObjectPointer(QDataStream& stream, AbstractDataObject const* pDataObject) const;
     AbstractDataObject const* readDataObjectPointer(QDataStream& stream, DataObjectGetter const& getDataObject) const;
+    void deserialize(QDataStream& stream);
 
 protected:
     const ComponentType mComponentType;
@@ -53,7 +54,7 @@ protected:
     DataIDType mID;
 
 private:
-    static quint32 smMaxComponentID;
+    static DataIDType smMaxComponentID;
 };
 
 //! Print a rod component to a stream
