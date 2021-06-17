@@ -9,14 +9,14 @@
 
 using namespace QRS::Core;
 
-quint32 AbstractDataObject::smNumObjects = 0;
+quint32 AbstractDataObject::smMaxObjectID = 0;
 
 //! Base constructor
 AbstractDataObject::AbstractDataObject(ObjectType type, QString const& name)
     : mType(type)
     , mName(name)
 {
-    mID = ++smNumObjects;
+    mID = ++smMaxObjectID;
 }
 
 AbstractDataObject::~AbstractDataObject()

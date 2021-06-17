@@ -10,7 +10,8 @@
 
 #include <unordered_map>
 #include "abstractprojectmanager.h"
-#include "core/datatypes.h"
+#include "core/aliasdata.h"
+#include "core/aliasdataset.h"
 #include "core/hierarchytree.h"
 
 QT_BEGIN_NAMESPACE
@@ -30,7 +31,6 @@ namespace QRS
 namespace Core
 {
 class Project;
-class AbstractDataObject;
 }
 
 namespace TableModels
@@ -50,7 +50,6 @@ namespace Managers
 {
 
 class DoubleSpinBoxItemDelegate;
-using mapDataObjects = std::unordered_map<Core::DataIDType, Core::AbstractDataObject*>;
 
 //! Manager to create objects of different types: scalars, vectors, matroces and surfaces
 class DataObjectsManager : public AbstractProjectManager
@@ -61,14 +60,14 @@ public:
     explicit DataObjectsManager(Core::Project& project, QString& lastPath, QSettings& settings, QWidget* parent = nullptr);
     ~DataObjectsManager();
     void selectDataObject(int iRow);
-    mapDataObjects const& getDataObjects() { return mDataObjects; };
+    Core::DataObjects const& getDataObjects() { return mDataObjects; };
 
 public slots:
     void apply() override;
-    Core::DataIDType addScalar();
-    Core::DataIDType addVector();
-    Core::DataIDType addMatrix();
-    Core::DataIDType addSurface();
+    Core::AbstractDataObject* addScalar();
+    Core::AbstractDataObject* addVector();
+    Core::AbstractDataObject* addMatrix();
+    Core::AbstractDataObject* addSurface();
     void insertItemAfterSelected();
     void insertLeadingItemAfterSelected();
     void removeSelectedItem();
@@ -96,7 +95,7 @@ private:
     // Delegates
     DoubleSpinBoxItemDelegate* mpItemDelegate = nullptr;
     // Data
-    mapDataObjects mDataObjects;
+    Core::DataObjects mDataObjects;
     Core::HierarchyTree mHierarchyDataObjects;
     // Models
     TableModels::TableModelInterface* mpTableModelInterface = nullptr;

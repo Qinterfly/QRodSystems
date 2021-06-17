@@ -5,8 +5,8 @@
  * \brief Specification of data types used in a project
  */
 
-#ifndef DATATYPES_H
-#define DATATYPES_H
+#ifndef ALIASDATA_H
+#define ALIASDATA_H
 
 #include <QtGlobal>
 
@@ -19,4 +19,4 @@ using DataIDType = quint32;
 
 }
 
-#endif // DATATYPES_H
+#endif // ALIASDATA_H

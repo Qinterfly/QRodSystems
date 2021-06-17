@@ -9,7 +9,7 @@
 #define PROJECTHIERARCHYMODEL_H
 
 #include "models/hierarchy/abstracthierarchymodel.h"
-#include "core/datatypes.h"
+#include "core/aliasdata.h"
 #include "core/project.h"
 
 namespace QRS::HierarchyModels

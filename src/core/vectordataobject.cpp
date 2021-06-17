@@ -1,7 +1,7 @@
 /*!
  * \file
  * \author Pavel Lakiza
- * \date April 2021
+ * \date June 2021
  * \brief Implementation of the VectorDataObject class
  */
 
@@ -17,6 +17,12 @@ VectorDataObject::VectorDataObject(QString const& name)
     : AbstractDataObject(kVector, name)
 {
     ++smNumInstances;
+}
+
+//! Decrease a number of instances while being destroyed
+VectorDataObject::~VectorDataObject()
+{
+    --smNumInstances;
 }
 
 //! Insert a new item into VectorDataObject

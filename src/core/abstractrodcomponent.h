@@ -11,7 +11,7 @@
 #include <QObject>
 #include <QString>
 #include <QDataStream>
-#include "datatypes.h"
+#include "aliasdata.h"
 
 namespace QRS::Core
 {
@@ -37,8 +37,8 @@ public:
     virtual bool isDataComplete() const = 0;
     DataIDType id() const { return mID; }
     ComponentType componentType() const { return mComponentType; }
-    static quint32 numberComponents() { return smNumComponents; }
-    static void setNumberComponents(quint32 numComponents) { smNumComponents = numComponents; }
+    static quint32 maxComponentID() { return smMaxComponentID; }
+    static void setMaxComponentID(quint32 iMaxComponentID) { smMaxComponentID = iMaxComponentID; }
     virtual void serialize(QDataStream& stream) const;
     virtual void deserialize(QDataStream& stream, DataObjectGetter const& getDataObject) = 0;
     friend QDataStream& operator<<(QDataStream& stream, AbstractRodComponent const& component);
@@ -53,7 +53,7 @@ protected:
     DataIDType mID;
 
 private:
-    static quint32 smNumComponents;
+    static quint32 smMaxComponentID;
 };
 
 //! Print a rod component to a stream

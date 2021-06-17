@@ -15,6 +15,9 @@
 
 #include "rodcomponentsmanager.h"
 #include "core/project.h"
+#include "core/vectordataobject.h"
+#include "core/matrixdataobject.h"
+#include "core/geometryrodcomponent.h"
 #include "managers/geometrycomponentwidget.h"
 
 using ads::CDockManager;
@@ -25,12 +28,14 @@ using namespace QRS::Core;
 
 RodComponentsManager::RodComponentsManager(Project& project, QString& lastPath, QSettings& settings, QWidget* parent)
     : AbstractProjectManager(project, lastPath, settings, kRodComponents, "RodComponentsManager", parent)
+    , mDataObjects(project.getDataObjects())
 {
     setWindowTitle("Rod Components Manager[*]");
     setGeometry(0, 0, 700, 700);
     setWindowModified(false);
     createContent();
     restoreSettings();
+    retrieveRodComponents();
 }
 
 RodComponentsManager::~RodComponentsManager()
@@ -125,10 +130,29 @@ void RodComponentsManager::apply()
     qInfo() << tr("Rod components were modified by means of the manager");
 }
 
+AbstractRodComponent* RodComponentsManager::addGeometry()
+{
+    static QString const kGeometryName = "Geometry ";
+    QString name = kGeometryName + QString::number(GeometryRodComponent::numberInstances() + 1);
+    AbstractRodComponent* pComponent = new GeometryRodComponent(name);
+    emplaceRodComponent(pComponent);
+    return pComponent;
+}
+
 //! Make a copy of existed rod components
 void RodComponentsManager::retrieveRodComponents()
 {
     mRodComponents = mProject.cloneRodComponents();
     mHierarchyRodComponents = mProject.cloneHierarchyRodComponents();
     // TODO: Update content
+}
+
+//! Helper function to insert a rod component into the manager
+void RodComponentsManager::emplaceRodComponent(AbstractRodComponent* pComponent)
+{
+    DataIDType id = pComponent->id();
+    mRodComponents.emplace(id, pComponent);
+    mHierarchyRodComponents.appendNode(new HierarchyNode(HierarchyNode::NodeType::kObject, id));
+    // mpTreeRodComponentsModel->updateContent(); // TODO
+    setWindowModified(true);
 }

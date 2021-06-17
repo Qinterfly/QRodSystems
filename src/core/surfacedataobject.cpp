@@ -1,7 +1,7 @@
 /*!
  * \file
  * \author Pavel Lakiza
- * \date April 2021
+ * \date June 2021
  * \brief Implementation of the SurfaceDataObject class
  */
 
@@ -18,6 +18,12 @@ SurfaceDataObject::SurfaceDataObject(QString const& name)
     ++smNumInstances;
     mLeadingItems.emplace(0.0, Array<double>());
     mLeadingItems.emplace(1.0, Array<double>());
+}
+
+//! Decrease a number of instances while being destroyed
+SurfaceDataObject::~SurfaceDataObject()
+{
+    --smNumInstances;
 }
 
 //! Insert a new item into SurfaceDataObject

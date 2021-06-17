@@ -10,13 +10,13 @@
 
 using namespace QRS::Core;
 
-quint32 AbstractRodComponent::smNumComponents = 0;
+quint32 AbstractRodComponent::smMaxComponentID = 0;
 
 AbstractRodComponent::AbstractRodComponent(ComponentType componentType, QString name)
     : mComponentType(componentType)
     , mName(name)
 {
-    mID = ++smNumComponents;
+    mID = ++smMaxComponentID;
 }
 
 AbstractRodComponent::~AbstractRodComponent()

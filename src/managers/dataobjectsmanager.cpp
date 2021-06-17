@@ -205,43 +205,43 @@ void DataObjectsManager::retrieveDataObjects()
 }
 
 //! Add a scalar object
-DataIDType DataObjectsManager::addScalar()
+AbstractDataObject* DataObjectsManager::addScalar()
 {
     static QString const kScalarName = "Scalar ";
     QString name = kScalarName + QString::number(ScalarDataObject::numberInstances() + 1);
     AbstractDataObject* pObject = new ScalarDataObject(name);
     emplaceDataObject(pObject);
-    return pObject->id();
+    return pObject;
 }
 
 //! Add a vector object
-DataIDType DataObjectsManager::addVector()
+AbstractDataObject* DataObjectsManager::addVector()
 {
     static QString const kVectorName = "Vector ";
     QString name = kVectorName + QString::number(VectorDataObject::numberInstances() + 1);
     AbstractDataObject* pObject = new VectorDataObject(name);
     emplaceDataObject(pObject);
-    return pObject->id();
+    return pObject;
 }
 
 //! Add a matrix object
-DataIDType DataObjectsManager::addMatrix()
+AbstractDataObject* DataObjectsManager::addMatrix()
 {
     static QString const kMatrixName = "Matrix ";
     QString name = kMatrixName + QString::number(MatrixDataObject::numberInstances() + 1);
     AbstractDataObject* pObject = new MatrixDataObject(name);
     emplaceDataObject(pObject);
-    return pObject->id();
+    return pObject;
 }
 
 //! Add a surface object
-DataIDType DataObjectsManager::addSurface()
+AbstractDataObject* DataObjectsManager::addSurface()
 {
     static QString const kSurfaceName = "Surface ";
     QString name = kSurfaceName + QString::number(SurfaceDataObject::numberInstances() + 1);
     AbstractDataObject* pObject = new SurfaceDataObject(name);
     emplaceDataObject(pObject);
-    return pObject->id();
+    return pObject;
 }
 
 //! Select a data object by row index
@@ -371,26 +371,26 @@ void DataObjectsManager::importDataObject(QString const& path, QString const& fi
     stream.readLine();
     stream >> numDataObjects;
     stream.readLine();
-    DataIDType id;
     for (quint32 iDataObject = 0; iDataObject != numDataObjects; ++iDataObject)
     {
+        AbstractDataObject* pDataObject = nullptr;
         switch (type)
         {
         case AbstractDataObject::ObjectType::kScalar:
-            id = addScalar();
+            pDataObject = addScalar();
             break;
         case AbstractDataObject::ObjectType::kVector:
-            id = addVector();
+            pDataObject = addVector();
             break;
         case AbstractDataObject::ObjectType::kMatrix:
-            id = addMatrix();
+            pDataObject = addMatrix();
             break;
         case AbstractDataObject::ObjectType::kSurface:
-            id = addSurface();
+            pDataObject = addSurface();
             break;
         }
-        AbstractDataObject* pDataObject = mDataObjects[id];
-        pDataObject->import(stream);
+        if (pDataObject)
+            pDataObject->import(stream);
     }
     pFile->close();
 }

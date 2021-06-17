@@ -2,7 +2,8 @@ INCLUDEPATH += $$PWD
 
 HEADERS += \
     $$PWD/abstractrodcomponent.h \
-    $$PWD/datatypes.h \
+    $$PWD/aliasdata.h \
+    $$PWD/aliasdataset.h \
     $$PWD/array.h \
     $$PWD/geometryrodcomponent.h \
     $$PWD/project.h \

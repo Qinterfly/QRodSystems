@@ -9,7 +9,7 @@
 #define RODCOMPONENTSMANAGER_H
 
 #include "managers/abstractprojectmanager.h"
-#include "core/datatypes.h"
+#include "core/aliasdataset.h"
 #include "core/hierarchytree.h"
 
 QT_BEGIN_NAMESPACE
@@ -32,8 +32,6 @@ class AbstractRodComponent;
 namespace Managers
 {
 
-using mapRodComponents = std::unordered_map<Core::DataIDType, Core::AbstractRodComponent*>;
-
 //! Manager to create rod components, such as a geometry, cross section and force
 class RodComponentsManager : public AbstractProjectManager
 {
@@ -45,6 +43,7 @@ public:
 
 public slots:
     void apply() override;
+    Core::AbstractRodComponent* addGeometry();
 
 private:
     // Content
@@ -53,6 +52,8 @@ private:
     void retrieveRodComponents();
     ads::CDockWidget* createHierarchyWidget();
     ads::CDockWidget* createComponentsDockWidget();
+    // Helpers
+    void emplaceRodComponent(Core::AbstractRodComponent* pComponent);
 
 private:
     // Widgets
@@ -60,7 +61,8 @@ private:
     QTreeView* mpTreeRodComponents;
     // Data
     Core::HierarchyTree mHierarchyRodComponents;
-    mapRodComponents mRodComponents;
+    Core::RodComponents mRodComponents;
+    Core::DataObjects const& mDataObjects;
 };
 
 }

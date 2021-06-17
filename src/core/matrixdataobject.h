@@ -18,7 +18,7 @@ class MatrixDataObject : public AbstractDataObject
 {
 public:
     MatrixDataObject(QString const& name);
-    ~MatrixDataObject() {};
+    ~MatrixDataObject();
     AbstractDataObject* clone() const override;
     DataItemType& addItem(DataValueType key) override;
     static quint32 numberInstances() { return smNumInstances; }

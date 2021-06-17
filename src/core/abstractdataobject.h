@@ -13,7 +13,7 @@
 #include <QDataStream>
 #include <unordered_map>
 #include "array.h"
-#include "datatypes.h"
+#include "aliasdata.h"
 
 namespace QRS::Core
 {
@@ -48,8 +48,8 @@ public:
     ObjectType type() const { return mType; }
     QString const& name() const { return mName; }
     void setName(QString const& name) { mName = name; }
-    static quint32 numberObjects() { return smNumObjects; }
-    static void setNumberObjects(quint32 numObjects) { smNumObjects = numObjects; }
+    static quint32 maxObjectID() { return smMaxObjectID; }
+    static void setMaxObjectID(quint32 iMaxObjectID) { smMaxObjectID = iMaxObjectID; }
     virtual void serialize(QDataStream& stream) const;
     virtual void deserialize(QDataStream& stream);
     friend QDataStream& operator<<(QDataStream& stream, AbstractDataObject const& obj);
@@ -62,7 +62,7 @@ protected:
     DataHolder mItems;
 
 private:
-    static quint32 smNumObjects;
+    static quint32 smMaxObjectID;
 };
 
 //! Print a data object to a stream

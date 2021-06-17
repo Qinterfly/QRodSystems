@@ -18,7 +18,7 @@ class SurfaceDataObject : public AbstractDataObject
 {
 public:
     SurfaceDataObject(QString const& name);
-    ~SurfaceDataObject() {};
+    ~SurfaceDataObject();
     AbstractDataObject* clone() const override;
     DataItemType& addItem(DataValueType key) override;
     DataKeyType addLeadingItem(DataValueType key);

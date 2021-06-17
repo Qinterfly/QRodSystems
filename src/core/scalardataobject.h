@@ -18,7 +18,7 @@ class ScalarDataObject : public AbstractDataObject
 {
 public:
     ScalarDataObject(QString const& name);
-    ~ScalarDataObject() {};
+    ~ScalarDataObject();
     AbstractDataObject* clone() const override;
     DataItemType& addItem(DataValueType key) override;
     static quint32 numberInstances() { return smNumInstances; }

@@ -1,7 +1,7 @@
 /*!
  * \file
  * \author Pavel Lakiza
- * \date April 2021
+ * \date June 2021
  * \brief Implementation of the MatrixDataObject class
  */
 
@@ -17,6 +17,12 @@ MatrixDataObject::MatrixDataObject(QString const& name)
     : AbstractDataObject(kMatrix, name)
 {
     ++smNumInstances;
+}
+
+//! Decrease a number of instances while being destroyed
+MatrixDataObject::~MatrixDataObject()
+{
+    --smNumInstances;
 }
 
 //! Insert a new item into MatrixDataObject

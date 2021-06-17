@@ -9,10 +9,10 @@
 #define PROJECT_H
 
 #include <QObject>
-#include <unordered_map>
-#include "abstractdataobject.h"
+#include "aliasdataset.h"
 #include "array.h"
 #include "hierarchytree.h"
+#include "abstractdataobject.h"
 #include "abstractrodcomponent.h"
 
 QT_BEGIN_NAMESPACE
@@ -26,9 +26,6 @@ class ProjectHierarchyModel;
 
 namespace QRS::Core
 {
-
-using DataObjects = std::unordered_map<DataIDType, AbstractDataObject*>;
-using RodComponents = std::unordered_map<DataIDType, AbstractRodComponent*>;
 
 //! Project class to interact with a created system of rods
 class Project : public QObject
@@ -48,6 +45,7 @@ public:
     void setDataObjects(DataObjects dataObjects, HierarchyTree const& hierarchyDataObjects);
     DataObjects cloneDataObjects() const;
     HierarchyTree cloneHierarchyDataObjects() const { return mHierarchyDataObjects.clone(); }
+    DataObjects const& getDataObjects() const { return mDataObjects; }
     // Rod components
     DataIDType numberRodComponents() const { return mRodComponents.size(); }
     AbstractRodComponent* addRodComponent(AbstractRodComponent::ComponentType type);

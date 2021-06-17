@@ -8,9 +8,8 @@
 #ifndef DATAOBJECTSHIERARCHYITEM_H
 #define DATAOBJECTSHIERARCHYITEM_H
 
-#include <unordered_map>
+#include "core/aliasdataset.h"
 #include "models/hierarchy/abstracthierarchyitem.h"
-#include "core/datatypes.h"
 
 namespace QRS
 {
@@ -29,8 +28,6 @@ class DataObjectsPropertiesModel;
 namespace HierarchyModels
 {
 
-using DataObjects = std::unordered_map<Core::DataIDType, Core::AbstractDataObject*>;
-
 //! Item to represent a hierarchy of data objects
 class DataObjectsHierarchyItem : public AbstractHierarchyItem
 {
@@ -39,14 +36,14 @@ class DataObjectsHierarchyItem : public AbstractHierarchyItem
     friend class PropertiesModels::DataObjectsPropertiesModel;
 
 public:
-    DataObjectsHierarchyItem(DataObjects& dataObjects, Core::HierarchyTree& hierarchyDataObjects,
+    DataObjectsHierarchyItem(Core::DataObjects& dataObjects, Core::HierarchyTree& hierarchyDataObjects,
                              QString const& text = "Root", QIcon const& icon = QIcon());
     DataObjectsHierarchyItem(Core::HierarchyNode* pNode, Core::AbstractDataObject* pDataObject);
     DataObjectsHierarchyItem(Core::HierarchyNode* pNode);
     int type() const override { return AbstractHierarchyItem::ItemType::kDataObjects; }
 
 private:
-    void appendItems(DataObjects& dataObjects, Core::HierarchyNode* pNode);
+    void appendItems(Core::DataObjects& dataObjects, Core::HierarchyNode* pNode);
 
 private:
     Core::AbstractDataObject* mpDataObject = nullptr;

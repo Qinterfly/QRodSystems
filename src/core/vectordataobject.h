@@ -18,7 +18,7 @@ class VectorDataObject : public AbstractDataObject
 {
 public:
     VectorDataObject(QString const& name);
-    ~VectorDataObject() {};
+    ~VectorDataObject();
     AbstractDataObject* clone() const override;
     DataItemType& addItem(DataValueType key) override;
     static quint32 numberInstances() { return smNumInstances; }

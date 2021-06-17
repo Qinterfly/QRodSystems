@@ -10,11 +10,11 @@
 #include <QtWidgets>
 #include "core/project.h"
 #include "core/utilities.h"
-#include "core/abstractdataobject.h"
 #include "core/scalardataobject.h"
 #include "core/vectordataobject.h"
 #include "core/matrixdataobject.h"
 #include "core/surfacedataobject.h"
+#include "core/geometryrodcomponent.h"
 #include "managers/dataobjectsmanager.h"
 #include "managers/rodcomponentsmanager.h"
 
@@ -54,13 +54,12 @@ void TestManagers::initTestCase()
     fontSize = 10;
 #endif
     qApp->setFont(QFont("Source Sans Pro", fontSize));
-    mpDataObjectsManager = new DataObjectsManager(*mpProject, mLastPath, *mpSettings);
-    mpRodComponentsManager = new RodComponentsManager(*mpProject, mLastPath, *mpSettings);
 }
 
 //! Test how the data objects manager handles with data
 void TestManagers::testDataObjectsManager()
 {
+    mpDataObjectsManager = new DataObjectsManager(*mpProject, mLastPath, *mpSettings);
     // Creating data objects of different types
     mpDataObjectsManager->addScalar();
     mpDataObjectsManager->addVector();
@@ -110,12 +109,15 @@ void TestManagers::testDataObjectsManager()
     pScalar->addItem(endValue); // Already existed key
     // Selecting
     mpDataObjectsManager->selectDataObject(3);
+    mpDataObjectsManager->apply();
 }
 
 //! Test how to create components of a rod
 void TestManagers::testRodComponentsManager()
 {
-    // TODO
+    mpRodComponentsManager = new RodComponentsManager(*mpProject, mLastPath, *mpSettings);
+    // Add a geometrical component
+    GeometryRodComponent* pGeometry = (GeometryRodComponent*)mpRodComponentsManager->addGeometry();
 }
 
 //! Cleanup
