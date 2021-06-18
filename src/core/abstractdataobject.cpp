@@ -21,8 +21,7 @@ AbstractDataObject::AbstractDataObject(ObjectType type, QString const& name)
 
 AbstractDataObject::~AbstractDataObject()
 {
-    if (mID == smMaxObjectID)
-        --smMaxObjectID;
+
 }
 
 //! Modify a key existed

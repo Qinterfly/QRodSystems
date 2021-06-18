@@ -20,6 +20,7 @@ using namespace QRS::Core;
 
 AbstractDataObject* createDataObject(AbstractDataObject::ObjectType type);
 AbstractRodComponent* createRodComponent(AbstractRodComponent::ComponentType type);
+AbstractDataObject const* substituteDataObject(DataObjects const& dataObjects, AbstractDataObject const* pObject);
 
 //! Construct a clean project with the user specified name
 Project::Project(QString const& name)
@@ -53,6 +54,20 @@ AbstractDataObject* Project::addDataObject(AbstractDataObject::ObjectType type)
 //! Substitute current data objects with new ones
 void Project::setDataObjects(DataObjects const& dataObjects, HierarchyTree const& hierarchyDataObjects)
 {
+    // Resolve references of rod components
+    for (auto& item : mRodComponents)
+    {
+        AbstractRodComponent* pComponent = item.second;
+        switch (pComponent->componentType())
+        {
+        case AbstractRodComponent::kGeometry:
+            GeometryRodComponent* pGeometry = (GeometryRodComponent*)pComponent;
+            pGeometry->setRadiusVector((VectorDataObject const*)substituteDataObject(dataObjects, pGeometry->radiusVector()));
+            pGeometry->setRotationMatrix((MatrixDataObject const*)substituteDataObject(dataObjects, pGeometry->rotationMatrix()));
+            break;
+        }
+    }
+    // Substitute data objects
     clearDataMap(mDataObjects);
     AbstractDataObject* pDataObject;
     for (auto& item : dataObjects)
@@ -61,7 +76,7 @@ void Project::setDataObjects(DataObjects const& dataObjects, HierarchyTree const
         mDataObjects.emplace(pDataObject->id(), pDataObject->clone());
     }
     mHierarchyDataObjects = hierarchyDataObjects;
-    emit dataObjectsChanged();
+    emit dataChanged();
     setModified(true);
 }
 
@@ -89,6 +104,21 @@ AbstractRodComponent* Project::addRodComponent(AbstractRodComponent::ComponentTy
         setModified(true);
     }
     return pComponent;
+}
+
+//! Substitute current rod components with new ones
+void Project::setRodComponents(RodComponents const& rodComponents, HierarchyTree const& hierarchyRodComponents)
+{
+    clearDataMap(mRodComponents);
+    AbstractRodComponent* pComponent;
+    for (auto& item : rodComponents)
+    {
+        pComponent = item.second;
+        mRodComponents.emplace(pComponent->id(), pComponent->clone());
+    }
+    mHierarchyRodComponents = hierarchyRodComponents;
+    emit dataChanged();
+    setModified(true);
 }
 
 //! Clone rod components
@@ -160,3 +190,18 @@ AbstractRodComponent* createRodComponent(AbstractRodComponent::ComponentType typ
     }
     return pComponent;
 }
+
+//! Substitute a data object with its updated version
+AbstractDataObject const* substituteDataObject(DataObjects const& dataObjects, AbstractDataObject const* pDataObject)
+{
+    if (!pDataObject)
+        return nullptr;
+    DataIDType id = pDataObject->id();
+    if (dataObjects.contains(id))
+    {
+        AbstractDataObject const* pFoundDataObject = dataObjects.at(id);
+        if (pFoundDataObject->type() == pDataObject->type())
+            return pFoundDataObject;
+    }
+    return nullptr;
+};

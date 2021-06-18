@@ -24,15 +24,13 @@ using DataObjectGetter = std::function<AbstractDataObject const*(DataIDType id)>
 //! Component of the rod structure which characterizes one of its properties
 class AbstractRodComponent : public QObject
 {
-    Q_OBJECT
-
 public:
     enum ComponentType
     {
         kGeometry
     };
     AbstractRodComponent(ComponentType componentType, QString name);
-    virtual ~AbstractRodComponent();
+    virtual ~AbstractRodComponent() = 0;
     virtual AbstractRodComponent* clone() const = 0;
     virtual bool isDataComplete() const = 0;
     DataIDType id() const { return mID; }

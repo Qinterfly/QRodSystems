@@ -24,8 +24,6 @@ using DataHolder = std::map<DataKeyType, DataItemType>;
 //! Data object which is designied in the way to be represented in a table easily
 class AbstractDataObject : public QObject
 {
-    Q_OBJECT
-
 public:
     enum ObjectType
     {
@@ -35,7 +33,7 @@ public:
         kSurface
     };
     AbstractDataObject(ObjectType type, QString const& name);
-    virtual ~AbstractDataObject();
+    virtual ~AbstractDataObject() = 0;
     virtual AbstractDataObject* clone() const = 0;
     virtual DataItemType& addItem(DataKeyType key) = 0;
     void removeItem(DataValueType key);

@@ -21,8 +21,7 @@ AbstractRodComponent::AbstractRodComponent(ComponentType componentType, QString 
 
 AbstractRodComponent::~AbstractRodComponent()
 {
-    if (mID == smMaxComponentID)
-        --smMaxComponentID;
+
 }
 
 //! Serialize only a header data of a rod component

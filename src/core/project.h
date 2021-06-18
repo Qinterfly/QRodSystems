@@ -49,6 +49,7 @@ public:
     // Rod components
     DataIDType numberRodComponents() const { return mRodComponents.size(); }
     AbstractRodComponent* addRodComponent(AbstractRodComponent::ComponentType type);
+    void setRodComponents(RodComponents const& rodComponents, HierarchyTree const& hierarchyRodComponents);
     RodComponents cloneRodComponents() const;
     HierarchyTree cloneHierarchyRodComponents() const { return mHierarchyRodComponents.clone(); }
     // Getters and setters
@@ -58,7 +59,7 @@ public:
     void importDataObjects(QString const& path, QString const& fileName);
 
 signals:
-    void dataObjectsChanged();
+    void dataChanged();
     void modified(bool modifiedState);
 
 public slots:
