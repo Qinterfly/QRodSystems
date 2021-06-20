@@ -8,6 +8,7 @@
 #include <QTreeView>
 #include "projecthierarchymodel.h"
 #include "dataobjectshierarchyitem.h"
+#include "rodcomponentshierarchyitem.h"
 
 using namespace QRS::HierarchyModels;
 using namespace QRS::Core;
@@ -33,17 +34,9 @@ void ProjectHierarchyModel::updateContent()
     if (!mpProject)
         return;
     QStandardItem* pRootItem = invisibleRootItem();
-    // Moving groups of objects is not allowed
     pRootItem->setFlags(Qt::ItemIsEnabled);
-    // Add a representative of data objects
-    DataObjects& dataObjects = mpProject->mDataObjects;
-    HierarchyTree& hierarchyDataObjects = mpProject->mHierarchyDataObjects;
-    QString text = "Data Objects";
-    QIcon icon(":/icons/database.svg");
-    DataObjectsHierarchyItem* pHierachyDataObjects = new DataObjectsHierarchyItem(dataObjects, hierarchyDataObjects, text, icon);
-    pHierachyDataObjects->setFlags(Qt::ItemIsEnabled | Qt::ItemIsDropEnabled | Qt::ItemIsDragEnabled);
-    // Insert all the base items linked to each category
-    pRootItem->appendRow(pHierachyDataObjects);
+    pRootItem->appendRow(retrieveDataObjectsItem());
+    pRootItem->appendRow(retrieveRodComponentsItem());
 }
 
 //! Clear all the items
@@ -81,3 +74,26 @@ void ProjectHierarchyModel::validateItemSelection()
     }
 }
 
+//! Retrieve a representative of data objects
+DataObjectsHierarchyItem* ProjectHierarchyModel::retrieveDataObjectsItem()
+{
+    DataObjects& dataObjects = mpProject->mDataObjects;
+    HierarchyTree& hierarchyDataObjects = mpProject->mHierarchyDataObjects;
+    QString text = "Data Objects";
+    QIcon icon(":/icons/database.svg");
+    DataObjectsHierarchyItem* pItem = new DataObjectsHierarchyItem(dataObjects, hierarchyDataObjects, text, icon);
+    pItem->setFlags(Qt::ItemIsEnabled | Qt::ItemIsDropEnabled | Qt::ItemIsDragEnabled);
+    return pItem;
+}
+
+//! Retrieve a representative of rod components
+RodComponentsHierarchyItem* ProjectHierarchyModel::retrieveRodComponentsItem()
+{
+    RodComponents& rodComponents = mpProject->mRodComponents;
+    HierarchyTree& hierarchyRodComponents = mpProject->mHierarchyRodComponents;
+    QString text = "Rod Components";
+    QIcon icon(":/icons/capacitor.svg");
+    RodComponentsHierarchyItem* pItem = new RodComponentsHierarchyItem(rodComponents, hierarchyRodComponents, text, icon);
+    pItem->setFlags(Qt::ItemIsEnabled | Qt::ItemIsDropEnabled | Qt::ItemIsDragEnabled);
+    return pItem;
+}

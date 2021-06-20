@@ -15,6 +15,9 @@
 namespace QRS::HierarchyModels
 {
 
+class DataObjectsHierarchyItem;
+class RodComponentsHierarchyItem;
+
 //! Project hierarchy representative
 class ProjectHierarchyModel : public AbstractHierarchyModel
 {
@@ -31,6 +34,10 @@ signals:
 
 public slots:
     void validateItemSelection();
+
+private:
+    DataObjectsHierarchyItem* retrieveDataObjectsItem();
+    RodComponentsHierarchyItem* retrieveRodComponentsItem();
 
 private:
     Core::Project* mpProject = nullptr;

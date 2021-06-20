@@ -29,6 +29,11 @@ namespace Core
 class AbstractRodComponent;
 }
 
+namespace HierarchyModels
+{
+class RodComponentsHierarchyModel;
+}
+
 namespace Managers
 {
 
@@ -63,6 +68,8 @@ private:
     Core::HierarchyTree mHierarchyRodComponents;
     Core::RodComponents mRodComponents;
     Core::DataObjects const& mDataObjects;
+    // Models
+    HierarchyModels::RodComponentsHierarchyModel* mpTreeRodComponentsModel;
 };
 
 }

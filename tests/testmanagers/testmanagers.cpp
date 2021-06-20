@@ -100,6 +100,10 @@ void TestManagers::testRodComponentsManager()
     GeometryRodComponent* pGeometry = (GeometryRodComponent*)mpRodComponentsManager->addGeometry();
     pGeometry->setRadiusVector(pVector);
     pGeometry->setRotationMatrix(pMatrix);
+    QVERIFY(pGeometry->isDataComplete());
+    // User interaction
+    mpRodComponentsManager->show();
+    qApp->exec();
 }
 
 //! Cleanup

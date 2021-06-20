@@ -8,8 +8,8 @@
 #ifndef DATAOBJECTSHIERARCHYITEM_H
 #define DATAOBJECTSHIERARCHYITEM_H
 
-#include "core/aliasdataset.h"
 #include "models/hierarchy/abstracthierarchyitem.h"
+#include "core/aliasdataset.h"
 
 namespace QRS
 {

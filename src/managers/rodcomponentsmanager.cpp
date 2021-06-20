@@ -18,13 +18,15 @@
 #include "core/vectordataobject.h"
 #include "core/matrixdataobject.h"
 #include "core/geometryrodcomponent.h"
+#include "models/hierarchy/rodcomponentshierarchymodel.h"
 #include "managers/geometrycomponentwidget.h"
 
 using ads::CDockManager;
 using ads::CDockWidget;
 using ads::CDockAreaWidget;
-using namespace QRS::Managers;
 using namespace QRS::Core;
+using namespace QRS::Managers;
+using namespace QRS::HierarchyModels;
 
 RodComponentsManager::RodComponentsManager(Project& project, QString& lastPath, QSettings& settings, QWidget* parent)
     : AbstractProjectManager(project, lastPath, settings, kRodComponents, "RodComponentsManager", parent)
@@ -77,6 +79,9 @@ CDockWidget* RodComponentsManager::createHierarchyWidget()
     mpTreeRodComponents->setHeaderHidden(true);
     mpTreeRodComponents->setAcceptDrops(true);
     mpTreeRodComponents->setDragEnabled(true);
+    // Hierarchy model
+    mpTreeRodComponentsModel = new RodComponentsHierarchyModel(mRodComponents, mHierarchyRodComponents, mpTreeRodComponents);
+    mpTreeRodComponents->setModel(mpTreeRodComponentsModel);
     // ToolBar
     QToolBar* pToolBar = pDockWidget->createDefaultToolBar();
     pDockWidget->setToolBarIconSize(kToolBarIconSize, CDockWidget::StateDocked);
@@ -95,8 +100,6 @@ CDockWidget* RodComponentsManager::createHierarchyWidget()
     pToolBar->addSeparator();
     pAction = pToolBar->addAction(QIcon(":/icons/delete.svg"), tr("Remove"));
     pAction->setShortcut(Qt::Key_R);
-    // TODO: Hierarchy model
-    // ...
     setToolBarShortcutHints(pToolBar);
     pDockWidget->setWidget(mpTreeRodComponents);
     return pDockWidget;
@@ -125,7 +128,7 @@ QLayout* RodComponentsManager::createDialogControls()
 //! Apply all the changes made by user
 void RodComponentsManager::apply()
 {
-    // TODO: Project data substitution
+    mProject.setRodComponents(mRodComponents, mHierarchyRodComponents);
     setWindowModified(false);
     qInfo() << tr("Rod components were modified by means of the manager");
 }
@@ -144,7 +147,7 @@ void RodComponentsManager::retrieveRodComponents()
 {
     mRodComponents = mProject.cloneRodComponents();
     mHierarchyRodComponents = mProject.cloneHierarchyRodComponents();
-    // TODO: Update content
+    mpTreeRodComponentsModel->updateContent();
 }
 
 //! Helper function to insert a rod component into the manager
@@ -153,6 +156,6 @@ void RodComponentsManager::emplaceRodComponent(AbstractRodComponent* pComponent)
     DataIDType id = pComponent->id();
     mRodComponents.emplace(id, pComponent);
     mHierarchyRodComponents.appendNode(new HierarchyNode(HierarchyNode::NodeType::kObject, id));
-    // mpTreeRodComponentsModel->updateContent(); // TODO
+    mpTreeRodComponentsModel->updateContent();
     setWindowModified(true);
 }

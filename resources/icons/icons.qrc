@@ -101,5 +101,6 @@
         <file>tubes.svg</file>
         <file>force.svg</file>
         <file>clamp.svg</file>
+        <file>capacitor.svg</file>
     </qresource>
 </RCC>

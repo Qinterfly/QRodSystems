@@ -14,8 +14,9 @@ using namespace QRS::Core;
 
 QIcon getDataObjectIcon(AbstractDataObject::ObjectType type);
 
-//! Create the representer of the structure of data objects
-DataObjectsHierarchyItem::DataObjectsHierarchyItem(DataObjects& dataObjects, HierarchyTree& hierarchyDataObjects, QString const& text, QIcon const& icon)
+//! Create the representative of the structure of data objects
+DataObjectsHierarchyItem::DataObjectsHierarchyItem(DataObjects& dataObjects, HierarchyTree& hierarchyDataObjects,
+                                                   QString const& text, QIcon const& icon)
     : AbstractHierarchyItem(icon, text, hierarchyDataObjects.root())
 {
     if (!mpNode->hasChild())
@@ -23,6 +24,7 @@ DataObjectsHierarchyItem::DataObjectsHierarchyItem(DataObjects& dataObjects, Hie
     appendItems(dataObjects, mpNode->firstChild());
 }
 
+//! Create items based on the position in the tree structure
 void DataObjectsHierarchyItem::appendItems(DataObjects& dataObjects, HierarchyNode* pNode)
 {
     HierarchyNode* pNextNode;
@@ -67,10 +69,10 @@ DataObjectsHierarchyItem::DataObjectsHierarchyItem(HierarchyNode* pNode)
     setFlags(flags() | Qt::ItemIsEditable);
 }
 
-//! Helper function to assign appropriate data object icon
+//! Helper function to assign an appropriate data object icon
 QIcon getDataObjectIcon(AbstractDataObject::ObjectType type)
 {
-    switch(type)
+    switch (type)
     {
     case AbstractDataObject::ObjectType::kScalar:
         return QIcon(":/icons/letter-s.svg");

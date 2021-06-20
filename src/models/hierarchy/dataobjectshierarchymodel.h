@@ -9,7 +9,7 @@
 #define DATAOBJECTSHIERARCHYMODEL_H
 
 #include "models/hierarchy/abstracthierarchymodel.h"
-#include "dataobjectshierarchyitem.h"
+#include "core/aliasdataset.h"
 
 namespace QRS
 {
@@ -17,7 +17,6 @@ namespace QRS
 namespace Core
 {
 class HierarchyTree;
-class AbstractDataObject;
 }
 
 namespace HierarchyModels

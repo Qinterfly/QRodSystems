@@ -35,6 +35,7 @@ public:
     virtual bool isDataComplete() const = 0;
     DataIDType id() const { return mID; }
     ComponentType componentType() const { return mComponentType; }
+    QString const& name() const { return mName; }
     static DataIDType maxComponentID() { return smMaxComponentID; }
     static void setMaxComponentID(DataIDType iMaxComponentID) { smMaxComponentID = iMaxComponentID; }
     virtual void serialize(QDataStream& stream) const;

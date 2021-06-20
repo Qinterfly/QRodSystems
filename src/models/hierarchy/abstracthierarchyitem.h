@@ -17,7 +17,6 @@ namespace Core
 {
 class HierarchyNode;
 class HierarchyTree;
-class AbstractDataObject;
 }
 
 namespace HierarchyModels
@@ -31,7 +30,8 @@ class AbstractHierarchyItem : public QStandardItem
 public:
     enum ItemType
     {
-        kDataObjects = QStandardItem::UserType
+        kDataObjects = QStandardItem::UserType,
+        kRodComponents
     };
     AbstractHierarchyItem(QIcon const& icon, QString const& text, Core::HierarchyNode* pNode);
     virtual ~AbstractHierarchyItem() = 0;

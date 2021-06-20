@@ -432,9 +432,14 @@ void MainWindow::representHierarchyProperties(QVector<AbstractHierarchyItem*> it
     switch (itemType)
     {
     case AbstractHierarchyItem::ItemType::kDataObjects:
+    {
         DataObjectsPropertiesModel* pModel = new DataObjectsPropertiesModel(mpPropertiesWidget, items);
         connect(pModel, &DataObjectsPropertiesModel::propertyChanged, mpProject, &Project::setModified);
         mpPropertiesWidget->setModel(pModel);
+        break;
+    }
+    case AbstractHierarchyItem::ItemType::kRodComponents:
+        // TODO
         break;
     }
 }
