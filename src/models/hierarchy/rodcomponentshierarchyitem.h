@@ -20,6 +20,8 @@ namespace HierarchyModels
 //! Item to represent a hierarchy of rod components
 class RodComponentsHierarchyItem : public AbstractHierarchyItem
 {
+    friend class RodComponentsHierarchyModel;
+
 public:
     RodComponentsHierarchyItem(Core::RodComponents& rodComponents, Core::HierarchyTree& hierarchyRodComponents,
                                QString const& text = "Root", QIcon const& icon = QIcon());

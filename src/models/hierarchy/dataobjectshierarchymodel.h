@@ -35,10 +35,6 @@ public:
     bool isEmpty() const;
     void selectItem(int iRow);
 
-signals:
-    void dataObjectSelected(Core::DataIDType id);
-    void selectionCleared();
-
 public slots:
     void retrieveSelectedDataObject();
     void removeSelectedItems();

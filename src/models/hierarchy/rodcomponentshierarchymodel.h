@@ -27,6 +27,13 @@ public:
     void updateContent() override;
     void clearContent() override;
     bool isEmpty() const;
+    void selectItem(int iRow);
+
+public slots:
+    void retrieveSelectedRodComponent();
+
+private slots:
+    void renameRodComponent(QStandardItem* pStandardItem);
 
 private:
     Core::RodComponents& mRodComponents;

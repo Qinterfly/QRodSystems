@@ -97,6 +97,7 @@ void TestManagers::testRodComponentsManager()
     VectorDataObject* pVector = (VectorDataObject*)mpProject->addDataObject(AbstractDataObject::kVector);
     MatrixDataObject* pMatrix = (MatrixDataObject*)mpProject->addDataObject(AbstractDataObject::kMatrix);
     // Add a geometrical component
+    mpRodComponentsManager->addGeometry();
     GeometryRodComponent* pGeometry = (GeometryRodComponent*)mpRodComponentsManager->addGeometry();
     pGeometry->setRadiusVector(pVector);
     pGeometry->setRotationMatrix(pMatrix);

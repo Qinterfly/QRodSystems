@@ -21,6 +21,7 @@ RodComponentsHierarchyModel::RodComponentsHierarchyModel(RodComponents& rodCompo
     , mRodComponents(rodComponents)
     , mHierarchyRodComponents(hierarchyRodComponents)
 {
+    connect(this, &QStandardItemModel::itemChanged, this, &RodComponentsHierarchyModel::renameRodComponent);
     RodComponentsHierarchyModel::updateContent();
 }
 
@@ -48,4 +49,55 @@ void RodComponentsHierarchyModel::clearContent()
 inline bool RodComponentsHierarchyModel::isEmpty() const
 {
     return mRodComponents.size() == 0 || mHierarchyRodComponents.size() <= 1;
+}
+
+//! Rename a rod component after editing
+void RodComponentsHierarchyModel::renameRodComponent(QStandardItem* pStandardItem)
+{
+    RodComponentsHierarchyItem* pItem = (RodComponentsHierarchyItem*)pStandardItem;
+    QString newName = pItem->data(Qt::DisplayRole).toString();
+    if (pItem->mpRodComponent)
+        pItem->mpRodComponent->setName(newName);
+    else if (pItem->mpNode->type() == HierarchyNode::NodeType::kDirectory)
+        pItem->mpNode->value() = newName;
+    emit dataModified(true);
+}
+
+//! Select an item by row index
+void RodComponentsHierarchyModel::selectItem(int iRow)
+{
+    if (iRow > invisibleRootItem()->rowCount())
+        return;
+    RodComponentsHierarchyItem* pItem = (RodComponentsHierarchyItem*)invisibleRootItem()->child(iRow);
+    QModelIndex const& selectionIndex = pItem->index();
+    QTreeView* pView = (QTreeView*)parent();
+    pView->selectionModel()->select(selectionIndex, QItemSelectionModel::SelectionFlag::SelectCurrent);
+    AbstractRodComponent const* pRodComponent = pItem->mpRodComponent;
+    if (pRodComponent)
+        emit selected(pRodComponent->id());
+    else
+        emit selectionCleared();
+}
+
+//! Retrieve a selected rod component
+void RodComponentsHierarchyModel::retrieveSelectedRodComponent()
+{
+    QTreeView* pView = (QTreeView*)parent();
+    if (pView->selectionModel()->selection().isEmpty())
+    {
+        emit selectionCleared();
+        return;
+    }
+    QModelIndexList indices = pView->selectionModel()->selectedIndexes();
+    if (indices.count() > 1)
+    {
+        emit selectionCleared();
+        return;
+    }
+    RodComponentsHierarchyItem* pItem = (RodComponentsHierarchyItem*)itemFromIndex(indices[0]);
+    AbstractRodComponent* pRodComponent = pItem->mpRodComponent;
+    if (pRodComponent)
+        emit selected(pRodComponent->id());
+    else
+        emit selectionCleared();
 }

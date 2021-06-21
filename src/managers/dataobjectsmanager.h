@@ -73,8 +73,6 @@ public slots:
     void removeSelectedItem();
     void removeSelectedLeadingItem();
     void importDataObjects();
-    void representDataObject(Core::DataIDType id);
-    void clearDataObjectRepresentation();
 
 private:
     // Content
@@ -87,6 +85,9 @@ private:
     void emplaceDataObject(Core::AbstractDataObject* pDataObject);
     bool isDataTableModifiable();
     void importDataObject(QString const& path, QString const& fileName);
+    // Selection
+    void representDataObject(Core::DataIDType id);
+    void clearDataObjectRepresentation();
 
 private:
     // Widgets

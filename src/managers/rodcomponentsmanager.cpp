@@ -19,7 +19,7 @@
 #include "core/matrixdataobject.h"
 #include "core/geometryrodcomponent.h"
 #include "models/hierarchy/rodcomponentshierarchymodel.h"
-#include "managers/geometrycomponentwidget.h"
+#include "managers/geometryrodcomponentwidget.h"
 
 using ads::CDockManager;
 using ads::CDockWidget;
@@ -82,12 +82,20 @@ CDockWidget* RodComponentsManager::createHierarchyWidget()
     // Hierarchy model
     mpTreeRodComponentsModel = new RodComponentsHierarchyModel(mRodComponents, mHierarchyRodComponents, mpTreeRodComponents);
     mpTreeRodComponents->setModel(mpTreeRodComponentsModel);
+    connect(mpTreeRodComponentsModel, &RodComponentsHierarchyModel::dataModified,
+            this, &RodComponentsManager::setWindowModified);
+    connect(mpTreeRodComponentsModel, &RodComponentsHierarchyModel::selected,
+            this, &RodComponentsManager::representRodComponent);
+    connect(mpTreeRodComponents->selectionModel(), &QItemSelectionModel::selectionChanged,
+            mpTreeRodComponentsModel, &RodComponentsHierarchyModel::retrieveSelectedRodComponent);
+    connect(mpTreeRodComponentsModel, &RodComponentsHierarchyModel::selectionCleared,
+            this, &RodComponentsManager::clearRodComponentRepresentation);
     // ToolBar
     QToolBar* pToolBar = pDockWidget->createDefaultToolBar();
     pDockWidget->setToolBarIconSize(kToolBarIconSize, CDockWidget::StateDocked);
     // Actions
     QAction* pAction;
-    pAction = pToolBar->addAction(QIcon(":/icons/axis.svg"), tr("Geometry"));
+    pAction = pToolBar->addAction(QIcon(":/icons/axis.svg"), tr("Geometry"), this, &RodComponentsManager::addGeometry);
     pAction->setShortcut(QKeySequence("Ctrl+1"));
     pAction = pToolBar->addAction(QIcon(":/icons/tubes.svg"), tr("Cross section"));
     pAction->setShortcut(QKeySequence("Ctrl+2"));
@@ -125,6 +133,12 @@ QLayout* RodComponentsManager::createDialogControls()
     return pLayout;
 }
 
+//! Select a rod component by row index
+void RodComponentsManager::selectRodComponent(int iRow)
+{
+    mpTreeRodComponentsModel->selectItem(iRow);
+}
+
 //! Apply all the changes made by user
 void RodComponentsManager::apply()
 {
@@ -159,3 +173,27 @@ void RodComponentsManager::emplaceRodComponent(AbstractRodComponent* pComponent)
     mpTreeRodComponentsModel->updateContent();
     setWindowModified(true);
 }
+
+//! Represent a selected rod component according to its type
+void RodComponentsManager::representRodComponent(Core::DataIDType id)
+{
+    clearRodComponentRepresentation();
+    if (!mRodComponents.contains(id))
+        return;
+    AbstractRodComponent* pRodComponent = mRodComponents[id];
+    switch (pRodComponent->componentType())
+    {
+    case AbstractRodComponent::ComponentType::kGeometry:
+        GeometryRodComponent* pGeometry = (GeometryRodComponent*)pRodComponent;
+        mpComponentDockWidget->setWidget(new GeometryRodComponentWidget(*pGeometry, mpComponentDockWidget));
+        break;
+    }
+}
+
+//! Delete a widget to represent properties of a rod component
+void RodComponentsManager::clearRodComponentRepresentation()
+{
+    QWidget* pWidget = mpComponentDockWidget->takeWidget();
+    delete pWidget;
+}
+

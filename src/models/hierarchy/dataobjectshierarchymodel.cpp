@@ -63,6 +63,22 @@ void DataObjectsHierarchyModel::renameDataObject(QStandardItem* pStandardItem)
     emit dataModified(true);
 }
 
+//! Select an item by row index
+void DataObjectsHierarchyModel::selectItem(int iRow)
+{
+    if (iRow > invisibleRootItem()->rowCount())
+        return;
+    DataObjectsHierarchyItem* pItem = (DataObjectsHierarchyItem*)invisibleRootItem()->child(iRow);
+    QModelIndex const& selectionIndex = pItem->index();
+    QTreeView* pView = (QTreeView*)parent();
+    pView->selectionModel()->select(selectionIndex, QItemSelectionModel::SelectionFlag::SelectCurrent);
+    AbstractDataObject const* pDataObject = pItem->mpDataObject;
+    if (pDataObject)
+        emit selected(pDataObject->id());
+    else
+        emit selectionCleared();
+}
+
 //! Retrieve a selected data object
 void DataObjectsHierarchyModel::retrieveSelectedDataObject()
 {
@@ -81,23 +97,7 @@ void DataObjectsHierarchyModel::retrieveSelectedDataObject()
     DataObjectsHierarchyItem* pItem = (DataObjectsHierarchyItem*)itemFromIndex(indices[0]);
     AbstractDataObject* pDataObject = pItem->mpDataObject;
     if (pDataObject)
-        emit dataObjectSelected(pDataObject->id());
-    else
-        emit selectionCleared();
-}
-
-//! Select an item by row index
-void DataObjectsHierarchyModel::selectItem(int iRow)
-{
-    if (iRow > invisibleRootItem()->rowCount())
-        return;
-    DataObjectsHierarchyItem* pItem = (DataObjectsHierarchyItem*)invisibleRootItem()->child(iRow);
-    QModelIndex const& selectionIndex = pItem->index();
-    QTreeView* pView = (QTreeView*)parent();
-    pView->selectionModel()->select(selectionIndex, QItemSelectionModel::SelectionFlag::SelectCurrent);
-    AbstractDataObject const* pDataObject = pItem->mpDataObject;
-    if (pDataObject)
-        emit dataObjectSelected(pDataObject->id());
+        emit selected(pDataObject->id());
     else
         emit selectionCleared();
 }

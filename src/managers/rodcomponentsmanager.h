@@ -45,6 +45,7 @@ class RodComponentsManager : public AbstractProjectManager
 public:
     RodComponentsManager(Core::Project& project, QString& lastPath, QSettings& settings, QWidget* parent = nullptr);
     ~RodComponentsManager();
+    void selectRodComponent(int iRow);
 
 public slots:
     void apply() override;
@@ -59,6 +60,9 @@ private:
     ads::CDockWidget* createComponentsDockWidget();
     // Helpers
     void emplaceRodComponent(Core::AbstractRodComponent* pComponent);
+    // Selection
+    void representRodComponent(Core::DataIDType id);
+    void clearRodComponentRepresentation();
 
 private:
     // Widgets

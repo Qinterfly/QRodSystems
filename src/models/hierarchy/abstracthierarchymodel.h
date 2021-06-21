@@ -10,6 +10,7 @@
 
 #include <QStandardItemModel>
 #include "abstracthierarchyitem.h"
+#include "core/aliasdata.h"
 
 QT_BEGIN_NAMESPACE
 class QTreeView;
@@ -46,6 +47,8 @@ public:
 
 signals:
     void dataModified(bool flag);
+    void selected(Core::DataIDType id);
+    void selectionCleared();
 
 private:
     bool processDropOnItem(QDataStream& stream, int& numItems, QModelIndex const& indexParent);

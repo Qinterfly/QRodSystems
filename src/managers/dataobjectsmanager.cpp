@@ -149,7 +149,7 @@ CDockWidget* DataObjectsManager::createHierarchyWidget()
     mpTreeDataObjects->setModel(mpTreeDataObjectsModel);
     connect(mpTreeDataObjectsModel, &DataObjectsHierarchyModel::dataModified,
             this, &DataObjectsManager::setWindowModified);
-    connect(mpTreeDataObjectsModel, &DataObjectsHierarchyModel::dataObjectSelected,
+    connect(mpTreeDataObjectsModel, &DataObjectsHierarchyModel::selected,
             this, &DataObjectsManager::representDataObject);
     connect(mpTreeDataObjects->selectionModel(), &QItemSelectionModel::selectionChanged,
             mpTreeDataObjectsModel, &DataObjectsHierarchyModel::retrieveSelectedDataObject);
@@ -250,15 +250,6 @@ void DataObjectsManager::selectDataObject(int iRow)
     mpTreeDataObjectsModel->selectItem(iRow);
 }
 
-//! Clear a visual data of a data object
-void DataObjectsManager::clearDataObjectRepresentation()
-{
-    mpTableModelInterface = nullptr;
-    mpBaseTableModel->setDataObject(nullptr);
-    mpMatrixTableModel->setDataObject(nullptr);
-    mpSurfaceTableModel->setDataObject(nullptr);
-}
-
 //! Represent a selected data object according to its type
 void DataObjectsManager::representDataObject(DataIDType id)
 {
@@ -291,6 +282,15 @@ void DataObjectsManager::representDataObject(DataIDType id)
         mpTableModelInterface = mpSurfaceTableModel;
         break;
     }
+}
+
+//! Clear a visual data of a data object
+void DataObjectsManager::clearDataObjectRepresentation()
+{
+    mpTableModelInterface = nullptr;
+    mpBaseTableModel->setDataObject(nullptr);
+    mpMatrixTableModel->setDataObject(nullptr);
+    mpSurfaceTableModel->setDataObject(nullptr);
 }
 
 //! Insert a new array into the data object
