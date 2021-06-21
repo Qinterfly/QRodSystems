@@ -87,7 +87,7 @@ CDockWidget* RodComponentsManager::createHierarchyWidget()
     connect(mpTreeRodComponentsModel, &RodComponentsHierarchyModel::selected,
             this, &RodComponentsManager::representRodComponent);
     connect(mpTreeRodComponents->selectionModel(), &QItemSelectionModel::selectionChanged,
-            mpTreeRodComponentsModel, &RodComponentsHierarchyModel::retrieveSelectedRodComponent);
+            mpTreeRodComponentsModel, &RodComponentsHierarchyModel::retrieveSelectedItem);
     connect(mpTreeRodComponentsModel, &RodComponentsHierarchyModel::selectionCleared,
             this, &RodComponentsManager::clearRodComponentRepresentation);
     // ToolBar

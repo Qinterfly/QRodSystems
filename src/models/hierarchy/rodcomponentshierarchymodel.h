@@ -20,6 +20,8 @@ namespace HierarchyModels
 //! Tree model to represent and modify a hierarchy of rod components
 class RodComponentsHierarchyModel : public AbstractHierarchyModel
 {
+    Q_OBJECT
+
 public:
     RodComponentsHierarchyModel(Core::RodComponents& rodComponents, Core::HierarchyTree& hierarchyRodComponents,
                                 QTreeView* pView = nullptr);
@@ -29,11 +31,15 @@ public:
     bool isEmpty() const;
     void selectItem(int iRow);
 
+signals:
+    void selected(Core::DataIDType id);
+    void selectionCleared();
+
 public slots:
-    void retrieveSelectedRodComponent();
+    void retrieveSelectedItem();
 
 private slots:
-    void renameRodComponent(QStandardItem* pStandardItem);
+    void renameItem(QStandardItem* pStandardItem);
 
 private:
     Core::RodComponents& mRodComponents;

@@ -28,7 +28,7 @@ class GeometryRodComponentWidget : public QWidget
 
 public:
     explicit GeometryRodComponentWidget(Core::GeometryRodComponent& geometry, QWidget* parent = nullptr);
-    ~GeometryRodComponentWidget();
+    ~GeometryRodComponentWidget() = default;
 
 private:
     void createContent();

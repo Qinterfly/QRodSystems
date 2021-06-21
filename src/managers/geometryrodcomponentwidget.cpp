@@ -21,11 +21,6 @@ GeometryRodComponentWidget::GeometryRodComponentWidget(Core::GeometryRodComponen
     createContent();
 }
 
-GeometryRodComponentWidget::~GeometryRodComponentWidget()
-{
-
-}
-
 //! Construct all the widgets
 void GeometryRodComponentWidget::createContent()
 {
@@ -39,4 +34,5 @@ void GeometryRodComponentWidget::createContent()
     // Spacer
     pMainLayout->addItem(new QSpacerItem(0, 0, QSizePolicy::Minimum, QSizePolicy::Expanding), 2, 0);
     setLayout(pMainLayout);
+    setStyleSheet("background-color: white");
 }

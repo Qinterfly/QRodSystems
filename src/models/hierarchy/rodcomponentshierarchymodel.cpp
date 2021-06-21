@@ -21,7 +21,7 @@ RodComponentsHierarchyModel::RodComponentsHierarchyModel(RodComponents& rodCompo
     , mRodComponents(rodComponents)
     , mHierarchyRodComponents(hierarchyRodComponents)
 {
-    connect(this, &QStandardItemModel::itemChanged, this, &RodComponentsHierarchyModel::renameRodComponent);
+    connect(this, &QStandardItemModel::itemChanged, this, &RodComponentsHierarchyModel::renameItem);
     RodComponentsHierarchyModel::updateContent();
 }
 
@@ -52,7 +52,7 @@ inline bool RodComponentsHierarchyModel::isEmpty() const
 }
 
 //! Rename a rod component after editing
-void RodComponentsHierarchyModel::renameRodComponent(QStandardItem* pStandardItem)
+void RodComponentsHierarchyModel::renameItem(QStandardItem* pStandardItem)
 {
     RodComponentsHierarchyItem* pItem = (RodComponentsHierarchyItem*)pStandardItem;
     QString newName = pItem->data(Qt::DisplayRole).toString();
@@ -80,7 +80,7 @@ void RodComponentsHierarchyModel::selectItem(int iRow)
 }
 
 //! Retrieve a selected rod component
-void RodComponentsHierarchyModel::retrieveSelectedRodComponent()
+void RodComponentsHierarchyModel::retrieveSelectedItem()
 {
     QTreeView* pView = (QTreeView*)parent();
     if (pView->selectionModel()->selection().isEmpty())

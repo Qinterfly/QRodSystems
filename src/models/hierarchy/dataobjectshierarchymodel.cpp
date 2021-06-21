@@ -20,7 +20,7 @@ DataObjectsHierarchyModel::DataObjectsHierarchyModel(DataObjects& dataObjects, H
     , mDataObjects(dataObjects)
     , mHierarchyDataObjects(hierarchyDataObjects)
 {
-    connect(this, &QStandardItemModel::itemChanged, this, &DataObjectsHierarchyModel::renameDataObject);
+    connect(this, &QStandardItemModel::itemChanged, this, &DataObjectsHierarchyModel::renameItem);
     DataObjectsHierarchyModel::updateContent();
 }
 
@@ -52,7 +52,7 @@ inline bool DataObjectsHierarchyModel::isEmpty() const
 }
 
 //! Rename a data object after editing
-void DataObjectsHierarchyModel::renameDataObject(QStandardItem* pStandardItem)
+void DataObjectsHierarchyModel::renameItem(QStandardItem* pStandardItem)
 {
     DataObjectsHierarchyItem* pItem = (DataObjectsHierarchyItem*)pStandardItem;
     QString newName = pItem->data(Qt::DisplayRole).toString();
@@ -80,7 +80,7 @@ void DataObjectsHierarchyModel::selectItem(int iRow)
 }
 
 //! Retrieve a selected data object
-void DataObjectsHierarchyModel::retrieveSelectedDataObject()
+void DataObjectsHierarchyModel::retrieveSelectedItem()
 {
     QTreeView* pView = (QTreeView*)parent();
     if (pView->selectionModel()->selection().isEmpty())

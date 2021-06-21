@@ -152,7 +152,7 @@ CDockWidget* DataObjectsManager::createHierarchyWidget()
     connect(mpTreeDataObjectsModel, &DataObjectsHierarchyModel::selected,
             this, &DataObjectsManager::representDataObject);
     connect(mpTreeDataObjects->selectionModel(), &QItemSelectionModel::selectionChanged,
-            mpTreeDataObjectsModel, &DataObjectsHierarchyModel::retrieveSelectedDataObject);
+            mpTreeDataObjectsModel, &DataObjectsHierarchyModel::retrieveSelectedItem);
     connect(mpTreeDataObjectsModel, &DataObjectsHierarchyModel::selectionCleared,
             this, &DataObjectsManager::clearDataObjectRepresentation);
     // ToolBar

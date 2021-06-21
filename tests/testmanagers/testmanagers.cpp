@@ -93,15 +93,17 @@ void TestManagers::testDataObjectsManager()
 //! Test how to create components of a rod
 void TestManagers::testRodComponentsManager()
 {
-    // Create sample objects
+    // Creating sample objects
     VectorDataObject* pVector = (VectorDataObject*)mpProject->addDataObject(AbstractDataObject::kVector);
     MatrixDataObject* pMatrix = (MatrixDataObject*)mpProject->addDataObject(AbstractDataObject::kMatrix);
-    // Add a geometrical component
+    // Adding a geometrical component
     mpRodComponentsManager->addGeometry();
     GeometryRodComponent* pGeometry = (GeometryRodComponent*)mpRodComponentsManager->addGeometry();
     pGeometry->setRadiusVector(pVector);
     pGeometry->setRotationMatrix(pMatrix);
     QVERIFY(pGeometry->isDataComplete());
+    // Selecting
+    mpRodComponentsManager->selectRodComponent(1);
     // User interaction
     mpRodComponentsManager->show();
     qApp->exec();

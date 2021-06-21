@@ -35,12 +35,16 @@ public:
     bool isEmpty() const;
     void selectItem(int iRow);
 
+signals:
+    void selected(Core::DataIDType id);
+    void selectionCleared();
+
 public slots:
-    void retrieveSelectedDataObject();
+    void retrieveSelectedItem();
     void removeSelectedItems();
 
 private slots:
-    void renameDataObject(QStandardItem* pStandardItem);
+    void renameItem(QStandardItem* pStandardItem);
 
 private:
     Core::DataObjects& mDataObjects;
