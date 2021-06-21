@@ -17,6 +17,7 @@ GeometryRodComponentWidget::GeometryRodComponentWidget(Core::GeometryRodComponen
     : QWidget(parent)
     , mGeometry(geometry)
 {
+    setPalette(parent->palette());
     setWindowState(Qt::WindowMaximized);
     createContent();
 }
@@ -34,5 +35,4 @@ void GeometryRodComponentWidget::createContent()
     // Spacer
     pMainLayout->addItem(new QSpacerItem(0, 0, QSizePolicy::Minimum, QSizePolicy::Expanding), 2, 0);
     setLayout(pMainLayout);
-    setStyleSheet("background-color: white");
 }
