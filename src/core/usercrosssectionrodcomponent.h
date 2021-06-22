@@ -13,7 +13,7 @@
 namespace QRS::Core
 {
 
-//! Cross section with user-defined characteristics
+//! Cross section which properties are defined by user
 class UserCrossSectionRodComponent : public AbstractCrossSectionRodComponent
 {
 public:

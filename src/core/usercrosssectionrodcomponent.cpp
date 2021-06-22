@@ -15,7 +15,7 @@ UserCrossSectionRodComponent::UserCrossSectionRodComponent(QString const& name)
 
 }
 
-//! Clone a user defied cross section
+//! Clone a user-defined cross section
 AbstractRodComponent* UserCrossSectionRodComponent::clone() const
 {
     UserCrossSectionRodComponent* pCrossSection = new UserCrossSectionRodComponent(mName);
