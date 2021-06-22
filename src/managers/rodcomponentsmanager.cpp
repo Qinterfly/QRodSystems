@@ -30,13 +30,13 @@ using namespace QRS::HierarchyModels;
 
 RodComponentsManager::RodComponentsManager(Project& project, QString& lastPath, QSettings& settings, QWidget* parent)
     : AbstractProjectManager(project, lastPath, settings, kRodComponents, "RodComponentsManager", parent)
-    , mDataObjects(project.getDataObjects())
 {
     setWindowTitle("Rod Components Manager[*]");
     setGeometry(0, 0, 700, 700);
     setWindowModified(false);
     createContent();
     restoreSettings();
+    retrieveDataObjects();
     retrieveRodComponents();
 }
 
@@ -106,7 +106,8 @@ CDockWidget* RodComponentsManager::createHierarchyWidget()
     pAction = pToolBar->addAction(QIcon(":/icons/material.svg"), tr("Material"));
     pAction->setShortcut(QKeySequence("Ctrl+5"));
     pToolBar->addSeparator();
-    pAction = pToolBar->addAction(QIcon(":/icons/delete.svg"), tr("Remove"));
+    pAction = pToolBar->addAction(QIcon(":/icons/delete.svg"), tr("Remove"),
+                                  mpTreeRodComponentsModel, &RodComponentsHierarchyModel::removeSelectedItems);
     pAction->setShortcut(Qt::Key_R);
     setToolBarShortcutHints(pToolBar);
     pDockWidget->setWidget(mpTreeRodComponents);
@@ -147,6 +148,7 @@ void RodComponentsManager::apply()
     qInfo() << tr("Rod components were modified by means of the manager");
 }
 
+//! Add a geometrical component
 AbstractRodComponent* RodComponentsManager::addGeometry()
 {
     static QString const kGeometryName = "Geometry ";
@@ -154,6 +156,32 @@ AbstractRodComponent* RodComponentsManager::addGeometry()
     AbstractRodComponent* pComponent = new GeometryRodComponent(name);
     emplaceRodComponent(pComponent);
     return pComponent;
+}
+
+//! Retrieve data objects according to their type
+void RodComponentsManager::retrieveDataObjects()
+{
+    DataObjects const& dataObjects = mProject.getDataObjects();
+    for (auto const& iter : dataObjects)
+    {
+        AbstractDataObject const* pDataObject = iter.second;
+        DataIDType id = pDataObject->id();
+        switch (pDataObject->type())
+        {
+        case AbstractDataObject::ObjectType::kScalar:
+            mScalarDataObjects.emplace(id, (ScalarDataObject const*)pDataObject);
+            break;
+        case AbstractDataObject::ObjectType::kVector:
+            mVectorDataObjects.emplace(id, (VectorDataObject const*)pDataObject);
+            break;
+        case AbstractDataObject::ObjectType::kMatrix:
+            mMatrixDataObjects.emplace(id, (MatrixDataObject const*)pDataObject);
+            break;
+        case AbstractDataObject::ObjectType::kSurface:
+            mSurfaceDataObjects.emplace(id, (SurfaceDataObject const*)pDataObject);
+            break;
+        }
+    }
 }
 
 //! Make a copy of existed rod components
@@ -185,7 +213,7 @@ void RodComponentsManager::representRodComponent(Core::DataIDType id)
     {
     case AbstractRodComponent::ComponentType::kGeometry:
         GeometryRodComponent* pGeometry = (GeometryRodComponent*)pRodComponent;
-        mpComponentDockWidget->setWidget(new GeometryRodComponentWidget(*pGeometry, mpComponentDockWidget));
+        mpComponentDockWidget->setWidget(new GeometryRodComponentWidget(*pGeometry, mVectorDataObjects, mMatrixDataObjects, mpComponentDockWidget));
         break;
     }
 }

@@ -224,19 +224,17 @@ QComboBox, QFontComboBox {
     border-right-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 #c1c9cf, stop:1 #d2d8dd);
     border-bottom-color: qlineargradient(spread:pad, x1:0.5, y1:0, x2:0.5, y2:1, stop:0 #c1c9cf, stop:1 #d2d8dd);
     border-left-color: qlineargradient(spread:pad, x1:1, y1:0, x2:0, y2:0, stop:0 #c1c9cf, stop:1 #d2d8dd);
-    background-color: #f4f4f4;
+    background-color: white;
     color: #272727;
     padding-left: 5px;
-}
-
-QComboBox:editable, QComboBox:!editable, QComboBox::drop-down:editable, QComboBox:!editable:on, QComboBox::drop-down:editable:on {
-    background: white;
+    selection-background-color: palette(highlight);
+    selection-color: white;
 }
 
 QComboBox::drop-down {
     subcontrol-origin: padding;
     subcontrol-position: top right;
-    width: 15px;
+    width: 20px;
     color: #272727;
     border-left-width: 1px;
     border-left-color: darkgray;
@@ -246,7 +244,7 @@ QComboBox::drop-down {
 }
 
 QComboBox::down-arrow {
-    image: url(/usr/share/icons/Adwaita/16x16/actions/go-down-symbolic.symbolic.png); /*Adawaita icon thene*/
+    image: url(:/icons/down-arrow.png);
 }
 
 QComboBox::down-arrow:on {
@@ -255,10 +253,6 @@ QComboBox::down-arrow:on {
 }
 
 QComboBox QAbstractItemView {
-    border: 1px solid darkgray;
-    border-radius: 8px;
-    selection-background-color: #dadada;
-    selection-color: #272727;
     color: #272727;
     background: white;
 }

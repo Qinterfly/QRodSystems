@@ -37,6 +37,7 @@ signals:
 
 public slots:
     void retrieveSelectedItem();
+    void removeSelectedItems();
 
 private slots:
     void renameItem(QStandardItem* pStandardItem);

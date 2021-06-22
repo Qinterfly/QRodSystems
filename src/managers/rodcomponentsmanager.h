@@ -11,6 +11,7 @@
 #include "managers/abstractprojectmanager.h"
 #include "core/aliasdataset.h"
 #include "core/hierarchytree.h"
+#include "aliasmanagers.h"
 
 QT_BEGIN_NAMESPACE
 class QTreeView;
@@ -23,11 +24,6 @@ class CDockWidget;
 
 namespace QRS
 {
-
-namespace Core
-{
-class AbstractRodComponent;
-}
 
 namespace HierarchyModels
 {
@@ -55,6 +51,7 @@ private:
     // Content
     void createContent();
     QLayout* createDialogControls();
+    void retrieveDataObjects();
     void retrieveRodComponents();
     ads::CDockWidget* createHierarchyWidget();
     ads::CDockWidget* createComponentsDockWidget();
@@ -68,10 +65,14 @@ private:
     // Widgets
     ads::CDockWidget* mpComponentDockWidget;
     QTreeView* mpTreeRodComponents;
-    // Data
+    // Rod components data
     Core::HierarchyTree mHierarchyRodComponents;
     Core::RodComponents mRodComponents;
-    Core::DataObjects const& mDataObjects;
+    // Data objects
+    ScalarDataObjects mScalarDataObjects;
+    VectorDataObjects mVectorDataObjects;
+    MatrixDataObjects mMatrixDataObjects;
+    SurfaceDataObjects mSurfaceDataObjects;
     // Models
     HierarchyModels::RodComponentsHierarchyModel* mpTreeRodComponentsModel;
 };

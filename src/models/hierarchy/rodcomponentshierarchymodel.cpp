@@ -101,3 +101,28 @@ void RodComponentsHierarchyModel::retrieveSelectedItem()
     else
         emit selectionCleared();
 }
+
+//! Remove rod components under selection
+void RodComponentsHierarchyModel::removeSelectedItems()
+{
+    QTreeView* pView = (QTreeView*)parent();
+    if (pView->selectionModel()->selection().isEmpty())
+        return;
+    QModelIndexList indices = pView->selectionModel()->selectedIndexes();
+    for (QModelIndex const& index : indices)
+    {
+        RodComponentsHierarchyItem* pItem = (RodComponentsHierarchyItem*)itemFromIndex(index);
+        AbstractRodComponent* pRodComponent = pItem->mpRodComponent;
+        if (pRodComponent)
+        {
+            mRodComponents.erase(pRodComponent->id());
+            delete pRodComponent;
+        }
+        mHierarchyRodComponents.removeNode(pItem->mpNode);
+    }
+    updateContent();
+    emit dataModified(true);
+    emit selectionCleared();
+}
+
+

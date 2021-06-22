@@ -54,13 +54,13 @@ void TestManagers::initTestCase()
     fontSize = 10;
 #endif
     qApp->setFont(QFont("Source Sans Pro", fontSize));
-    mpDataObjectsManager = new DataObjectsManager(*mpProject, mLastPath, *mpSettings);
-    mpRodComponentsManager = new RodComponentsManager(*mpProject, mLastPath, *mpSettings);
 }
 
 //! Test how the data objects manager handles with data
 void TestManagers::testDataObjectsManager()
 {
+    // Creating a manager
+    mpDataObjectsManager = new DataObjectsManager(*mpProject, mLastPath, *mpSettings);
     // Creating data objects of different types
     ScalarDataObject* pScalar = (ScalarDataObject*)mpDataObjectsManager->addScalar();
     VectorDataObject* pVector = (VectorDataObject*)mpDataObjectsManager->addVector();
@@ -96,6 +96,8 @@ void TestManagers::testRodComponentsManager()
     // Creating sample objects
     VectorDataObject* pVector = (VectorDataObject*)mpProject->addDataObject(AbstractDataObject::kVector);
     MatrixDataObject* pMatrix = (MatrixDataObject*)mpProject->addDataObject(AbstractDataObject::kMatrix);
+    // Creating a manager
+    mpRodComponentsManager = new RodComponentsManager(*mpProject, mLastPath, *mpSettings);
     // Adding a geometrical component
     mpRodComponentsManager->addGeometry();
     GeometryRodComponent* pGeometry = (GeometryRodComponent*)mpRodComponentsManager->addGeometry();
@@ -106,6 +108,7 @@ void TestManagers::testRodComponentsManager()
     mpRodComponentsManager->selectRodComponent(1);
     // User interaction
     mpRodComponentsManager->show();
+    mpRodComponentsManager->apply();
     qApp->exec();
 }
 

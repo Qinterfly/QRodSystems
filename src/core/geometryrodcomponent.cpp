@@ -49,5 +49,3 @@ void GeometryRodComponent::deserialize(QDataStream& stream, DataObjectGetter con
     mpRadiusVector = (VectorDataObject const*)readDataObjectPointer(stream, getDataObject);
     mpRotationMatrix = (MatrixDataObject const*)readDataObjectPointer(stream, getDataObject);
 }
-
-

@@ -2,6 +2,7 @@ INCLUDEPATH += $$PWD
 
 HEADERS += \
     $$PWD/abstractprojectmanager.h \
+    $$PWD/aliasmanagers.h \
     $$PWD/dataobjectsmanager.h \
     $$PWD/doublespinboxitemdelegate.h  \
     $$PWD/geometryrodcomponentwidget.h \
