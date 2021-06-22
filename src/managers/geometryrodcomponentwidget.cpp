@@ -40,11 +40,14 @@ void GeometryRodComponentWidget::createContent()
     QGridLayout* pMainLayout = new QGridLayout(this);
     // Radius vector
     mpComboBoxRadiusVector = createObjectsComboBox(mVectorDataObjects, mGeometryRodComponent.radiusVector());
-    connect(mpComboBoxRadiusVector, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &GeometryRodComponentWidget::setRadiusVector);
+    connect(mpComboBoxRadiusVector, QOverload<int>::of(&QComboBox::currentIndexChanged),
+            this, &GeometryRodComponentWidget::setRadiusVector);
     pMainLayout->addWidget(new QLabel(tr("Radius vector: ")), 0, 0);
     pMainLayout->addWidget(mpComboBoxRadiusVector, 0, 1);
     // Rotation matrix
     mpComboBoxRotationMatrix = createObjectsComboBox(mMatrixDataObjects, mGeometryRodComponent.rotationMatrix());
+    connect(mpComboBoxRotationMatrix, QOverload<int>::of(&QComboBox::currentIndexChanged),
+            this, &GeometryRodComponentWidget::setRotationMatrix);
     pMainLayout->addWidget(new QLabel(tr("Rotation matrix: ")), 1, 0);
     pMainLayout->addWidget(mpComboBoxRotationMatrix, 1, 1);
     // Spacer
