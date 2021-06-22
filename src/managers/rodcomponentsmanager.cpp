@@ -18,8 +18,9 @@
 #include "core/vectordataobject.h"
 #include "core/matrixdataobject.h"
 #include "core/geometryrodcomponent.h"
-#include "models/hierarchy/rodcomponentshierarchymodel.h"
+#include "core/usercrosssectionrodcomponent.h"
 #include "managers/geometryrodcomponentwidget.h"
+#include "models/hierarchy/rodcomponentshierarchymodel.h"
 
 using ads::CDockManager;
 using ads::CDockWidget;
@@ -38,6 +39,7 @@ RodComponentsManager::RodComponentsManager(Project& project, QString& lastPath, 
     restoreSettings();
     retrieveDataObjects();
     retrieveRodComponents();
+    mpTreeRodComponentsModel->updateContent();
 }
 
 RodComponentsManager::~RodComponentsManager()
@@ -79,6 +81,7 @@ CDockWidget* RodComponentsManager::createHierarchyWidget()
     mpTreeRodComponents->setHeaderHidden(true);
     mpTreeRodComponents->setAcceptDrops(true);
     mpTreeRodComponents->setDragEnabled(true);
+    pDockWidget->setWidget(mpTreeRodComponents);
     // Hierarchy model
     mpTreeRodComponentsModel = new RodComponentsHierarchyModel(mRodComponents, mHierarchyRodComponents, mpTreeRodComponents);
     mpTreeRodComponents->setModel(mpTreeRodComponentsModel);
@@ -110,7 +113,6 @@ CDockWidget* RodComponentsManager::createHierarchyWidget()
                                   mpTreeRodComponentsModel, &RodComponentsHierarchyModel::removeSelectedItems);
     pAction->setShortcut(Qt::Key_R);
     setToolBarShortcutHints(pToolBar);
-    pDockWidget->setWidget(mpTreeRodComponents);
     return pDockWidget;
 }
 
@@ -151,11 +153,27 @@ void RodComponentsManager::apply()
 //! Add a geometrical component
 AbstractRodComponent* RodComponentsManager::addGeometry()
 {
-    static QString const kGeometryName = "Geometry ";
-    QString name = kGeometryName + QString::number(GeometryRodComponent::numberInstances() + 1);
-    AbstractRodComponent* pComponent = new GeometryRodComponent(name);
-    emplaceRodComponent(pComponent);
-    return pComponent;
+    static QString const kBaseName = "Geometry ";
+    QString name = kBaseName + QString::number(GeometryRodComponent::numberInstances() + 1);
+    AbstractRodComponent* pRodComponent = new GeometryRodComponent(name);
+    emplaceRodComponent(pRodComponent);
+    return pRodComponent;
+}
+
+//! Add a cross section
+AbstractRodComponent* RodComponentsManager::addCrossSection(AbstractCrossSectionRodComponent::SectionType sectionType)
+{
+    static QString const kBaseName = "Cross section ";
+    QString name = kBaseName + QString::number(AbstractCrossSectionRodComponent::numberInstances() + 1);
+    AbstractRodComponent* pRodComponent = nullptr;
+    switch (sectionType)
+    {
+    case AbstractCrossSectionRodComponent::SectionType::kUserDefined:
+        pRodComponent = new UserCrossSectionRodComponent(name);
+        break;
+    }
+    emplaceRodComponent(pRodComponent);
+    return pRodComponent;
 }
 
 //! Retrieve data objects according to their type
@@ -189,14 +207,13 @@ void RodComponentsManager::retrieveRodComponents()
 {
     mRodComponents = mProject.cloneRodComponents();
     mHierarchyRodComponents = mProject.cloneHierarchyRodComponents();
-    mpTreeRodComponentsModel->updateContent();
 }
 
 //! Helper function to insert a rod component into the manager
-void RodComponentsManager::emplaceRodComponent(AbstractRodComponent* pComponent)
+void RodComponentsManager::emplaceRodComponent(AbstractRodComponent* pRodComponent)
 {
-    DataIDType id = pComponent->id();
-    mRodComponents.emplace(id, pComponent);
+    DataIDType id = pRodComponent->id();
+    mRodComponents.emplace(id, pRodComponent);
     mHierarchyRodComponents.appendNode(new HierarchyNode(HierarchyNode::NodeType::kObject, id));
     mpTreeRodComponentsModel->updateContent();
     setWindowModified(true);
@@ -212,8 +229,13 @@ void RodComponentsManager::representRodComponent(Core::DataIDType id)
     switch (pRodComponent->componentType())
     {
     case AbstractRodComponent::ComponentType::kGeometry:
+    {
         GeometryRodComponent* pGeometry = (GeometryRodComponent*)pRodComponent;
         mpComponentDockWidget->setWidget(new GeometryRodComponentWidget(*pGeometry, mVectorDataObjects, mMatrixDataObjects, mpComponentDockWidget));
+        break;
+    }
+    case AbstractRodComponent::ComponentType::kCrossSection:
+        // TODO
         break;
     }
 }

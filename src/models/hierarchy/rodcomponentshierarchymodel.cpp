@@ -28,7 +28,7 @@ RodComponentsHierarchyModel::RodComponentsHierarchyModel(RodComponents& rodCompo
 //! Update all the content
 void RodComponentsHierarchyModel::updateContent()
 {
-    RodComponentsHierarchyModel::clearContent();
+    clearContent();
     if (isEmpty())
         return;
     QStandardItem* pRootItem = invisibleRootItem();
@@ -43,6 +43,7 @@ void RodComponentsHierarchyModel::updateContent()
 void RodComponentsHierarchyModel::clearContent()
 {
     removeRows(0, rowCount());
+    emit selectionCleared();
 }
 
 //! Check if there are data objcects to represent
@@ -66,7 +67,7 @@ void RodComponentsHierarchyModel::renameItem(QStandardItem* pStandardItem)
 //! Select an item by row index
 void RodComponentsHierarchyModel::selectItem(int iRow)
 {
-    if (iRow > invisibleRootItem()->rowCount())
+    if (iRow > invisibleRootItem()->rowCount() - 1)
         return;
     RodComponentsHierarchyItem* pItem = (RodComponentsHierarchyItem*)invisibleRootItem()->child(iRow);
     QModelIndex const& selectionIndex = pItem->index();

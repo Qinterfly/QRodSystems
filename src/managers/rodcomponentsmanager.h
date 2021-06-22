@@ -11,6 +11,7 @@
 #include "managers/abstractprojectmanager.h"
 #include "core/aliasdataset.h"
 #include "core/hierarchytree.h"
+#include "core/abstractcrosssectionrodcomponent.h"
 #include "aliasmanagers.h"
 
 QT_BEGIN_NAMESPACE
@@ -46,6 +47,7 @@ public:
 public slots:
     void apply() override;
     Core::AbstractRodComponent* addGeometry();
+    Core::AbstractRodComponent* addCrossSection(Core::AbstractCrossSectionRodComponent::SectionType sectionType);
 
 private:
     // Content
@@ -56,7 +58,7 @@ private:
     ads::CDockWidget* createHierarchyWidget();
     ads::CDockWidget* createComponentsDockWidget();
     // Helpers
-    void emplaceRodComponent(Core::AbstractRodComponent* pComponent);
+    void emplaceRodComponent(Core::AbstractRodComponent* pRodComponent);
     // Selection
     void representRodComponent(Core::DataIDType id);
     void clearRodComponentRepresentation();
@@ -65,14 +67,14 @@ private:
     // Widgets
     ads::CDockWidget* mpComponentDockWidget;
     QTreeView* mpTreeRodComponents;
-    // Rod components data
-    Core::HierarchyTree mHierarchyRodComponents;
-    Core::RodComponents mRodComponents;
     // Data objects
     ScalarDataObjects mScalarDataObjects;
     VectorDataObjects mVectorDataObjects;
     MatrixDataObjects mMatrixDataObjects;
     SurfaceDataObjects mSurfaceDataObjects;
+    // Rod components data
+    Core::RodComponents mRodComponents;
+    Core::HierarchyTree mHierarchyRodComponents;
     // Models
     HierarchyModels::RodComponentsHierarchyModel* mpTreeRodComponentsModel;
 };

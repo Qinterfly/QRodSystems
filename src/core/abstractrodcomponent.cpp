@@ -24,25 +24,6 @@ AbstractRodComponent::~AbstractRodComponent()
 
 }
 
-//! Serialize only a header data of a rod component
-void AbstractRodComponent::serialize(QDataStream& stream) const
-{
-    stream << (quint32)mComponentType;
-    stream << mName;
-    stream << (DataIDType)mID;
-}
-
-/*!
- * \brief Partly deserialize an abstract rod component
- *
- * It is assumed that a type and name have already been assigned.
- * So, only an identifier needs to be set.
- */
-void AbstractRodComponent::deserialize(QDataStream& stream)
-{
-    stream >> mID;
-}
-
 //! Helper function to write the identifier of a data object
 void AbstractRodComponent::writeDataObjectPointer(QDataStream& stream, AbstractDataObject const* pDataObject) const
 {

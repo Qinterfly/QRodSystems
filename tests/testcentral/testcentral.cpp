@@ -54,7 +54,7 @@ void TestCentral::initTestCase()
     qApp->setFont(QFont("Source Sans Pro", fontSize));
     // Window
     mWindow = new MainWindow();
-    mWindow->openProject("../../../../examples/base.qrs");
+    mWindow->openProject("../../../../examples/test.qrs");
 }
 
 //! Test run

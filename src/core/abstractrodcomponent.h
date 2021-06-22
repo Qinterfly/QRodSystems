@@ -27,7 +27,8 @@ class AbstractRodComponent : public QObject
 public:
     enum ComponentType
     {
-        kGeometry
+        kGeometry,
+        kCrossSection
     };
     AbstractRodComponent(ComponentType componentType, QString name);
     virtual ~AbstractRodComponent() = 0;
@@ -39,17 +40,16 @@ public:
     void setName(QString const& name) { mName = name; }
     static DataIDType maxComponentID() { return smMaxComponentID; }
     static void setMaxComponentID(DataIDType iMaxComponentID) { smMaxComponentID = iMaxComponentID; }
-    virtual void serialize(QDataStream& stream) const;
+    virtual void serialize(QDataStream& stream) const = 0;
     virtual void deserialize(QDataStream& stream, DataObjectGetter const& getDataObject) = 0;
     friend QDataStream& operator<<(QDataStream& stream, AbstractRodComponent const& component);
 
 protected:
     void writeDataObjectPointer(QDataStream& stream, AbstractDataObject const* pDataObject) const;
     AbstractDataObject const* readDataObjectPointer(QDataStream& stream, DataObjectGetter const& getDataObject) const;
-    void deserialize(QDataStream& stream);
 
 protected:
-    const ComponentType mComponentType;
+    ComponentType const mComponentType;
     QString mName;
     DataIDType mID;
 

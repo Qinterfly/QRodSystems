@@ -14,12 +14,6 @@
 namespace QRS
 {
 
-namespace Core
-{
-class HierarchyTree;
-class AbstractDataObject;
-}
-
 namespace PropertiesModels
 {
 class DataObjectsPropertiesModel;
@@ -32,7 +26,6 @@ namespace HierarchyModels
 class DataObjectsHierarchyItem : public AbstractHierarchyItem
 {
     friend class DataObjectsHierarchyModel;
-    friend class ProjectHierarchyModel;
     friend class PropertiesModels::DataObjectsPropertiesModel;
 
 public:

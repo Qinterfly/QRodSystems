@@ -55,6 +55,7 @@ DataObjectsManager::DataObjectsManager(Project& project, QString& lastPath, QSet
     createContent();
     restoreSettings();
     retrieveDataObjects();
+    mpTreeDataObjectsModel->updateContent();
 }
 
 DataObjectsManager::~DataObjectsManager()
@@ -201,7 +202,6 @@ void DataObjectsManager::retrieveDataObjects()
 {
     mDataObjects = mProject.cloneDataObjects();
     mHierarchyDataObjects = mProject.cloneHierarchyDataObjects();
-    mpTreeDataObjectsModel->updateContent();
 }
 
 //! Add a scalar object

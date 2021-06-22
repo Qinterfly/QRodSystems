@@ -14,6 +14,7 @@
 #include "hierarchytree.h"
 #include "abstractdataobject.h"
 #include "abstractrodcomponent.h"
+#include "abstractcrosssectionrodcomponent.h"
 
 QT_BEGIN_NAMESPACE
 class QString;
@@ -48,7 +49,8 @@ public:
     DataObjects const& getDataObjects() const { return mDataObjects; }
     // Rod components
     DataIDType numberRodComponents() const { return mRodComponents.size(); }
-    AbstractRodComponent* addRodComponent(AbstractRodComponent::ComponentType type);
+    AbstractRodComponent* addGeometry();
+    AbstractRodComponent* addCrossSection(AbstractCrossSectionRodComponent::SectionType sectionType);
     void setRodComponents(RodComponents const& rodComponents, HierarchyTree const& hierarchyRodComponents);
     RodComponents cloneRodComponents() const;
     HierarchyTree cloneHierarchyRodComponents() const { return mHierarchyRodComponents.clone(); }
@@ -67,6 +69,7 @@ public slots:
     void setModified(bool modifiedState = true);
 
 private:
+    void emplaceRodComponent(AbstractRodComponent* pRodComponent);
     template<typename T>
     void clearDataMap(std::unordered_map<DataIDType, T*>& dataMap);
 

@@ -37,7 +37,7 @@ void DataObjectsHierarchyItem::appendItems(DataObjects& dataObjects, HierarchyNo
             pItem = new DataObjectsHierarchyItem(pNode);
             break;
         case HierarchyNode::NodeType::kObject:
-            DataIDType id = pNode->value().toUInt();
+            DataIDType id = pNode->value().value<DataIDType>();
             if (!dataObjects.contains(id))
                 return;
             pItem = new DataObjectsHierarchyItem(pNode, dataObjects[id]);

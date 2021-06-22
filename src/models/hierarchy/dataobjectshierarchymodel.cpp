@@ -66,7 +66,7 @@ void DataObjectsHierarchyModel::renameItem(QStandardItem* pStandardItem)
 //! Select an item by row index
 void DataObjectsHierarchyModel::selectItem(int iRow)
 {
-    if (iRow > invisibleRootItem()->rowCount())
+    if (iRow > invisibleRootItem()->rowCount() - 1)
         return;
     DataObjectsHierarchyItem* pItem = (DataObjectsHierarchyItem*)invisibleRootItem()->child(iRow);
     QModelIndex const& selectionIndex = pItem->index();

@@ -15,11 +15,11 @@
 #include "matrixdataobject.h"
 #include "surfacedataobject.h"
 #include "geometryrodcomponent.h"
+#include "usercrosssectionrodcomponent.h"
 
 using namespace QRS::Core;
 
 AbstractDataObject* createDataObject(AbstractDataObject::ObjectType type);
-AbstractRodComponent* createRodComponent(AbstractRodComponent::ComponentType type);
 AbstractDataObject const* substituteDataObject(DataObjects const& dataObjects, AbstractDataObject const* pObject);
 
 //! Construct a clean project with the user specified name
@@ -57,13 +57,17 @@ void Project::setDataObjects(DataObjects const& dataObjects, HierarchyTree const
     // Resolve references of rod components
     for (auto& item : mRodComponents)
     {
-        AbstractRodComponent* pComponent = item.second;
-        switch (pComponent->componentType())
+        AbstractRodComponent* pRodComponent = item.second;
+        switch (pRodComponent->componentType())
         {
-        case AbstractRodComponent::kGeometry:
-            GeometryRodComponent* pGeometry = (GeometryRodComponent*)pComponent;
+        case AbstractRodComponent::ComponentType::kGeometry:
+        {
+            GeometryRodComponent* pGeometry = (GeometryRodComponent*)pRodComponent;
             pGeometry->setRadiusVector((VectorDataObject const*)substituteDataObject(dataObjects, pGeometry->radiusVector()));
             pGeometry->setRotationMatrix((MatrixDataObject const*)substituteDataObject(dataObjects, pGeometry->rotationMatrix()));
+            break;
+        }
+        case AbstractRodComponent::ComponentType::kCrossSection:
             break;
         }
     }
@@ -92,29 +96,39 @@ DataObjects Project::cloneDataObjects() const
     return result;
 }
 
-//! Create a rod component of a given type
-AbstractRodComponent* Project::addRodComponent(AbstractRodComponent::ComponentType type)
+//! Create a geometrical rod component
+AbstractRodComponent* Project::addGeometry()
 {
-    AbstractRodComponent* pComponent = createRodComponent(type);
-    if (pComponent)
+    QString name = "Geometry " + QString::number(GeometryRodComponent::numberInstances() + 1);
+    AbstractRodComponent* pRodComponent = new GeometryRodComponent(name);
+    emplaceRodComponent(pRodComponent);
+    return pRodComponent;
+}
+
+//! Create a cross section
+AbstractRodComponent* Project::addCrossSection(AbstractCrossSectionRodComponent::SectionType sectionType)
+{
+    QString name = "Cross section " + QString::number(AbstractCrossSectionRodComponent::numberInstances() + 1);
+    AbstractRodComponent* pRodComponent = nullptr;
+    switch (sectionType)
     {
-        DataIDType id = pComponent->id();
-        mRodComponents.emplace(id, pComponent);
-        mHierarchyRodComponents.appendNode(new HierarchyNode(HierarchyNode::NodeType::kObject, id));
-        setModified(true);
+    case AbstractCrossSectionRodComponent::SectionType::kUserDefined:
+        pRodComponent = new UserCrossSectionRodComponent(name);
+        break;
     }
-    return pComponent;
+    emplaceRodComponent(pRodComponent);
+    return pRodComponent;
 }
 
 //! Substitute current rod components with new ones
 void Project::setRodComponents(RodComponents const& rodComponents, HierarchyTree const& hierarchyRodComponents)
 {
     clearDataMap(mRodComponents);
-    AbstractRodComponent* pComponent;
+    AbstractRodComponent* pRodComponent;
     for (auto& item : rodComponents)
     {
-        pComponent = item.second;
-        mRodComponents.emplace(pComponent->id(), pComponent->clone());
+        pRodComponent = item.second;
+        mRodComponents.emplace(pRodComponent->id(), pRodComponent->clone());
     }
     mHierarchyRodComponents = hierarchyRodComponents;
     emit dataChanged();
@@ -127,8 +141,8 @@ RodComponents Project::cloneRodComponents() const
     RodComponents result;
     for (auto& pItem : mRodComponents)
     {
-        AbstractRodComponent* pComponent = pItem.second->clone();
-        result.emplace(pComponent->id(), pComponent);
+        AbstractRodComponent* pRodComponent = pItem.second->clone();
+        result.emplace(pRodComponent->id(), pRodComponent);
     }
     return result;
 }
@@ -176,21 +190,6 @@ AbstractDataObject* createDataObject(AbstractDataObject::ObjectType type)
     return pObject;
 }
 
-//! Helper function to create RodComponent by a type and name
-AbstractRodComponent* createRodComponent(AbstractRodComponent::ComponentType type)
-{
-    AbstractRodComponent* pComponent = nullptr;
-    QString name;
-    switch (type)
-    {
-    case AbstractRodComponent::ComponentType::kGeometry:
-        name = "Geometry " + QString::number(GeometryRodComponent::numberInstances() + 1);
-        pComponent = new GeometryRodComponent(name);
-        break;
-    }
-    return pComponent;
-}
-
 //! Substitute a data object with its updated version
 AbstractDataObject const* substituteDataObject(DataObjects const& dataObjects, AbstractDataObject const* pDataObject)
 {
@@ -205,3 +204,15 @@ AbstractDataObject const* substituteDataObject(DataObjects const& dataObjects, A
     }
     return nullptr;
 };
+
+//! Emplace a rod component into a project
+void Project::emplaceRodComponent(AbstractRodComponent* pRodComponent)
+{
+    if (pRodComponent)
+    {
+        DataIDType id = pRodComponent->id();
+        mRodComponents.emplace(id, pRodComponent);
+        mHierarchyRodComponents.appendNode(new HierarchyNode(HierarchyNode::NodeType::kObject, id));
+        setModified(true);
+    }
+}

@@ -18,6 +18,7 @@
 #include "matrixdataobject.h"
 #include "surfacedataobject.h"
 #include "geometryrodcomponent.h"
+#include "usercrosssectionrodcomponent.h"
 #include "utilities.h"
 
 using namespace QRS::Core;
@@ -184,7 +185,7 @@ void readRodComponents(QDataStream& inputStream, DataObjects const& dataObjects,
     inputStream >> numComponents;
     if (numComponents == 0)
         return;
-    AbstractRodComponent::ComponentType type;
+    AbstractRodComponent::ComponentType componentType;
     QString name;
     DataObjectGetter getDataObject = [&dataObjects](DataIDType id)
     {
@@ -196,17 +197,30 @@ void readRodComponents(QDataStream& inputStream, DataObjects const& dataObjects,
     };
     for (quint32 i = 0; i != numComponents; ++i)
     {
-        inputStream >> type;
+        inputStream >> componentType;
         inputStream >> name;
-        AbstractRodComponent* pComponent = nullptr;
-        switch (type)
+        AbstractRodComponent* pRodComponent = nullptr;
+        switch (componentType)
         {
         case (AbstractRodComponent::ComponentType::kGeometry):
-            pComponent = new GeometryRodComponent(name);
+            pRodComponent = new GeometryRodComponent(name);
             break;
+        case (AbstractRodComponent::ComponentType::kCrossSection):
+        {
+            AbstractCrossSectionRodComponent::SectionType sectionType;
+            inputStream >> sectionType;
+            switch (sectionType)
+            {
+            case (AbstractCrossSectionRodComponent::SectionType::kUserDefined):
+            {
+                pRodComponent = new UserCrossSectionRodComponent(name);
+                break;
+            }
+            }
         }
-        pComponent->deserialize(inputStream, getDataObject);
-        rodComponents.emplace(pComponent->id(), pComponent);
+        }
+        pRodComponent->deserialize(inputStream, getDataObject);
+        rodComponents.emplace(pRodComponent->id(), pRodComponent);
     }
 }
 

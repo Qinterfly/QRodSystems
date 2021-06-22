@@ -12,7 +12,7 @@
 using namespace QRS::HierarchyModels;
 using namespace QRS::Core;
 
-QIcon getDataObjectIcon(AbstractRodComponent::ComponentType type);
+QIcon getRodComponentIcon(AbstractRodComponent::ComponentType type);
 
 //! Create the representative of the structure of rod components
 RodComponentsHierarchyItem::RodComponentsHierarchyItem(RodComponents& rodComponents, HierarchyTree& hierarchyRodComponents,
@@ -37,7 +37,7 @@ void RodComponentsHierarchyItem::appendItems(RodComponents& rodComponents, Hiera
             pItem = new RodComponentsHierarchyItem(pNode);
             break;
         case HierarchyNode::NodeType::kObject:
-            DataIDType id = pNode->value().toUInt();
+            DataIDType id = pNode->value().value<DataIDType>();
             if (!rodComponents.contains(id))
                 return;
             pItem = new RodComponentsHierarchyItem(pNode, rodComponents[id]);
@@ -56,7 +56,7 @@ void RodComponentsHierarchyItem::appendItems(RodComponents& rodComponents, Hiera
 
 //! Construct an item to represent a rod component
 RodComponentsHierarchyItem::RodComponentsHierarchyItem(HierarchyNode* pNode, AbstractRodComponent* pRodComponent)
-    : AbstractHierarchyItem(getDataObjectIcon(pRodComponent->componentType()), pRodComponent->name(), pNode)
+    : AbstractHierarchyItem(getRodComponentIcon(pRodComponent->componentType()), pRodComponent->name(), pNode)
     , mpRodComponent(pRodComponent)
 {
     setFlags(flags() | Qt::ItemIsEditable);
@@ -70,12 +70,14 @@ RodComponentsHierarchyItem::RodComponentsHierarchyItem(HierarchyNode* pNode)
 }
 
 //! Helper function to assign an appropriate rod component icon
-QIcon getDataObjectIcon(AbstractRodComponent::ComponentType type)
+QIcon getRodComponentIcon(AbstractRodComponent::ComponentType type)
 {
     switch (type)
     {
     case AbstractRodComponent::ComponentType::kGeometry:
         return QIcon(":/icons/axis.svg");
+    case AbstractRodComponent::ComponentType::kCrossSection:
+        return QIcon(":/icons/tubes.svg");
     default:
         return QIcon();
     }

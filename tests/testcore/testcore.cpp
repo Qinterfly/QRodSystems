@@ -14,6 +14,7 @@
 #include "core/matrixdataobject.h"
 #include "core/hierarchytree.h"
 #include "core/geometryrodcomponent.h"
+#include "core/usercrosssectionrodcomponent.h"
 
 using namespace QRS::Core;
 
@@ -48,6 +49,7 @@ void TestCore::initTestCase()
     VectorDataObject* pVector;
     MatrixDataObject* pMatrix;
     GeometryRodComponent* pGeometry;
+    UserCrossSectionRodComponent* pUserCrossSection;
     for (quint32 i = 0; i != numSets; ++i)
     {
         // Creating data objects
@@ -55,10 +57,16 @@ void TestCore::initTestCase()
         pVector = (VectorDataObject*)mpProject->addDataObject(AbstractDataObject::ObjectType::kVector);
         pMatrix = (MatrixDataObject*)mpProject->addDataObject(AbstractDataObject::ObjectType::kMatrix);
         mpProject->addDataObject(AbstractDataObject::ObjectType::kSurface);
-        // Creating rod components
-        pGeometry = (GeometryRodComponent*)mpProject->addRodComponent(AbstractRodComponent::ComponentType::kGeometry);
+        // Creating geometrical components
+        pGeometry = (GeometryRodComponent*)mpProject->addGeometry();
         pGeometry->setRadiusVector(pVector);
         pGeometry->setRotationMatrix(pMatrix);
+        // Creating user-defined cross sections
+        pUserCrossSection = (UserCrossSectionRodComponent*)mpProject->addCrossSection(AbstractCrossSectionRodComponent::SectionType::kUserDefined);
+        pUserCrossSection->area() = 0.1;
+        pUserCrossSection->inertiaMomemntTorsional() = 1e-6;
+        pUserCrossSection->inertiaMomentX() = 1e-4;
+        pUserCrossSection->inertiaMomentY() = pUserCrossSection->inertiaMomentX();
     }
 }
 

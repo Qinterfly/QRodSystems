@@ -99,13 +99,14 @@ void TestManagers::testRodComponentsManager()
     // Creating a manager
     mpRodComponentsManager = new RodComponentsManager(*mpProject, mLastPath, *mpSettings);
     // Adding a geometrical component
-    mpRodComponentsManager->addGeometry();
     GeometryRodComponent* pGeometry = (GeometryRodComponent*)mpRodComponentsManager->addGeometry();
     pGeometry->setRadiusVector(pVector);
     pGeometry->setRotationMatrix(pMatrix);
     QVERIFY(pGeometry->isDataComplete());
+    // Adding a user-defined cross section
+    mpRodComponentsManager->addCrossSection(AbstractCrossSectionRodComponent::SectionType::kUserDefined);
     // Selecting
-    mpRodComponentsManager->selectRodComponent(1);
+    mpRodComponentsManager->selectRodComponent(0);
     // User interaction
     mpRodComponentsManager->show();
     mpRodComponentsManager->apply();

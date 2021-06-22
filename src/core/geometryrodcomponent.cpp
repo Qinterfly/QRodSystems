@@ -25,19 +25,22 @@ GeometryRodComponent::~GeometryRodComponent()
     --smNumInstances;
 }
 
-//! Clone a geometrical component
+//! Clone a geometrical rod component
 AbstractRodComponent* GeometryRodComponent::clone() const
 {
-    GeometryRodComponent* pComponent = new GeometryRodComponent(mName);
-    pComponent->mpRadiusVector = mpRadiusVector;
-    pComponent->mpRotationMatrix = mpRotationMatrix;
-    return pComponent;
+    GeometryRodComponent* pGeometry = new GeometryRodComponent(mName);
+    pGeometry->mID = mID;
+    pGeometry->mpRadiusVector = mpRadiusVector;
+    pGeometry->mpRotationMatrix = mpRotationMatrix;
+    return pGeometry;
 }
 
 //! Serialize all properties of a geometrical component
 void GeometryRodComponent::serialize(QDataStream& stream) const
 {
-    AbstractRodComponent::serialize(stream);
+    stream << (quint32)mComponentType;
+    stream << mName;
+    stream << (DataIDType)mID;
     writeDataObjectPointer(stream, mpRadiusVector);
     writeDataObjectPointer(stream, mpRotationMatrix);
 }
@@ -45,7 +48,7 @@ void GeometryRodComponent::serialize(QDataStream& stream) const
 //! Deserialize a geometrical component
 void GeometryRodComponent::deserialize(QDataStream& stream, DataObjectGetter const& getDataObject)
 {
-    AbstractRodComponent::deserialize(stream);
+    stream >> mID;
     mpRadiusVector = (VectorDataObject const*)readDataObjectPointer(stream, getDataObject);
     mpRotationMatrix = (MatrixDataObject const*)readDataObjectPointer(stream, getDataObject);
 }
