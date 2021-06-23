@@ -103,5 +103,7 @@
         <file>clamp.svg</file>
         <file>capacitor.svg</file>
         <file>down-arrow.png</file>
+        <file>rectangle.svg</file>
+        <file>abstract-shape.svg</file>
     </qresource>
 </RCC>

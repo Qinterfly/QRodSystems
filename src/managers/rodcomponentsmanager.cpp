@@ -9,6 +9,7 @@
 #include <QPushButton>
 #include <QTreeView>
 #include <QToolBar>
+#include <QLabel>
 #include "DockManager.h"
 #include "DockWidget.h"
 #include "DockAreaWidget.h"
@@ -28,6 +29,10 @@ using ads::CDockAreaWidget;
 using namespace QRS::Core;
 using namespace QRS::Managers;
 using namespace QRS::HierarchyModels;
+
+QSize const skToolBarIconSize = QSize(27, 27);
+
+QWidget* addToolbarHeader(QToolBar* pToolBar, QString const& name);
 
 RodComponentsManager::RodComponentsManager(Project& project, QString& lastPath, QSettings& settings, QWidget* parent)
     : AbstractProjectManager(project, lastPath, settings, kRodComponents, "RodComponentsManager", parent)
@@ -52,16 +57,18 @@ RodComponentsManager::~RodComponentsManager()
 //! Create all the widgets
 void RodComponentsManager::createContent()
 {
-    // Main layout
-    QVBoxLayout* pMainLayout = new QVBoxLayout(this);
-    pMainLayout->setContentsMargins(0, 0, 0, 0);
-    pMainLayout->addWidget(mpDockManager);
     // Components dock widget
     mpComponentDockWidget = createComponentsDockWidget();
     mpDockManager->addDockWidget(ads::LeftDockWidgetArea, mpComponentDockWidget);
     // Hierarchy of components
     mpDockManager->addDockWidget(ads::RightDockWidgetArea, createHierarchyWidget());
-    // Buttons
+    // Main layout
+    QVBoxLayout* pMainLayout = new QVBoxLayout(this);
+    pMainLayout->setContentsMargins(0, 0, 0, 0);
+    pMainLayout->setSpacing(0);
+    // Arrangement
+    pMainLayout->addWidget(createMainToolBar());
+    pMainLayout->addWidget(mpDockManager);
     pMainLayout->addLayout(createDialogControls());
 }
 
@@ -69,7 +76,6 @@ void RodComponentsManager::createContent()
 CDockWidget* RodComponentsManager::createHierarchyWidget()
 {
     QSize const kIconSize = QSize(16, 16);
-    QSize const kToolBarIconSize = QSize(27, 27);
     CDockWidget* pDockWidget = new CDockWidget("Components");
     pDockWidget->setFeature(CDockWidget::DockWidgetClosable, false);
     // Tree widget
@@ -93,26 +99,6 @@ CDockWidget* RodComponentsManager::createHierarchyWidget()
             mpTreeRodComponentsModel, &RodComponentsHierarchyModel::retrieveSelectedItem);
     connect(mpTreeRodComponentsModel, &RodComponentsHierarchyModel::selectionCleared,
             this, &RodComponentsManager::clearRodComponentRepresentation);
-    // ToolBar
-    QToolBar* pToolBar = pDockWidget->createDefaultToolBar();
-    pDockWidget->setToolBarIconSize(kToolBarIconSize, CDockWidget::StateDocked);
-    // Actions
-    QAction* pAction;
-    pAction = pToolBar->addAction(QIcon(":/icons/axis.svg"), tr("Geometry"), this, &RodComponentsManager::addGeometry);
-    pAction->setShortcut(QKeySequence("Ctrl+1"));
-    pAction = pToolBar->addAction(QIcon(":/icons/tubes.svg"), tr("Cross section"));
-    pAction->setShortcut(QKeySequence("Ctrl+2"));
-    pAction = pToolBar->addAction(QIcon(":/icons/clamp.svg"), tr("Boundary condition"));
-    pAction->setShortcut(QKeySequence("Ctrl+3"));
-    pAction = pToolBar->addAction(QIcon(":/icons/force.svg"), tr("Force"));
-    pAction->setShortcut(QKeySequence("Ctrl+4"));
-    pAction = pToolBar->addAction(QIcon(":/icons/material.svg"), tr("Material"));
-    pAction->setShortcut(QKeySequence("Ctrl+5"));
-    pToolBar->addSeparator();
-    pAction = pToolBar->addAction(QIcon(":/icons/delete.svg"), tr("Remove"),
-                                  mpTreeRodComponentsModel, &RodComponentsHierarchyModel::removeSelectedItems);
-    pAction->setShortcut(Qt::Key_R);
-    setToolBarShortcutHints(pToolBar);
     return pDockWidget;
 }
 
@@ -247,3 +233,108 @@ void RodComponentsManager::clearRodComponentRepresentation()
     delete pWidget;
 }
 
+//! Create a menu to choose types of components to construct
+QToolBar* RodComponentsManager::createMainToolBar()
+{
+    QToolBar* pMainToolBar = new QToolBar();
+    // Geometry
+    pMainToolBar->addWidget(makeGeometryToolBar());
+    pMainToolBar->addSeparator();
+    // Cross section
+    pMainToolBar->addWidget(makeCrossSectionsToolBar());
+    pMainToolBar->addSeparator();
+    // Boundary condition
+    pMainToolBar->addWidget(makeBoundaryConditionsToolBar());
+    pMainToolBar->addSeparator();
+    // Loading
+    pMainToolBar->addWidget(makeLoadingToolBar());
+    pMainToolBar->addSeparator();
+    // Material
+    pMainToolBar->addWidget(makeMaterialToolBar());
+    pMainToolBar->addSeparator();
+    // Modify
+    pMainToolBar->addWidget(makeModificationToolBar());
+    pMainToolBar->addSeparator();
+    return pMainToolBar;
+}
+
+//! Create a toolbar to create geometrical components
+QWidget* RodComponentsManager::makeGeometryToolBar()
+{
+    QToolBar* pToolBar = new QToolBar();
+    pToolBar->addAction(QIcon(":/icons/axis.svg"), tr("Geometry"), this, &RodComponentsManager::addGeometry);
+    pToolBar->setIconSize(skToolBarIconSize);
+    return addToolbarHeader(pToolBar, "Geometry");
+}
+
+//! Create a toolbar to construct cross sections
+QWidget* RodComponentsManager::makeCrossSectionsToolBar()
+{
+    QToolBar* pToolBar = new QToolBar();
+    // User-defined
+    pToolBar->addAction(QIcon(":/icons/abstract-shape.svg"), tr("User-defined"), this, [this]()
+    {
+        addCrossSection(AbstractCrossSectionRodComponent::kUserDefined);
+    });
+    pToolBar->addAction(QIcon(":/icons/rectangle.svg"), tr("Rectangular"));
+    pToolBar->setIconSize(skToolBarIconSize);
+    return addToolbarHeader(pToolBar, "Section");
+}
+
+//! Create a toolbar to construct boundary conditions
+QWidget* RodComponentsManager::makeBoundaryConditionsToolBar()
+{
+    QToolBar* pToolBar = new QToolBar();
+    pToolBar->addAction(QIcon(":/icons/clamp.svg"), tr("Clamp"));
+    pToolBar->setIconSize(skToolBarIconSize);
+    return addToolbarHeader(pToolBar, "Boundary");
+}
+
+//! Create a toolbar to construct loading
+QWidget* RodComponentsManager::makeLoadingToolBar()
+{
+    QToolBar* pToolBar = new QToolBar();
+    pToolBar->addAction(QIcon(":/icons/force.svg"), tr("Force"));
+    pToolBar->setIconSize(skToolBarIconSize);
+    return addToolbarHeader(pToolBar, "Loading");
+}
+
+//! Create a toolbar to construct materials
+QWidget* RodComponentsManager::makeMaterialToolBar()
+{
+    QToolBar* pToolBar = new QToolBar();
+    pToolBar->addAction(QIcon(":/icons/material.svg"), tr("Material"));
+    pToolBar->setIconSize(skToolBarIconSize);
+    return addToolbarHeader(pToolBar, "Material");
+}
+
+//! Create a toolbar to modify rod components
+QWidget* RodComponentsManager::makeModificationToolBar()
+{
+    QToolBar* pToolBar = new QToolBar();
+    QAction* pAction = pToolBar->addAction(QIcon(":/icons/delete.svg"), tr("Remove"),
+                                           mpTreeRodComponentsModel, &RodComponentsHierarchyModel::removeSelectedItems);
+    pAction->setShortcut(Qt::Key_R);
+    pToolBar->setIconSize(skToolBarIconSize);
+    setToolBarShortcutHints(pToolBar);
+    return addToolbarHeader(pToolBar, "Modify");
+}
+
+//! Helper function to add the header to a toolbar
+QWidget* addToolbarHeader(QToolBar* pToolBar, QString const& name)
+{
+    QWidget* pWidget = new QWidget();
+    QGridLayout* pLayout = new QGridLayout();
+    pLayout->setContentsMargins(3, 0, 3, 0);
+    pLayout->setSpacing(0);
+    // Separator
+    QFrame* pLine = new QFrame();
+    pLine->setFrameShape(QFrame::HLine);
+    pLine->setFrameShadow(QFrame::Sunken);
+    // Arranging widgets
+    pLayout->addWidget(new QLabel(name), 0, 0, Qt::AlignCenter);
+    pLayout->addWidget(pLine, 1, 0);
+    pLayout->addWidget(pToolBar, 2, 0, Qt::AlignCenter);
+    pWidget->setLayout(pLayout);
+    return pWidget;
+}

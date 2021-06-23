@@ -7,12 +7,13 @@
 
 #include "rodcomponentshierarchyitem.h"
 #include "core/abstractrodcomponent.h"
+#include "core/abstractcrosssectionrodcomponent.h"
 #include "core/hierarchytree.h"
 
 using namespace QRS::HierarchyModels;
 using namespace QRS::Core;
 
-QIcon getRodComponentIcon(AbstractRodComponent::ComponentType type);
+QIcon getRodComponentIcon(AbstractRodComponent const* pRodComponent);
 
 //! Create the representative of the structure of rod components
 RodComponentsHierarchyItem::RodComponentsHierarchyItem(RodComponents& rodComponents, HierarchyTree& hierarchyRodComponents,
@@ -56,7 +57,7 @@ void RodComponentsHierarchyItem::appendItems(RodComponents& rodComponents, Hiera
 
 //! Construct an item to represent a rod component
 RodComponentsHierarchyItem::RodComponentsHierarchyItem(HierarchyNode* pNode, AbstractRodComponent* pRodComponent)
-    : AbstractHierarchyItem(getRodComponentIcon(pRodComponent->componentType()), pRodComponent->name(), pNode)
+    : AbstractHierarchyItem(getRodComponentIcon(pRodComponent), pRodComponent->name(), pNode)
     , mpRodComponent(pRodComponent)
 {
     setFlags(flags() | Qt::ItemIsEditable);
@@ -70,16 +71,24 @@ RodComponentsHierarchyItem::RodComponentsHierarchyItem(HierarchyNode* pNode)
 }
 
 //! Helper function to assign an appropriate rod component icon
-QIcon getRodComponentIcon(AbstractRodComponent::ComponentType type)
+QIcon getRodComponentIcon(AbstractRodComponent const* pRodComponent)
 {
-    switch (type)
+    QIcon icon;
+    switch (pRodComponent->componentType())
     {
     case AbstractRodComponent::ComponentType::kGeometry:
-        return QIcon(":/icons/axis.svg");
+        icon = QIcon(":/icons/axis.svg");
+        break;
     case AbstractRodComponent::ComponentType::kCrossSection:
-        return QIcon(":/icons/tubes.svg");
-    default:
-        return QIcon();
+    {
+        AbstractCrossSectionRodComponent const* pCrossSection = (AbstractCrossSectionRodComponent const*)pRodComponent;
+        switch (pCrossSection->sectionType())
+        {
+        case AbstractCrossSectionRodComponent::SectionType::kUserDefined:
+            icon = QIcon(":/icons/abstract-shape.svg");
+        }
     }
+    }
+    return icon;
 }
 

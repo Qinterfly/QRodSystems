@@ -29,6 +29,7 @@ public:
     static quint32 numberInstances() { return smNumInstances; }
     void serialize(QDataStream& stream) const override;
     void deserialize(QDataStream& stream, DataObjectGetter const& getDataObject) override;
+    SectionType sectionType() const { return mSectionType; }
 
 protected:
     void copyIntegratedProperties(AbstractCrossSectionRodComponent const* pCrossSection);

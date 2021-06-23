@@ -62,6 +62,14 @@ private:
     // Selection
     void representRodComponent(Core::DataIDType id);
     void clearRodComponentRepresentation();
+    // Toolbars
+    QToolBar* createMainToolBar();
+    QWidget* makeGeometryToolBar();
+    QWidget* makeCrossSectionsToolBar();
+    QWidget* makeBoundaryConditionsToolBar();
+    QWidget* makeLoadingToolBar();
+    QWidget* makeMaterialToolBar();
+    QWidget* makeModificationToolBar();
 
 private:
     // Widgets
