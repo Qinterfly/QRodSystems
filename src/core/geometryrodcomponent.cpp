@@ -32,6 +32,7 @@ AbstractRodComponent* GeometryRodComponent::clone() const
     pGeometry->mID = mID;
     pGeometry->mpRadiusVector = mpRadiusVector;
     pGeometry->mpRotationMatrix = mpRotationMatrix;
+    --smNumInstances;
     return pGeometry;
 }
 

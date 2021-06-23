@@ -41,6 +41,7 @@ AbstractDataObject* SurfaceDataObject::clone() const
     obj->mLeadingItems = mLeadingItems;
     obj->mItems = mItems;
     obj->mID = mID;
+    --smNumInstances;
     return obj;
 }
 

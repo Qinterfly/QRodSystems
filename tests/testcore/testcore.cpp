@@ -32,6 +32,7 @@ private slots:
     void createHierarchyTree();
     void reorganizeHierarchyTree();
     void createRodGeometry();
+    void createRodCrossSection();
     void cleanupTestCase();
 
 private:
@@ -46,6 +47,7 @@ void TestCore::initTestCase()
 {
     mpProject = new Project("test");
     const quint32 numSets = 5;
+    ScalarDataObject* pScalar;
     VectorDataObject* pVector;
     MatrixDataObject* pMatrix;
     GeometryRodComponent* pGeometry;
@@ -53,7 +55,7 @@ void TestCore::initTestCase()
     for (quint32 i = 0; i != numSets; ++i)
     {
         // Creating data objects
-        mpProject->addDataObject(AbstractDataObject::ObjectType::kScalar);
+        pScalar = (ScalarDataObject*)mpProject->addDataObject(AbstractDataObject::ObjectType::kScalar);
         pVector = (VectorDataObject*)mpProject->addDataObject(AbstractDataObject::ObjectType::kVector);
         pMatrix = (MatrixDataObject*)mpProject->addDataObject(AbstractDataObject::ObjectType::kMatrix);
         mpProject->addDataObject(AbstractDataObject::ObjectType::kSurface);
@@ -63,10 +65,8 @@ void TestCore::initTestCase()
         pGeometry->setRotationMatrix(pMatrix);
         // Creating user-defined cross sections
         pUserCrossSection = (UserCrossSectionRodComponent*)mpProject->addCrossSection(AbstractCrossSectionRodComponent::SectionType::kUserDefined);
-        pUserCrossSection->area() = 0.1;
-        pUserCrossSection->inertiaMomemntTorsional() = 1e-6;
-        pUserCrossSection->inertiaMomentX() = 1e-4;
-        pUserCrossSection->inertiaMomentY() = pUserCrossSection->inertiaMomentX();
+        pUserCrossSection->setArea(pScalar);
+        pUserCrossSection->setInertiaMomentTorsional(pScalar);
     }
 }
 
@@ -202,6 +202,17 @@ void TestCore::createRodGeometry()
     delete pRadiusVector;
     QVERIFY(!pGeometry.isDataComplete());
     delete pRotationMatrix;
+}
+
+//! Try creating a cross section of a rod
+void TestCore::createRodCrossSection()
+{
+    ScalarDataObject* pArea = new ScalarDataObject("Area");
+    UserCrossSectionRodComponent pCrossSection("User-defined cross section");
+    pCrossSection.setArea(pArea);
+    QVERIFY(pCrossSection.isDataComplete());
+    delete pArea;
+    QVERIFY(!pCrossSection.isDataComplete());
 }
 
 //! Cleanup

@@ -38,6 +38,7 @@ AbstractDataObject* ScalarDataObject::clone() const
     ScalarDataObject* obj = new ScalarDataObject(mName);
     obj->mItems = mItems;
     obj->mID = mID;
+    --smNumInstances;
     return obj;
 }
 

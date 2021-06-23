@@ -21,15 +21,14 @@ AbstractRodComponent* UserCrossSectionRodComponent::clone() const
     UserCrossSectionRodComponent* pCrossSection = new UserCrossSectionRodComponent(mName);
     pCrossSection->mID = mID;
     pCrossSection->copyIntegratedProperties(this);
+    --smNumInstances;
     return pCrossSection;
 }
 
-//! \brief Check if a specified data is complete
+//! \brief Check if specified data is complete
 //!
 //! Some of properties may be of zero values to achieve infinite stiffness
 bool UserCrossSectionRodComponent::isDataComplete() const
 {
-    return mArea >= 0
-           && mInertiaMomentTorsional >= 0
-           && mInertiaMomentX >= 0 && mInertiaMomentY >= 0;
+    return mpArea;
 }

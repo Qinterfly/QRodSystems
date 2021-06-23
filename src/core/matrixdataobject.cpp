@@ -39,6 +39,7 @@ AbstractDataObject* MatrixDataObject::clone() const
     MatrixDataObject* obj = new MatrixDataObject(mName);
     obj->mItems = mItems;
     obj->mID = mID;
+    --smNumInstances;
     return obj;
 }
 

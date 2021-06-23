@@ -8,10 +8,13 @@
 #ifndef ABSTRACTCROSSSECTIONRODCOMPONENT_H
 #define ABSTRACTCROSSSECTIONRODCOMPONENT_H
 
+#include <QPointer>
 #include "abstractrodcomponent.h"
 
 namespace QRS::Core
 {
+
+class ScalarDataObject;
 
 //! General cross section of a rod
 class AbstractCrossSectionRodComponent : public AbstractRodComponent
@@ -35,18 +38,15 @@ protected:
     SectionType const mSectionType;
     static quint32 smNumInstances;
     // Area
-    DataValueType mArea = 0.0;
+    QPointer<ScalarDataObject const> mpArea;
     // Inertia moments
-    DataValueType mInertiaMomentTorsional = 0.0;
-    DataValueType mInertiaMomentX = 0.0;
-    DataValueType mInertiaMomentY = 0.0;
-    DataValueType mInertiaMomentXY = 0.0;
+    QPointer<ScalarDataObject const> mpInertiaMomentTorsional;
+    QPointer<ScalarDataObject const> mpInertiaMomentX;
+    QPointer<ScalarDataObject const> mpInertiaMomentY;
+    QPointer<ScalarDataObject const> mpInertiaProductXY;
     // Center coordinates
-    DataValueType mCenterCoordinateX = 0.0;
-    DataValueType mCenterCoordinateY = 0.0;
-    // Eccentricity
-    DataValueType mEccentricityX = 0.0;
-    DataValueType mEccentricityY = 0.0;
+    QPointer<ScalarDataObject const> mpCenterCoordinateX;
+    QPointer<ScalarDataObject const> mpCenterCoordinateY;
 };
 
 }

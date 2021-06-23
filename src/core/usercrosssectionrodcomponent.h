@@ -9,6 +9,7 @@
 #define USERCROSSSECTIONRODCOMPONENT_H
 
 #include "abstractcrosssectionrodcomponent.h"
+#include "core/scalardataobject.h"
 
 namespace QRS::Core
 {
@@ -20,19 +21,28 @@ public:
     UserCrossSectionRodComponent(QString const& name);
     AbstractRodComponent* clone() const override;
     bool isDataComplete() const override;
+
     // Area
-    DataValueType& area() { return mArea; }
+    ScalarDataObject const* area() const { return mpArea; }
     // Inertia moments
-    DataValueType& inertiaMomemntTorsional() { return mInertiaMomentTorsional; }
-    DataValueType& inertiaMomentX() { return mInertiaMomentX; }
-    DataValueType& inertiaMomentY() { return mInertiaMomentY; }
-    DataValueType& inertiaMomentXY() { return mInertiaMomentXY; }
+    ScalarDataObject const* inertiaMomentTorsional() const { return mpInertiaMomentTorsional; }
+    ScalarDataObject const* inertiaMomentX() const { return mpInertiaMomentX; }
+    ScalarDataObject const* inertiaMomentY() const { return mpInertiaMomentY; }
+    ScalarDataObject const* inertiaMomentProductXY() const { return mpInertiaProductXY; }
     // Center coordinates
-    DataValueType& centerCoordinateX() { return mCenterCoordinateX; }
-    DataValueType& centerCoordinateY() { return mCenterCoordinateY; }
-    // Eccentricity
-    DataValueType& eccentricityX() { return mEccentricityX; }
-    DataValueType& eccentricityY() { return mEccentricityY; }
+    ScalarDataObject const* centerCoordinateX() const { return mpCenterCoordinateX; }
+    ScalarDataObject const* centerCoordinateY() const { return mpCenterCoordinateY; }
+
+    // Area
+    void setArea(ScalarDataObject const* pArea) { mpArea = pArea; }
+    // Inertia moments
+    void setInertiaMomentTorsional(ScalarDataObject const* pInertiaMomentTorsional) { mpInertiaMomentTorsional = pInertiaMomentTorsional; }
+    void setInertiaMomentX(ScalarDataObject const* pInertiaMomentX) { mpInertiaMomentX = pInertiaMomentX; }
+    void setInertiaMomentY(ScalarDataObject const* pInertiaMomentY) { mpInertiaMomentY = pInertiaMomentY; }
+    void setInertiaProductXY(ScalarDataObject const* pInertiaProductXY) { mpInertiaProductXY = pInertiaProductXY; }
+    // Center coordinates
+    void setCenterCoordinateX(ScalarDataObject const* pCenterCoordinateX) { mpCenterCoordinateX = pCenterCoordinateX; }
+    void setCenterCoordinateY(ScalarDataObject const* pCenterCoordinateY) { mpCenterCoordinateY = pCenterCoordinateY; }
 };
 
 }

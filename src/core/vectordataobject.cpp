@@ -39,6 +39,7 @@ AbstractDataObject* VectorDataObject::clone() const
     VectorDataObject* obj = new VectorDataObject(mName);
     obj->mItems = mItems;
     obj->mID = mID;
+    --smNumInstances;
     return obj;
 }
 

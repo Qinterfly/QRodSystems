@@ -15,6 +15,7 @@
 #include "core/matrixdataobject.h"
 #include "core/surfacedataobject.h"
 #include "core/geometryrodcomponent.h"
+#include "core/usercrosssectionrodcomponent.h"
 #include "managers/dataobjectsmanager.h"
 #include "managers/rodcomponentsmanager.h"
 
@@ -94,6 +95,7 @@ void TestManagers::testDataObjectsManager()
 void TestManagers::testRodComponentsManager()
 {
     // Creating sample objects
+    ScalarDataObject* pScalar = (ScalarDataObject*)mpProject->addDataObject(AbstractDataObject::kScalar);
     VectorDataObject* pVector = (VectorDataObject*)mpProject->addDataObject(AbstractDataObject::kVector);
     MatrixDataObject* pMatrix = (MatrixDataObject*)mpProject->addDataObject(AbstractDataObject::kMatrix);
     // Creating a manager
@@ -104,7 +106,10 @@ void TestManagers::testRodComponentsManager()
     pGeometry->setRotationMatrix(pMatrix);
     QVERIFY(pGeometry->isDataComplete());
     // Adding a user-defined cross section
-    mpRodComponentsManager->addCrossSection(AbstractCrossSectionRodComponent::SectionType::kUserDefined);
+    UserCrossSectionRodComponent* pCrossSection;
+    pCrossSection = (UserCrossSectionRodComponent*)mpRodComponentsManager->addCrossSection(AbstractCrossSectionRodComponent::kUserDefined);
+    pCrossSection->setArea(pScalar);
+    QVERIFY(pCrossSection->isDataComplete());
     // Selecting
     mpRodComponentsManager->selectRodComponent(0);
     // User interaction

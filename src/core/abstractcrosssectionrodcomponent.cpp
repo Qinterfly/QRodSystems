@@ -6,6 +6,7 @@
  */
 
 #include "abstractcrosssectionrodcomponent.h"
+#include "core/scalardataobject.h"
 
 using namespace QRS::Core;
 
@@ -31,13 +32,15 @@ void AbstractCrossSectionRodComponent::serialize(QDataStream& stream) const
     stream << (quint32)mSectionType;
     stream << (DataIDType)mID;
     // Area
-    stream << mArea;
+    writeDataObjectPointer(stream, mpArea);
     // Inertia moments
-    stream << mInertiaMomentTorsional << mInertiaMomentX << mInertiaMomentY << mInertiaMomentXY;
+    writeDataObjectPointer(stream, mpInertiaMomentTorsional);
+    writeDataObjectPointer(stream, mpInertiaMomentX);
+    writeDataObjectPointer(stream, mpInertiaMomentY);
+    writeDataObjectPointer(stream, mpInertiaProductXY);
     // Center coordinates
-    stream << mCenterCoordinateX << mCenterCoordinateY;
-    // Eccentricity
-    stream << mEccentricityX << mEccentricityY;
+    writeDataObjectPointer(stream, mpCenterCoordinateX);
+    writeDataObjectPointer(stream, mpCenterCoordinateY);
 }
 
 /*!
@@ -46,33 +49,32 @@ void AbstractCrossSectionRodComponent::serialize(QDataStream& stream) const
  * It is assumed that a type and name have already been assigned.
  * So, only integrated properties need to be set.
  */
-void AbstractCrossSectionRodComponent::deserialize(QDataStream& stream, DataObjectGetter const& /*getDataObject*/)
+void AbstractCrossSectionRodComponent::deserialize(QDataStream& stream, DataObjectGetter const& getDataObject)
 {
     stream >> mID;
     // Area
-    stream >> mArea;
+    mpArea = (ScalarDataObject const*)readDataObjectPointer(stream, getDataObject);
     // Inertia moments
-    stream >> mInertiaMomentTorsional >> mInertiaMomentX >> mInertiaMomentY >> mInertiaMomentXY;
+    mpInertiaMomentTorsional = (ScalarDataObject const*)readDataObjectPointer(stream, getDataObject);
+    mpInertiaMomentX = (ScalarDataObject const*)readDataObjectPointer(stream, getDataObject);
+    mpInertiaMomentY = (ScalarDataObject const*)readDataObjectPointer(stream, getDataObject);
+    mpInertiaProductXY = (ScalarDataObject const*)readDataObjectPointer(stream, getDataObject);
     // Center coordinates
-    stream >> mCenterCoordinateX >> mCenterCoordinateY;
-    // Eccentricity
-    stream >> mEccentricityX >> mEccentricityY;
+    mpCenterCoordinateX  = (ScalarDataObject const*)readDataObjectPointer(stream, getDataObject);
+    mpCenterCoordinateY   = (ScalarDataObject const*)readDataObjectPointer(stream, getDataObject);
 }
 
 //! Copy integrated properties of a cross section
 void AbstractCrossSectionRodComponent::copyIntegratedProperties(AbstractCrossSectionRodComponent const* pCrossSection)
 {
     // Area
-    mArea = pCrossSection->mArea;
+    mpArea = pCrossSection->mpArea;
     // Inertia moments
-    mInertiaMomentTorsional = pCrossSection->mInertiaMomentTorsional;
-    mInertiaMomentX = pCrossSection->mInertiaMomentX;
-    mInertiaMomentY = pCrossSection->mInertiaMomentY;
-    mInertiaMomentXY = pCrossSection->mInertiaMomentXY;
+    mpInertiaMomentTorsional = pCrossSection->mpInertiaMomentTorsional;
+    mpInertiaMomentX = pCrossSection->mpInertiaMomentX;
+    mpInertiaMomentY = pCrossSection->mpInertiaMomentY;
+    mpInertiaProductXY = pCrossSection->mpInertiaProductXY;
     // Center coordinates
-    mCenterCoordinateX = pCrossSection->mCenterCoordinateX;
-    mCenterCoordinateY = pCrossSection->mCenterCoordinateY;
-    // Eccentricity
-    mEccentricityX = pCrossSection->mEccentricityX;
-    mEccentricityY = pCrossSection->mEccentricityY;
+    mpCenterCoordinateX = pCrossSection->mpCenterCoordinateX;
+    mpCenterCoordinateY = pCrossSection->mpCenterCoordinateY;
 }
