@@ -147,7 +147,8 @@ CDockWidget* DataObjectsManager::createHierarchyWidget()
     mpTreeDataObjects->setDragEnabled(true);
     pDockWidget->setWidget(mpTreeDataObjects);
     // Hierarchy model
-    mpTreeDataObjectsModel = new DataObjectsHierarchyModel(mDataObjects, mHierarchyDataObjects, mpTreeDataObjects);
+    mpTreeDataObjectsModel = new DataObjectsHierarchyModel(mDataObjects, mHierarchyDataObjects,
+                                                           "dataobjectsmanager/hierarchy", mpTreeDataObjects);
     mpTreeDataObjects->setModel(mpTreeDataObjectsModel);
     connect(mpTreeDataObjectsModel, &DataObjectsHierarchyModel::dataModified,
             this, &DataObjectsManager::setWindowModified);

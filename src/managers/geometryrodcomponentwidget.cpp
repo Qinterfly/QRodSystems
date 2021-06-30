@@ -17,8 +17,10 @@
 using namespace QRS::Managers;
 using namespace QRS::Core;
 
-GeometryRodComponentWidget::GeometryRodComponentWidget(Core::GeometryRodComponent& geometryRodComponent, QWidget* parent)
+GeometryRodComponentWidget::GeometryRodComponentWidget(Core::GeometryRodComponent& geometryRodComponent,
+                                                       QString const& mimeType, QWidget* parent)
     : QWidget(parent)
+    , mkMimeType(mimeType)
     , mGeometryRodComponent(geometryRodComponent)
 {
     setPalette(parent->palette());
@@ -30,16 +32,15 @@ GeometryRodComponentWidget::GeometryRodComponentWidget(Core::GeometryRodComponen
 void GeometryRodComponentWidget::createContent()
 {
     QGridLayout* pMainLayout = new QGridLayout(this);
-    QString dropFormat = "dataobjectsmanager/hierarchy";
     // Radius vector
     DataObjectLineEdit* pRadiusVectorEdit = new DataObjectLineEdit(mGeometryRodComponent.radiusVector(),
-                                                                   AbstractDataObject::ObjectType::kVector, dropFormat);
+                                                                   AbstractDataObject::ObjectType::kVector, mkMimeType);
     pMainLayout->addWidget(new QLabel(tr("Radius vector: ")), 0, 0);
     pMainLayout->addWidget(pRadiusVectorEdit, 0, 1);
     connect(pRadiusVectorEdit, &DataObjectLineEdit::dataObjectSelected, this, &GeometryRodComponentWidget::setRadiusVector);
     // Rotation matrix
     DataObjectLineEdit* pRotationMatrixEdit = new DataObjectLineEdit(mGeometryRodComponent.rotationMatrix(),
-                                                                     AbstractDataObject::ObjectType::kMatrix, dropFormat);
+                                                                     AbstractDataObject::ObjectType::kMatrix, mkMimeType);
     pMainLayout->addWidget(new QLabel(tr("Rotation matrix: ")), 1, 0);
     pMainLayout->addWidget(pRotationMatrixEdit, 1, 1);
     connect(pRotationMatrixEdit, &DataObjectLineEdit::dataObjectSelected, this, &GeometryRodComponentWidget::setRotationMatrix);

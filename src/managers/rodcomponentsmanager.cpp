@@ -31,6 +31,7 @@ using namespace QRS::Managers;
 using namespace QRS::HierarchyModels;
 
 QSize const skToolBarIconSize = QSize(27, 27);
+QString const skDataObjectsMimeType = "rodcomponentsmanager/dataobjectshierarchy";
 
 QWidget* addToolbarHeader(QToolBar* pToolBar, QString const& name);
 
@@ -96,7 +97,8 @@ CDockWidget* RodComponentsManager::createHierarchyRodComponentsWidget()
     mpTreeRodComponents->setDragEnabled(true);
     pDockWidget->setWidget(mpTreeRodComponents);
     // Hierarchy model
-    mpTreeRodComponentsModel = new RodComponentsHierarchyModel(mRodComponents, mHierarchyRodComponents, mpTreeRodComponents);
+    mpTreeRodComponentsModel = new RodComponentsHierarchyModel(mRodComponents, mHierarchyRodComponents,
+                                                               "rodcomponentsmanager/hierarchy", mpTreeRodComponents);
     mpTreeRodComponents->setModel(mpTreeRodComponentsModel);
     connect(mpTreeRodComponentsModel, &RodComponentsHierarchyModel::dataModified,
             this, &RodComponentsManager::setWindowModified);
@@ -123,7 +125,8 @@ ads::CDockWidget* RodComponentsManager::createHierarchyDataObjectsWidget()
     pTreeDataObjects->setDragEnabled(true);
     pDockWidget->setWidget(pTreeDataObjects);
     // Hierarchy model
-    mpTreeDataObjectsModel = new DataObjectsHierarchyModel(mDataObjects, mHierarchyDataObjects, pTreeDataObjects);
+    mpTreeDataObjectsModel = new DataObjectsHierarchyModel(mDataObjects, mHierarchyDataObjects,
+                                                           skDataObjectsMimeType, pTreeDataObjects);
     pTreeDataObjects->setModel(mpTreeDataObjectsModel);
     return pDockWidget;
 }
@@ -216,7 +219,7 @@ void RodComponentsManager::representRodComponent(Core::DataIDType id)
     case AbstractRodComponent::ComponentType::kGeometry:
     {
         GeometryRodComponent* pGeometry = (GeometryRodComponent*)pRodComponent;
-        GeometryRodComponentWidget* pGeometryWidget = new GeometryRodComponentWidget(*pGeometry, mpComponentDockWidget);
+        GeometryRodComponentWidget* pGeometryWidget = new GeometryRodComponentWidget(*pGeometry, skDataObjectsMimeType, mpComponentDockWidget);
         connect(pGeometryWidget, &GeometryRodComponentWidget::modified, this, &RodComponentsManager::setWindowModified);
         mpComponentDockWidget->setWidget(pGeometryWidget);
         break;

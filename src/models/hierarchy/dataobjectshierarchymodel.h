@@ -28,7 +28,8 @@ class DataObjectsHierarchyModel : public AbstractHierarchyModel
     Q_OBJECT
 
 public:
-    DataObjectsHierarchyModel(Core::DataObjects& dataObjects, Core::HierarchyTree& hierarchyDataObjects, QTreeView* pView = nullptr);
+    DataObjectsHierarchyModel(Core::DataObjects& dataObjects, Core::HierarchyTree& hierarchyDataObjects,
+                              QString const& mimeType, QTreeView* pView = nullptr);
     ~DataObjectsHierarchyModel() = default;
     void updateContent() override;
     void clearContent() override;

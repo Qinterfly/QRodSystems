@@ -13,8 +13,8 @@
 using namespace QRS::HierarchyModels;
 using namespace QRS::Core;
 
-ProjectHierarchyModel::ProjectHierarchyModel(QTreeView* pView)
-    : AbstractHierarchyModel("central/projectHierarchy", pView)
+ProjectHierarchyModel::ProjectHierarchyModel(QString const& mimeType, QTreeView* pView)
+    : AbstractHierarchyModel(mimeType, pView)
 {
 
 }

@@ -15,8 +15,9 @@
 using namespace QRS::HierarchyModels;
 using namespace QRS::Core;
 
-DataObjectsHierarchyModel::DataObjectsHierarchyModel(DataObjects& dataObjects, HierarchyTree& hierarchyDataObjects, QTreeView* pView)
-    : AbstractHierarchyModel("dataobjectsmanager/hierarchy", pView)
+DataObjectsHierarchyModel::DataObjectsHierarchyModel(DataObjects& dataObjects, HierarchyTree& hierarchyDataObjects,
+                                                     QString const& mimeType, QTreeView* pView)
+    : AbstractHierarchyModel(mimeType, pView)
     , mDataObjects(dataObjects)
     , mHierarchyDataObjects(hierarchyDataObjects)
 {

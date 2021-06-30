@@ -151,7 +151,7 @@ CDockWidget* MainWindow::createProjectHierarchyWidget()
     pWidget->setStyleSheet("padding: 3px 0px 0px 0px");
     pWidget->setIconSize(kIconSize);
     // Set the hierarchy model
-    mpProjectHierarchyModel = new ProjectHierarchyModel(pWidget);
+    mpProjectHierarchyModel = new ProjectHierarchyModel("central/projectHierarchy", pWidget);
     mpProjectHierarchyModel->setProject(mpProject);
     pWidget->setModel(mpProjectHierarchyModel);
     connect(pWidget->selectionModel(), &QItemSelectionModel::selectionChanged,

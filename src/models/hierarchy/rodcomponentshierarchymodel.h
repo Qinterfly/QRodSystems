@@ -24,7 +24,7 @@ class RodComponentsHierarchyModel : public AbstractHierarchyModel
 
 public:
     RodComponentsHierarchyModel(Core::RodComponents& rodComponents, Core::HierarchyTree& hierarchyRodComponents,
-                                QTreeView* pView = nullptr);
+                                QString const& mimeType, QTreeView* pView = nullptr);
     ~RodComponentsHierarchyModel() = default;
     void updateContent() override;
     void clearContent() override;

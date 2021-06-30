@@ -32,7 +32,7 @@ class GeometryRodComponentWidget : public QWidget
     Q_OBJECT
 
 public:
-    GeometryRodComponentWidget(Core::GeometryRodComponent& geometryRodComponent, QWidget* parent = nullptr);
+    GeometryRodComponentWidget(Core::GeometryRodComponent& geometryRodComponent, QString const& mimeType, QWidget* parent = nullptr);
     ~GeometryRodComponentWidget() = default;
 
 signals:
@@ -46,6 +46,7 @@ private:
     void createContent();
 
 private:
+    QString const mkMimeType;
     Core::GeometryRodComponent& mGeometryRodComponent;
 };
 

@@ -55,7 +55,7 @@ private:
     void updateContentExpanded();
 
 protected:
-    QString const kMimeType;
+    QString const mkMimeType;
 
 };
 

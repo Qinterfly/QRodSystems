@@ -16,8 +16,8 @@ using namespace QRS::HierarchyModels;
 using namespace QRS::Core;
 
 RodComponentsHierarchyModel::RodComponentsHierarchyModel(RodComponents& rodComponents, HierarchyTree& hierarchyRodComponents,
-                                                         QTreeView* pView)
-    : AbstractHierarchyModel("rodcomponentsmanager/hierarchy", pView)
+                                                         QString const& mimeType, QTreeView* pView)
+    : AbstractHierarchyModel(mimeType, pView)
     , mRodComponents(rodComponents)
     , mHierarchyRodComponents(hierarchyRodComponents)
 {

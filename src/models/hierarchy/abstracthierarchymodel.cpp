@@ -19,7 +19,7 @@ static const QString skBaseFolderName = "Group ";
 
 AbstractHierarchyModel::AbstractHierarchyModel(QString const& mimeType, QTreeView* pView)
     : QStandardItemModel(pView)
-    , kMimeType(mimeType)
+    , mkMimeType(mimeType)
 {
 
 }
@@ -44,7 +44,7 @@ Qt::DropActions AbstractHierarchyModel::supportedDragActions() const
 //! Retrieve the mime types
 QStringList AbstractHierarchyModel::mimeTypes() const
 {
-    return QStringList() << kMimeType;
+    return QStringList() << mkMimeType;
 }
 
 //! Encode each item according to a given list of indicies
@@ -62,18 +62,19 @@ QMimeData* AbstractHierarchyModel::mimeData(const QModelIndexList& indicies) con
         }
     }
     QMimeData* pMimeData = new QMimeData();
-    pMimeData->setData(kMimeType, encodedData);
+    pMimeData->setData(mkMimeType, encodedData);
     return pMimeData;
 }
 
 //! Process the drop action
-bool AbstractHierarchyModel::dropMimeData(QMimeData const* pMimeData, Qt::DropAction action, int row, int /*column*/, const QModelIndex& indexParent)
+bool AbstractHierarchyModel::dropMimeData(QMimeData const* pMimeData, Qt::DropAction action, int row, int /*column*/,
+                                          const QModelIndex& indexParent)
 {
-    if (!pMimeData->hasFormat(kMimeType))
+    if (!pMimeData->hasFormat(mkMimeType))
         return false;
     if (action == Qt::IgnoreAction)
         return true;
-    QByteArray encodedData = pMimeData->data(kMimeType);
+    QByteArray encodedData = pMimeData->data(mkMimeType);
     QDataStream stream(&encodedData, QIODevice::ReadOnly);
     int numItems;
     stream >> numItems;

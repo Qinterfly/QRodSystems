@@ -24,7 +24,7 @@ class ProjectHierarchyModel : public AbstractHierarchyModel
     Q_OBJECT
 
 public:
-    ProjectHierarchyModel(QTreeView* pView = nullptr);
+    ProjectHierarchyModel(QString const& mimeType, QTreeView* pView = nullptr);
     void updateContent() override;
     void clearContent() override;
     void setProject(Core::Project* pProject);
