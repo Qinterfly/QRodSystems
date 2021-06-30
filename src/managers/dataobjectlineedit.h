@@ -41,7 +41,7 @@ private:
 private:
     Core::AbstractDataObject const* mpDataObject;
     Core::AbstractDataObject::ObjectType mType;
-    QString mMimeType;
+    QString const mkMimeType;
 };
 
 }

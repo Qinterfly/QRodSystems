@@ -20,7 +20,7 @@ DataObjectLineEdit::DataObjectLineEdit(AbstractDataObject const* pDataObject, Ab
     : QLineEdit(parent)
     , mpDataObject(pDataObject)
     , mType(type)
-    , mMimeType(mimeType)
+    , mkMimeType(mimeType)
 {
     if (mpDataObject)
         setText(mpDataObject->name());
@@ -33,9 +33,9 @@ DataObjectLineEdit::DataObjectLineEdit(AbstractDataObject const* pDataObject, Ab
 void DataObjectLineEdit::dragEnterEvent(QDragEnterEvent* pEvent)
 {
     QMimeData const* pMimeData = pEvent->mimeData();
-    if (pMimeData->hasFormat(mMimeType))
+    if (pMimeData->hasFormat(mkMimeType))
     {
-        QDataStream dataStream = pMimeData->data(mMimeType);
+        QDataStream dataStream = pMimeData->data(mkMimeType);
         int numObjects;
         dataStream >> numObjects;
         if (numObjects == 0)
@@ -50,7 +50,7 @@ void DataObjectLineEdit::dragEnterEvent(QDragEnterEvent* pEvent)
 //! Process dropping of the approved item
 void DataObjectLineEdit::dropEvent(QDropEvent* pEvent)
 {
-    QDataStream dataStream = pEvent->mimeData()->data(mMimeType);
+    QDataStream dataStream = pEvent->mimeData()->data(mkMimeType);
     int numObjects;
     dataStream >> numObjects;
     DataObjectsHierarchyItem* pItem = (DataObjectsHierarchyItem*)AbstractHierarchyItem::readPointer(dataStream);
