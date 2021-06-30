@@ -11,11 +11,9 @@
 
 #include "abstractprojectmanager.h"
 #include "central/uiconstants.h"
-#include "core/project.h"
 #include "DockManager.h"
 
 using namespace QRS::Managers;
-using namespace QRS::Core;
 using ads::CDockManager;
 
 AbstractProjectManager::AbstractProjectManager(QString& lastPath, QSettings& settings,

@@ -23,11 +23,6 @@ class CDockManager;
 namespace QRS
 {
 
-namespace Core
-{
-class Project;
-}
-
 namespace Managers
 {
 

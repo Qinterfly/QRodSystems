@@ -17,9 +17,6 @@
 using namespace QRS::Managers;
 using namespace QRS::Core;
 
-template <typename T>
-QComboBox* createObjectsComboBox(auto const& objects, T const* pCurrentObject);
-
 GeometryRodComponentWidget::GeometryRodComponentWidget(Core::GeometryRodComponent& geometryRodComponent, QWidget* parent)
     : QWidget(parent)
     , mGeometryRodComponent(geometryRodComponent)

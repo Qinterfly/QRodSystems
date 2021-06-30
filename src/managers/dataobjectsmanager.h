@@ -28,11 +28,6 @@ class CDockWidget;
 namespace QRS
 {
 
-namespace Core
-{
-class Project;
-}
-
 namespace TableModels
 {
 class TableModelInterface;
