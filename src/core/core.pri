@@ -1,8 +1,8 @@
 INCLUDEPATH += $$PWD
 
 HEADERS += \
-    $$PWD/abstractcrosssectionrodcomponent.h \
     $$PWD/abstractrodcomponent.h \
+    $$PWD/abstractsectionrodcomponent.h \
     $$PWD/aliasdata.h \
     $$PWD/aliasdataset.h \
     $$PWD/array.h \
@@ -10,7 +10,7 @@ HEADERS += \
     $$PWD/project.h \
     $$PWD/abstractdataobject.h \
     $$PWD/scalardataobject.h \
-    $$PWD/usercrosssectionrodcomponent.h \
+    $$PWD/usersectionrodcomponent.h \
     $$PWD/vectordataobject.h \
     $$PWD/matrixdataobject.h \
     $$PWD/surfacedataobject.h \
@@ -19,15 +19,15 @@ HEADERS += \
     $$PWD/utilities.h
 
 SOURCES += \
-    $$PWD/abstractcrosssectionrodcomponent.cpp \
     $$PWD/abstractrodcomponent.cpp \
+    $$PWD/abstractsectionrodcomponent.cpp \
     $$PWD/array.cpp \
     $$PWD/geometryrodcomponent.cpp \
     $$PWD/project-base.cpp \
     $$PWD/project-io.cpp \
     $$PWD/abstractdataobject.cpp \
     $$PWD/scalardataobject.cpp \
-    $$PWD/usercrosssectionrodcomponent.cpp \
+    $$PWD/usersectionrodcomponent.cpp \
     $$PWD/vectordataobject.cpp \
     $$PWD/matrixdataobject.cpp \
     $$PWD/surfacedataobject.cpp \

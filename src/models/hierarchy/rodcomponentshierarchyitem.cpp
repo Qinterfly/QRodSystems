@@ -7,7 +7,7 @@
 
 #include "rodcomponentshierarchyitem.h"
 #include "core/abstractrodcomponent.h"
-#include "core/abstractcrosssectionrodcomponent.h"
+#include "core/abstractsectionrodcomponent.h"
 #include "core/hierarchytree.h"
 
 using namespace QRS::HierarchyModels;
@@ -79,12 +79,12 @@ QIcon getRodComponentIcon(AbstractRodComponent const* pRodComponent)
     case AbstractRodComponent::ComponentType::kGeometry:
         icon = QIcon(":/icons/axis.svg");
         break;
-    case AbstractRodComponent::ComponentType::kCrossSection:
+    case AbstractRodComponent::ComponentType::kSection:
     {
-        AbstractCrossSectionRodComponent const* pCrossSection = (AbstractCrossSectionRodComponent const*)pRodComponent;
-        switch (pCrossSection->sectionType())
+        AbstractSectionRodComponent const* pSection = (AbstractSectionRodComponent const*)pRodComponent;
+        switch (pSection->sectionType())
         {
-        case AbstractCrossSectionRodComponent::SectionType::kUserDefined:
+        case AbstractSectionRodComponent::SectionType::kUserDefined:
             icon = QIcon(":/icons/abstract-shape.svg");
         }
     }

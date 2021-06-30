@@ -15,7 +15,7 @@
 #include "matrixdataobject.h"
 #include "surfacedataobject.h"
 #include "geometryrodcomponent.h"
-#include "usercrosssectionrodcomponent.h"
+#include "usersectionrodcomponent.h"
 
 using namespace QRS::Core;
 
@@ -67,7 +67,7 @@ void Project::setDataObjects(DataObjects const& dataObjects, HierarchyTree const
             pGeometry->setRotationMatrix((MatrixDataObject const*)substituteDataObject(dataObjects, pGeometry->rotationMatrix()));
             break;
         }
-        case AbstractRodComponent::ComponentType::kCrossSection:
+        case AbstractRodComponent::ComponentType::kSection:
             break;
         }
     }
@@ -106,14 +106,14 @@ AbstractRodComponent* Project::addGeometry()
 }
 
 //! Create a cross section
-AbstractRodComponent* Project::addCrossSection(AbstractCrossSectionRodComponent::SectionType sectionType)
+AbstractRodComponent* Project::addCrossSection(AbstractSectionRodComponent::SectionType sectionType)
 {
-    QString name = "Cross section " + QString::number(AbstractCrossSectionRodComponent::numberInstances() + 1);
+    QString name = "Cross section " + QString::number(AbstractSectionRodComponent::numberInstances() + 1);
     AbstractRodComponent* pRodComponent = nullptr;
     switch (sectionType)
     {
-    case AbstractCrossSectionRodComponent::SectionType::kUserDefined:
-        pRodComponent = new UserCrossSectionRodComponent(name);
+    case AbstractSectionRodComponent::SectionType::kUserDefined:
+        pRodComponent = new UserSectionRodComponent(name);
         break;
     }
     emplaceRodComponent(pRodComponent);

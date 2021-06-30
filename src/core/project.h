@@ -14,7 +14,7 @@
 #include "hierarchytree.h"
 #include "abstractdataobject.h"
 #include "abstractrodcomponent.h"
-#include "abstractcrosssectionrodcomponent.h"
+#include "abstractsectionrodcomponent.h"
 
 QT_BEGIN_NAMESPACE
 class QString;
@@ -55,7 +55,7 @@ public:
     // Rod components
     DataIDType numberRodComponents() const { return mRodComponents.size(); }
     AbstractRodComponent* addGeometry();
-    AbstractRodComponent* addCrossSection(AbstractCrossSectionRodComponent::SectionType sectionType);
+    AbstractRodComponent* addCrossSection(AbstractSectionRodComponent::SectionType sectionType);
     RodComponents cloneRodComponents() const;
     HierarchyTree cloneHierarchyRodComponents() const { return mHierarchyRodComponents.clone(); }
     // Getters and setters

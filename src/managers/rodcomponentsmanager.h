@@ -11,7 +11,7 @@
 #include "managers/abstractprojectmanager.h"
 #include "core/aliasdataset.h"
 #include "core/hierarchytree.h"
-#include "core/abstractcrosssectionrodcomponent.h"
+#include "core/abstractsectionrodcomponent.h"
 
 QT_BEGIN_NAMESPACE
 class QTreeView;
@@ -53,7 +53,7 @@ signals:
 public slots:
     void apply() override;
     Core::AbstractRodComponent* addGeometry();
-    Core::AbstractRodComponent* addCrossSection(Core::AbstractCrossSectionRodComponent::SectionType sectionType);
+    Core::AbstractRodComponent* addSection(Core::AbstractSectionRodComponent::SectionType sectionType);
 
 private:
     // Content
@@ -70,7 +70,7 @@ private:
     // Toolbars
     QToolBar* createMainToolBar();
     QWidget* makeGeometryToolBar();
-    QWidget* makeCrossSectionsToolBar();
+    QWidget* makeSectionsToolBar();
     QWidget* makeBoundaryConditionsToolBar();
     QWidget* makeLoadingToolBar();
     QWidget* makeMaterialToolBar();

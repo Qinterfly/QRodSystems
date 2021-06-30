@@ -18,8 +18,9 @@
 #include "core/vectordataobject.h"
 #include "core/matrixdataobject.h"
 #include "core/geometryrodcomponent.h"
-#include "core/usercrosssectionrodcomponent.h"
+#include "core/usersectionrodcomponent.h"
 #include "managers/geometryrodcomponentwidget.h"
+#include "managers/usersectionrodcomponentwidget.h"
 #include "models/hierarchy/dataobjectshierarchymodel.h"
 #include "models/hierarchy/rodcomponentshierarchymodel.h"
 
@@ -182,15 +183,15 @@ AbstractRodComponent* RodComponentsManager::addGeometry()
 }
 
 //! Add a cross section
-AbstractRodComponent* RodComponentsManager::addCrossSection(AbstractCrossSectionRodComponent::SectionType sectionType)
+AbstractRodComponent* RodComponentsManager::addSection(AbstractSectionRodComponent::SectionType sectionType)
 {
-    static QString const kBaseName = "Cross section ";
-    QString name = kBaseName + QString::number(AbstractCrossSectionRodComponent::numberInstances() + 1);
+    static QString const kBaseName = "Section ";
+    QString name = kBaseName + QString::number(AbstractSectionRodComponent::numberInstances() + 1);
     AbstractRodComponent* pRodComponent = nullptr;
     switch (sectionType)
     {
-    case AbstractCrossSectionRodComponent::SectionType::kUserDefined:
-        pRodComponent = new UserCrossSectionRodComponent(name);
+    case AbstractSectionRodComponent::SectionType::kUserDefined:
+        pRodComponent = new UserSectionRodComponent(name);
         break;
     }
     emplaceRodComponent(pRodComponent);
@@ -224,9 +225,14 @@ void RodComponentsManager::representRodComponent(Core::DataIDType id)
         mpComponentDockWidget->setWidget(pGeometryWidget);
         break;
     }
-    case AbstractRodComponent::ComponentType::kCrossSection:
-        // TODO
+    case AbstractRodComponent::ComponentType::kSection:
+    {
+        UserSectionRodComponent* pSection = (UserSectionRodComponent*)pRodComponent;
+        UserSectionRodComponentWidget* pSectionWidget = new UserSectionRodComponentWidget(*pSection, skDataObjectsMimeType, mpComponentDockWidget);
+        connect(pSectionWidget, &UserSectionRodComponentWidget::modified, this, &RodComponentsManager::setWindowModified);
+        mpComponentDockWidget->setWidget(pSectionWidget);
         break;
+    }
     }
 }
 
@@ -244,8 +250,8 @@ QToolBar* RodComponentsManager::createMainToolBar()
     // Geometry
     pMainToolBar->addWidget(makeGeometryToolBar());
     pMainToolBar->addSeparator();
-    // Cross section
-    pMainToolBar->addWidget(makeCrossSectionsToolBar());
+    // Section
+    pMainToolBar->addWidget(makeSectionsToolBar());
     pMainToolBar->addSeparator();
     // Boundary condition
     pMainToolBar->addWidget(makeBoundaryConditionsToolBar());
@@ -272,13 +278,13 @@ QWidget* RodComponentsManager::makeGeometryToolBar()
 }
 
 //! Create a toolbar to construct cross sections
-QWidget* RodComponentsManager::makeCrossSectionsToolBar()
+QWidget* RodComponentsManager::makeSectionsToolBar()
 {
     QToolBar* pToolBar = new QToolBar();
     // User-defined
     pToolBar->addAction(QIcon(":/icons/abstract-shape.svg"), tr("User-defined"), this, [this]()
     {
-        addCrossSection(AbstractCrossSectionRodComponent::kUserDefined);
+        addSection(AbstractSectionRodComponent::kUserDefined);
     });
     pToolBar->addAction(QIcon(":/icons/rectangle.svg"), tr("Rectangular"));
     pToolBar->setIconSize(skToolBarIconSize);

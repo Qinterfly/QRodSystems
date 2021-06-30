@@ -2,23 +2,23 @@
  * \file
  * \author Pavel Lakiza
  * \date June 2021
- * \brief Declaration of the UserCrossSectionRodComponent class
+ * \brief Declaration of the UserSectionRodComponent class
  */
 
-#ifndef USERCROSSSECTIONRODCOMPONENT_H
-#define USERCROSSSECTIONRODCOMPONENT_H
+#ifndef USERSECTIONRODCOMPONENT_H
+#define USERSECTIONRODCOMPONENT_H
 
-#include "abstractcrosssectionrodcomponent.h"
+#include "abstractsectionrodcomponent.h"
 #include "core/scalardataobject.h"
 
 namespace QRS::Core
 {
 
-//! Cross section which properties are defined by user
-class UserCrossSectionRodComponent : public AbstractCrossSectionRodComponent
+//! Section which properties are defined by user
+class UserSectionRodComponent : public AbstractSectionRodComponent
 {
 public:
-    UserCrossSectionRodComponent(QString const& name);
+    UserSectionRodComponent(QString const& name);
     AbstractRodComponent* clone() const override;
     bool isDataComplete() const override;
 
@@ -28,7 +28,7 @@ public:
     ScalarDataObject const* inertiaMomentTorsional() const { return mpInertiaMomentTorsional; }
     ScalarDataObject const* inertiaMomentX() const { return mpInertiaMomentX; }
     ScalarDataObject const* inertiaMomentY() const { return mpInertiaMomentY; }
-    ScalarDataObject const* inertiaMomentProductXY() const { return mpInertiaProductXY; }
+    ScalarDataObject const* inertiaProductXY() const { return mpInertiaProductXY; }
     // Center coordinates
     ScalarDataObject const* centerCoordinateX() const { return mpCenterCoordinateX; }
     ScalarDataObject const* centerCoordinateY() const { return mpCenterCoordinateY; }
@@ -48,4 +48,4 @@ public:
 }
 
 
-#endif // USERCROSSSECTIONRODCOMPONENT_H
+#endif // USERSECTIONRODCOMPONENT_H

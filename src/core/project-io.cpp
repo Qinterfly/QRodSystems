@@ -18,7 +18,7 @@
 #include "matrixdataobject.h"
 #include "surfacedataobject.h"
 #include "geometryrodcomponent.h"
-#include "usercrosssectionrodcomponent.h"
+#include "usersectionrodcomponent.h"
 #include "utilities.h"
 
 using namespace QRS::Core;
@@ -205,15 +205,15 @@ void readRodComponents(QDataStream& inputStream, DataObjects const& dataObjects,
         case (AbstractRodComponent::ComponentType::kGeometry):
             pRodComponent = new GeometryRodComponent(name);
             break;
-        case (AbstractRodComponent::ComponentType::kCrossSection):
+        case (AbstractRodComponent::ComponentType::kSection):
         {
-            AbstractCrossSectionRodComponent::SectionType sectionType;
+            AbstractSectionRodComponent::SectionType sectionType;
             inputStream >> sectionType;
             switch (sectionType)
             {
-            case (AbstractCrossSectionRodComponent::SectionType::kUserDefined):
+            case (AbstractSectionRodComponent::SectionType::kUserDefined):
             {
-                pRodComponent = new UserCrossSectionRodComponent(name);
+                pRodComponent = new UserSectionRodComponent(name);
                 break;
             }
             }

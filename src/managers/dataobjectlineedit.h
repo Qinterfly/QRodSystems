@@ -23,7 +23,7 @@ class DataObjectLineEdit : public QLineEdit
     Q_OBJECT
 public:
     DataObjectLineEdit(Core::AbstractDataObject const* pDataObject, Core::AbstractDataObject::ObjectType type,
-                       QString const& dropFormat, QWidget* parent = nullptr);
+                       QString const& mimeType, QWidget* parent = nullptr);
     ~DataObjectLineEdit() = default;
 
 signals:
@@ -41,7 +41,7 @@ private:
 private:
     Core::AbstractDataObject const* mpDataObject;
     Core::AbstractDataObject::ObjectType mType;
-    QString mDropFormat;
+    QString mMimeType;
 };
 
 }

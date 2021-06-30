@@ -2,11 +2,11 @@
  * \file
  * \author Pavel Lakiza
  * \date June 2021
- * \brief Declaration of the AbstractCrossSectionRodComponent class
+ * \brief Declaration of the AbstractSectionRodComponent class
  */
 
-#ifndef ABSTRACTCROSSSECTIONRODCOMPONENT_H
-#define ABSTRACTCROSSSECTIONRODCOMPONENT_H
+#ifndef ABSTRACTSECTIONRODCOMPONENT_H
+#define ABSTRACTSECTIONRODCOMPONENT_H
 
 #include <QPointer>
 #include "abstractrodcomponent.h"
@@ -17,22 +17,22 @@ namespace QRS::Core
 class ScalarDataObject;
 
 //! General cross section of a rod
-class AbstractCrossSectionRodComponent : public AbstractRodComponent
+class AbstractSectionRodComponent : public AbstractRodComponent
 {
 public:
     enum SectionType
     {
         kUserDefined
     };
-    AbstractCrossSectionRodComponent(SectionType sectionType, QString const& name);
-    virtual ~AbstractCrossSectionRodComponent() = 0;
+    AbstractSectionRodComponent(SectionType sectionType, QString const& name);
+    virtual ~AbstractSectionRodComponent() = 0;
     static quint32 numberInstances() { return smNumInstances; }
     void serialize(QDataStream& stream) const override;
     void deserialize(QDataStream& stream, DataObjectGetter const& getDataObject) override;
     SectionType sectionType() const { return mSectionType; }
 
 protected:
-    void copyIntegratedProperties(AbstractCrossSectionRodComponent const* pCrossSection);
+    void copyIntegratedProperties(AbstractSectionRodComponent const* pSection);
 
 protected:
     // Info
@@ -52,4 +52,4 @@ protected:
 
 }
 
-#endif // ABSTRACTCROSSSECTIONRODCOMPONENT_H
+#endif // ABSTRACTSECTIONRODCOMPONENT_H

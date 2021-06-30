@@ -33,7 +33,6 @@ class GeometryRodComponentWidget : public QWidget
 
 public:
     GeometryRodComponentWidget(Core::GeometryRodComponent& geometryRodComponent, QString const& mimeType, QWidget* parent = nullptr);
-    ~GeometryRodComponentWidget() = default;
 
 signals:
     void modified(bool flag = true);

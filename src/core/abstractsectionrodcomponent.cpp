@@ -2,30 +2,30 @@
  * \file
  * \author Pavel Lakiza
  * \date June 2021
- * \brief Definition of the AbstractCrossSectionRodComponent class
+ * \brief Definition of the AbstractSectionRodComponent class
  */
 
-#include "abstractcrosssectionrodcomponent.h"
+#include "abstractsectionrodcomponent.h"
 #include "core/scalardataobject.h"
 
 using namespace QRS::Core;
 
-quint32 AbstractCrossSectionRodComponent::smNumInstances = 0;
+quint32 AbstractSectionRodComponent::smNumInstances = 0;
 
-AbstractCrossSectionRodComponent::AbstractCrossSectionRodComponent(SectionType sectionType, QString const& name)
-    : AbstractRodComponent(kCrossSection, name), mSectionType(sectionType)
+AbstractSectionRodComponent::AbstractSectionRodComponent(SectionType sectionType, QString const& name)
+    : AbstractRodComponent(kSection, name), mSectionType(sectionType)
 {
     ++smNumInstances;
 }
 
 //! Decrease a number of instances while being destroyed
-AbstractCrossSectionRodComponent::~AbstractCrossSectionRodComponent()
+AbstractSectionRodComponent::~AbstractSectionRodComponent()
 {
     --smNumInstances;
 }
 
 //! Serialize a cross section
-void AbstractCrossSectionRodComponent::serialize(QDataStream& stream) const
+void AbstractSectionRodComponent::serialize(QDataStream& stream) const
 {
     stream << (quint32)mComponentType;
     stream << mName;
@@ -49,7 +49,7 @@ void AbstractCrossSectionRodComponent::serialize(QDataStream& stream) const
  * It is assumed that a type and name have already been assigned.
  * So, only integrated properties need to be set.
  */
-void AbstractCrossSectionRodComponent::deserialize(QDataStream& stream, DataObjectGetter const& getDataObject)
+void AbstractSectionRodComponent::deserialize(QDataStream& stream, DataObjectGetter const& getDataObject)
 {
     stream >> mID;
     // Area
@@ -65,16 +65,16 @@ void AbstractCrossSectionRodComponent::deserialize(QDataStream& stream, DataObje
 }
 
 //! Copy integrated properties of a cross section
-void AbstractCrossSectionRodComponent::copyIntegratedProperties(AbstractCrossSectionRodComponent const* pCrossSection)
+void AbstractSectionRodComponent::copyIntegratedProperties(AbstractSectionRodComponent const* pSection)
 {
     // Area
-    mpArea = pCrossSection->mpArea;
+    mpArea = pSection->mpArea;
     // Inertia moments
-    mpInertiaMomentTorsional = pCrossSection->mpInertiaMomentTorsional;
-    mpInertiaMomentX = pCrossSection->mpInertiaMomentX;
-    mpInertiaMomentY = pCrossSection->mpInertiaMomentY;
-    mpInertiaProductXY = pCrossSection->mpInertiaProductXY;
+    mpInertiaMomentTorsional = pSection->mpInertiaMomentTorsional;
+    mpInertiaMomentX = pSection->mpInertiaMomentX;
+    mpInertiaMomentY = pSection->mpInertiaMomentY;
+    mpInertiaProductXY = pSection->mpInertiaProductXY;
     // Center coordinates
-    mpCenterCoordinateX = pCrossSection->mpCenterCoordinateX;
-    mpCenterCoordinateY = pCrossSection->mpCenterCoordinateY;
+    mpCenterCoordinateX = pSection->mpCenterCoordinateX;
+    mpCenterCoordinateY = pSection->mpCenterCoordinateY;
 }

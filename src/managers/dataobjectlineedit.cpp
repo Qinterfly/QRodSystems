@@ -16,11 +16,11 @@ using namespace QRS::Core;
 using namespace QRS::HierarchyModels;
 
 DataObjectLineEdit::DataObjectLineEdit(AbstractDataObject const* pDataObject, AbstractDataObject::ObjectType type,
-                                       QString const& dropFormat, QWidget* parent)
+                                       QString const& mimeType, QWidget* parent)
     : QLineEdit(parent)
     , mpDataObject(pDataObject)
     , mType(type)
-    , mDropFormat(dropFormat)
+    , mMimeType(mimeType)
 {
     if (mpDataObject)
         setText(mpDataObject->name());
@@ -33,9 +33,9 @@ DataObjectLineEdit::DataObjectLineEdit(AbstractDataObject const* pDataObject, Ab
 void DataObjectLineEdit::dragEnterEvent(QDragEnterEvent* pEvent)
 {
     QMimeData const* pMimeData = pEvent->mimeData();
-    if (pMimeData->hasFormat(mDropFormat))
+    if (pMimeData->hasFormat(mMimeType))
     {
-        QDataStream dataStream = pMimeData->data(mDropFormat);
+        QDataStream dataStream = pMimeData->data(mMimeType);
         int numObjects;
         dataStream >> numObjects;
         if (numObjects == 0)
@@ -50,7 +50,7 @@ void DataObjectLineEdit::dragEnterEvent(QDragEnterEvent* pEvent)
 //! Process dropping of the approved item
 void DataObjectLineEdit::dropEvent(QDropEvent* pEvent)
 {
-    QDataStream dataStream = pEvent->mimeData()->data(mDropFormat);
+    QDataStream dataStream = pEvent->mimeData()->data(mMimeType);
     int numObjects;
     dataStream >> numObjects;
     DataObjectsHierarchyItem* pItem = (DataObjectsHierarchyItem*)AbstractHierarchyItem::readPointer(dataStream);

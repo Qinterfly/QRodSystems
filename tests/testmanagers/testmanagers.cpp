@@ -15,7 +15,7 @@
 #include "core/matrixdataobject.h"
 #include "core/surfacedataobject.h"
 #include "core/geometryrodcomponent.h"
-#include "core/usercrosssectionrodcomponent.h"
+#include "core/usersectionrodcomponent.h"
 #include "managers/managersfactory.h"
 #include "managers/dataobjectsmanager.h"
 #include "managers/rodcomponentsmanager.h"
@@ -109,10 +109,10 @@ void TestManagers::testRodComponentsManager()
     pGeometry->setRotationMatrix(pMatrix);
     QVERIFY(pGeometry->isDataComplete());
     // Adding a user-defined cross section
-    UserCrossSectionRodComponent* pCrossSection;
-    pCrossSection = (UserCrossSectionRodComponent*)pManager->addCrossSection(AbstractCrossSectionRodComponent::kUserDefined);
-    pCrossSection->setArea(pScalar);
-    QVERIFY(pCrossSection->isDataComplete());
+    UserSectionRodComponent* pSection;
+    pSection = (UserSectionRodComponent*)pManager->addSection(AbstractSectionRodComponent::kUserDefined);
+    pSection->setArea(pScalar);
+    QVERIFY(pSection->isDataComplete());
     // Selecting
     pManager->selectRodComponent(0);
     pManager->apply();

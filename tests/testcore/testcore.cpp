@@ -14,7 +14,7 @@
 #include "core/matrixdataobject.h"
 #include "core/hierarchytree.h"
 #include "core/geometryrodcomponent.h"
-#include "core/usercrosssectionrodcomponent.h"
+#include "core/usersectionrodcomponent.h"
 
 using namespace QRS::Core;
 
@@ -51,7 +51,7 @@ void TestCore::initTestCase()
     VectorDataObject* pVector;
     MatrixDataObject* pMatrix;
     GeometryRodComponent* pGeometry;
-    UserCrossSectionRodComponent* pUserCrossSection;
+    UserSectionRodComponent* pUserCrossSection;
     for (quint32 i = 0; i != numSets; ++i)
     {
         // Creating data objects
@@ -64,7 +64,7 @@ void TestCore::initTestCase()
         pGeometry->setRadiusVector(pVector);
         pGeometry->setRotationMatrix(pMatrix);
         // Creating user-defined cross sections
-        pUserCrossSection = (UserCrossSectionRodComponent*)mpProject->addCrossSection(AbstractCrossSectionRodComponent::SectionType::kUserDefined);
+        pUserCrossSection = (UserSectionRodComponent*)mpProject->addCrossSection(AbstractSectionRodComponent::SectionType::kUserDefined);
         pUserCrossSection->setArea(pScalar);
         pUserCrossSection->setInertiaMomentTorsional(pScalar);
     }
@@ -208,11 +208,11 @@ void TestCore::createRodGeometry()
 void TestCore::createRodCrossSection()
 {
     ScalarDataObject* pArea = new ScalarDataObject("Area");
-    UserCrossSectionRodComponent pCrossSection("User-defined cross section");
-    pCrossSection.setArea(pArea);
-    QVERIFY(pCrossSection.isDataComplete());
+    UserSectionRodComponent pSection("User-defined cross section");
+    pSection.setArea(pArea);
+    QVERIFY(pSection.isDataComplete());
     delete pArea;
-    QVERIFY(!pCrossSection.isDataComplete());
+    QVERIFY(!pSection.isDataComplete());
 }
 
 //! Cleanup

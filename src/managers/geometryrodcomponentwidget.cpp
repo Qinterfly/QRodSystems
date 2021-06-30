@@ -52,13 +52,13 @@ void GeometryRodComponentWidget::createContent()
 //! Set a radius vector
 void GeometryRodComponentWidget::setRadiusVector(Core::AbstractDataObject const* pDataObject)
 {
-    mGeometryRodComponent.setRadiusVector((VectorDataObject*)pDataObject);
+    mGeometryRodComponent.setRadiusVector((VectorDataObject const*)pDataObject);
     emit modified();
 }
 
 //! Set a rotation matrix
 void GeometryRodComponentWidget::setRotationMatrix(Core::AbstractDataObject const* pDataObject)
 {
-    mGeometryRodComponent.setRotationMatrix((MatrixDataObject*)pDataObject);
+    mGeometryRodComponent.setRotationMatrix((MatrixDataObject const*)pDataObject);
     emit modified();
 }
