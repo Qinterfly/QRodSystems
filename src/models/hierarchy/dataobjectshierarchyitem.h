@@ -34,6 +34,7 @@ public:
     DataObjectsHierarchyItem(Core::HierarchyNode* pNode, Core::AbstractDataObject* pDataObject);
     DataObjectsHierarchyItem(Core::HierarchyNode* pNode);
     int type() const override { return AbstractHierarchyItem::ItemType::kDataObjects; }
+    Core::AbstractDataObject const* getDataObject() const { return mpDataObject; }
 
 private:
     void appendItems(Core::DataObjects& dataObjects, Core::HierarchyNode* pNode);

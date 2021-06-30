@@ -43,7 +43,7 @@ public:
         kRodComponents,
         kRodConstructor
     };
-    AbstractProjectManager(Core::Project& project, QString& lastPath, QSettings& settings,
+    AbstractProjectManager(QString& lastPath, QSettings& settings,
                            ManagerType type, QString groupName, QWidget* parent = nullptr);
     virtual ~AbstractProjectManager() = 0;
     void saveSettings();
@@ -63,7 +63,6 @@ protected:
     // Dock manager
     ads::CDockManager* mpDockManager = nullptr;
     // Data
-    Core::Project& mProject;
     QString& mLastPath;
 
 private:

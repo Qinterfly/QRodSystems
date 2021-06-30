@@ -21,7 +21,6 @@
 
 #include "dataobjectsmanager.h"
 #include "central/uiconstants.h"
-#include "core/project.h"
 #include "core/scalardataobject.h"
 #include "core/vectordataobject.h"
 #include "core/matrixdataobject.h"
@@ -46,15 +45,17 @@ const static QSize skToolBarIconSize = QSize(22, 22);
 void setToolBarShortcutHints(QToolBar* pToolBar);
 QIcon getDataObjectIcon(AbstractDataObject::ObjectType type);
 
-DataObjectsManager::DataObjectsManager(Project& project, QString& lastPath, QSettings& settings, QWidget* parent)
-    : AbstractProjectManager(project, lastPath, settings, kDataObjects, "DataObjectsManager", parent)
+DataObjectsManager::DataObjectsManager(DataObjects&& dataObjects, HierarchyTree&& hierarchyDataObjects,
+                                       QString& lastPath, QSettings& settings, QWidget* parent)
+    : AbstractProjectManager(lastPath, settings, kDataObjects, "DataObjectsManager", parent)
+    , mDataObjects(std::move(dataObjects))
+    , mHierarchyDataObjects(std::move(hierarchyDataObjects))
 {
     setWindowTitle("Data Objects Manager[*]");
     setGeometry(0, 0, 700, 700);
     setWindowModified(false);
     createContent();
     restoreSettings();
-    retrieveDataObjects();
     mpTreeDataObjectsModel->updateContent();
 }
 
@@ -192,16 +193,9 @@ QLayout* DataObjectsManager::createDialogControls()
 //! Apply all the changes made by user
 void DataObjectsManager::apply()
 {
-    mProject.setDataObjects(mDataObjects, mHierarchyDataObjects);
+    emit dataObjectsModified(mDataObjects, mHierarchyDataObjects);
     setWindowModified(false);
     qInfo() << tr("Data objects were modified through the manager");
-}
-
-//! Make a copy of existed data objects
-void DataObjectsManager::retrieveDataObjects()
-{
-    mDataObjects = mProject.cloneDataObjects();
-    mHierarchyDataObjects = mProject.cloneHierarchyDataObjects();
 }
 
 //! Add a scalar object

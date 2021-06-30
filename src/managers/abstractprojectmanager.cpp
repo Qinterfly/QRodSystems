@@ -18,10 +18,9 @@ using namespace QRS::Managers;
 using namespace QRS::Core;
 using ads::CDockManager;
 
-AbstractProjectManager::AbstractProjectManager(Core::Project& project, QString& lastPath, QSettings& settings,
+AbstractProjectManager::AbstractProjectManager(QString& lastPath, QSettings& settings,
                                                ManagerType type, QString groupName, QWidget* parent)
     : QDialog(parent)
-    , mProject(project)
     , mLastPath(lastPath)
     , mSettings(settings)
     , mType(type)

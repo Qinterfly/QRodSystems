@@ -25,6 +25,11 @@ namespace QRS::HierarchyModels
 class ProjectHierarchyModel;
 }
 
+namespace QRS::Managers
+{
+class ManagersFactory;
+}
+
 namespace QRS::Core
 {
 
@@ -32,7 +37,9 @@ namespace QRS::Core
 class Project : public QObject
 {
     Q_OBJECT
+
     friend class QRS::HierarchyModels::ProjectHierarchyModel;
+    friend class QRS::Managers::ManagersFactory;
 
 public:
     Project(QString const& name);
@@ -43,15 +50,12 @@ public:
     // Data objects
     DataIDType numberDataObjects() const { return mDataObjects.size(); }
     AbstractDataObject* addDataObject(AbstractDataObject::ObjectType type);
-    void setDataObjects(DataObjects const& dataObjects, HierarchyTree const& hierarchyDataObjects);
     DataObjects cloneDataObjects() const;
     HierarchyTree cloneHierarchyDataObjects() const { return mHierarchyDataObjects.clone(); }
-    DataObjects const& getDataObjects() const { return mDataObjects; }
     // Rod components
     DataIDType numberRodComponents() const { return mRodComponents.size(); }
     AbstractRodComponent* addGeometry();
     AbstractRodComponent* addCrossSection(AbstractCrossSectionRodComponent::SectionType sectionType);
-    void setRodComponents(RodComponents const& rodComponents, HierarchyTree const& hierarchyRodComponents);
     RodComponents cloneRodComponents() const;
     HierarchyTree cloneHierarchyRodComponents() const { return mHierarchyRodComponents.clone(); }
     // Getters and setters
@@ -61,12 +65,15 @@ public:
     void importDataObjects(QString const& path, QString const& fileName);
 
 signals:
-    void dataChanged();
+    void dataObjectsChanged();
+    void rodComponentsChanged();
     void modified(bool modifiedState);
 
 public slots:
     bool save(QString const& dir, QString const& fileName);
     void setModified(bool modifiedState = true);
+    void setDataObjects(DataObjects const& dataObjects, HierarchyTree const& hierarchyDataObjects);
+    void setRodComponents(RodComponents const& rodComponents, HierarchyTree const& hierarchyRodComponents);
 
 private:
     void emplaceRodComponent(AbstractRodComponent* pRodComponent);

@@ -9,7 +9,6 @@
 #define GEOMETRYRODCOMPONENTWIDGET_H
 
 #include <QWidget>
-#include "aliasmanagers.h"
 
 QT_BEGIN_NAMESPACE
 class QComboBox;
@@ -21,6 +20,7 @@ namespace QRS
 namespace Core
 {
 class GeometryRodComponent;
+class AbstractDataObject;
 }
 
 namespace Managers
@@ -32,25 +32,21 @@ class GeometryRodComponentWidget : public QWidget
     Q_OBJECT
 
 public:
-    GeometryRodComponentWidget(Core::GeometryRodComponent& geometryRodComponent, VectorDataObjects const& vectorDataObjects,
-                               MatrixDataObjects const& matrixDataObjects, QWidget* parent = nullptr);
+    GeometryRodComponentWidget(Core::GeometryRodComponent& geometryRodComponent, QWidget* parent = nullptr);
     ~GeometryRodComponentWidget() = default;
 
+signals:
+    void modified(bool flag = true);
+
 private slots:
-    void setRadiusVector(int index);
-    void setRotationMatrix(int index);
+    void setRadiusVector(Core::AbstractDataObject const* pDataObject);
+    void setRotationMatrix(Core::AbstractDataObject const* pDataObject);
 
 private:
     void createContent();
 
 private:
-    // Data
     Core::GeometryRodComponent& mGeometryRodComponent;
-    VectorDataObjects const& mVectorDataObjects;
-    MatrixDataObjects const& mMatrixDataObjects;
-    // Widgets
-    QComboBox* mpComboBoxRadiusVector;
-    QComboBox* mpComboBoxRotationMatrix;
 };
 
 }

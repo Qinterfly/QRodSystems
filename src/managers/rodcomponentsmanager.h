@@ -12,7 +12,6 @@
 #include "core/aliasdataset.h"
 #include "core/hierarchytree.h"
 #include "core/abstractcrosssectionrodcomponent.h"
-#include "aliasmanagers.h"
 
 QT_BEGIN_NAMESPACE
 class QTreeView;
@@ -28,6 +27,7 @@ namespace QRS
 
 namespace HierarchyModels
 {
+class DataObjectsHierarchyModel;
 class RodComponentsHierarchyModel;
 }
 
@@ -40,9 +40,15 @@ class RodComponentsManager : public AbstractProjectManager
     Q_OBJECT
 
 public:
-    RodComponentsManager(Core::Project& project, QString& lastPath, QSettings& settings, QWidget* parent = nullptr);
+    RodComponentsManager(Core::DataObjects& dataObjects, Core::HierarchyTree& hieararchyDataObjects,
+                         Core::RodComponents&& rodComponents, Core::HierarchyTree&& hierarchyRodComponents,
+                         QString& lastPath, QSettings& settings, QWidget* parent = nullptr);
     ~RodComponentsManager();
     void selectRodComponent(int iRow);
+    void updateDataObjects();
+
+signals:
+    void rodComponentsModified(Core::RodComponents const& rodComponents, Core::HierarchyTree const& hierarchyRodComponents);
 
 public slots:
     void apply() override;
@@ -53,10 +59,9 @@ private:
     // Content
     void createContent();
     QLayout* createDialogControls();
-    void retrieveDataObjects();
-    void retrieveRodComponents();
-    ads::CDockWidget* createHierarchyWidget();
-    ads::CDockWidget* createComponentsDockWidget();
+    ads::CDockWidget* createHierarchyRodComponentsWidget();
+    ads::CDockWidget* createConstructorDockWidget();
+    ads::CDockWidget* createHierarchyDataObjectsWidget();
     // Helpers
     void emplaceRodComponent(Core::AbstractRodComponent* pRodComponent);
     // Selection
@@ -76,14 +81,13 @@ private:
     ads::CDockWidget* mpComponentDockWidget;
     QTreeView* mpTreeRodComponents;
     // Data objects
-    ScalarDataObjects mScalarDataObjects;
-    VectorDataObjects mVectorDataObjects;
-    MatrixDataObjects mMatrixDataObjects;
-    SurfaceDataObjects mSurfaceDataObjects;
+    Core::DataObjects& mDataObjects;
+    Core::HierarchyTree& mHierarchyDataObjects;
     // Rod components data
     Core::RodComponents mRodComponents;
     Core::HierarchyTree mHierarchyRodComponents;
     // Models
+    HierarchyModels::DataObjectsHierarchyModel* mpTreeDataObjectsModel;
     HierarchyModels::RodComponentsHierarchyModel* mpTreeRodComponentsModel;
 };
 

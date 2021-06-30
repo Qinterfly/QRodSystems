@@ -15,12 +15,12 @@
 #include "DockAreaWidget.h"
 
 #include "rodcomponentsmanager.h"
-#include "core/project.h"
 #include "core/vectordataobject.h"
 #include "core/matrixdataobject.h"
 #include "core/geometryrodcomponent.h"
 #include "core/usercrosssectionrodcomponent.h"
 #include "managers/geometryrodcomponentwidget.h"
+#include "models/hierarchy/dataobjectshierarchymodel.h"
 #include "models/hierarchy/rodcomponentshierarchymodel.h"
 
 using ads::CDockManager;
@@ -34,16 +34,21 @@ QSize const skToolBarIconSize = QSize(27, 27);
 
 QWidget* addToolbarHeader(QToolBar* pToolBar, QString const& name);
 
-RodComponentsManager::RodComponentsManager(Project& project, QString& lastPath, QSettings& settings, QWidget* parent)
-    : AbstractProjectManager(project, lastPath, settings, kRodComponents, "RodComponentsManager", parent)
+RodComponentsManager::RodComponentsManager(DataObjects& dataObjects, HierarchyTree& hieararchyDataObjects,
+                                           RodComponents&& rodComponents, HierarchyTree&& hierarchyRodComponents,
+                                           QString& lastPath, QSettings& settings, QWidget* parent)
+    : AbstractProjectManager(lastPath, settings, kRodComponents, "RodComponentsManager", parent)
+    , mDataObjects(dataObjects)
+    , mHierarchyDataObjects(hieararchyDataObjects)
+    , mRodComponents(std::move(rodComponents))
+    , mHierarchyRodComponents(std::move(hierarchyRodComponents))
 {
     setWindowTitle("Rod Components Manager[*]");
     setGeometry(0, 0, 700, 700);
     setWindowModified(false);
     createContent();
     restoreSettings();
-    retrieveDataObjects();
-    retrieveRodComponents();
+    mpTreeDataObjectsModel->updateContent();
     mpTreeRodComponentsModel->updateContent();
 }
 
@@ -58,10 +63,12 @@ RodComponentsManager::~RodComponentsManager()
 void RodComponentsManager::createContent()
 {
     // Components dock widget
-    mpComponentDockWidget = createComponentsDockWidget();
+    mpComponentDockWidget = createConstructorDockWidget();
     mpDockManager->addDockWidget(ads::LeftDockWidgetArea, mpComponentDockWidget);
     // Hierarchy of components
-    mpDockManager->addDockWidget(ads::RightDockWidgetArea, createHierarchyWidget());
+    CDockAreaWidget* pArea = mpDockManager->addDockWidget(ads::RightDockWidgetArea, createHierarchyRodComponentsWidget());
+    // Hierarchy of data objects
+    mpDockManager->addDockWidget(ads::BottomDockWidgetArea, createHierarchyDataObjectsWidget(), pArea);
     // Main layout
     QVBoxLayout* pMainLayout = new QVBoxLayout(this);
     pMainLayout->setContentsMargins(0, 0, 0, 0);
@@ -73,7 +80,7 @@ void RodComponentsManager::createContent()
 }
 
 //! Create a widget to show a hierarchy of rod components
-CDockWidget* RodComponentsManager::createHierarchyWidget()
+CDockWidget* RodComponentsManager::createHierarchyRodComponentsWidget()
 {
     QSize const kIconSize = QSize(16, 16);
     CDockWidget* pDockWidget = new CDockWidget("Components");
@@ -102,8 +109,27 @@ CDockWidget* RodComponentsManager::createHierarchyWidget()
     return pDockWidget;
 }
 
+//! Create a widget to show a hierarchy of data objects
+ads::CDockWidget* RodComponentsManager::createHierarchyDataObjectsWidget()
+{
+    CDockWidget* pDockWidget = new CDockWidget("Data Objects");
+    pDockWidget->setFeature(CDockWidget::DockWidgetClosable, false);
+    QTreeView* pTreeDataObjects = new QTreeView();
+    pTreeDataObjects->setSelectionMode(QAbstractItemView::SingleSelection);
+    pTreeDataObjects->setSelectionBehavior(QAbstractItemView::SelectItems);
+    pTreeDataObjects->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    pTreeDataObjects->setHeaderHidden(true);
+    pTreeDataObjects->setAcceptDrops(false);
+    pTreeDataObjects->setDragEnabled(true);
+    pDockWidget->setWidget(pTreeDataObjects);
+    // Hierarchy model
+    mpTreeDataObjectsModel = new DataObjectsHierarchyModel(mDataObjects, mHierarchyDataObjects, pTreeDataObjects);
+    pTreeDataObjects->setModel(mpTreeDataObjectsModel);
+    return pDockWidget;
+}
+
 //! Create a dock widget to contain constructors of rod components
-ads::CDockWidget* RodComponentsManager::createComponentsDockWidget()
+ads::CDockWidget* RodComponentsManager::createConstructorDockWidget()
 {
     CDockWidget* pDockWidget = new CDockWidget("Component Constructor");
     pDockWidget->setFeature(CDockWidget::DockWidgetClosable, false);
@@ -128,10 +154,16 @@ void RodComponentsManager::selectRodComponent(int iRow)
     mpTreeRodComponentsModel->selectItem(iRow);
 }
 
+//! Update the representation of data objects
+void RodComponentsManager::updateDataObjects()
+{
+    mpTreeDataObjectsModel->updateContent();
+}
+
 //! Apply all the changes made by user
 void RodComponentsManager::apply()
 {
-    mProject.setRodComponents(mRodComponents, mHierarchyRodComponents);
+    emit rodComponentsModified(mRodComponents, mHierarchyRodComponents);
     setWindowModified(false);
     qInfo() << tr("Rod components were modified by means of the manager");
 }
@@ -162,39 +194,6 @@ AbstractRodComponent* RodComponentsManager::addCrossSection(AbstractCrossSection
     return pRodComponent;
 }
 
-//! Retrieve data objects according to their type
-void RodComponentsManager::retrieveDataObjects()
-{
-    DataObjects const& dataObjects = mProject.getDataObjects();
-    for (auto const& iter : dataObjects)
-    {
-        AbstractDataObject const* pDataObject = iter.second;
-        DataIDType id = pDataObject->id();
-        switch (pDataObject->type())
-        {
-        case AbstractDataObject::ObjectType::kScalar:
-            mScalarDataObjects.emplace(id, (ScalarDataObject const*)pDataObject);
-            break;
-        case AbstractDataObject::ObjectType::kVector:
-            mVectorDataObjects.emplace(id, (VectorDataObject const*)pDataObject);
-            break;
-        case AbstractDataObject::ObjectType::kMatrix:
-            mMatrixDataObjects.emplace(id, (MatrixDataObject const*)pDataObject);
-            break;
-        case AbstractDataObject::ObjectType::kSurface:
-            mSurfaceDataObjects.emplace(id, (SurfaceDataObject const*)pDataObject);
-            break;
-        }
-    }
-}
-
-//! Make a copy of existed rod components
-void RodComponentsManager::retrieveRodComponents()
-{
-    mRodComponents = mProject.cloneRodComponents();
-    mHierarchyRodComponents = mProject.cloneHierarchyRodComponents();
-}
-
 //! Helper function to insert a rod component into the manager
 void RodComponentsManager::emplaceRodComponent(AbstractRodComponent* pRodComponent)
 {
@@ -217,7 +216,9 @@ void RodComponentsManager::representRodComponent(Core::DataIDType id)
     case AbstractRodComponent::ComponentType::kGeometry:
     {
         GeometryRodComponent* pGeometry = (GeometryRodComponent*)pRodComponent;
-        mpComponentDockWidget->setWidget(new GeometryRodComponentWidget(*pGeometry, mVectorDataObjects, mMatrixDataObjects, mpComponentDockWidget));
+        GeometryRodComponentWidget* pGeometryWidget = new GeometryRodComponentWidget(*pGeometry, mpComponentDockWidget);
+        connect(pGeometryWidget, &GeometryRodComponentWidget::modified, this, &RodComponentsManager::setWindowModified);
+        mpComponentDockWidget->setWidget(pGeometryWidget);
         break;
     }
     case AbstractRodComponent::ComponentType::kCrossSection:

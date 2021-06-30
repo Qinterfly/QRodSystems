@@ -57,10 +57,14 @@ class DataObjectsManager : public AbstractProjectManager
     Q_OBJECT
 
 public:
-    explicit DataObjectsManager(Core::Project& project, QString& lastPath, QSettings& settings, QWidget* parent = nullptr);
+    explicit DataObjectsManager(Core::DataObjects&& dataObjects, Core::HierarchyTree&& hierarchyDataObjects,
+                                QString& lastPath, QSettings& settings, QWidget* parent = nullptr);
     ~DataObjectsManager();
     void selectDataObject(int iRow);
     Core::DataObjects const& getDataObjects() { return mDataObjects; };
+
+signals:
+    void dataObjectsModified(Core::DataObjects const& dataObjects, Core::HierarchyTree const& hierarchyDataObjects);
 
 public slots:
     void apply() override;
@@ -80,7 +84,6 @@ private:
     ads::CDockWidget* createDataTableWidget();
     ads::CDockWidget* createHierarchyWidget();
     QLayout* createDialogControls();
-    void retrieveDataObjects();
     // Helpers
     void emplaceDataObject(Core::AbstractDataObject* pDataObject);
     bool isDataTableModifiable();

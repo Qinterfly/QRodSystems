@@ -1,7 +1,7 @@
 /*!
  * \file
  * \author Pavel Lakiza
- * \date May 2021
+ * \date June 2021
  * \brief Declaration of the ManagersFactory class
  */
 
@@ -36,6 +36,7 @@ public:
     ~ManagersFactory();
     bool createManager(AbstractProjectManager::ManagerType type);
     bool deleteManager(AbstractProjectManager::ManagerType type);
+    AbstractProjectManager* manager(AbstractProjectManager::ManagerType type);
 
 private:
     Core::Project& mProject;

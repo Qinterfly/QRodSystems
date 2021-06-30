@@ -1,7 +1,7 @@
 /*!
  * \file
  * \author Pavel Lakiza
- * \date May 2021
+ * \date June 2021
  * \brief Implementation of the HierarchyTree class
  */
 
@@ -15,6 +15,19 @@ static const QString kRootName = "Root";
 HierarchyTree::HierarchyTree()
 {
     mpRootNode = new HierarchyNode(HierarchyNode::NodeType::kDirectory, kRootName);
+}
+
+//! Copy constructor
+HierarchyTree::HierarchyTree(HierarchyTree& another)
+{
+    mpRootNode = copyNode(another.mpRootNode, 0);
+}
+
+//! Move constructor
+HierarchyTree::HierarchyTree(HierarchyTree&& another)
+{
+    mpRootNode = another.mpRootNode;
+    another.mpRootNode = nullptr;
 }
 
 //! Take the user defined node as the root

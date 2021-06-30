@@ -1,19 +1,19 @@
 /*!
  * \file
  * \author Pavel Lakiza
- * \date May 2021
+ * \date June 2021
  * \brief Definition of the ManagersFactory class
  */
 
 #include <QApplication>
 #include <QDesktopWidget>
-
 #include "managersfactory.h"
+#include "core/project.h"
 #include "managers/dataobjectsmanager.h"
 #include "managers/rodcomponentsmanager.h"
 
-using namespace QRS::Managers;
 using namespace QRS::Core;
+using namespace QRS::Managers;
 
 void moveToCenter(QWidget*);
 
@@ -48,11 +48,23 @@ bool ManagersFactory::createManager(AbstractProjectManager::ManagerType type)
     switch (type)
     {
     case AbstractProjectManager::kDataObjects:
-        pManager = new DataObjectsManager(mProject, mLastPath, mSettings, mpParent);
+    {
+        DataObjectsManager* pDataObjectManager = new DataObjectsManager(mProject.cloneDataObjects(), mProject.cloneHierarchyDataObjects(),
+                                                                        mLastPath, mSettings, mpParent);
+        connect(pDataObjectManager, &DataObjectsManager::dataObjectsModified, &mProject, &Project::setDataObjects);
+        pManager = pDataObjectManager;
         break;
+    }
     case AbstractProjectManager::kRodComponents:
-        pManager = new RodComponentsManager(mProject, mLastPath, mSettings, mpParent);
+    {
+        RodComponentsManager* pRodComponentsManager = new RodComponentsManager(mProject.mDataObjects, mProject.mHierarchyDataObjects,
+                                                                               mProject.cloneRodComponents(), mProject.cloneHierarchyRodComponents(),
+                                                                               mLastPath, mSettings, mpParent);
+        connect(pRodComponentsManager, &RodComponentsManager::rodComponentsModified, &mProject, &Project::setRodComponents);
+        connect(&mProject, &Project::dataObjectsChanged, pRodComponentsManager, &RodComponentsManager::updateDataObjects);
+        pManager = pRodComponentsManager;
         break;
+    }
     default:
         return false;
     }
@@ -81,4 +93,13 @@ void moveToCenter(QWidget* pWidget)
     int x = (screenGeometry.width() - pWidget->width()) / 2;
     int y = (screenGeometry.height() - pWidget->height()) / 2;
     pWidget->move(x, y);
+}
+
+//! Retrieve a manager of a given type
+AbstractProjectManager* ManagersFactory::manager(AbstractProjectManager::ManagerType type)
+{
+    if (mManagers.contains(type))
+        return mManagers[type];
+    else
+        return nullptr;
 }

@@ -16,6 +16,7 @@
 #include "core/surfacedataobject.h"
 #include "core/geometryrodcomponent.h"
 #include "core/usercrosssectionrodcomponent.h"
+#include "managers/managersfactory.h"
 #include "managers/dataobjectsmanager.h"
 #include "managers/rodcomponentsmanager.h"
 
@@ -37,8 +38,7 @@ private slots:
 private:
     Project* mpProject;
     QSettings* mpSettings;
-    DataObjectsManager* mpDataObjectsManager;
-    RodComponentsManager* mpRodComponentsManager;
+    ManagersFactory* mpManagersFactory;
     QString mLastPath;
 };
 
@@ -55,18 +55,20 @@ void TestManagers::initTestCase()
     fontSize = 10;
 #endif
     qApp->setFont(QFont("Source Sans Pro", fontSize));
+    mpManagersFactory = new ManagersFactory(*mpProject, mLastPath, *mpSettings, nullptr);
 }
 
 //! Test how the data objects manager handles with data
 void TestManagers::testDataObjectsManager()
 {
     // Creating a manager
-    mpDataObjectsManager = new DataObjectsManager(*mpProject, mLastPath, *mpSettings);
+    mpManagersFactory->createManager(AbstractProjectManager::ManagerType::kDataObjects);
+    DataObjectsManager* pManager = (DataObjectsManager*)mpManagersFactory->manager(AbstractProjectManager::ManagerType::kDataObjects);
     // Creating data objects of different types
-    ScalarDataObject* pScalar = (ScalarDataObject*)mpDataObjectsManager->addScalar();
-    VectorDataObject* pVector = (VectorDataObject*)mpDataObjectsManager->addVector();
-    MatrixDataObject* pMatrix = (MatrixDataObject*)mpDataObjectsManager->addMatrix();
-    SurfaceDataObject* pSurface = (SurfaceDataObject*)mpDataObjectsManager->addSurface();
+    ScalarDataObject* pScalar = (ScalarDataObject*)pManager->addScalar();
+    VectorDataObject* pVector = (VectorDataObject*)pManager->addVector();
+    MatrixDataObject* pMatrix = (MatrixDataObject*)pManager->addMatrix();
+    SurfaceDataObject* pSurface = (SurfaceDataObject*)pManager->addSurface();
     // Inserting itmes into the object
     int nStep = 10;
     double startValue = 0.1;
@@ -86,9 +88,9 @@ void TestManagers::testDataObjectsManager()
     }
     pScalar->addItem(endValue); // Already existed key
     // Selecting
-    mpDataObjectsManager->selectDataObject(3);
-    mpDataObjectsManager->apply();
-    QCOMPARE(mpProject->getDataObjects().size(), uint(4));
+    pManager->selectDataObject(3);
+    pManager->apply();
+    pManager->hide();
 }
 
 //! Test how to create components of a rod
@@ -99,32 +101,30 @@ void TestManagers::testRodComponentsManager()
     VectorDataObject* pVector = (VectorDataObject*)mpProject->addDataObject(AbstractDataObject::kVector);
     MatrixDataObject* pMatrix = (MatrixDataObject*)mpProject->addDataObject(AbstractDataObject::kMatrix);
     // Creating a manager
-    mpRodComponentsManager = new RodComponentsManager(*mpProject, mLastPath, *mpSettings);
+    mpManagersFactory->createManager(AbstractProjectManager::ManagerType::kRodComponents);
+    RodComponentsManager* pManager = (RodComponentsManager*)mpManagersFactory->manager(AbstractProjectManager::ManagerType::kRodComponents);
     // Adding a geometrical component
-    GeometryRodComponent* pGeometry = (GeometryRodComponent*)mpRodComponentsManager->addGeometry();
+    GeometryRodComponent* pGeometry = (GeometryRodComponent*)pManager->addGeometry();
     pGeometry->setRadiusVector(pVector);
     pGeometry->setRotationMatrix(pMatrix);
     QVERIFY(pGeometry->isDataComplete());
     // Adding a user-defined cross section
     UserCrossSectionRodComponent* pCrossSection;
-    pCrossSection = (UserCrossSectionRodComponent*)mpRodComponentsManager->addCrossSection(AbstractCrossSectionRodComponent::kUserDefined);
+    pCrossSection = (UserCrossSectionRodComponent*)pManager->addCrossSection(AbstractCrossSectionRodComponent::kUserDefined);
     pCrossSection->setArea(pScalar);
     QVERIFY(pCrossSection->isDataComplete());
     // Selecting
-    mpRodComponentsManager->selectRodComponent(0);
-    // User interaction
-    mpRodComponentsManager->show();
-    mpRodComponentsManager->apply();
-    qApp->exec();
+    pManager->selectRodComponent(0);
+    pManager->apply();
 }
 
 //! Cleanup
 void TestManagers::cleanupTestCase()
 {
+    qApp->exec();
     delete mpProject;
     delete mpSettings;
-    delete mpDataObjectsManager;
-    delete mpRodComponentsManager;
+    delete mpManagersFactory;
 }
 
 QTEST_MAIN(TestManagers)

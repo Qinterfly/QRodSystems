@@ -146,7 +146,7 @@ CDockWidget* MainWindow::createProjectHierarchyWidget()
     pWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
     pWidget->setHeaderHidden(true);
     pWidget->setAcceptDrops(true);
-    pWidget->setDragDropMode(QAbstractItemView::DragDrop);
+    pWidget->setDragEnabled(true);
     pWidget->setSortingEnabled(false);
     pWidget->setStyleSheet("padding: 3px 0px 0px 0px");
     pWidget->setIconSize(kIconSize);
@@ -244,7 +244,8 @@ void MainWindow::specifyMenuConnections()
 void MainWindow::specifyProjectConnections()
 {
     connect(mpProject, &Project::modified, this, &MainWindow::projectModified);
-    connect(mpProject, &Project::dataChanged, mpProjectHierarchyModel, &ProjectHierarchyModel::updateContent);
+    connect(mpProject, &Project::dataObjectsChanged, mpProjectHierarchyModel, &ProjectHierarchyModel::updateContent);
+    connect(mpProject, &Project::rodComponentsChanged, mpProjectHierarchyModel, &ProjectHierarchyModel::updateContent);
 }
 
 //! Save the current window settings

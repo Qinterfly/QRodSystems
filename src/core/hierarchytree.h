@@ -1,7 +1,7 @@
 /*!
  * \file
  * \author Pavel Lakiza
- * \date April 2021
+ * \date June 2021
  * \brief Declaration of the HierarchyTree class
  */
 
@@ -19,6 +19,8 @@ class HierarchyTree
 {
 public:
     HierarchyTree();
+    HierarchyTree(HierarchyTree& another);
+    HierarchyTree(HierarchyTree&& another);
     HierarchyTree(HierarchyNode* pRootNode);
     HierarchyTree(QDataStream& stream, int numNodes);
     HierarchyTree& operator=(HierarchyTree const& another);
