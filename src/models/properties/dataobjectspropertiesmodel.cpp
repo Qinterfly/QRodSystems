@@ -150,11 +150,12 @@ void DataObjectsPropertiesModel::modifyProperty(QStandardItem* pChangedProperty)
             pItem->mpNode->value() = newName;
         pItem->setText(newName);
     }
-    emit propertyChanged(true);
+    emit propertyChanged();
 }
 
 //! Prepare a row to insert into the table
-QList<QStandardItem*> DataObjectsPropertiesModel::preparePropertyRow(PropertyType type, QString const& title, QVariant const& value, bool isValueEditable) const
+QList<QStandardItem*> DataObjectsPropertiesModel::preparePropertyRow(PropertyType type, QString const& title,
+                                                                     QVariant const& value, bool isValueEditable) const
 {
     QColor const kAlternateColor = QColor(236, 236, 236);
     QList<QStandardItem*> result;

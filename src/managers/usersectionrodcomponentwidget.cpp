@@ -46,7 +46,8 @@ QLayout* UserSectionRodComponentWidget::createAreaLayout()
 {
     QHBoxLayout* pLayout = new QHBoxLayout();
     DataObjectLineEdit* pEdit = new DataObjectLineEdit(mUserSectionRodComponent.area(), AbstractDataObject::ObjectType::kScalar, mkMimeType);
-    connect(pEdit, &DataObjectLineEdit::dataObjectSelected, this, &UserSectionRodComponentWidget::setArea);
+    auto setFun = [this](AbstractDataObject const * pData) { setProperty(pData, &UserSectionRodComponent::setArea); };
+    connect(pEdit, &DataObjectLineEdit::dataObjectSelected, setFun);
     pLayout->addWidget(new QLabel(tr("Area: ")));
     pLayout->addWidget(pEdit);
     return pLayout;
@@ -58,20 +59,24 @@ QWidget* UserSectionRodComponentWidget::createInertiaMomentsGroup()
     QGroupBox* pGroupBox = new QGroupBox(tr("Moments of inertia: "));
     QGridLayout* pLayout = new QGridLayout();
     DataObjectLineEdit* pEdit;
+    std::function<void(AbstractDataObject const*)> setFun;
     // Torsional
     pLayout->addWidget(new QLabel(tr("Torsional: ")), 0, 0);
     pEdit = new DataObjectLineEdit(mUserSectionRodComponent.inertiaMomentTorsional(), AbstractDataObject::ObjectType::kScalar, mkMimeType);
-    connect(pEdit, &DataObjectLineEdit::dataObjectSelected, this, &UserSectionRodComponentWidget::setInertiaMomentTorsional);
+    setFun = [this](AbstractDataObject const * pData) { setProperty(pData, &UserSectionRodComponent::setInertiaMomentTorsional); };
+    connect(pEdit, &DataObjectLineEdit::dataObjectSelected, setFun);
     pLayout->addWidget(pEdit, 0, 1);
     // X
     pLayout->addWidget(new QLabel(tr("X: ")), 1, 0);
     pEdit = new DataObjectLineEdit(mUserSectionRodComponent.inertiaMomentX(), AbstractDataObject::ObjectType::kScalar, mkMimeType);
-    connect(pEdit, &DataObjectLineEdit::dataObjectSelected, this, &UserSectionRodComponentWidget::setInertiaMomentX);
+    setFun = [this](AbstractDataObject const * pData) { setProperty(pData, &UserSectionRodComponent::setInertiaMomentX); };
+    connect(pEdit, &DataObjectLineEdit::dataObjectSelected, setFun);
     pLayout->addWidget(pEdit, 1, 1);
     // Y
     pLayout->addWidget(new QLabel(tr("Y: ")), 2, 0);
     pEdit = new DataObjectLineEdit(mUserSectionRodComponent.inertiaMomentY(), AbstractDataObject::ObjectType::kScalar, mkMimeType);
-    connect(pEdit, &DataObjectLineEdit::dataObjectSelected, this, &UserSectionRodComponentWidget::setInertiaMomentY);
+    setFun = [this](AbstractDataObject const * pData) { setProperty(pData, &UserSectionRodComponent::setInertiaMomentY); };
+    connect(pEdit, &DataObjectLineEdit::dataObjectSelected, setFun);
     pLayout->addWidget(pEdit, 2, 1);
     // Layout
     pGroupBox->setLayout(pLayout);
@@ -84,58 +89,26 @@ QWidget* UserSectionRodComponentWidget::createCenterCoordinatesGroup()
     QGroupBox* pGroupBox = new QGroupBox(tr("Coordinates of the center: "));
     QGridLayout* pLayout = new QGridLayout();
     DataObjectLineEdit* pEdit;
+    std::function<void(AbstractDataObject const*)> setFun;
     // X
     pLayout->addWidget(new QLabel(tr("X: ")), 0, 0);
     pEdit = new DataObjectLineEdit(mUserSectionRodComponent.centerCoordinateX(), AbstractDataObject::ObjectType::kScalar, mkMimeType);
-    connect(pEdit, &DataObjectLineEdit::dataObjectSelected, this, &UserSectionRodComponentWidget::setCenterCoordinateX);
+    setFun = [this](AbstractDataObject const * pData) { setProperty(pData, &UserSectionRodComponent::setCenterCoordinateX); };
+    connect(pEdit, &DataObjectLineEdit::dataObjectSelected, setFun);
     pLayout->addWidget(pEdit, 0, 1);
     // Y
     pLayout->addWidget(new QLabel(tr("Y: ")), 1, 0);
     pEdit = new DataObjectLineEdit(mUserSectionRodComponent.centerCoordinateY(), AbstractDataObject::ObjectType::kScalar, mkMimeType);
-    connect(pEdit, &DataObjectLineEdit::dataObjectSelected, this, &UserSectionRodComponentWidget::setCenterCoordinateY);
+    setFun = [this](AbstractDataObject const * pData) { setProperty(pData, &UserSectionRodComponent::setCenterCoordinateY); };
+    connect(pEdit, &DataObjectLineEdit::dataObjectSelected, setFun);
     pLayout->addWidget(pEdit, 1, 1);
     pGroupBox->setLayout(pLayout);
     return pGroupBox;
 }
 
-//! Set an area
-void UserSectionRodComponentWidget::setArea(Core::AbstractDataObject const* pDataObject)
+//! Set a section property which takes a scalar data object
+void UserSectionRodComponentWidget::setProperty(AbstractDataObject const* pDataObject, auto setFun)
 {
-    mUserSectionRodComponent.setArea((ScalarDataObject const*)pDataObject);
-    emit modified();
-}
-
-//! Set a torsional moment of inertia
-void UserSectionRodComponentWidget::setInertiaMomentTorsional(Core::AbstractDataObject const* pDataObject)
-{
-    mUserSectionRodComponent.setInertiaMomentTorsional((ScalarDataObject const*)pDataObject);
-    emit modified();
-}
-
-//! Set a moment of inertia about the X axis
-void UserSectionRodComponentWidget::setInertiaMomentX(Core::AbstractDataObject const* pDataObject)
-{
-    mUserSectionRodComponent.setInertiaMomentX((ScalarDataObject const*)pDataObject);
-    emit modified();
-}
-
-//! Set a moment of inertia about the Y axis
-void UserSectionRodComponentWidget::setInertiaMomentY(Core::AbstractDataObject const* pDataObject)
-{
-    mUserSectionRodComponent.setInertiaMomentY((ScalarDataObject const*)pDataObject);
-    emit modified();
-}
-
-//! Set coordinate of the center along the X axis
-void UserSectionRodComponentWidget::setCenterCoordinateX(Core::AbstractDataObject const* pDataObject)
-{
-    mUserSectionRodComponent.setCenterCoordinateX((ScalarDataObject const*)pDataObject);
-    emit modified();
-}
-
-//! Set coordinate of the center along the Y axis
-void UserSectionRodComponentWidget::setCenterCoordinateY(Core::AbstractDataObject const* pDataObject)
-{
-    mUserSectionRodComponent.setCenterCoordinateY((ScalarDataObject const*)pDataObject);
+    (mUserSectionRodComponent.*setFun)((ScalarDataObject const*)pDataObject);
     emit modified();
 }

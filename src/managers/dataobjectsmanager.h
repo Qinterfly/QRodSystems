@@ -59,7 +59,7 @@ public:
     Core::DataObjects const& getDataObjects() { return mDataObjects; };
 
 signals:
-    void dataObjectsModified(Core::DataObjects const& dataObjects, Core::HierarchyTree const& hierarchyDataObjects);
+    void applied(Core::DataObjects const& dataObjects, Core::HierarchyTree const& hierarchyDataObjects);
 
 public slots:
     void apply() override;

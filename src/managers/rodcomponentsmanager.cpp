@@ -101,8 +101,7 @@ CDockWidget* RodComponentsManager::createHierarchyRodComponentsWidget()
     mpTreeRodComponentsModel = new RodComponentsHierarchyModel(mRodComponents, mHierarchyRodComponents,
                                                                "rodcomponentsmanager/hierarchy", mpTreeRodComponents);
     mpTreeRodComponents->setModel(mpTreeRodComponentsModel);
-    connect(mpTreeRodComponentsModel, &RodComponentsHierarchyModel::dataModified,
-            this, &RodComponentsManager::setWindowModified);
+    connect(mpTreeRodComponentsModel, &RodComponentsHierarchyModel::dataChanged, [this]() { setWindowModified(true); });
     connect(mpTreeRodComponentsModel, &RodComponentsHierarchyModel::selected,
             this, &RodComponentsManager::representRodComponent);
     connect(mpTreeRodComponents->selectionModel(), &QItemSelectionModel::selectionChanged,
@@ -167,7 +166,7 @@ void RodComponentsManager::updateDataObjects()
 //! Apply all the changes made by user
 void RodComponentsManager::apply()
 {
-    emit rodComponentsModified(mRodComponents, mHierarchyRodComponents);
+    emit applied(mRodComponents, mHierarchyRodComponents);
     setWindowModified(false);
     qInfo() << tr("Rod components were modified by means of the manager");
 }

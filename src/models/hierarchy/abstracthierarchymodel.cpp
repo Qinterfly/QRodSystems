@@ -1,7 +1,7 @@
 /*!
  * \file
  * \author Pavel Lakiza
- * \date May 2021
+ * \date July 2021
  * \brief Definition of the AbstractHierarchyModel class
  */
 
@@ -89,7 +89,7 @@ bool AbstractHierarchyModel::dropMimeData(QMimeData const* pMimeData, Qt::DropAc
     if (isProcessed)
     {
         updateContentExpanded();
-        emit dataModified(true);
+        emit dataChanged();
     }
     return false;
 }

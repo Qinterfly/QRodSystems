@@ -82,7 +82,7 @@ private slots:
     void openProjectDialog();
     void openRecentProject();
     bool saveAsProject();
-    void projectModified();
+    void setModified(bool flag);
     // Properties
     void representHierarchyProperties(QVector<HierarchyModels::AbstractHierarchyItem*> items);
     // Settings

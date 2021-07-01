@@ -243,9 +243,20 @@ void MainWindow::specifyMenuConnections()
 //! Set signals and slots for a project
 void MainWindow::specifyProjectConnections()
 {
-    connect(mpProject, &Project::modified, this, &MainWindow::projectModified);
+    // Update models
+    connect(mpProject, &Project::propertiesDataObjectsChanged, mpProjectHierarchyModel, &ProjectHierarchyModel::updateContent);
+    connect(mpProject, &Project::propertiesRodComponentsChanged, mpProjectHierarchyModel, &ProjectHierarchyModel::updateContent);
     connect(mpProject, &Project::dataObjectsSubstituted, mpProjectHierarchyModel, &ProjectHierarchyModel::updateContent);
     connect(mpProject, &Project::rodComponentsSubstituted, mpProjectHierarchyModel, &ProjectHierarchyModel::updateContent);
+    // Update the project through models
+    connect(mpProjectHierarchyModel, &ProjectHierarchyModel::dataChanged, mpProject, &Project::projectHierarchyChanged);
+    // Set the modified state when the project has been changed
+    std::function<void()> funProjectChanged = [this]() { setModified(true); };
+    connect(mpProject, &Project::projectHierarchyChanged, funProjectChanged);
+    connect(mpProject, &Project::propertiesDataObjectsChanged, funProjectChanged);
+    connect(mpProject, &Project::propertiesRodComponentsChanged, funProjectChanged);
+    connect(mpProject, &Project::dataObjectsSubstituted, funProjectChanged);
+    connect(mpProject, &Project::rodComponentsSubstituted, funProjectChanged);
 }
 
 //! Save the current window settings
@@ -303,9 +314,8 @@ void MainWindow::createProject()
         return;
     delete mpProject;
     mpProject = new Project(skDefaultProjectName);
-    connect(mpProject, &Project::modified, this, &MainWindow::projectModified);
-    setWindowModified(false);
-    setProjectTitle();
+    specifyProjectConnections();
+    setModified(false);
     delete mpManagersFactory;
     mpManagersFactory = new ManagersFactory(*mpProject, mLastPath, *mpSettings, this);
 }
@@ -332,14 +342,13 @@ void MainWindow::openProject(QString const& filePath)
     QString path = info.path();
     QString baseName = info.baseName();
     delete mpProject;
+    // Open a project and specify connections
     mpProject = new Project(path, baseName);
-    specifyProjectConnections();
-    // Update the models of the project
     mpProjectHierarchyModel->setProject(mpProject);
+    specifyProjectConnections();
     // Modify GUI
     mLastPath = path;
-    setWindowModified(false);
-    setProjectTitle();
+    setModified(false);
     addToRecentProjects();
     // Update managers
     delete mpManagersFactory;
@@ -357,9 +366,9 @@ void MainWindow::openRecentProject()
 }
 
 //! Whenever a project has been modified
-void MainWindow::projectModified()
+void MainWindow::setModified(bool flag)
 {
-    setWindowModified(mpProject->isModified());
+    setWindowModified(flag);
     setProjectTitle();
 }
 
@@ -380,6 +389,7 @@ bool MainWindow::saveAsProject()
     bool isSaved = saveProjectHelper(filePath);
     if (isSaved)
         addToRecentProjects();
+    setModified(!isSaved);
     return isSaved;
 }
 
@@ -393,7 +403,7 @@ bool MainWindow::saveProjectHelper(QString const& filePath)
     QString fileName = info.baseName();
     bool isSaved = mpProject->save(path, fileName);
     mLastPath = path;
-    setProjectTitle();
+    setModified(!isSaved);
     return isSaved;
 }
 
@@ -435,7 +445,7 @@ void MainWindow::representHierarchyProperties(QVector<AbstractHierarchyItem*> it
     case AbstractHierarchyItem::ItemType::kDataObjects:
     {
         DataObjectsPropertiesModel* pModel = new DataObjectsPropertiesModel(mpPropertiesWidget, items);
-        connect(pModel, &DataObjectsPropertiesModel::propertyChanged, mpProject, &Project::setModified);
+        connect(pModel, &DataObjectsPropertiesModel::propertyChanged, mpProject, &Project::propertiesDataObjectsChanged);
         mpPropertiesWidget->setModel(pModel);
         break;
     }

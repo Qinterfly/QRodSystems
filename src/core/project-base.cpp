@@ -26,7 +26,6 @@ AbstractDataObject const* substituteDataObject(DataObjects const& dataObjects, A
 Project::Project(QString const& name)
     : mID(QRandomGenerator::global()->generate())
     , mName(name)
-    , mIsModified(false)
 {
 
 }
@@ -46,7 +45,6 @@ AbstractDataObject* Project::addDataObject(AbstractDataObject::ObjectType type)
         DataIDType id = pObject->id();
         mDataObjects.emplace(id, pObject);
         mHierarchyDataObjects.appendNode(new HierarchyNode(HierarchyNode::NodeType::kObject, id));
-        setModified(true);
     }
     return pObject;
 }
@@ -81,7 +79,6 @@ void Project::setDataObjects(DataObjects const& dataObjects, HierarchyTree const
     }
     mHierarchyDataObjects = hierarchyDataObjects;
     emit dataObjectsSubstituted();
-    setModified(true);
 }
 
 //! Clone data objects
@@ -132,7 +129,6 @@ void Project::setRodComponents(RodComponents const& rodComponents, HierarchyTree
     }
     mHierarchyRodComponents = hierarchyRodComponents;
     emit rodComponentsSubstituted();
-    setModified(true);
 }
 
 //! Clone rod components
@@ -145,13 +141,6 @@ RodComponents Project::cloneRodComponents() const
         result.emplace(pRodComponent->id(), pRodComponent);
     }
     return result;
-}
-
-//! Set a modification state
-void Project::setModified(bool modifiedState)
-{
-    mIsModified = modifiedState;
-    emit modified(mIsModified);
 }
 
 //! Helper function to clear a map consisted of data pointers
@@ -213,6 +202,5 @@ void Project::emplaceRodComponent(AbstractRodComponent* pRodComponent)
         DataIDType id = pRodComponent->id();
         mRodComponents.emplace(id, pRodComponent);
         mHierarchyRodComponents.appendNode(new HierarchyNode(HierarchyNode::NodeType::kObject, id));
-        setModified(true);
     }
 }

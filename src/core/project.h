@@ -45,8 +45,6 @@ public:
     Project(QString const& name);
     Project(QString const& path, QString const& fileName);
     virtual ~Project();
-    // State
-    bool isModified() const { return mIsModified; }
     // Data objects
     DataIDType numberDataObjects() const { return mDataObjects.size(); }
     AbstractDataObject* addDataObject(AbstractDataObject::ObjectType type);
@@ -65,14 +63,17 @@ public:
     void importDataObjects(QString const& path, QString const& fileName);
 
 signals:
-    //! Whenever all data objects, rod components have been modified through setters
+    // DataObjects
     void dataObjectsSubstituted();
+    void propertiesDataObjectsChanged();
+    // Rod components
     void rodComponentsSubstituted();
-    void modified(bool modifiedState);
+    void propertiesRodComponentsChanged();
+    // Project hierarchy
+    void projectHierarchyChanged();
 
 public slots:
     bool save(QString const& dir, QString const& fileName);
-    void setModified(bool modifiedState = true);
     void setDataObjects(QRS::Core::DataObjects const& dataObjects, QRS::Core::HierarchyTree const& hierarchyDataObjects);
     void setRodComponents(QRS::Core::RodComponents const& rodComponents, QRS::Core::HierarchyTree const& hierarchyRodComponents);
 
@@ -88,8 +89,6 @@ private:
     QString mName;
     //! Path to a file where a project is stored
     QString mFilePath;
-    //! Flag whether a project has been modified since last saving
-    bool mIsModified;
     //! Data objects
     DataObjects mDataObjects;
     //! Hierarchy of data objects

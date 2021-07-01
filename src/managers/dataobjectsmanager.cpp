@@ -150,8 +150,7 @@ CDockWidget* DataObjectsManager::createHierarchyWidget()
     mpTreeDataObjectsModel = new DataObjectsHierarchyModel(mDataObjects, mHierarchyDataObjects,
                                                            "dataobjectsmanager/hierarchy", mpTreeDataObjects);
     mpTreeDataObjects->setModel(mpTreeDataObjectsModel);
-    connect(mpTreeDataObjectsModel, &DataObjectsHierarchyModel::dataModified,
-            this, &DataObjectsManager::setWindowModified);
+    connect(mpTreeDataObjectsModel, &DataObjectsHierarchyModel::dataChanged, [this]() { setWindowModified(true); });
     connect(mpTreeDataObjectsModel, &DataObjectsHierarchyModel::selected,
             this, &DataObjectsManager::representDataObject);
     connect(mpTreeDataObjects->selectionModel(), &QItemSelectionModel::selectionChanged,
@@ -194,7 +193,7 @@ QLayout* DataObjectsManager::createDialogControls()
 //! Apply all the changes made by user
 void DataObjectsManager::apply()
 {
-    emit dataObjectsModified(mDataObjects, mHierarchyDataObjects);
+    emit applied(mDataObjects, mHierarchyDataObjects);
     setWindowModified(false);
     qInfo() << tr("Data objects were modified through the manager");
 }

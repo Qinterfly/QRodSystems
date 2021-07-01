@@ -74,13 +74,11 @@ bool Project::save(QString const& path, QString const& fileName)
     mName = baseFileName;
     mFilePath = filePath;
     qInfo() << tr("Project was saved to the file: %1").arg(mFilePath);
-    setModified(false);
     return true;
 }
 
 //! Read a project from a file
 Project::Project(QString const& path, QString const& fileName)
-    : mIsModified(false)
 {
     QString baseFileName = QFileInfo(fileName).baseName();
     QString filePath = QFileInfo(path + QDir::separator() + fileName + skProjectExtension).absoluteFilePath();

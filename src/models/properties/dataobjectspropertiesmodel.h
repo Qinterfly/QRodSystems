@@ -45,7 +45,7 @@ public:
     DataObjectsPropertiesModel(QTableView* pView, QVector<HierarchyModels::AbstractHierarchyItem*> items);
 
 signals:
-    void propertyChanged(bool flag);
+    void propertyChanged();
 
 private:
     void setDirectoryAttributes();

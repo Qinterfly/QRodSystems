@@ -38,13 +38,7 @@ private:
     QLayout* createAreaLayout();
     QWidget* createInertiaMomentsGroup();
     QWidget* createCenterCoordinatesGroup();
-    // Setters
-    void setArea(Core::AbstractDataObject const* pDataObject);
-    void setInertiaMomentTorsional(Core::AbstractDataObject const* pDataObject);
-    void setInertiaMomentX(Core::AbstractDataObject const* pDataObject);
-    void setInertiaMomentY(Core::AbstractDataObject const* pDataObject);
-    void setCenterCoordinateX(Core::AbstractDataObject const* pDataObject);
-    void setCenterCoordinateY(Core::AbstractDataObject const* pDataObject);
+    void setProperty(Core::AbstractDataObject const* pDataObject, auto setFun);
 
 private:
     QString const mkMimeType;

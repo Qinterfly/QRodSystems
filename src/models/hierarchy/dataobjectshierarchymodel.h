@@ -1,7 +1,7 @@
 /*!
  * \file
  * \author Pavel Lakiza
- * \date May 2021
+ * \date July 2021
  * \brief Declaration of the DataObjectsHierarchyModel class
  */
 

@@ -48,7 +48,7 @@ public:
     void updateDataObjects();
 
 signals:
-    void rodComponentsModified(Core::RodComponents const& rodComponents, Core::HierarchyTree const& hierarchyRodComponents);
+    void applied(Core::RodComponents const& rodComponents, Core::HierarchyTree const& hierarchyRodComponents);
 
 public slots:
     void apply() override;

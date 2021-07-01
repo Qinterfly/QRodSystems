@@ -1,7 +1,7 @@
 /*!
  * \file
  * \author Pavel Lakiza
- * \date May 2021
+ * \date July 2021
  * \brief Declaration of the AbstractHierarchyModel class
  */
 
@@ -45,7 +45,8 @@ public:
     bool dropMimeData(QMimeData const* pMimeData, Qt::DropAction action, int row, int column, const QModelIndex& parent) override;
 
 signals:
-    void dataModified(bool flag);
+    //! Emitted when hierarchical elements get renamed, moved or deleted
+    void dataChanged();
 
 private:
     bool processDropOnItem(QDataStream& stream, int& numItems, QModelIndex const& indexParent);

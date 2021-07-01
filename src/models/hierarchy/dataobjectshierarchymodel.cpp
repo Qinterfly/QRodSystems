@@ -1,7 +1,7 @@
 /*!
  * \file
  * \author Pavel Lakiza
- * \date May 2021
+ * \date July 2021
  * \brief Definition of the DataObjectsHierarchyModel class
  */
 
@@ -61,7 +61,7 @@ void DataObjectsHierarchyModel::renameItem(QStandardItem* pStandardItem)
         pItem->mpDataObject->setName(newName);
     else if (pItem->mpNode->type() == HierarchyNode::NodeType::kDirectory)
         pItem->mpNode->value() = newName;
-    emit dataModified(true);
+    emit dataChanged();
 }
 
 //! Select an item by row index
@@ -122,6 +122,6 @@ void DataObjectsHierarchyModel::removeSelectedItems()
         mHierarchyDataObjects.removeNode(pItem->mpNode);
     }
     updateContent();
-    emit dataModified(true);
+    emit dataChanged();
     emit selectionCleared();
 }

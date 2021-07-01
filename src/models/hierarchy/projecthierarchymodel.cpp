@@ -23,7 +23,6 @@ ProjectHierarchyModel::ProjectHierarchyModel(QString const& mimeType, QTreeView*
 void ProjectHierarchyModel::setProject(Project* pProject)
 {
     mpProject = pProject;
-    connect(this, &AbstractHierarchyModel::dataModified, mpProject, &Project::setModified);
     updateContent();
 }
 

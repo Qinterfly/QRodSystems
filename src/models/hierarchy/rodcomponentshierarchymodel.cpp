@@ -61,7 +61,7 @@ void RodComponentsHierarchyModel::renameItem(QStandardItem* pStandardItem)
         pItem->mpRodComponent->setName(newName);
     else if (pItem->mpNode->type() == HierarchyNode::NodeType::kDirectory)
         pItem->mpNode->value() = newName;
-    emit dataModified(true);
+    emit dataChanged();
 }
 
 //! Select an item by row index
@@ -122,7 +122,7 @@ void RodComponentsHierarchyModel::removeSelectedItems()
         mHierarchyRodComponents.removeNode(pItem->mpNode);
     }
     updateContent();
-    emit dataModified(true);
+    emit dataChanged();
     emit selectionCleared();
 }
 

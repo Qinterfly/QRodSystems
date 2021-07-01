@@ -51,7 +51,7 @@ bool ManagersFactory::createManager(AbstractProjectManager::ManagerType type)
     {
         DataObjectsManager* pDataObjectManager = new DataObjectsManager(mProject.cloneDataObjects(), mProject.cloneHierarchyDataObjects(),
                                                                         mLastPath, mSettings, mpParent);
-        connect(pDataObjectManager, &DataObjectsManager::dataObjectsModified, &mProject, &Project::setDataObjects);
+        connect(pDataObjectManager, &DataObjectsManager::applied, &mProject, &Project::setDataObjects);
         pManager = pDataObjectManager;
         break;
     }
@@ -60,8 +60,9 @@ bool ManagersFactory::createManager(AbstractProjectManager::ManagerType type)
         RodComponentsManager* pRodComponentsManager = new RodComponentsManager(mProject.mDataObjects, mProject.mHierarchyDataObjects,
                                                                                mProject.cloneRodComponents(), mProject.cloneHierarchyRodComponents(),
                                                                                mLastPath, mSettings, mpParent);
-        connect(pRodComponentsManager, &RodComponentsManager::rodComponentsModified, &mProject, &Project::setRodComponents);
+        connect(pRodComponentsManager, &RodComponentsManager::applied, &mProject, &Project::setRodComponents);
         connect(&mProject, &Project::dataObjectsSubstituted, pRodComponentsManager, &RodComponentsManager::updateDataObjects);
+        connect(&mProject, &Project::projectHierarchyChanged, pRodComponentsManager, &RodComponentsManager::updateDataObjects);
         pManager = pRodComponentsManager;
         break;
     }
