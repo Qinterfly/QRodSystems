@@ -63,7 +63,7 @@ public:
     void importDataObjects(QString const& path, QString const& fileName);
 
 signals:
-    // DataObjects
+    // Data objects
     void dataObjectsSubstituted();
     void propertiesDataObjectsChanged();
     // Rod components
