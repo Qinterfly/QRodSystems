@@ -43,7 +43,6 @@ private:
     void setInertiaMomentTorsional(Core::AbstractDataObject const* pDataObject);
     void setInertiaMomentX(Core::AbstractDataObject const* pDataObject);
     void setInertiaMomentY(Core::AbstractDataObject const* pDataObject);
-    void setInertiaProductXY(Core::AbstractDataObject const* pDataObject);
     void setCenterCoordinateX(Core::AbstractDataObject const* pDataObject);
     void setCenterCoordinateY(Core::AbstractDataObject const* pDataObject);
 

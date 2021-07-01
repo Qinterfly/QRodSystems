@@ -295,7 +295,7 @@ QWidget* RodComponentsManager::makeSectionsToolBar()
 QWidget* RodComponentsManager::makeBoundaryConditionsToolBar()
 {
     QToolBar* pToolBar = new QToolBar();
-    pToolBar->addAction(QIcon(":/icons/clamp.svg"), tr("Clamp"));
+    pToolBar->addAction(QIcon(":/icons/clamp.svg"), tr("Boundary"));
     pToolBar->setIconSize(skToolBarIconSize);
     return addToolbarHeader(pToolBar, "Boundary");
 }
@@ -304,7 +304,7 @@ QWidget* RodComponentsManager::makeBoundaryConditionsToolBar()
 QWidget* RodComponentsManager::makeLoadingToolBar()
 {
     QToolBar* pToolBar = new QToolBar();
-    pToolBar->addAction(QIcon(":/icons/force.svg"), tr("Force"));
+    pToolBar->addAction(QIcon(":/icons/loading.svg"), tr("Loading"));
     pToolBar->setIconSize(skToolBarIconSize);
     return addToolbarHeader(pToolBar, "Loading");
 }

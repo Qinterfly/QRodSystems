@@ -28,7 +28,6 @@ public:
     ScalarDataObject const* inertiaMomentTorsional() const { return mpInertiaMomentTorsional; }
     ScalarDataObject const* inertiaMomentX() const { return mpInertiaMomentX; }
     ScalarDataObject const* inertiaMomentY() const { return mpInertiaMomentY; }
-    ScalarDataObject const* inertiaProductXY() const { return mpInertiaProductXY; }
     // Center coordinates
     ScalarDataObject const* centerCoordinateX() const { return mpCenterCoordinateX; }
     ScalarDataObject const* centerCoordinateY() const { return mpCenterCoordinateY; }
@@ -39,7 +38,6 @@ public:
     void setInertiaMomentTorsional(ScalarDataObject const* pInertiaMomentTorsional) { mpInertiaMomentTorsional = pInertiaMomentTorsional; }
     void setInertiaMomentX(ScalarDataObject const* pInertiaMomentX) { mpInertiaMomentX = pInertiaMomentX; }
     void setInertiaMomentY(ScalarDataObject const* pInertiaMomentY) { mpInertiaMomentY = pInertiaMomentY; }
-    void setInertiaProductXY(ScalarDataObject const* pInertiaProductXY) { mpInertiaProductXY = pInertiaProductXY; }
     // Center coordinates
     void setCenterCoordinateX(ScalarDataObject const* pCenterCoordinateX) { mpCenterCoordinateX = pCenterCoordinateX; }
     void setCenterCoordinateY(ScalarDataObject const* pCenterCoordinateY) { mpCenterCoordinateY = pCenterCoordinateY; }

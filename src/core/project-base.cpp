@@ -80,7 +80,7 @@ void Project::setDataObjects(DataObjects const& dataObjects, HierarchyTree const
         mDataObjects.emplace(pDataObject->id(), pDataObject->clone());
     }
     mHierarchyDataObjects = hierarchyDataObjects;
-    emit dataObjectsChanged();
+    emit dataObjectsSubstituted();
     setModified(true);
 }
 
@@ -131,7 +131,7 @@ void Project::setRodComponents(RodComponents const& rodComponents, HierarchyTree
         mRodComponents.emplace(pRodComponent->id(), pRodComponent->clone());
     }
     mHierarchyRodComponents = hierarchyRodComponents;
-    emit rodComponentsChanged();
+    emit rodComponentsSubstituted();
     setModified(true);
 }
 

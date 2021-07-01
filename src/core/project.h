@@ -65,15 +65,16 @@ public:
     void importDataObjects(QString const& path, QString const& fileName);
 
 signals:
-    void dataObjectsChanged();
-    void rodComponentsChanged();
+    //! Whenever all data objects, rod components have been modified through setters
+    void dataObjectsSubstituted();
+    void rodComponentsSubstituted();
     void modified(bool modifiedState);
 
 public slots:
     bool save(QString const& dir, QString const& fileName);
     void setModified(bool modifiedState = true);
-    void setDataObjects(DataObjects const& dataObjects, HierarchyTree const& hierarchyDataObjects);
-    void setRodComponents(RodComponents const& rodComponents, HierarchyTree const& hierarchyRodComponents);
+    void setDataObjects(QRS::Core::DataObjects const& dataObjects, QRS::Core::HierarchyTree const& hierarchyDataObjects);
+    void setRodComponents(QRS::Core::RodComponents const& rodComponents, QRS::Core::HierarchyTree const& hierarchyRodComponents);
 
 private:
     void emplaceRodComponent(AbstractRodComponent* pRodComponent);

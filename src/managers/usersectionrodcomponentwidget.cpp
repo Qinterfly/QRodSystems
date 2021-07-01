@@ -73,11 +73,7 @@ QWidget* UserSectionRodComponentWidget::createInertiaMomentsGroup()
     pEdit = new DataObjectLineEdit(mUserSectionRodComponent.inertiaMomentY(), AbstractDataObject::ObjectType::kScalar, mkMimeType);
     connect(pEdit, &DataObjectLineEdit::dataObjectSelected, this, &UserSectionRodComponentWidget::setInertiaMomentY);
     pLayout->addWidget(pEdit, 2, 1);
-    // XY
-    pLayout->addWidget(new QLabel(tr("Product XY: ")), 3, 0);
-    pEdit = new DataObjectLineEdit(mUserSectionRodComponent.inertiaProductXY(), AbstractDataObject::ObjectType::kScalar, mkMimeType);
-    connect(pEdit, &DataObjectLineEdit::dataObjectSelected, this, &UserSectionRodComponentWidget::setInertiaProductXY);
-    pLayout->addWidget(pEdit, 3, 1);
+    // Layout
     pGroupBox->setLayout(pLayout);
     return pGroupBox;
 }
@@ -127,13 +123,6 @@ void UserSectionRodComponentWidget::setInertiaMomentX(Core::AbstractDataObject c
 void UserSectionRodComponentWidget::setInertiaMomentY(Core::AbstractDataObject const* pDataObject)
 {
     mUserSectionRodComponent.setInertiaMomentY((ScalarDataObject const*)pDataObject);
-    emit modified();
-}
-
-//! Set a product of inertia
-void UserSectionRodComponentWidget::setInertiaProductXY(Core::AbstractDataObject const* pDataObject)
-{
-    mUserSectionRodComponent.setInertiaProductXY((ScalarDataObject const*)pDataObject);
     emit modified();
 }
 

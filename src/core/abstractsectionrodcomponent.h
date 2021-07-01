@@ -44,7 +44,6 @@ protected:
     QPointer<ScalarDataObject const> mpInertiaMomentTorsional;
     QPointer<ScalarDataObject const> mpInertiaMomentX;
     QPointer<ScalarDataObject const> mpInertiaMomentY;
-    QPointer<ScalarDataObject const> mpInertiaProductXY;
     // Center coordinates
     QPointer<ScalarDataObject const> mpCenterCoordinateX;
     QPointer<ScalarDataObject const> mpCenterCoordinateY;

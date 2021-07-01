@@ -37,7 +37,6 @@ void AbstractSectionRodComponent::serialize(QDataStream& stream) const
     writeDataObjectPointer(stream, mpInertiaMomentTorsional);
     writeDataObjectPointer(stream, mpInertiaMomentX);
     writeDataObjectPointer(stream, mpInertiaMomentY);
-    writeDataObjectPointer(stream, mpInertiaProductXY);
     // Center coordinates
     writeDataObjectPointer(stream, mpCenterCoordinateX);
     writeDataObjectPointer(stream, mpCenterCoordinateY);
@@ -58,7 +57,6 @@ void AbstractSectionRodComponent::deserialize(QDataStream& stream, DataObjectGet
     mpInertiaMomentTorsional = (ScalarDataObject const*)readDataObjectPointer(stream, getDataObject);
     mpInertiaMomentX = (ScalarDataObject const*)readDataObjectPointer(stream, getDataObject);
     mpInertiaMomentY = (ScalarDataObject const*)readDataObjectPointer(stream, getDataObject);
-    mpInertiaProductXY = (ScalarDataObject const*)readDataObjectPointer(stream, getDataObject);
     // Center coordinates
     mpCenterCoordinateX  = (ScalarDataObject const*)readDataObjectPointer(stream, getDataObject);
     mpCenterCoordinateY   = (ScalarDataObject const*)readDataObjectPointer(stream, getDataObject);
@@ -73,7 +71,6 @@ void AbstractSectionRodComponent::copyIntegratedProperties(AbstractSectionRodCom
     mpInertiaMomentTorsional = pSection->mpInertiaMomentTorsional;
     mpInertiaMomentX = pSection->mpInertiaMomentX;
     mpInertiaMomentY = pSection->mpInertiaMomentY;
-    mpInertiaProductXY = pSection->mpInertiaProductXY;
     // Center coordinates
     mpCenterCoordinateX = pSection->mpCenterCoordinateX;
     mpCenterCoordinateY = pSection->mpCenterCoordinateY;

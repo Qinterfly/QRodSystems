@@ -244,8 +244,8 @@ void MainWindow::specifyMenuConnections()
 void MainWindow::specifyProjectConnections()
 {
     connect(mpProject, &Project::modified, this, &MainWindow::projectModified);
-    connect(mpProject, &Project::dataObjectsChanged, mpProjectHierarchyModel, &ProjectHierarchyModel::updateContent);
-    connect(mpProject, &Project::rodComponentsChanged, mpProjectHierarchyModel, &ProjectHierarchyModel::updateContent);
+    connect(mpProject, &Project::dataObjectsSubstituted, mpProjectHierarchyModel, &ProjectHierarchyModel::updateContent);
+    connect(mpProject, &Project::rodComponentsSubstituted, mpProjectHierarchyModel, &ProjectHierarchyModel::updateContent);
 }
 
 //! Save the current window settings
