@@ -8,7 +8,7 @@
 #ifndef RODCOMPONENTSMANAGER_H
 #define RODCOMPONENTSMANAGER_H
 
-#include "managers/abstractprojectmanager.h"
+#include "managers/abstractmanager.h"
 #include "core/aliasdataset.h"
 #include "core/hierarchytree.h"
 #include "core/abstractsectionrodcomponent.h"
@@ -35,7 +35,7 @@ namespace Managers
 {
 
 //! Manager to create rod components, such as a geometry, cross section and force
-class RodComponentsManager : public AbstractProjectManager
+class RodComponentsManager : public AbstractManager
 {
     Q_OBJECT
 

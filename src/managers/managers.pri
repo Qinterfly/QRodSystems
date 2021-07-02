@@ -1,7 +1,7 @@
 INCLUDEPATH += $$PWD
 
 HEADERS += \
-    $$PWD/abstractprojectmanager.h \
+    $$PWD/abstractmanager.h \
     $$PWD/dataobjectlineedit.h \
     $$PWD/dataobjectsmanager.h \
     $$PWD/doublespinboxitemdelegate.h  \
@@ -11,7 +11,7 @@ HEADERS += \
     $$PWD/usersectionrodcomponentwidget.h
 
 SOURCES += \
-    $$PWD/abstractprojectmanager.cpp \
+    $$PWD/abstractmanager.cpp \
     $$PWD/dataobjectlineedit.cpp \
     $$PWD/dataobjectsmanager.cpp \
     $$PWD/doublespinboxitemdelegate.cpp  \

@@ -36,14 +36,15 @@ void GeometryRodComponentWidget::createContent()
     DataObjectLineEdit* pRadiusVectorEdit = new DataObjectLineEdit(mGeometryRodComponent.radiusVector(),
                                                                    AbstractDataObject::ObjectType::kVector, mkMimeType);
     pMainLayout->addWidget(new QLabel(tr("Radius vector: ")), 0, 0);
-    pMainLayout->addWidget(pRadiusVectorEdit, 0, 1);
     connect(pRadiusVectorEdit, &DataObjectLineEdit::dataObjectSelected, this, &GeometryRodComponentWidget::setRadiusVector);
+    pMainLayout->addWidget(pRadiusVectorEdit, 0, 1);
+    pMainLayout->addWidget(new QLabel(tr("(m)")), 0, 2);
     // Rotation matrix
     DataObjectLineEdit* pRotationMatrixEdit = new DataObjectLineEdit(mGeometryRodComponent.rotationMatrix(),
                                                                      AbstractDataObject::ObjectType::kMatrix, mkMimeType);
     pMainLayout->addWidget(new QLabel(tr("Rotation matrix: ")), 1, 0);
-    pMainLayout->addWidget(pRotationMatrixEdit, 1, 1);
     connect(pRotationMatrixEdit, &DataObjectLineEdit::dataObjectSelected, this, &GeometryRodComponentWidget::setRotationMatrix);
+    pMainLayout->addWidget(pRotationMatrixEdit, 1, 1);
     // Spacer
     pMainLayout->addItem(new QSpacerItem(0, 0, QSizePolicy::Minimum, QSizePolicy::Expanding), 2, 0);
     setLayout(pMainLayout);

@@ -47,7 +47,7 @@ QIcon getDataObjectIcon(AbstractDataObject::ObjectType type);
 
 DataObjectsManager::DataObjectsManager(DataObjects&& dataObjects, HierarchyTree&& hierarchyDataObjects,
                                        QString& lastPath, QSettings& settings, QWidget* parent)
-    : AbstractProjectManager(lastPath, settings, kDataObjects, "DataObjectsManager", parent)
+    : AbstractManager(lastPath, settings, kDataObjects, "DataObjectsManager", parent)
     , mDataObjects(std::move(dataObjects))
     , mHierarchyDataObjects(std::move(hierarchyDataObjects))
 {
@@ -150,7 +150,7 @@ CDockWidget* DataObjectsManager::createHierarchyWidget()
     mpTreeDataObjectsModel = new DataObjectsHierarchyModel(mDataObjects, mHierarchyDataObjects,
                                                            "dataobjectsmanager/hierarchy", mpTreeDataObjects);
     mpTreeDataObjects->setModel(mpTreeDataObjectsModel);
-    connect(mpTreeDataObjectsModel, &DataObjectsHierarchyModel::dataChanged, [this]() { setWindowModified(true); });
+    connect(mpTreeDataObjectsModel, &DataObjectsHierarchyModel::hierarchyChanged, [this]() { setWindowModified(true); });
     connect(mpTreeDataObjectsModel, &DataObjectsHierarchyModel::selected,
             this, &DataObjectsManager::representDataObject);
     connect(mpTreeDataObjects->selectionModel(), &QItemSelectionModel::selectionChanged,

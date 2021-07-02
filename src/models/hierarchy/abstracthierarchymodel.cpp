@@ -89,7 +89,7 @@ bool AbstractHierarchyModel::dropMimeData(QMimeData const* pMimeData, Qt::DropAc
     if (isProcessed)
     {
         updateContentExpanded();
-        emit dataChanged();
+        emit hierarchyChanged();
     }
     return false;
 }

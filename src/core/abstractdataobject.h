@@ -43,7 +43,7 @@ public:
     quint32 numberItems() const { return mItems.size(); }
     DataHolder const& getItems() { return mItems; }
     DataIDType id() const { return mID; }
-    ObjectType type() const { return mType; }
+    ObjectType type() const { return mkType; }
     QString const& name() const { return mName; }
     void setName(QString const& name) { mName = name; }
     static DataIDType maxObjectID() { return smMaxObjectID; }
@@ -54,7 +54,7 @@ public:
     virtual void import(QTextStream& stream) = 0;
 
 protected:
-    const ObjectType mType;
+    const ObjectType mkType;
     QString mName;
     DataIDType mID;
     DataHolder mItems;

@@ -2,11 +2,11 @@
  * \file
  * \author Pavel Lakiza
  * \date May 2021
- * \brief Declaration of the AbstractProjectManager class
+ * \brief Declaration of the AbstractManager class
  */
 
-#ifndef ABSTRACTPROJECTMANAGER_H
-#define ABSTRACTPROJECTMANAGER_H
+#ifndef ABSTRACTMANAGER_H
+#define ABSTRACTMANAGER_H
 
 #include <QDialog>
 
@@ -27,7 +27,7 @@ namespace Managers
 {
 
 //! Abstract manager to create objects of different types
-class AbstractProjectManager : public QDialog
+class AbstractManager : public QDialog
 {
     Q_OBJECT
 
@@ -38,14 +38,14 @@ public:
         kRodComponents,
         kRodConstructor
     };
-    AbstractProjectManager(QString& lastPath, QSettings& settings,
-                           ManagerType type, QString groupName, QWidget* parent = nullptr);
-    virtual ~AbstractProjectManager() = 0;
+    AbstractManager(QString& lastPath, QSettings& settings,
+                    ManagerType type, QString groupName, QWidget* parent = nullptr);
+    virtual ~AbstractManager() = 0;
     void saveSettings();
     void restoreSettings();
 
 signals:
-    void closed(QRS::Managers::AbstractProjectManager::ManagerType type);
+    void closed(QRS::Managers::AbstractManager::ManagerType type);
 
 public slots:
     virtual void apply() = 0;
@@ -62,12 +62,12 @@ protected:
 
 private:
     QSettings& mSettings;
-    ManagerType const mType;
-    QString const mGroupName;
+    ManagerType const mkType;
+    QString const mkGroupName;
 };
 
 }
 
 }
 
-#endif // ABSTRACTPROJECTMANAGER_H
+#endif // ABSTRACTMANAGER_H

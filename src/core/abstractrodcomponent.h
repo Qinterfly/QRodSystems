@@ -1,7 +1,7 @@
 /*!
  * \file
  * \author Pavel Lakiza
- * \date June 2021
+ * \date July 2021
  * \brief Declaration of the AbstractRodComponent class
  */
 
@@ -35,7 +35,7 @@ public:
     virtual AbstractRodComponent* clone() const = 0;
     virtual bool isDataComplete() const = 0;
     DataIDType id() const { return mID; }
-    ComponentType componentType() const { return mComponentType; }
+    ComponentType componentType() const { return mkComponentType; }
     QString const& name() const { return mName; }
     void setName(QString const& name) { mName = name; }
     static DataIDType maxComponentID() { return smMaxComponentID; }
@@ -49,7 +49,7 @@ protected:
     AbstractDataObject const* readDataObjectPointer(QDataStream& stream, DataObjectGetter const& getDataObject) const;
 
 protected:
-    ComponentType const mComponentType;
+    ComponentType const mkComponentType;
     QString mName;
     DataIDType mID;
 

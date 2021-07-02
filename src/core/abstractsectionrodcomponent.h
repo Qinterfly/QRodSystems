@@ -1,7 +1,7 @@
 /*!
  * \file
  * \author Pavel Lakiza
- * \date June 2021
+ * \date July 2021
  * \brief Declaration of the AbstractSectionRodComponent class
  */
 
@@ -29,14 +29,14 @@ public:
     static quint32 numberInstances() { return smNumInstances; }
     void serialize(QDataStream& stream) const override;
     void deserialize(QDataStream& stream, DataObjectGetter const& getDataObject) override;
-    SectionType sectionType() const { return mSectionType; }
+    SectionType sectionType() const { return mkSectionType; }
 
 protected:
     void copyIntegratedProperties(AbstractSectionRodComponent const* pSection);
 
 protected:
     // Info
-    SectionType const mSectionType;
+    SectionType const mkSectionType;
     static quint32 smNumInstances;
     // Area
     QPointer<ScalarDataObject const> mpArea;

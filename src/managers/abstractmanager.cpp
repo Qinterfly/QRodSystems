@@ -2,33 +2,33 @@
  * \file
  * \author Pavel Lakiza
  * \date May 2021
- * \brief Definition of the AbstractProjectManager class
+ * \brief Definition of the AbstractManager class
  */
 
 #include <QMessageBox>
 #include <QSettings>
 #include <QToolBar>
 
-#include "abstractprojectmanager.h"
+#include "abstractmanager.h"
 #include "central/uiconstants.h"
 #include "DockManager.h"
 
 using namespace QRS::Managers;
 using ads::CDockManager;
 
-AbstractProjectManager::AbstractProjectManager(QString& lastPath, QSettings& settings,
-                                               ManagerType type, QString groupName, QWidget* parent)
+AbstractManager::AbstractManager(QString& lastPath, QSettings& settings,
+                                 ManagerType type, QString groupName, QWidget* parent)
     : QDialog(parent)
     , mLastPath(lastPath)
     , mSettings(settings)
-    , mType(type)
-    , mGroupName(groupName)
+    , mkType(type)
+    , mkGroupName(groupName)
 {
     mpDockManager = new CDockManager();
     mpDockManager->setStyleSheet("");
 }
 
-AbstractProjectManager::~AbstractProjectManager()
+AbstractManager::~AbstractManager()
 {
     if (mpDockManager->parent() == nullptr)
     {
@@ -38,25 +38,25 @@ AbstractProjectManager::~AbstractProjectManager()
 }
 
 //! Save settings to a file
-void AbstractProjectManager::saveSettings()
+void AbstractManager::saveSettings()
 {
-    mSettings.beginGroup(mGroupName);
+    mSettings.beginGroup(mkGroupName);
     mSettings.setValue(UiConstants::Settings::skGeometry, saveGeometry());
     mSettings.setValue(UiConstants::Settings::skDockingState, mpDockManager->saveState());
     mSettings.endGroup();
 }
 
 //! Restore settings from a file
-void AbstractProjectManager::restoreSettings()
+void AbstractManager::restoreSettings()
 {
-    mSettings.beginGroup(mGroupName);
+    mSettings.beginGroup(mkGroupName);
     restoreGeometry(mSettings.value(UiConstants::Settings::skGeometry).toByteArray());
     mpDockManager->restoreState(mSettings.value(UiConstants::Settings::skDockingState).toByteArray());
     mSettings.endGroup();
 }
 
 //! Save settings and delete handling widgets before closing the window
-void AbstractProjectManager::closeEvent(QCloseEvent* pEvent)
+void AbstractManager::closeEvent(QCloseEvent* pEvent)
 {
     pEvent->ignore();
     bool isClosed = false;
@@ -75,13 +75,13 @@ void AbstractProjectManager::closeEvent(QCloseEvent* pEvent)
     if (isClosed)
     {
         saveSettings();
-        emit closed(mType);
+        emit closed(mkType);
         pEvent->accept();
     }
 }
 
 //! Helper function to add a shortcut hint to all actions which a toolbar contains
-void AbstractProjectManager::setToolBarShortcutHints(QToolBar* pToolBar)
+void AbstractManager::setToolBarShortcutHints(QToolBar* pToolBar)
 {
     QList<QAction*> listActions = pToolBar->actions();
     QString shortCut;

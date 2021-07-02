@@ -62,8 +62,8 @@ void TestManagers::initTestCase()
 void TestManagers::testDataObjectsManager()
 {
     // Creating a manager
-    mpManagersFactory->createManager(AbstractProjectManager::ManagerType::kDataObjects);
-    DataObjectsManager* pManager = (DataObjectsManager*)mpManagersFactory->manager(AbstractProjectManager::ManagerType::kDataObjects);
+    mpManagersFactory->createManager(AbstractManager::ManagerType::kDataObjects);
+    DataObjectsManager* pManager = (DataObjectsManager*)mpManagersFactory->manager(AbstractManager::ManagerType::kDataObjects);
     // Creating data objects of different types
     ScalarDataObject* pScalar = (ScalarDataObject*)pManager->addScalar();
     VectorDataObject* pVector = (VectorDataObject*)pManager->addVector();
@@ -101,8 +101,8 @@ void TestManagers::testRodComponentsManager()
     VectorDataObject* pVector = (VectorDataObject*)mpProject->addDataObject(AbstractDataObject::kVector);
     MatrixDataObject* pMatrix = (MatrixDataObject*)mpProject->addDataObject(AbstractDataObject::kMatrix);
     // Creating a manager
-    mpManagersFactory->createManager(AbstractProjectManager::ManagerType::kRodComponents);
-    RodComponentsManager* pManager = (RodComponentsManager*)mpManagersFactory->manager(AbstractProjectManager::ManagerType::kRodComponents);
+    mpManagersFactory->createManager(AbstractManager::ManagerType::kRodComponents);
+    RodComponentsManager* pManager = (RodComponentsManager*)mpManagersFactory->manager(AbstractManager::ManagerType::kRodComponents);
     // Adding a geometrical component
     GeometryRodComponent* pGeometry = (GeometryRodComponent*)pManager->addGeometry();
     pGeometry->setRadiusVector(pVector);

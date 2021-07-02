@@ -13,7 +13,7 @@ DataIDType AbstractDataObject::smMaxObjectID = 0;
 
 //! Base constructor
 AbstractDataObject::AbstractDataObject(ObjectType type, QString const& name)
-    : mType(type)
+    : mkType(type)
     , mName(name)
 {
     mID = ++smMaxObjectID;
@@ -88,7 +88,7 @@ DataValueType AbstractDataObject::getAvailableItemKey(DataValueType key, DataHol
 //! Serialize an abstract data object
 void AbstractDataObject::serialize(QDataStream& stream) const
 {
-    stream << (quint32)mType;
+    stream << (quint32)mkType;
     stream << mName;
     stream << (DataIDType)mID;
     stream << (quint32)mItems.size();

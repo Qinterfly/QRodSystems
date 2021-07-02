@@ -61,7 +61,7 @@ void DataObjectsHierarchyModel::renameItem(QStandardItem* pStandardItem)
         pItem->mpDataObject->setName(newName);
     else if (pItem->mpNode->type() == HierarchyNode::NodeType::kDirectory)
         pItem->mpNode->value() = newName;
-    emit dataChanged();
+    emit hierarchyChanged();
 }
 
 //! Select an item by row index
@@ -122,6 +122,6 @@ void DataObjectsHierarchyModel::removeSelectedItems()
         mHierarchyDataObjects.removeNode(pItem->mpNode);
     }
     updateContent();
-    emit dataChanged();
+    emit hierarchyChanged();
     emit selectionCleared();
 }

@@ -1,7 +1,7 @@
 /*!
  * \file
  * \author Pavel Lakiza
- * \date June 2021
+ * \date July 2021
  * \brief Definition of the AbstractRodComponent class
  */
 
@@ -13,7 +13,7 @@ using namespace QRS::Core;
 DataIDType AbstractRodComponent::smMaxComponentID = 0;
 
 AbstractRodComponent::AbstractRodComponent(ComponentType componentType, QString name)
-    : mComponentType(componentType)
+    : mkComponentType(componentType)
     , mName(name)
 {
     mID = ++smMaxComponentID;

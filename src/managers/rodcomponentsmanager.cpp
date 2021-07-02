@@ -39,7 +39,7 @@ QWidget* addToolbarHeader(QToolBar* pToolBar, QString const& name);
 RodComponentsManager::RodComponentsManager(DataObjects& dataObjects, HierarchyTree& hieararchyDataObjects,
                                            RodComponents&& rodComponents, HierarchyTree&& hierarchyRodComponents,
                                            QString& lastPath, QSettings& settings, QWidget* parent)
-    : AbstractProjectManager(lastPath, settings, kRodComponents, "RodComponentsManager", parent)
+    : AbstractManager(lastPath, settings, kRodComponents, "RodComponentsManager", parent)
     , mDataObjects(dataObjects)
     , mHierarchyDataObjects(hieararchyDataObjects)
     , mRodComponents(std::move(rodComponents))
@@ -101,7 +101,7 @@ CDockWidget* RodComponentsManager::createHierarchyRodComponentsWidget()
     mpTreeRodComponentsModel = new RodComponentsHierarchyModel(mRodComponents, mHierarchyRodComponents,
                                                                "rodcomponentsmanager/hierarchy", mpTreeRodComponents);
     mpTreeRodComponents->setModel(mpTreeRodComponentsModel);
-    connect(mpTreeRodComponentsModel, &RodComponentsHierarchyModel::dataChanged, [this]() { setWindowModified(true); });
+    connect(mpTreeRodComponentsModel, &RodComponentsHierarchyModel::hierarchyChanged, [this]() { setWindowModified(true); });
     connect(mpTreeRodComponentsModel, &RodComponentsHierarchyModel::selected,
             this, &RodComponentsManager::representRodComponent);
     connect(mpTreeRodComponents->selectionModel(), &QItemSelectionModel::selectionChanged,

@@ -9,7 +9,7 @@
 #define DATAOBJECTSMANAGER_H
 
 #include <unordered_map>
-#include "abstractprojectmanager.h"
+#include "abstractmanager.h"
 #include "core/aliasdata.h"
 #include "core/aliasdataset.h"
 #include "core/hierarchytree.h"
@@ -47,7 +47,7 @@ namespace Managers
 class DoubleSpinBoxItemDelegate;
 
 //! Manager to create objects of different types: scalars, vectors, matroces and surfaces
-class DataObjectsManager : public AbstractProjectManager
+class DataObjectsManager : public AbstractManager
 {
     Q_OBJECT
 

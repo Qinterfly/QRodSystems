@@ -9,7 +9,7 @@
 #define MANAGERSFACTORY_H
 
 #include <QObject>
-#include "abstractprojectmanager.h"
+#include "abstractmanager.h"
 
 QT_BEGIN_NAMESPACE
 class QSettings;
@@ -34,16 +34,16 @@ class ManagersFactory : public QObject
 public:
     ManagersFactory(Core::Project& project, QString& lastPath, QSettings& settings, QWidget* parent);
     ~ManagersFactory();
-    bool createManager(AbstractProjectManager::ManagerType type);
-    bool deleteManager(AbstractProjectManager::ManagerType type);
-    AbstractProjectManager* manager(AbstractProjectManager::ManagerType type);
+    bool createManager(AbstractManager::ManagerType type);
+    bool deleteManager(AbstractManager::ManagerType type);
+    AbstractManager* manager(AbstractManager::ManagerType type);
 
 private:
     Core::Project& mProject;
     QString& mLastPath;
     QSettings& mSettings;
     QWidget* mpParent;
-    std::unordered_map<AbstractProjectManager::ManagerType, AbstractProjectManager*> mManagers;
+    std::unordered_map<AbstractManager::ManagerType, AbstractManager*> mManagers;
 };
 
 }

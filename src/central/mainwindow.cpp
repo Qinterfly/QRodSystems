@@ -249,7 +249,7 @@ void MainWindow::specifyProjectConnections()
     connect(mpProject, &Project::dataObjectsSubstituted, mpProjectHierarchyModel, &ProjectHierarchyModel::updateContent);
     connect(mpProject, &Project::rodComponentsSubstituted, mpProjectHierarchyModel, &ProjectHierarchyModel::updateContent);
     // Update the project through models
-    connect(mpProjectHierarchyModel, &ProjectHierarchyModel::dataChanged, mpProject, &Project::projectHierarchyChanged);
+    connect(mpProjectHierarchyModel, &ProjectHierarchyModel::hierarchyChanged, mpProject, &Project::projectHierarchyChanged);
     // Set the modified state when the project has been changed
     std::function<void()> funProjectChanged = [this]() { setModified(true); };
     connect(mpProject, &Project::projectHierarchyChanged, funProjectChanged);
@@ -289,21 +289,21 @@ void MainWindow::restoreSettings()
 //! Show a manager for designing data objects
 void MainWindow::createDataObjectsManager()
 {
-    if (!mpManagersFactory->createManager(AbstractProjectManager::ManagerType::kDataObjects))
+    if (!mpManagersFactory->createManager(AbstractManager::ManagerType::kDataObjects))
         qWarning() << tr("Failed to open a manager to create data objects");
 }
 
 //! Show a manager to set rod components based on the created data objects
 void MainWindow::createRodComponentsManager()
 {
-    if (!mpManagersFactory->createManager(AbstractProjectManager::ManagerType::kRodComponents))
+    if (!mpManagersFactory->createManager(AbstractManager::ManagerType::kRodComponents))
         qWarning() << tr("Failed to open a manager to produce rod components");
 }
 
 //! Show a manager to assemble a rod by using rod components
 void MainWindow::createRodConstructorManager()
 {
-    if (!mpManagersFactory->createManager(AbstractProjectManager::ManagerType::kRodConstructor))
+    if (!mpManagersFactory->createManager(AbstractManager::ManagerType::kRodConstructor))
         qWarning() << tr("Failed to open a manager to construct rods");
 }
 

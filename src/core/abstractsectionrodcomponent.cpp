@@ -1,7 +1,7 @@
 /*!
  * \file
  * \author Pavel Lakiza
- * \date June 2021
+ * \date July 2021
  * \brief Definition of the AbstractSectionRodComponent class
  */
 
@@ -13,7 +13,7 @@ using namespace QRS::Core;
 quint32 AbstractSectionRodComponent::smNumInstances = 0;
 
 AbstractSectionRodComponent::AbstractSectionRodComponent(SectionType sectionType, QString const& name)
-    : AbstractRodComponent(kSection, name), mSectionType(sectionType)
+    : AbstractRodComponent(kSection, name), mkSectionType(sectionType)
 {
     ++smNumInstances;
 }
@@ -27,9 +27,9 @@ AbstractSectionRodComponent::~AbstractSectionRodComponent()
 //! Serialize a cross section
 void AbstractSectionRodComponent::serialize(QDataStream& stream) const
 {
-    stream << (quint32)mComponentType;
+    stream << (quint32)mkComponentType;
     stream << mName;
-    stream << (quint32)mSectionType;
+    stream << (quint32)mkSectionType;
     stream << (DataIDType)mID;
     // Area
     writeDataObjectPointer(stream, mpArea);

@@ -46,7 +46,7 @@ public:
 
 signals:
     //! Emitted when hierarchical elements get renamed, moved or deleted
-    void dataChanged();
+    void hierarchyChanged();
 
 private:
     bool processDropOnItem(QDataStream& stream, int& numItems, QModelIndex const& indexParent);
@@ -57,7 +57,6 @@ private:
 
 protected:
     QString const mkMimeType;
-
 };
 
 }

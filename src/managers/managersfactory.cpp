@@ -34,9 +34,9 @@ ManagersFactory::~ManagersFactory()
 }
 
 //! Create a manager according to a given type
-bool ManagersFactory::createManager(AbstractProjectManager::ManagerType type)
+bool ManagersFactory::createManager(AbstractManager::ManagerType type)
 {
-    AbstractProjectManager* pManager = nullptr;
+    AbstractManager* pManager = nullptr;
     bool isExisted = mManagers.contains(type);
     if (isExisted)
     {
@@ -47,7 +47,7 @@ bool ManagersFactory::createManager(AbstractProjectManager::ManagerType type)
     }
     switch (type)
     {
-    case AbstractProjectManager::kDataObjects:
+    case AbstractManager::kDataObjects:
     {
         DataObjectsManager* pDataObjectManager = new DataObjectsManager(mProject.cloneDataObjects(), mProject.cloneHierarchyDataObjects(),
                                                                         mLastPath, mSettings, mpParent);
@@ -55,7 +55,7 @@ bool ManagersFactory::createManager(AbstractProjectManager::ManagerType type)
         pManager = pDataObjectManager;
         break;
     }
-    case AbstractProjectManager::kRodComponents:
+    case AbstractManager::kRodComponents:
     {
         RodComponentsManager* pRodComponentsManager = new RodComponentsManager(mProject.mDataObjects, mProject.mHierarchyDataObjects,
                                                                                mProject.cloneRodComponents(), mProject.cloneHierarchyRodComponents(),
@@ -73,12 +73,12 @@ bool ManagersFactory::createManager(AbstractProjectManager::ManagerType type)
         return false;
     mManagers.emplace(type, pManager);
     pManager->show();
-    connect(pManager, &AbstractProjectManager::closed, this, &ManagersFactory::deleteManager);
+    connect(pManager, &AbstractManager::closed, this, &ManagersFactory::deleteManager);
     return true;
 }
 
 //! Destroy a manager by given type
-bool ManagersFactory::deleteManager(AbstractProjectManager::ManagerType type)
+bool ManagersFactory::deleteManager(AbstractManager::ManagerType type)
 {
     if (!mManagers.contains(type))
         return false;
@@ -97,7 +97,7 @@ void moveToCenter(QWidget* pWidget)
 }
 
 //! Retrieve a manager of a given type
-AbstractProjectManager* ManagersFactory::manager(AbstractProjectManager::ManagerType type)
+AbstractManager* ManagersFactory::manager(AbstractManager::ManagerType type)
 {
     if (mManagers.contains(type))
         return mManagers[type];

@@ -1,7 +1,7 @@
 /*!
  * \file
  * \author Pavel Lakiza
- * \date June 2021
+ * \date July 2021
  * \brief Definition of the GeometryRodComponent class
  */
 
@@ -39,7 +39,7 @@ AbstractRodComponent* GeometryRodComponent::clone() const
 //! Serialize all properties of a geometrical component
 void GeometryRodComponent::serialize(QDataStream& stream) const
 {
-    stream << (quint32)mComponentType;
+    stream << (quint32)mkComponentType;
     stream << mName;
     stream << (DataIDType)mID;
     writeDataObjectPointer(stream, mpRadiusVector);
