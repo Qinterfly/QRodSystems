@@ -61,27 +61,28 @@ QWidget* UserSectionRodComponentWidget::createInertiaMomentsGroup()
     QGridLayout* pLayout = new QGridLayout();
     DataObjectLineEdit* pEdit;
     std::function<void(AbstractDataObject const*)> setFun;
+    QString const kDimension = tr("(m<sup>4</sup>)");
     // Torsional
     pLayout->addWidget(new QLabel(tr("Torsional: ")), 0, 0);
     pEdit = new DataObjectLineEdit(mUserSectionRodComponent.inertiaMomentTorsional(), AbstractDataObject::ObjectType::kScalar, mkMimeType);
     setFun = [this](AbstractDataObject const * pData) { setProperty(pData, &UserSectionRodComponent::setInertiaMomentTorsional); };
     connect(pEdit, &DataObjectLineEdit::dataObjectSelected, setFun);
     pLayout->addWidget(pEdit, 0, 1);
-    pLayout->addWidget(new QLabel(tr("(m<sup>4</sup>)")), 0, 2);
+    pLayout->addWidget(new QLabel(kDimension), 0, 2);
     // X
     pLayout->addWidget(new QLabel(tr("X: ")), 1, 0);
     pEdit = new DataObjectLineEdit(mUserSectionRodComponent.inertiaMomentX(), AbstractDataObject::ObjectType::kScalar, mkMimeType);
     setFun = [this](AbstractDataObject const * pData) { setProperty(pData, &UserSectionRodComponent::setInertiaMomentX); };
     connect(pEdit, &DataObjectLineEdit::dataObjectSelected, setFun);
     pLayout->addWidget(pEdit, 1, 1);
-    pLayout->addWidget(new QLabel(tr("(m<sup>4</sup>)")), 1, 2);
+    pLayout->addWidget(new QLabel(kDimension), 1, 2);
     // Y
     pLayout->addWidget(new QLabel(tr("Y: ")), 2, 0);
     pEdit = new DataObjectLineEdit(mUserSectionRodComponent.inertiaMomentY(), AbstractDataObject::ObjectType::kScalar, mkMimeType);
     setFun = [this](AbstractDataObject const * pData) { setProperty(pData, &UserSectionRodComponent::setInertiaMomentY); };
     connect(pEdit, &DataObjectLineEdit::dataObjectSelected, setFun);
     pLayout->addWidget(pEdit, 2, 1);
-    pLayout->addWidget(new QLabel(tr("(m<sup>4</sup>)")), 2, 2);
+    pLayout->addWidget(new QLabel(kDimension), 2, 2);
     // Layout
     pGroupBox->setLayout(pLayout);
     return pGroupBox;
@@ -94,20 +95,21 @@ QWidget* UserSectionRodComponentWidget::createCenterCoordinatesGroup()
     QGridLayout* pLayout = new QGridLayout();
     DataObjectLineEdit* pEdit;
     std::function<void(AbstractDataObject const*)> setFun;
+    QString const kDimension = tr("(m)");
     // X
     pLayout->addWidget(new QLabel(tr("X: ")), 0, 0);
     pEdit = new DataObjectLineEdit(mUserSectionRodComponent.centerCoordinateX(), AbstractDataObject::ObjectType::kScalar, mkMimeType);
     setFun = [this](AbstractDataObject const * pData) { setProperty(pData, &UserSectionRodComponent::setCenterCoordinateX); };
     connect(pEdit, &DataObjectLineEdit::dataObjectSelected, setFun);
     pLayout->addWidget(pEdit, 0, 1);
-    pLayout->addWidget(new QLabel(tr("(m)")), 0, 2);
+    pLayout->addWidget(new QLabel(kDimension), 0, 2);
     // Y
     pLayout->addWidget(new QLabel(tr("Y: ")), 1, 0);
     pEdit = new DataObjectLineEdit(mUserSectionRodComponent.centerCoordinateY(), AbstractDataObject::ObjectType::kScalar, mkMimeType);
     setFun = [this](AbstractDataObject const * pData) { setProperty(pData, &UserSectionRodComponent::setCenterCoordinateY); };
     connect(pEdit, &DataObjectLineEdit::dataObjectSelected, setFun);
     pLayout->addWidget(pEdit, 1, 1);
-    pLayout->addWidget(new QLabel(tr("(m)")), 1, 2);
+    pLayout->addWidget(new QLabel(kDimension), 1, 2);
     pGroupBox->setLayout(pLayout);
     return pGroupBox;
 }
