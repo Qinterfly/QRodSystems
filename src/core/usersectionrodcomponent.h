@@ -21,7 +21,7 @@ public:
     UserSectionRodComponent(QString const& name);
     AbstractRodComponent* clone() const override;
     bool isDataComplete() const override;
-
+    // Getters
     // Area
     ScalarDataObject const* area() const { return mpArea; }
     // Inertia moments
@@ -31,7 +31,7 @@ public:
     // Center coordinates
     ScalarDataObject const* centerCoordinateX() const { return mpCenterCoordinateX; }
     ScalarDataObject const* centerCoordinateY() const { return mpCenterCoordinateY; }
-
+    // Setters
     // Area
     void setArea(ScalarDataObject const* pArea) { mpArea = pArea; }
     // Inertia moments

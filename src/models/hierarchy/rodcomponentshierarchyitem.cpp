@@ -86,8 +86,13 @@ QIcon getRodComponentIcon(AbstractRodComponent const* pRodComponent)
         {
         case AbstractSectionRodComponent::SectionType::kUserDefined:
             icon = QIcon(":/icons/abstract-shape.svg");
+            break;
         }
+        break;
     }
+    case AbstractRodComponent::ComponentType::kMaterial:
+        icon = QIcon(":/icons/material.svg");
+        break;
     }
     return icon;
 }

@@ -19,6 +19,7 @@
 #include "surfacedataobject.h"
 #include "geometryrodcomponent.h"
 #include "usersectionrodcomponent.h"
+#include "materialrodcomponent.h"
 #include "utilities.h"
 
 using namespace QRS::Core;
@@ -210,12 +211,14 @@ void readRodComponents(QDataStream& inputStream, DataObjects const& dataObjects,
             switch (sectionType)
             {
             case (AbstractSectionRodComponent::SectionType::kUserDefined):
-            {
                 pRodComponent = new UserSectionRodComponent(name);
                 break;
             }
-            }
+            break;
         }
+        case (AbstractRodComponent::ComponentType::kMaterial):
+            pRodComponent = new MaterialRodComponent(name);
+            break;
         }
         pRodComponent->deserialize(inputStream, getDataObject);
         rodComponents.emplace(pRodComponent->id(), pRodComponent);

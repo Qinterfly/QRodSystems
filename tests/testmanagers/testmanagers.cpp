@@ -16,6 +16,7 @@
 #include "core/surfacedataobject.h"
 #include "core/geometryrodcomponent.h"
 #include "core/usersectionrodcomponent.h"
+#include "core/materialrodcomponent.h"
 #include "managers/managersfactory.h"
 #include "managers/dataobjectsmanager.h"
 #include "managers/rodcomponentsmanager.h"
@@ -113,8 +114,15 @@ void TestManagers::testRodComponentsManager()
     pSection = (UserSectionRodComponent*)pManager->addSection(AbstractSectionRodComponent::kUserDefined);
     pSection->setArea(pScalar);
     QVERIFY(pSection->isDataComplete());
+    // Adding a material rod component
+    MaterialRodComponent* pMaterial = (MaterialRodComponent*)pManager->addMaterial();
+    pMaterial->setElasticModulus(pScalar);
+    pMaterial->setShearModulus(pScalar);
+    pMaterial->setDensity(pScalar);
+    pMaterial->setPoissonsRatio(pScalar);
+    QVERIFY(pMaterial->isDataComplete());
     // Selecting
-    pManager->selectRodComponent(0);
+    pManager->selectRodComponent(2);
     pManager->apply();
 }
 

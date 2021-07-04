@@ -19,6 +19,7 @@
 #include "core/matrixdataobject.h"
 #include "core/geometryrodcomponent.h"
 #include "core/usersectionrodcomponent.h"
+#include "core/materialrodcomponent.h"
 #include "managers/geometryrodcomponentwidget.h"
 #include "managers/usersectionrodcomponentwidget.h"
 #include "models/hierarchy/dataobjectshierarchymodel.h"
@@ -197,6 +198,16 @@ AbstractRodComponent* RodComponentsManager::addSection(AbstractSectionRodCompone
     return pRodComponent;
 }
 
+//! Add a material component
+AbstractRodComponent* RodComponentsManager::addMaterial()
+{
+    static QString const kBaseName = "Material ";
+    QString name = kBaseName + QString::number(MaterialRodComponent::numberInstances() + 1);
+    AbstractRodComponent* pRodComponent = new MaterialRodComponent(name);
+    emplaceRodComponent(pRodComponent);
+    return pRodComponent;
+}
+
 //! Helper function to insert a rod component into the manager
 void RodComponentsManager::emplaceRodComponent(AbstractRodComponent* pRodComponent)
 {
@@ -230,6 +241,11 @@ void RodComponentsManager::representRodComponent(Core::DataIDType id)
         UserSectionRodComponentWidget* pSectionWidget = new UserSectionRodComponentWidget(*pSection, skDataObjectsMimeType, mpComponentDockWidget);
         connect(pSectionWidget, &UserSectionRodComponentWidget::modified, this, &RodComponentsManager::setWindowModified);
         mpComponentDockWidget->setWidget(pSectionWidget);
+        break;
+    }
+    case AbstractRodComponent::ComponentType::kMaterial:
+    {
+        // TODO
         break;
     }
     }

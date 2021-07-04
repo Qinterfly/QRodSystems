@@ -54,6 +54,7 @@ public:
     DataIDType numberRodComponents() const { return mRodComponents.size(); }
     AbstractRodComponent* addGeometry();
     AbstractRodComponent* addCrossSection(AbstractSectionRodComponent::SectionType sectionType);
+    AbstractRodComponent* addMaterial();
     RodComponents cloneRodComponents() const;
     HierarchyTree cloneHierarchyRodComponents() const { return mHierarchyRodComponents.clone(); }
     // Getters and setters
@@ -79,8 +80,6 @@ public slots:
 
 private:
     void emplaceRodComponent(AbstractRodComponent* pRodComponent);
-    template<typename T>
-    void clearDataMap(std::unordered_map<DataIDType, T*>& dataMap);
 
 private:
     //! Unique project identifier

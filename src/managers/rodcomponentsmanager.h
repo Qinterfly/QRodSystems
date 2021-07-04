@@ -54,6 +54,7 @@ public slots:
     void apply() override;
     Core::AbstractRodComponent* addGeometry();
     Core::AbstractRodComponent* addSection(Core::AbstractSectionRodComponent::SectionType sectionType);
+    Core::AbstractRodComponent* addMaterial();
 
 private:
     // Content

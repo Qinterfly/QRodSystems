@@ -16,11 +16,17 @@
 #include "surfacedataobject.h"
 #include "geometryrodcomponent.h"
 #include "usersectionrodcomponent.h"
+#include "materialrodcomponent.h"
 
 using namespace QRS::Core;
 
+template<typename T>
+void clearDataMap(std::unordered_map<DataIDType, T*>& dataMap);
 AbstractDataObject* createDataObject(AbstractDataObject::ObjectType type);
 AbstractDataObject const* substituteDataObject(DataObjects const& dataObjects, AbstractDataObject const* pObject);
+void resolveGeometryRodComponentReferences(DataObjects const& dataObjects, GeometryRodComponent* pGeometry);
+void resolveSectionRodComponentReferences(DataObjects const& dataObjects, AbstractSectionRodComponent* pBaseSection);
+void resolveMaterialRodComponentReferences(DataObjects const& dataObjects, MaterialRodComponent* pMaterial);
 
 //! Construct a clean project with the user specified name
 Project::Project(QString const& name)
@@ -59,13 +65,13 @@ void Project::setDataObjects(DataObjects const& dataObjects, HierarchyTree const
         switch (pRodComponent->componentType())
         {
         case AbstractRodComponent::ComponentType::kGeometry:
-        {
-            GeometryRodComponent* pGeometry = (GeometryRodComponent*)pRodComponent;
-            pGeometry->setRadiusVector((VectorDataObject const*)substituteDataObject(dataObjects, pGeometry->radiusVector()));
-            pGeometry->setRotationMatrix((MatrixDataObject const*)substituteDataObject(dataObjects, pGeometry->rotationMatrix()));
+            resolveGeometryRodComponentReferences(dataObjects, (GeometryRodComponent*)pRodComponent);
             break;
-        }
         case AbstractRodComponent::ComponentType::kSection:
+            resolveSectionRodComponentReferences(dataObjects, (AbstractSectionRodComponent*)pRodComponent);
+            break;
+        case AbstractRodComponent::ComponentType::kMaterial:
+            resolveMaterialRodComponentReferences(dataObjects, (MaterialRodComponent*)pRodComponent);
             break;
         }
     }
@@ -117,6 +123,15 @@ AbstractRodComponent* Project::addCrossSection(AbstractSectionRodComponent::Sect
     return pRodComponent;
 }
 
+//! Add a material rod component
+AbstractRodComponent* Project::addMaterial()
+{
+    QString name = "Material " + QString::number(MaterialRodComponent::numberInstances() + 1);
+    AbstractRodComponent* pRodComponent = new MaterialRodComponent(name);
+    emplaceRodComponent(pRodComponent);
+    return pRodComponent;
+}
+
 //! Substitute current rod components with new ones
 void Project::setRodComponents(RodComponents const& rodComponents, HierarchyTree const& hierarchyRodComponents)
 {
@@ -143,9 +158,20 @@ RodComponents Project::cloneRodComponents() const
     return result;
 }
 
+//! Emplace a rod component into a project
+void Project::emplaceRodComponent(AbstractRodComponent* pRodComponent)
+{
+    if (pRodComponent)
+    {
+        DataIDType id = pRodComponent->id();
+        mRodComponents.emplace(id, pRodComponent);
+        mHierarchyRodComponents.appendNode(new HierarchyNode(HierarchyNode::NodeType::kObject, id));
+    }
+}
+
 //! Helper function to clear a map consisted of data pointers
 template<typename T>
-void Project::clearDataMap(std::unordered_map<DataIDType, T*>& dataMap)
+void clearDataMap(std::unordered_map<DataIDType, T*>& dataMap)
 {
     for (auto iter = dataMap.begin(); iter != dataMap.end(); ++iter)
         delete iter->second;
@@ -179,7 +205,7 @@ AbstractDataObject* createDataObject(AbstractDataObject::ObjectType type)
     return pObject;
 }
 
-//! Substitute a data object with its updated version
+//! Helper function to substitute a data object with its updated version
 AbstractDataObject const* substituteDataObject(DataObjects const& dataObjects, AbstractDataObject const* pDataObject)
 {
     if (!pDataObject)
@@ -194,13 +220,35 @@ AbstractDataObject const* substituteDataObject(DataObjects const& dataObjects, A
     return nullptr;
 };
 
-//! Emplace a rod component into a project
-void Project::emplaceRodComponent(AbstractRodComponent* pRodComponent)
+//! Helper function to resolve references of a geometrical rod component
+void resolveGeometryRodComponentReferences(DataObjects const& dataObjects, GeometryRodComponent* pGeometry)
 {
-    if (pRodComponent)
+    pGeometry->setRadiusVector((VectorDataObject const*)substituteDataObject(dataObjects, pGeometry->radiusVector()));
+    pGeometry->setRotationMatrix((MatrixDataObject const*)substituteDataObject(dataObjects, pGeometry->rotationMatrix()));
+}
+
+//! Helper function to resolve references of a cross section
+void resolveSectionRodComponentReferences(DataObjects const& dataObjects, AbstractSectionRodComponent* pBaseSection)
+{
+    switch (pBaseSection->sectionType())
     {
-        DataIDType id = pRodComponent->id();
-        mRodComponents.emplace(id, pRodComponent);
-        mHierarchyRodComponents.appendNode(new HierarchyNode(HierarchyNode::NodeType::kObject, id));
+    case AbstractSectionRodComponent::SectionType::kUserDefined:
+        UserSectionRodComponent* pUserSection = (UserSectionRodComponent*)pBaseSection;
+        pUserSection->setArea((ScalarDataObject const*)substituteDataObject(dataObjects, pUserSection->area()));
+        pUserSection->setInertiaMomentTorsional((ScalarDataObject const*)substituteDataObject(dataObjects, pUserSection->inertiaMomentTorsional()));
+        pUserSection->setInertiaMomentX((ScalarDataObject const*)substituteDataObject(dataObjects, pUserSection->inertiaMomentX()));
+        pUserSection->setInertiaMomentY((ScalarDataObject const*)substituteDataObject(dataObjects, pUserSection->inertiaMomentY()));
+        pUserSection->setCenterCoordinateX((ScalarDataObject const*)substituteDataObject(dataObjects, pUserSection->centerCoordinateX()));
+        pUserSection->setCenterCoordinateY((ScalarDataObject const*)substituteDataObject(dataObjects, pUserSection->centerCoordinateY()));
+        break;
     }
+}
+
+//! Helper function to resolve references of a material rod component
+void resolveMaterialRodComponentReferences(DataObjects const& dataObjects, MaterialRodComponent* pMaterial)
+{
+    pMaterial->setElasticModulus((ScalarDataObject const*)substituteDataObject(dataObjects, pMaterial->elasticModulus()));
+    pMaterial->setShearModulus((ScalarDataObject const*)substituteDataObject(dataObjects, pMaterial->shearModulus()));
+    pMaterial->setPoissonsRatio((ScalarDataObject const*)substituteDataObject(dataObjects, pMaterial->poissonsRatio()));
+    pMaterial->setDensity((ScalarDataObject const*)substituteDataObject(dataObjects, pMaterial->density()));
 }

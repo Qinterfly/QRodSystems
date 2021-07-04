@@ -28,7 +28,8 @@ public:
     enum ComponentType
     {
         kGeometry,
-        kSection
+        kSection,
+        kMaterial
     };
     AbstractRodComponent(ComponentType componentType, QString name);
     virtual ~AbstractRodComponent() = 0;

@@ -15,6 +15,7 @@
 #include "core/hierarchytree.h"
 #include "core/geometryrodcomponent.h"
 #include "core/usersectionrodcomponent.h"
+#include "core/materialrodcomponent.h"
 
 using namespace QRS::Core;
 
@@ -52,6 +53,7 @@ void TestCore::initTestCase()
     MatrixDataObject* pMatrix;
     GeometryRodComponent* pGeometry;
     UserSectionRodComponent* pUserCrossSection;
+    MaterialRodComponent* pMaterial;
     for (quint32 i = 0; i != numSets; ++i)
     {
         // Creating data objects
@@ -67,6 +69,9 @@ void TestCore::initTestCase()
         pUserCrossSection = (UserSectionRodComponent*)mpProject->addCrossSection(AbstractSectionRodComponent::SectionType::kUserDefined);
         pUserCrossSection->setArea(pScalar);
         pUserCrossSection->setInertiaMomentTorsional(pScalar);
+        // Creating material components
+        pMaterial = (MaterialRodComponent*)mpProject->addMaterial();
+        pMaterial->setElasticModulus(pScalar);
     }
 }
 
