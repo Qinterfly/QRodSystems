@@ -459,9 +459,14 @@ void MainWindow::representHierarchyProperties(QVector<AbstractHierarchyItem*> it
 void MainWindow::closeEvent(QCloseEvent* pEvent)
 {
     if (saveProjectChangesDialog())
+    {
+        saveSettings();
         pEvent->accept();
+    }
     else
+    {
         pEvent->ignore();
+    }
 }
 
 //! Show information a name of a project
