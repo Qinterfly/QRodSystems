@@ -310,9 +310,9 @@ QWidget* RodComponentsManager::makeSectionsToolBar()
 QWidget* RodComponentsManager::makeBoundaryConditionsToolBar()
 {
     QToolBar* pToolBar = new QToolBar();
-    pToolBar->addAction(QIcon(":/icons/clamp.svg"), tr("Boundary"));
+    pToolBar->addAction(QIcon(":/icons/clamp.svg"), tr("Constraint"));
     pToolBar->setIconSize(skToolBarIconSize);
-    return addToolbarHeader(pToolBar, "Boundary");
+    return addToolbarHeader(pToolBar, "Constraint");
 }
 
 //! Create a toolbar to construct loading
@@ -328,7 +328,7 @@ QWidget* RodComponentsManager::makeLoadingToolBar()
 QWidget* RodComponentsManager::makeMaterialToolBar()
 {
     QToolBar* pToolBar = new QToolBar();
-    pToolBar->addAction(QIcon(":/icons/material.svg"), tr("Material"));
+    pToolBar->addAction(QIcon(":/icons/material.svg"), tr("Material"), this, &RodComponentsManager::addMaterial);
     pToolBar->setIconSize(skToolBarIconSize);
     return addToolbarHeader(pToolBar, "Material");
 }

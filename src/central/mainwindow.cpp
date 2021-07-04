@@ -128,10 +128,6 @@ void MainWindow::createContent()
     // Properties
     pDockWidget = createPropertiesWidget();
     mpDockManager->addDockWidget(ads::BottomDockWidgetArea, pDockWidget, pArea);
-    // Views
-    mpUi->menuWindow->addSeparator();
-    mpUi->menuWindow->addAction(tr("&Save Settings"), this, &MainWindow::saveSettings);
-    mpUi->menuWindow->addAction(tr("&Restore Settings"), this, &MainWindow::restoreSettings);
     qInfo() << tr("Application successfully started");
 }
 
