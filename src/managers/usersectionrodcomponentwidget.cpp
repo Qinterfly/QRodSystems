@@ -57,7 +57,7 @@ QLayout* UserSectionRodComponentWidget::createAreaLayout()
 //! Create a group consisted of widgets to set moments of inertia
 QWidget* UserSectionRodComponentWidget::createInertiaMomentsGroup()
 {
-    QGroupBox* pGroupBox = new QGroupBox(tr("Moments of inertia: "));
+    QGroupBox* pGroupBox = new QGroupBox(tr("Moments of inertia"));
     QGridLayout* pLayout = new QGridLayout();
     DataObjectLineEdit* pEdit;
     std::function<void(AbstractDataObject const*)> setFun;
@@ -91,7 +91,7 @@ QWidget* UserSectionRodComponentWidget::createInertiaMomentsGroup()
 //! Create a group consisted of widgets to set coordinates of the center
 QWidget* UserSectionRodComponentWidget::createCenterCoordinatesGroup()
 {
-    QGroupBox* pGroupBox = new QGroupBox(tr("Coordinates of the center: "));
+    QGroupBox* pGroupBox = new QGroupBox(tr("Coordinates of the center"));
     QGridLayout* pLayout = new QGridLayout();
     DataObjectLineEdit* pEdit;
     std::function<void(AbstractDataObject const*)> setFun;

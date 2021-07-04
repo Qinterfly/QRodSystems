@@ -31,7 +31,7 @@ public:
     UserSectionRodComponentWidget(Core::UserSectionRodComponent& userSectionRodComponent,
                                   QString const& mimeType, QWidget* parent = nullptr);
 signals:
-    void modified(bool flag = true);
+    void modified();
 
 private:
     void createContent();

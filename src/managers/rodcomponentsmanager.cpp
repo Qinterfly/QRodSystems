@@ -22,6 +22,7 @@
 #include "core/materialrodcomponent.h"
 #include "managers/geometryrodcomponentwidget.h"
 #include "managers/usersectionrodcomponentwidget.h"
+#include "managers/materialrodcomponentwidget.h"
 #include "models/hierarchy/dataobjectshierarchymodel.h"
 #include "models/hierarchy/rodcomponentshierarchymodel.h"
 
@@ -225,13 +226,14 @@ void RodComponentsManager::representRodComponent(Core::DataIDType id)
     if (!mRodComponents.contains(id))
         return;
     AbstractRodComponent* pRodComponent = mRodComponents[id];
+    std::function<void()> funModified = [this]() { setWindowModified(true); };
     switch (pRodComponent->componentType())
     {
     case AbstractRodComponent::ComponentType::kGeometry:
     {
         GeometryRodComponent* pGeometry = (GeometryRodComponent*)pRodComponent;
         GeometryRodComponentWidget* pGeometryWidget = new GeometryRodComponentWidget(*pGeometry, skDataObjectsMimeType, mpComponentDockWidget);
-        connect(pGeometryWidget, &GeometryRodComponentWidget::modified, this, &RodComponentsManager::setWindowModified);
+        connect(pGeometryWidget, &GeometryRodComponentWidget::modified, funModified);
         mpComponentDockWidget->setWidget(pGeometryWidget);
         break;
     }
@@ -239,13 +241,16 @@ void RodComponentsManager::representRodComponent(Core::DataIDType id)
     {
         UserSectionRodComponent* pSection = (UserSectionRodComponent*)pRodComponent;
         UserSectionRodComponentWidget* pSectionWidget = new UserSectionRodComponentWidget(*pSection, skDataObjectsMimeType, mpComponentDockWidget);
-        connect(pSectionWidget, &UserSectionRodComponentWidget::modified, this, &RodComponentsManager::setWindowModified);
+        connect(pSectionWidget, &UserSectionRodComponentWidget::modified, funModified);
         mpComponentDockWidget->setWidget(pSectionWidget);
         break;
     }
     case AbstractRodComponent::ComponentType::kMaterial:
     {
-        // TODO
+        MaterialRodComponent* pMaterial = (MaterialRodComponent*)pRodComponent;
+        MaterialRodComponentWidget* pMaterialWidget = new MaterialRodComponentWidget(*pMaterial, skDataObjectsMimeType, mpComponentDockWidget);
+        connect(pMaterialWidget, &MaterialRodComponentWidget::modified, funModified);
+        mpComponentDockWidget->setWidget(pMaterialWidget);
         break;
     }
     }
@@ -301,7 +306,6 @@ QWidget* RodComponentsManager::makeSectionsToolBar()
     {
         addSection(AbstractSectionRodComponent::kUserDefined);
     });
-    pToolBar->addAction(QIcon(":/icons/rectangle.svg"), tr("Rectangular"));
     pToolBar->setIconSize(skToolBarIconSize);
     return addToolbarHeader(pToolBar, "Section");
 }
