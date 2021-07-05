@@ -58,25 +58,10 @@ AbstractDataObject* Project::addDataObject(AbstractDataObject::ObjectType type)
 //! Substitute current data objects with new ones
 void Project::setDataObjects(DataObjects const& dataObjects, HierarchyTree const& hierarchyDataObjects)
 {
-    // Resolve references of rod components
-    for (auto& item : mRodComponents)
-    {
-        AbstractRodComponent* pRodComponent = item.second;
-        switch (pRodComponent->componentType())
-        {
-        case AbstractRodComponent::ComponentType::kGeometry:
-            resolveGeometryRodComponentReferences(dataObjects, (GeometryRodComponent*)pRodComponent);
-            break;
-        case AbstractRodComponent::ComponentType::kSection:
-            resolveSectionRodComponentReferences(dataObjects, (AbstractSectionRodComponent*)pRodComponent);
-            break;
-        case AbstractRodComponent::ComponentType::kMaterial:
-            resolveMaterialRodComponentReferences(dataObjects, (MaterialRodComponent*)pRodComponent);
-            break;
-        }
-    }
-    // Substitute data objects
-    clearDataMap(mDataObjects);
+    // Copying references to data objects
+    DataObjects copyDataObjects = mDataObjects;
+    // Substituting data objects
+    mDataObjects.clear();
     AbstractDataObject* pDataObject;
     for (auto& item : dataObjects)
     {
@@ -84,6 +69,25 @@ void Project::setDataObjects(DataObjects const& dataObjects, HierarchyTree const
         mDataObjects.emplace(pDataObject->id(), pDataObject->clone());
     }
     mHierarchyDataObjects = hierarchyDataObjects;
+    // Resolving references of rod components
+    for (auto& item : mRodComponents)
+    {
+        AbstractRodComponent* pRodComponent = item.second;
+        switch (pRodComponent->componentType())
+        {
+        case AbstractRodComponent::ComponentType::kGeometry:
+            resolveGeometryRodComponentReferences(mDataObjects, (GeometryRodComponent*)pRodComponent);
+            break;
+        case AbstractRodComponent::ComponentType::kSection:
+            resolveSectionRodComponentReferences(mDataObjects, (AbstractSectionRodComponent*)pRodComponent);
+            break;
+        case AbstractRodComponent::ComponentType::kMaterial:
+            resolveMaterialRodComponentReferences(mDataObjects, (MaterialRodComponent*)pRodComponent);
+            break;
+        }
+    }
+    // Removing old data objects
+    clearDataMap(copyDataObjects);
     emit dataObjectsSubstituted();
 }
 

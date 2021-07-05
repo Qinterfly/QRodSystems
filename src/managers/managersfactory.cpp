@@ -63,6 +63,7 @@ bool ManagersFactory::createManager(AbstractManager::ManagerType type)
         connect(pRodComponentsManager, &RodComponentsManager::applied, &mProject, &Project::setRodComponents);
         connect(&mProject, &Project::dataObjectsSubstituted, pRodComponentsManager, &RodComponentsManager::updateDataObjects);
         connect(&mProject, &Project::projectHierarchyChanged, pRodComponentsManager, &RodComponentsManager::updateDataObjects);
+        connect(&mProject, &Project::propertiesDataObjectsChanged, pRodComponentsManager, &RodComponentsManager::updateDataObjects);
         pManager = pRodComponentsManager;
         break;
     }
