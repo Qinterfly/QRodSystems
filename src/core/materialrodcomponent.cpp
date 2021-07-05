@@ -50,13 +50,22 @@ void MaterialRodComponent::serialize(QDataStream& stream) const
 }
 
 //! Deserialize a material component
-void MaterialRodComponent::deserialize(QDataStream& stream, DataObjectGetter const& getDataObject)
+void MaterialRodComponent::deserialize(QDataStream& stream, DataObjects const& dataObjects)
 {
     stream >> mID;
-    mpElasticModulus = (ScalarDataObject const*)readDataObjectPointer(stream, getDataObject);
-    mpShearModulus = (ScalarDataObject const*)readDataObjectPointer(stream, getDataObject);
-    mpPoissonsRatio = (ScalarDataObject const*)readDataObjectPointer(stream, getDataObject);
-    mpDensity = (ScalarDataObject const*)readDataObjectPointer(stream, getDataObject);
+    mpElasticModulus = (ScalarDataObject const*)readDataObjectPointer(stream, dataObjects);
+    mpShearModulus = (ScalarDataObject const*)readDataObjectPointer(stream, dataObjects);
+    mpPoissonsRatio = (ScalarDataObject const*)readDataObjectPointer(stream, dataObjects);
+    mpDensity = (ScalarDataObject const*)readDataObjectPointer(stream, dataObjects);
+}
+
+//! Resolve references of a material rod component
+void MaterialRodComponent::resolveReferences(DataObjects const& dataObjects)
+{
+    mpElasticModulus = (ScalarDataObject const*)substituteDataObject(dataObjects, mpElasticModulus);
+    mpShearModulus = (ScalarDataObject const*)substituteDataObject(dataObjects, mpShearModulus);
+    mpPoissonsRatio = (ScalarDataObject const*)substituteDataObject(dataObjects, mpPoissonsRatio);
+    mpDensity = (ScalarDataObject const*)substituteDataObject(dataObjects, mpDensity);
 }
 
 //! Check whether the component data is complete

@@ -11,15 +11,10 @@
 #include <QObject>
 #include <QString>
 #include <QDataStream>
-#include "aliasdata.h"
+#include "aliasdataset.h"
 
 namespace QRS::Core
 {
-
-class AbstractDataObject;
-class AbstractRodComponent;
-
-using DataObjectGetter = std::function<AbstractDataObject const*(DataIDType id)>;
 
 //! Component of the rod structure which characterizes one of its properties
 class AbstractRodComponent : public QObject
@@ -42,12 +37,15 @@ public:
     static DataIDType maxComponentID() { return smMaxComponentID; }
     static void setMaxComponentID(DataIDType iMaxComponentID) { smMaxComponentID = iMaxComponentID; }
     virtual void serialize(QDataStream& stream) const = 0;
-    virtual void deserialize(QDataStream& stream, DataObjectGetter const& getDataObject) = 0;
+    virtual void deserialize(QDataStream& stream, DataObjects const& dataObjects) = 0;
     friend QDataStream& operator<<(QDataStream& stream, AbstractRodComponent const& component);
+    virtual void resolveReferences(DataObjects const& dataObjects) = 0;
 
 protected:
     void writeDataObjectPointer(QDataStream& stream, AbstractDataObject const* pDataObject) const;
-    AbstractDataObject const* readDataObjectPointer(QDataStream& stream, DataObjectGetter const& getDataObject) const;
+    AbstractDataObject const* readDataObjectPointer(QDataStream& stream, DataObjects const& dataObjects) const;
+    AbstractDataObject const* getDataObject(DataObjects const& dataObjects, DataIDType id) const;
+    AbstractDataObject const* substituteDataObject(DataObjects const& dataObjects, AbstractDataObject const* pDataObject) const;
 
 protected:
     ComponentType const mkComponentType;

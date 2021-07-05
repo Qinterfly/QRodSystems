@@ -31,7 +31,8 @@ public:
     MatrixDataObject const* rotationMatrix() const { return mpRotationMatrix; }
     static quint32 numberInstances() { return smNumInstances; }
     void serialize(QDataStream& stream) const override;
-    void deserialize(QDataStream& stream, DataObjectGetter const& getDataObject) override;
+    void deserialize(QDataStream& stream, DataObjects const& dataObjects) override;
+    void resolveReferences(DataObjects const& dataObjects) override;
 
 private:
     static quint32 smNumInstances;

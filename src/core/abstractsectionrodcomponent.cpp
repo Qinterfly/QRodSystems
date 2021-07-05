@@ -48,18 +48,32 @@ void AbstractSectionRodComponent::serialize(QDataStream& stream) const
  * It is assumed that a type and name have already been assigned.
  * So, only integrated properties need to be set.
  */
-void AbstractSectionRodComponent::deserialize(QDataStream& stream, DataObjectGetter const& getDataObject)
+void AbstractSectionRodComponent::deserialize(QDataStream& stream, DataObjects const& dataObjects)
 {
     stream >> mID;
     // Area
-    mpArea = (ScalarDataObject const*)readDataObjectPointer(stream, getDataObject);
+    mpArea = (ScalarDataObject const*)readDataObjectPointer(stream, dataObjects);
     // Inertia moments
-    mpInertiaMomentTorsional = (ScalarDataObject const*)readDataObjectPointer(stream, getDataObject);
-    mpInertiaMomentX = (ScalarDataObject const*)readDataObjectPointer(stream, getDataObject);
-    mpInertiaMomentY = (ScalarDataObject const*)readDataObjectPointer(stream, getDataObject);
+    mpInertiaMomentTorsional = (ScalarDataObject const*)readDataObjectPointer(stream, dataObjects);
+    mpInertiaMomentX = (ScalarDataObject const*)readDataObjectPointer(stream, dataObjects);
+    mpInertiaMomentY = (ScalarDataObject const*)readDataObjectPointer(stream, dataObjects);
     // Center coordinates
-    mpCenterCoordinateX  = (ScalarDataObject const*)readDataObjectPointer(stream, getDataObject);
-    mpCenterCoordinateY   = (ScalarDataObject const*)readDataObjectPointer(stream, getDataObject);
+    mpCenterCoordinateX  = (ScalarDataObject const*)readDataObjectPointer(stream, dataObjects);
+    mpCenterCoordinateY   = (ScalarDataObject const*)readDataObjectPointer(stream, dataObjects);
+}
+
+//! Resolve references of a cross-section
+void AbstractSectionRodComponent::resolveReferences(DataObjects const& dataObjects)
+{
+    // Area
+    mpArea = (ScalarDataObject const*)substituteDataObject(dataObjects, mpArea);
+    // Inertia moments
+    mpInertiaMomentTorsional = (ScalarDataObject const*)substituteDataObject(dataObjects, mpInertiaMomentTorsional);
+    mpInertiaMomentX = (ScalarDataObject const*)substituteDataObject(dataObjects, mpInertiaMomentX);
+    mpInertiaMomentY = (ScalarDataObject const*)substituteDataObject(dataObjects, mpInertiaMomentY);
+    // Center coordinates
+    mpCenterCoordinateX  = (ScalarDataObject const*)substituteDataObject(dataObjects, mpCenterCoordinateX);
+    mpCenterCoordinateY  = (ScalarDataObject const*)substituteDataObject(dataObjects, mpCenterCoordinateY);
 }
 
 //! Copy integrated properties of a cross section
@@ -75,3 +89,4 @@ void AbstractSectionRodComponent::copyIntegratedProperties(AbstractSectionRodCom
     mpCenterCoordinateX = pSection->mpCenterCoordinateX;
     mpCenterCoordinateY = pSection->mpCenterCoordinateY;
 }
+

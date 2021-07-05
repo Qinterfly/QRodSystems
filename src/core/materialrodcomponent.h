@@ -26,7 +26,8 @@ public:
     bool isDataComplete() const override;
     static quint32 numberInstances() { return smNumInstances; }
     void serialize(QDataStream& stream) const override;
-    void deserialize(QDataStream& stream, DataObjectGetter const& getDataObject) override;
+    void deserialize(QDataStream& stream, DataObjects const& dataObjects) override;
+    void resolveReferences(DataObjects const& dataObjects) override;
     // Getters
     ScalarDataObject const* elasticModulus() const { return mpElasticModulus; }
     ScalarDataObject const* shearModulus() const { return mpShearModulus; }

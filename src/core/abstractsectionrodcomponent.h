@@ -28,7 +28,8 @@ public:
     virtual ~AbstractSectionRodComponent() = 0;
     static quint32 numberInstances() { return smNumInstances; }
     void serialize(QDataStream& stream) const override;
-    void deserialize(QDataStream& stream, DataObjectGetter const& getDataObject) override;
+    void deserialize(QDataStream& stream, DataObjects const& dataObjects) override;
+    void resolveReferences(DataObjects const& dataObjects) override;
     SectionType sectionType() const { return mkSectionType; }
 
 protected:

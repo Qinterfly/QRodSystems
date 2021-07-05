@@ -47,9 +47,16 @@ void GeometryRodComponent::serialize(QDataStream& stream) const
 }
 
 //! Deserialize a geometrical component
-void GeometryRodComponent::deserialize(QDataStream& stream, DataObjectGetter const& getDataObject)
+void GeometryRodComponent::deserialize(QDataStream& stream, DataObjects const& dataObjects)
 {
     stream >> mID;
-    mpRadiusVector = (VectorDataObject const*)readDataObjectPointer(stream, getDataObject);
-    mpRotationMatrix = (MatrixDataObject const*)readDataObjectPointer(stream, getDataObject);
+    mpRadiusVector = (VectorDataObject const*)readDataObjectPointer(stream, dataObjects);
+    mpRotationMatrix = (MatrixDataObject const*)readDataObjectPointer(stream, dataObjects);
+}
+
+//! Resolve references of a geometrical rod component
+void GeometryRodComponent::resolveReferences(DataObjects const& dataObjects)
+{
+    mpRadiusVector = (VectorDataObject const*)substituteDataObject(dataObjects, mpRadiusVector);
+    mpRotationMatrix = (MatrixDataObject const*)substituteDataObject(dataObjects, mpRotationMatrix);
 }

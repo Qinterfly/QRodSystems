@@ -186,14 +186,6 @@ void readRodComponents(QDataStream& inputStream, DataObjects const& dataObjects,
         return;
     AbstractRodComponent::ComponentType componentType;
     QString name;
-    DataObjectGetter getDataObject = [&dataObjects](DataIDType id)
-    {
-        AbstractDataObject const* pDataObject = nullptr;
-        auto iterFound = dataObjects.find(id);
-        if (iterFound != dataObjects.end())
-            pDataObject = iterFound->second;
-        return pDataObject;
-    };
     for (quint32 i = 0; i != numComponents; ++i)
     {
         inputStream >> componentType;
@@ -220,7 +212,7 @@ void readRodComponents(QDataStream& inputStream, DataObjects const& dataObjects,
             pRodComponent = new MaterialRodComponent(name);
             break;
         }
-        pRodComponent->deserialize(inputStream, getDataObject);
+        pRodComponent->deserialize(inputStream, dataObjects);
         rodComponents.emplace(pRodComponent->id(), pRodComponent);
     }
 }
