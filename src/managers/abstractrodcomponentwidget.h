@@ -38,6 +38,4 @@ protected:
 
 }
 
-
-
 #endif // ABSTRACTRODCOMPONENTWIDGET_H

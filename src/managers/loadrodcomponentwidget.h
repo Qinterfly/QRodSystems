@@ -48,6 +48,4 @@ private:
 
 }
 
-
-
 #endif // LOADRODCOMPONENTWIDGET_H

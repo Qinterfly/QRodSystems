@@ -69,5 +69,4 @@ private:
 
 }
 
-
 #endif // LOADRODCOMPONENT_H

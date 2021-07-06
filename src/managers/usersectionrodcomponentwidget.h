@@ -43,4 +43,5 @@ private:
 }
 
 }
+
 #endif // USERSECTIONRODCOMPONENTWIDGET_H
