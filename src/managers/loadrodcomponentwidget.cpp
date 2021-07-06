@@ -69,7 +69,11 @@ QLayout* LoadRodComponentWidget::createBaseLayout()
     pSpinBox->setValue(mLoadRodComponent.multiplier());
     pSpinBox->setMaximum(kMaxMultiplier);
     pSpinBox->setMinimum(-kMaxMultiplier);
-    connect(pSpinBox, QOverload<double>::of(&QDoubleSpinBox::valueChanged), [this](double value) { mLoadRodComponent.setMultiplier(value); });
+    connect(pSpinBox, QOverload<double>::of(&QDoubleSpinBox::valueChanged), [this](double value)
+    {
+        mLoadRodComponent.setMultiplier(value);
+        emit modified();
+    });
     pLayout->addWidget(pSpinBox);
     return pLayout;
 }
