@@ -1,7 +1,7 @@
 /*!
  * \file
  * \author Pavel Lakiza
- * \date June 2021
+ * \date July 2021
  * \brief Definiton of the GeometryComponentWidget class
  */
 
@@ -10,21 +10,18 @@
 #include <QLabel>
 #include "geometryrodcomponentwidget.h"
 #include "dataobjectlineedit.h"
+#include "core/geometryrodcomponent.h"
 #include "core/vectordataobject.h"
 #include "core/matrixdataobject.h"
-#include "core/geometryrodcomponent.h"
 
 using namespace QRS::Managers;
 using namespace QRS::Core;
 
 GeometryRodComponentWidget::GeometryRodComponentWidget(Core::GeometryRodComponent& geometryRodComponent,
                                                        QString const& mimeType, QWidget* parent)
-    : QWidget(parent)
-    , mkMimeType(mimeType)
+    : AbstractRodComponentWidget(mimeType, parent)
     , mGeometryRodComponent(geometryRodComponent)
 {
-    setPalette(parent->palette());
-    setWindowState(Qt::WindowMaximized);
     createContent();
 }
 

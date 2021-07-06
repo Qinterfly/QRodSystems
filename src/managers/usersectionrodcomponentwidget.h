@@ -1,15 +1,14 @@
 /*!
  * \file
  * \author Pavel Lakiza
- * \date June 2021
+ * \date July 2021
  * \brief Declaration of the UserSectionRodComponentWidget class
  */
 
 #ifndef USERSECTIONRODCOMPONENTWIDGET_H
 #define USERSECTIONRODCOMPONENTWIDGET_H
 
-#include <QWidget>
-#include "aliasdata.h"
+#include "abstractrodcomponentwidget.h"
 
 namespace QRS
 {
@@ -24,16 +23,11 @@ namespace Managers
 {
 
 //! Widget to construct a user-defined section of a rod
-class UserSectionRodComponentWidget : public QWidget
+class UserSectionRodComponentWidget : public AbstractRodComponentWidget
 {
-    Q_OBJECT
-
 public:
     UserSectionRodComponentWidget(Core::UserSectionRodComponent& userSectionRodComponent,
                                   QString const& mimeType, QWidget* parent = nullptr);
-signals:
-    void modified();
-    void editDataObjectRequested(Core::DataIDType id);
 
 private:
     void createContent();
@@ -43,7 +37,6 @@ private:
     void setProperty(Core::AbstractDataObject const* pDataObject, auto setFun);
 
 private:
-    QString const mkMimeType;
     Core::UserSectionRodComponent& mUserSectionRodComponent;
 };
 

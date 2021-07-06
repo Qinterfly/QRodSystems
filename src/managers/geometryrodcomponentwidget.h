@@ -1,15 +1,14 @@
 /*!
  * \file
  * \author Pavel Lakiza
- * \date June 2021
+ * \date July 2021
  * \brief Declaration of the GeometryComponentWidget class
  */
 
 #ifndef GEOMETRYRODCOMPONENTWIDGET_H
 #define GEOMETRYRODCOMPONENTWIDGET_H
 
-#include <QWidget>
-#include "core/aliasdata.h"
+#include "abstractrodcomponentwidget.h"
 
 namespace QRS
 {
@@ -24,16 +23,10 @@ namespace Managers
 {
 
 //! Widget to construct a geometrical rod component
-class GeometryRodComponentWidget : public QWidget
+class GeometryRodComponentWidget : public AbstractRodComponentWidget
 {
-    Q_OBJECT
-
 public:
     GeometryRodComponentWidget(Core::GeometryRodComponent& geometryRodComponent, QString const& mimeType, QWidget* parent = nullptr);
-
-signals:
-    void modified();
-    void editDataObjectRequested(Core::DataIDType id);
 
 private slots:
     void setRadiusVector(Core::AbstractDataObject const* pDataObject);
@@ -43,7 +36,6 @@ private:
     void createContent();
 
 private:
-    QString const mkMimeType;
     Core::GeometryRodComponent& mGeometryRodComponent;
 };
 

@@ -24,6 +24,7 @@
 #include "managers/geometryrodcomponentwidget.h"
 #include "managers/usersectionrodcomponentwidget.h"
 #include "managers/materialrodcomponentwidget.h"
+#include "managers/loadrodcomponentwidget.h"
 #include "models/hierarchy/dataobjectshierarchymodel.h"
 #include "models/hierarchy/rodcomponentshierarchymodel.h"
 
@@ -251,40 +252,39 @@ void RodComponentsManager::representRodComponent(Core::DataIDType id)
         return;
     AbstractRodComponent* pRodComponent = mRodComponents[id];
     std::function<void()> funModified = [this]() { setWindowModified(true); };
+    AbstractRodComponentWidget* pRodComponentWidget = nullptr;
     switch (pRodComponent->componentType())
     {
     case AbstractRodComponent::ComponentType::kGeometry:
     {
         GeometryRodComponent* pGeometry = (GeometryRodComponent*)pRodComponent;
-        GeometryRodComponentWidget* pGeometryWidget = new GeometryRodComponentWidget(*pGeometry, skDataObjectsMimeType, mpComponentDockWidget);
-        connect(pGeometryWidget, &GeometryRodComponentWidget::modified, funModified);
-        connect(pGeometryWidget, &GeometryRodComponentWidget::editDataObjectRequested, this, &RodComponentsManager::editDataObjectRequested);
-        mpComponentDockWidget->setWidget(pGeometryWidget);
+        pRodComponentWidget = new GeometryRodComponentWidget(*pGeometry, skDataObjectsMimeType, mpComponentDockWidget);
         break;
     }
     case AbstractRodComponent::ComponentType::kSection:
     {
         UserSectionRodComponent* pSection = (UserSectionRodComponent*)pRodComponent;
-        UserSectionRodComponentWidget* pSectionWidget = new UserSectionRodComponentWidget(*pSection, skDataObjectsMimeType, mpComponentDockWidget);
-        connect(pSectionWidget, &UserSectionRodComponentWidget::modified, funModified);
-        connect(pSectionWidget, &UserSectionRodComponentWidget::editDataObjectRequested, this, &RodComponentsManager::editDataObjectRequested);
-        mpComponentDockWidget->setWidget(pSectionWidget);
+        pRodComponentWidget = new UserSectionRodComponentWidget(*pSection, skDataObjectsMimeType, mpComponentDockWidget);
         break;
     }
     case AbstractRodComponent::ComponentType::kMaterial:
     {
         MaterialRodComponent* pMaterial = (MaterialRodComponent*)pRodComponent;
-        MaterialRodComponentWidget* pMaterialWidget = new MaterialRodComponentWidget(*pMaterial, skDataObjectsMimeType, mpComponentDockWidget);
-        connect(pMaterialWidget, &MaterialRodComponentWidget::modified, funModified);
-        connect(pMaterialWidget, &MaterialRodComponentWidget::editDataObjectRequested, this, &RodComponentsManager::editDataObjectRequested);
-        mpComponentDockWidget->setWidget(pMaterialWidget);
+        pRodComponentWidget = new MaterialRodComponentWidget(*pMaterial, skDataObjectsMimeType, mpComponentDockWidget);
         break;
     }
     case AbstractRodComponent::ComponentType::kLoad:
     {
-        // TODO
+        LoadRodComponent* pLoad = (LoadRodComponent*)pRodComponent;
+        pRodComponentWidget = new LoadRodComponentWidget(*pLoad, skDataObjectsMimeType, mpComponentDockWidget);
         break;
     }
+    }
+    if (pRodComponentWidget)
+    {
+        connect(pRodComponentWidget, &GeometryRodComponentWidget::modified, funModified);
+        connect(pRodComponentWidget, &GeometryRodComponentWidget::editDataObjectRequested, this, &RodComponentsManager::editDataObjectRequested);
+        mpComponentDockWidget->setWidget(pRodComponentWidget);
     }
 }
 

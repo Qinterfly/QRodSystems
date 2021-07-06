@@ -1,7 +1,7 @@
 /*!
  * \file
  * \author Pavel Lakiza
- * \date June 2021
+ * \date July 2021
  * \brief Definition of the UserSectionRodComponentWidget class
  */
 
@@ -17,12 +17,9 @@ using namespace QRS::Core;
 
 UserSectionRodComponentWidget::UserSectionRodComponentWidget(UserSectionRodComponent& userSectionRodComponent,
                                                              QString const& mimeType, QWidget* parent)
-    : QWidget(parent)
-    , mkMimeType(mimeType)
+    : AbstractRodComponentWidget(mimeType, parent)
     , mUserSectionRodComponent(userSectionRodComponent)
 {
-    setPalette(parent->palette());
-    setWindowState(Qt::WindowMaximized);
     createContent();
 }
 

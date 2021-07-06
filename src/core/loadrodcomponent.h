@@ -46,14 +46,14 @@ public:
     LoadType loadType() const { return mLoadType; }
     VectorDataObject const* directionVector() const { return mpDirectionVector; }
     ScalarDataObject const* loadGraph() const { return mpLoadGraph; }
-    ScalarDataObject const* timeDependedCoefficient() const { return mpTimeDependedCoefficient; }
+    ScalarDataObject const* timeCoefficient() const { return mpTimeCoefficient; }
     VectorDataObject const* timeRotationVector() const { return mpTimeRotationVector; }
     DataValueType multiplier() const { return mMultiplier; }
     // Setters
     void setType(LoadType type) { mLoadType = type; }
     void setDirectionVector(VectorDataObject const* pDirectionVector) { mpDirectionVector = pDirectionVector; }
     void setLoadGraph(ScalarDataObject const* pLoadGraph) { mpLoadGraph = pLoadGraph; }
-    void setTimeDependedCoefficient(ScalarDataObject const* pTimeDependedCoefficient) { mpTimeDependedCoefficient = pTimeDependedCoefficient; }
+    void setTimeCoefficient(ScalarDataObject const* pTimeCoefficient) { mpTimeCoefficient = pTimeCoefficient; }
     void setTimeRotationVector(VectorDataObject const* pTimeRotationVector) { mpTimeRotationVector = pTimeRotationVector; }
     void setMultiplier(DataValueType value) { mMultiplier = value; }
 
@@ -62,7 +62,7 @@ private:
     LoadType mLoadType = kNone;
     QPointer<VectorDataObject const> mpDirectionVector;
     QPointer<ScalarDataObject const> mpLoadGraph;
-    QPointer<ScalarDataObject const> mpTimeDependedCoefficient;
+    QPointer<ScalarDataObject const> mpTimeCoefficient;
     QPointer<VectorDataObject const> mpTimeRotationVector;
     DataValueType mMultiplier = 1.0;
 };

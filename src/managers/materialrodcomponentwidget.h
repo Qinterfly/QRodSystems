@@ -8,8 +8,7 @@
 #ifndef MATERIALRODCOMPONENTWIDGET_H
 #define MATERIALRODCOMPONENTWIDGET_H
 
-#include <QWidget>
-#include "core/aliasdata.h"
+#include "abstractrodcomponentwidget.h"
 
 namespace QRS
 {
@@ -24,14 +23,8 @@ namespace Managers
 {
 
 //! Widget to construct a material rod component
-class MaterialRodComponentWidget : public QWidget
+class MaterialRodComponentWidget : public AbstractRodComponentWidget
 {
-    Q_OBJECT
-
-signals:
-    void modified();
-    void editDataObjectRequested(Core::DataIDType id);
-
 public:
     MaterialRodComponentWidget(Core::MaterialRodComponent& materialRodComponent, QString const& mimeType, QWidget* parent = nullptr);
 
@@ -42,7 +35,6 @@ private:
     void setProperty(Core::AbstractDataObject const* pDataObject, auto setFun);
 
 private:
-    QString const mkMimeType;
     Core::MaterialRodComponent& mMaterialRodComponent;
 };
 

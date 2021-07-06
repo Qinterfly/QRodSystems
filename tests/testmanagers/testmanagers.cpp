@@ -130,7 +130,7 @@ void TestManagers::testRodComponentsManager()
     pLoad->setDirectionVector(pVector);
     QVERIFY(pLoad->isDataComplete());
     // Selecting
-    pManager->selectRodComponent(2);
+    pManager->selectRodComponent(3);
     pManager->apply();
 }
 
