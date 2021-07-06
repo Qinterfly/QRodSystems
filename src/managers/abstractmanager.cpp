@@ -64,9 +64,20 @@ void AbstractManager::closeEvent(QCloseEvent* pEvent)
     {
         auto dialogResult = QMessageBox::question(this
                                                   , tr("Close confirmation")
-                                                  , tr("Manager containes unsaved changes. Would you like to close it anyway?")
-                                                  , QMessageBox::Yes | QMessageBox::No);
-        isClosed = QMessageBox::Yes == dialogResult;
+                                                  , tr("Manager containes unsaved changes. Would you like to save them?")
+                                                  , QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
+        switch (dialogResult)
+        {
+        case QMessageBox::Save:
+            isClosed = true;
+            apply();
+            break;
+        case QMessageBox::Discard:
+            isClosed = true;
+            break;
+        default:
+            break;
+        }
     }
     else
     {

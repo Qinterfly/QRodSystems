@@ -84,11 +84,11 @@ void DataObjectLineEdit::showContextMenu(const QPoint& point)
 {
     QMenu* pMenu = new QMenu();
     QAction* pAction;
-    // Edit data object
+    // Edit a data object
     pAction = pMenu->addAction(QIcon(":/icons/edit-edit.svg"), "Edit", this, &DataObjectLineEdit::edit);
     pAction->setShortcut(Qt::Key_E);
     pMenu->addSeparator();
-    // Remove data object
+    // Remove a data object
     pAction = pMenu->addAction(QIcon(":/icons/delete.svg"), "Remove", this, &DataObjectLineEdit::reset);
     pAction->setShortcut(Qt::Key_Delete);
     // Show the menu
