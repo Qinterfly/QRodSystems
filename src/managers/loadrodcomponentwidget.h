@@ -34,9 +34,10 @@ public:
 
 private:
     void createContent();
-    QComboBox* createLoadTypeComboBox();
     QLayout* createBaseLayout();
     QWidget* createTimeGroup();
+    QLayout* createLoadTypeSubLayout();
+    QComboBox* createLoadTypeComboBox();
     template<typename T>
     void setProperty(Core::AbstractDataObject const* pDataObject, auto setFun);
 

@@ -10,6 +10,7 @@
 #include <QComboBox>
 #include <QGroupBox>
 #include <QDoubleSpinBox>
+#include <QCheckBox>
 #include "loadrodcomponentwidget.h"
 #include "dataobjectlineedit.h"
 #include "core/loadrodcomponent.h"
@@ -47,7 +48,7 @@ QLayout* LoadRodComponentWidget::createBaseLayout()
     std::function<void(AbstractDataObject const*)> setFun;
     // Load type
     pLayout->addWidget(new QLabel(tr("Load type: ")), 0, 0);
-    pLayout->addWidget(createLoadTypeComboBox(), 0, 1);
+    pLayout->addLayout(createLoadTypeSubLayout(), 0, 1);
     // Direction vector
     pEdit = new DataObjectLineEdit(mLoadRodComponent.directionVector(), AbstractDataObject::ObjectType::kVector, mkMimeType);
     setFun = [this](AbstractDataObject const * pData) { setProperty<VectorDataObject>(pData, &LoadRodComponent::setDirectionVector); };
@@ -74,7 +75,7 @@ QLayout* LoadRodComponentWidget::createBaseLayout()
         mLoadRodComponent.setMultiplier(value);
         emit modified();
     });
-    pLayout->addWidget(pSpinBox);
+    pLayout->addWidget(pSpinBox, 3, 1);
     return pLayout;
 }
 
@@ -101,6 +102,24 @@ QWidget* LoadRodComponentWidget::createTimeGroup()
     pLayout->addWidget(pEdit, 1, 1);
     pGroupBox->setLayout(pLayout);
     return pGroupBox;
+}
+
+//! Create a sublayout consisted of widgets to set a load type and following state
+QLayout* LoadRodComponentWidget::createLoadTypeSubLayout()
+{
+    QHBoxLayout* pLayout = new QHBoxLayout();
+    // Load type
+    pLayout->addWidget(createLoadTypeComboBox());
+    // Following state
+    QCheckBox* pCheckBox = new QCheckBox("Following");
+    pCheckBox->setChecked(mLoadRodComponent.isFollowing());
+    connect(pCheckBox, &QCheckBox::toggled, [this](bool flag)
+    {
+        mLoadRodComponent.setFollowingState(flag);
+        emit modified();
+    });
+    pLayout->addWidget(pCheckBox);
+    return pLayout;
 }
 
 //! Create a combobox to specify a type of load

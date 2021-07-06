@@ -109,14 +109,13 @@ QSpinBox::down-button:pressed, QDoubleSpinBox::down-button:pressed, QTimeEdit::d
 QSpinBox::up-button:hover, QDoubleSpinBox::up-button:hover, QTimeEdit::up-button:hover, QDateEdit::up-button:hover, QDateTimeEdit::up-button:hover {
     color: #FFFFFF;
     border-top-right-radius: 5px;
-    background-color: qlineargradient(spread:pad, x1:0.5, y1:0, x2:0.5, y2:1, stop:0 #84afe5, stop:1 #1168e4);
-
+    background-color: palette(highlight);
 }
 
 QSpinBox::down-button:hover, QDoubleSpinBox::down-button:hover, QTimeEdit::down-button:hover, QDateEdit::down-button:hover, QDateTimeEdit::down-button:hover {
     color: #FFFFFF;
     border-bottom-right-radius: 5px;
-    background-color: qlineargradient(spread:pad, x1:0.5, y1:0, x2:0.5, y2:1, stop:0 #84afe5, stop:1 #1168e4);
+    background-color: palette(highlight);
 }
 
 QSpinBox::up-arrow, QDoubleSpinBox::up-arrow, QTimeEdit::up-arrow, QDateEdit::up-arrow, QDateTimeEdit::up-arrow {
@@ -273,18 +272,18 @@ QCheckBox:disabled, QRadioButton:disabled {
 }
 
 QCheckBox:hover {
-    border-radius:4px;
+    border-radius: 4px;
     border-style:solid;
     padding-left: 1px;
     padding-right: 1px;
     padding-bottom: 1px;
     padding-top: 1px;
-    border-width:1px;
+    border-width: 1px;
     border-color: transparent;
 }
 
 QCheckBox::indicator:checked {
-    image: url(/usr/share/icons/Adwaita/16x16/actions/object-select-symbolic.symbolic.png);
+    image: url(:/icons/check.svg);
     height: 15px;
     width: 15px;
     border-style:solid;
@@ -292,18 +291,17 @@ QCheckBox::indicator:checked {
     border-color: #48a5fd;
     color: #ffffff;
     border-radius: 3px;
-    background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 #48a5fd, stop:0.5 #329cfb, stop:1 #48a5fd);
+    background-color: palette(highlight);
 }
 
 QCheckBox::indicator:unchecked {
-    
     height: 15px;
     width: 15px;
     border-style:solid;
     border-width: 1px;
-    border-color: #48a5fd;
+    border-color: palette(highlight);
     border-radius: 3px;
-    background-color: #fbfdfa;
+    background-color: white;
 }
 
 /* QLCDNumber */

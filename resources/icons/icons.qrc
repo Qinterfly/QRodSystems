@@ -105,5 +105,6 @@
         <file>down-arrow.png</file>
         <file>rectangle.svg</file>
         <file>abstract-shape.svg</file>
+        <file>check.svg</file>
     </qresource>
 </RCC>

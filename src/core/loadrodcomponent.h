@@ -49,6 +49,7 @@ public:
     ScalarDataObject const* timeCoefficient() const { return mpTimeCoefficient; }
     VectorDataObject const* timeRotationVector() const { return mpTimeRotationVector; }
     DataValueType multiplier() const { return mMultiplier; }
+    bool isFollowing() const { return mIsFollowing; }
     // Setters
     void setType(LoadType type) { mLoadType = type; }
     void setDirectionVector(VectorDataObject const* pDirectionVector) { mpDirectionVector = pDirectionVector; }
@@ -56,6 +57,7 @@ public:
     void setTimeCoefficient(ScalarDataObject const* pTimeCoefficient) { mpTimeCoefficient = pTimeCoefficient; }
     void setTimeRotationVector(VectorDataObject const* pTimeRotationVector) { mpTimeRotationVector = pTimeRotationVector; }
     void setMultiplier(DataValueType value) { mMultiplier = value; }
+    void setFollowingState(bool isFollowing) { mIsFollowing = isFollowing; }
 
 private:
     static quint32 smNumInstances;
@@ -65,6 +67,7 @@ private:
     QPointer<ScalarDataObject const> mpTimeCoefficient;
     QPointer<VectorDataObject const> mpTimeRotationVector;
     DataValueType mMultiplier = 1.0;
+    bool mIsFollowing = false;
 };
 
 }

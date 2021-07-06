@@ -36,6 +36,7 @@ AbstractRodComponent* LoadRodComponent::clone() const
     pLoad->mpTimeCoefficient = mpTimeCoefficient;
     pLoad->mpTimeRotationVector = mpTimeRotationVector;
     pLoad->mMultiplier = mMultiplier;
+    pLoad->mIsFollowing = mIsFollowing;
     --smNumInstances;
     return pLoad;
 }
@@ -52,6 +53,7 @@ void LoadRodComponent::serialize(QDataStream& stream) const
     writeDataObjectPointer(stream, mpTimeCoefficient);
     writeDataObjectPointer(stream, mpTimeRotationVector);
     stream << mMultiplier;
+    stream << mIsFollowing;
 }
 
 //! Deserialize a rod load
@@ -64,6 +66,7 @@ void LoadRodComponent::deserialize(QDataStream& stream, DataObjects const& dataO
     mpTimeCoefficient = (ScalarDataObject const*)readDataObjectPointer(stream, dataObjects);
     mpTimeRotationVector = (VectorDataObject const*)readDataObjectPointer(stream, dataObjects);
     stream >> mMultiplier;
+    stream >> mIsFollowing;
 }
 
 //! Resolve references of a rod load
