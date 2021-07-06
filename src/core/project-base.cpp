@@ -17,6 +17,7 @@
 #include "geometryrodcomponent.h"
 #include "usersectionrodcomponent.h"
 #include "materialrodcomponent.h"
+#include "loadrodcomponent.h"
 
 using namespace QRS::Core;
 
@@ -118,6 +119,15 @@ AbstractRodComponent* Project::addMaterial()
 {
     QString name = "Material " + QString::number(MaterialRodComponent::numberInstances() + 1);
     AbstractRodComponent* pRodComponent = new MaterialRodComponent(name);
+    emplaceRodComponent(pRodComponent);
+    return pRodComponent;
+}
+
+//! Add a rod load
+AbstractRodComponent* Project::addLoad()
+{
+    QString name = "Load " + QString::number(LoadRodComponent::numberInstances() + 1);
+    AbstractRodComponent* pRodComponent = new LoadRodComponent(name);
     emplaceRodComponent(pRodComponent);
     return pRodComponent;
 }

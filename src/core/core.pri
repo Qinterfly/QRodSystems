@@ -7,6 +7,7 @@ HEADERS += \
     $$PWD/aliasdataset.h \
     $$PWD/array.h \
     $$PWD/geometryrodcomponent.h \
+    $$PWD/loadrodcomponent.h \
     $$PWD/materialrodcomponent.h \
     $$PWD/project.h \
     $$PWD/abstractdataobject.h \
@@ -24,6 +25,7 @@ SOURCES += \
     $$PWD/abstractsectionrodcomponent.cpp \
     $$PWD/array.cpp \
     $$PWD/geometryrodcomponent.cpp \
+    $$PWD/loadrodcomponent.cpp \
     $$PWD/materialrodcomponent.cpp \
     $$PWD/project-base.cpp \
     $$PWD/project-io.cpp \

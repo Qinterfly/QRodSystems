@@ -60,3 +60,9 @@ void GeometryRodComponent::resolveReferences(DataObjects const& dataObjects)
     mpRadiusVector = (VectorDataObject const*)substituteDataObject(dataObjects, mpRadiusVector);
     mpRotationMatrix = (MatrixDataObject const*)substituteDataObject(dataObjects, mpRotationMatrix);
 }
+
+//! Check whether the component data is complete
+bool GeometryRodComponent::isDataComplete() const
+{
+    return mpRadiusVector && mpRotationMatrix;
+};

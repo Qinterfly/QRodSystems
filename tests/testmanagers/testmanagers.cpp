@@ -17,6 +17,7 @@
 #include "core/geometryrodcomponent.h"
 #include "core/usersectionrodcomponent.h"
 #include "core/materialrodcomponent.h"
+#include "core/loadrodcomponent.h"
 #include "managers/managersfactory.h"
 #include "managers/dataobjectsmanager.h"
 #include "managers/rodcomponentsmanager.h"
@@ -123,6 +124,11 @@ void TestManagers::testRodComponentsManager()
     pMaterial->setDensity(pScalar);
     pMaterial->setPoissonsRatio(pScalar);
     QVERIFY(pMaterial->isDataComplete());
+    // Adding a rod load
+    LoadRodComponent* pLoad = (LoadRodComponent*)pManager->addLoad();
+    pLoad->setType(LoadRodComponent::LoadType::kPointForce);
+    pLoad->setDirectionVector(pVector);
+    QVERIFY(pLoad->isDataComplete());
     // Selecting
     pManager->selectRodComponent(2);
     pManager->apply();

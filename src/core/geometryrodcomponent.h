@@ -24,7 +24,7 @@ public:
     GeometryRodComponent(QString const& name);
     ~GeometryRodComponent();
     AbstractRodComponent* clone() const override;
-    bool isDataComplete() const override { return mpRadiusVector && mpRotationMatrix; };
+    bool isDataComplete() const override;
     void setRadiusVector(VectorDataObject const* pRadiusVector) { mpRadiusVector = pRadiusVector; }
     void setRotationMatrix(MatrixDataObject const* pRotationMatrix) { mpRotationMatrix = pRotationMatrix; }
     VectorDataObject const* radiusVector() const { return mpRadiusVector; }

@@ -20,6 +20,7 @@
 #include "core/geometryrodcomponent.h"
 #include "core/usersectionrodcomponent.h"
 #include "core/materialrodcomponent.h"
+#include "core/loadrodcomponent.h"
 #include "managers/geometryrodcomponentwidget.h"
 #include "managers/usersectionrodcomponentwidget.h"
 #include "managers/materialrodcomponentwidget.h"
@@ -209,6 +210,16 @@ AbstractRodComponent* RodComponentsManager::addMaterial()
     return pRodComponent;
 }
 
+//! Add a rod load
+AbstractRodComponent* RodComponentsManager::addLoad()
+{
+    static QString const kBaseName = "Load ";
+    QString name = kBaseName + QString::number(LoadRodComponent::numberInstances() + 1);
+    AbstractRodComponent* pRodComponent = new LoadRodComponent(name);
+    emplaceRodComponent(pRodComponent);
+    return pRodComponent;
+}
+
 //! Resolve references of rod components
 void RodComponentsManager::resolveRodComponentsReferences()
 {
@@ -269,6 +280,11 @@ void RodComponentsManager::representRodComponent(Core::DataIDType id)
         mpComponentDockWidget->setWidget(pMaterialWidget);
         break;
     }
+    case AbstractRodComponent::ComponentType::kLoad:
+    {
+        // TODO
+        break;
+    }
     }
 }
 
@@ -292,7 +308,7 @@ QToolBar* RodComponentsManager::createMainToolBar()
     // Boundary condition
     pMainToolBar->addWidget(makeBoundaryConditionsToolBar());
     pMainToolBar->addSeparator();
-    // Loading
+    // Load
     pMainToolBar->addWidget(makeLoadingToolBar());
     pMainToolBar->addSeparator();
     // Material
@@ -339,9 +355,9 @@ QWidget* RodComponentsManager::makeBoundaryConditionsToolBar()
 QWidget* RodComponentsManager::makeLoadingToolBar()
 {
     QToolBar* pToolBar = new QToolBar();
-    pToolBar->addAction(QIcon(":/icons/loading.svg"), tr("Loading"));
+    pToolBar->addAction(QIcon(":/icons/load.svg"), tr("Load"), this, &RodComponentsManager::addLoad);
     pToolBar->setIconSize(skToolBarIconSize);
-    return addToolbarHeader(pToolBar, "Loading");
+    return addToolbarHeader(pToolBar, "Load");
 }
 
 //! Create a toolbar to construct materials

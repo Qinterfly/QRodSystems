@@ -71,6 +71,5 @@ void MaterialRodComponent::resolveReferences(DataObjects const& dataObjects)
 //! Check whether the component data is complete
 bool MaterialRodComponent::isDataComplete() const
 {
-    return mpElasticModulus && mpShearModulus
-           && mpDensity && mpPoissonsRatio;
+    return mpElasticModulus && mpPoissonsRatio;
 }

@@ -93,6 +93,9 @@ QIcon getRodComponentIcon(AbstractRodComponent const* pRodComponent)
     case AbstractRodComponent::ComponentType::kMaterial:
         icon = QIcon(":/icons/material.svg");
         break;
+    case AbstractRodComponent::ComponentType::kLoad:
+        icon = QIcon(":/icons/load.svg");
+        break;
     }
     return icon;
 }

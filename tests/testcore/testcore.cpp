@@ -16,6 +16,7 @@
 #include "core/geometryrodcomponent.h"
 #include "core/usersectionrodcomponent.h"
 #include "core/materialrodcomponent.h"
+#include "core/loadrodcomponent.h"
 
 using namespace QRS::Core;
 
@@ -34,6 +35,8 @@ private slots:
     void reorganizeHierarchyTree();
     void createRodGeometry();
     void createRodCrossSection();
+    void createRodMaterial();
+    void createRodLoad();
     void cleanupTestCase();
 
 private:
@@ -54,6 +57,7 @@ void TestCore::initTestCase()
     GeometryRodComponent* pGeometry;
     UserSectionRodComponent* pUserCrossSection;
     MaterialRodComponent* pMaterial;
+    LoadRodComponent* pLoad;
     for (quint32 i = 0; i != numSets; ++i)
     {
         // Creating data objects
@@ -72,6 +76,10 @@ void TestCore::initTestCase()
         // Creating material components
         pMaterial = (MaterialRodComponent*)mpProject->addMaterial();
         pMaterial->setElasticModulus(pScalar);
+        // Creating rod loads
+        pLoad = (LoadRodComponent*)mpProject->addLoad();
+        pLoad->setType(LoadRodComponent::LoadType::kAcceleration);
+        pLoad->setDirectionVector(pVector);
     }
 }
 
@@ -200,12 +208,12 @@ void TestCore::createRodGeometry()
 {
     VectorDataObject* pRadiusVector = new VectorDataObject("Radius");
     MatrixDataObject* pRotationMatrix = new MatrixDataObject("Rotation");
-    GeometryRodComponent pGeometry("Geometry");
-    pGeometry.setRadiusVector(pRadiusVector);
-    pGeometry.setRotationMatrix(pRotationMatrix);
-    QVERIFY(pGeometry.isDataComplete());
+    GeometryRodComponent geometry("Geometry");
+    geometry.setRadiusVector(pRadiusVector);
+    geometry.setRotationMatrix(pRotationMatrix);
+    QVERIFY(geometry.isDataComplete());
     delete pRadiusVector;
-    QVERIFY(!pGeometry.isDataComplete());
+    QVERIFY(!geometry.isDataComplete());
     delete pRotationMatrix;
 }
 
@@ -213,11 +221,35 @@ void TestCore::createRodGeometry()
 void TestCore::createRodCrossSection()
 {
     ScalarDataObject* pArea = new ScalarDataObject("Area");
-    UserSectionRodComponent pSection("User-defined cross section");
-    pSection.setArea(pArea);
-    QVERIFY(pSection.isDataComplete());
+    UserSectionRodComponent section("User-defined cross section");
+    section.setArea(pArea);
+    QVERIFY(section.isDataComplete());
     delete pArea;
-    QVERIFY(!pSection.isDataComplete());
+    QVERIFY(!section.isDataComplete());
+}
+
+//! Try creating a material of a rod
+void TestCore::createRodMaterial()
+{
+    ScalarDataObject* pElasticModulus = new ScalarDataObject("Elastic modulus");
+    ScalarDataObject* pPoissonsRatio = new ScalarDataObject("Poisson's Ratio");
+    MaterialRodComponent material("Material");
+    material.setElasticModulus(pElasticModulus);
+    material.setPoissonsRatio(pPoissonsRatio);
+    QVERIFY(material.isDataComplete());
+    delete pElasticModulus;
+    delete pPoissonsRatio;
+}
+
+//! Try creating a rod load
+void TestCore::createRodLoad()
+{
+    VectorDataObject* pDirectionVector = new VectorDataObject("Direction Vector");
+    LoadRodComponent load("Load");
+    load.setType(LoadRodComponent::LoadType::kAcceleration);
+    load.setDirectionVector(pDirectionVector);
+    QVERIFY(load.isDataComplete());
+    delete pDirectionVector;
 }
 
 //! Cleanup
