@@ -32,19 +32,20 @@ GeometryRodComponentWidget::GeometryRodComponentWidget(Core::GeometryRodComponen
 void GeometryRodComponentWidget::createContent()
 {
     QGridLayout* pMainLayout = new QGridLayout(this);
+    DataObjectLineEdit* pEdit;
     // Radius vector
-    DataObjectLineEdit* pRadiusVectorEdit = new DataObjectLineEdit(mGeometryRodComponent.radiusVector(),
-                                                                   AbstractDataObject::ObjectType::kVector, mkMimeType);
+    pEdit = new DataObjectLineEdit(mGeometryRodComponent.radiusVector(), AbstractDataObject::ObjectType::kVector, mkMimeType);
     pMainLayout->addWidget(new QLabel(tr("Radius vector: ")), 0, 0);
-    connect(pRadiusVectorEdit, &DataObjectLineEdit::dataObjectSelected, this, &GeometryRodComponentWidget::setRadiusVector);
-    pMainLayout->addWidget(pRadiusVectorEdit, 0, 1);
+    connect(pEdit, &DataObjectLineEdit::selected, this, &GeometryRodComponentWidget::setRadiusVector);
+    connect(pEdit, &DataObjectLineEdit::editRequested, this, &GeometryRodComponentWidget::editDataObjectRequested);
+    pMainLayout->addWidget(pEdit, 0, 1);
     pMainLayout->addWidget(new QLabel(tr("(m)")), 0, 2);
     // Rotation matrix
-    DataObjectLineEdit* pRotationMatrixEdit = new DataObjectLineEdit(mGeometryRodComponent.rotationMatrix(),
-                                                                     AbstractDataObject::ObjectType::kMatrix, mkMimeType);
+    pEdit = new DataObjectLineEdit(mGeometryRodComponent.rotationMatrix(), AbstractDataObject::ObjectType::kMatrix, mkMimeType);
     pMainLayout->addWidget(new QLabel(tr("Rotation matrix: ")), 1, 0);
-    connect(pRotationMatrixEdit, &DataObjectLineEdit::dataObjectSelected, this, &GeometryRodComponentWidget::setRotationMatrix);
-    pMainLayout->addWidget(pRotationMatrixEdit, 1, 1);
+    connect(pEdit, &DataObjectLineEdit::selected, this, &GeometryRodComponentWidget::setRotationMatrix);
+    connect(pEdit, &DataObjectLineEdit::editRequested, this, &GeometryRodComponentWidget::editDataObjectRequested);
+    pMainLayout->addWidget(pEdit, 1, 1);
     // Spacer
     pMainLayout->addItem(new QSpacerItem(0, 0, QSizePolicy::Minimum, QSizePolicy::Expanding), 2, 0);
     setLayout(pMainLayout);

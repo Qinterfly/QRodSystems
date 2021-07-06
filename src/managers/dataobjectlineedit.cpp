@@ -56,31 +56,59 @@ void DataObjectLineEdit::dropEvent(QDropEvent* pEvent)
     DataObjectsHierarchyItem* pItem = (DataObjectsHierarchyItem*)AbstractHierarchyItem::readPointer(dataStream);
     mpDataObject = pItem->getDataObject();
     setText(mpDataObject->name());
-    emit dataObjectSelected(mpDataObject);
+    emit selected(mpDataObject);
 }
 
 //! Erase the data object address
 void DataObjectLineEdit::keyPressEvent(QKeyEvent* pEvent)
 {
-    if (pEvent->key() == Qt::Key_Delete)
-        resetDataObjectPointer();
+    switch (pEvent->key())
+    {
+    case Qt::Key_E:
+        edit();
+        break;
+    case Qt::Key_Delete:
+        reset();
+        break;
+    }
+}
+
+//! Start the editing session when a double click event occurs
+void DataObjectLineEdit::mouseDoubleClickEvent(QMouseEvent* /*pEvent*/)
+{
+    edit();
 }
 
 //! Show a menu to modify data
 void DataObjectLineEdit::showContextMenu(const QPoint& point)
 {
     QMenu* pMenu = new QMenu();
-    QAction* pAction = pMenu->addAction(QIcon(":/icons/delete.svg"), "Remove", this, &DataObjectLineEdit::resetDataObjectPointer);
+    QAction* pAction;
+    // Edit data object
+    pAction = pMenu->addAction(QIcon(":/icons/edit-edit.svg"), "Edit", this, &DataObjectLineEdit::edit);
+    pAction->setShortcut(Qt::Key_E);
+    pMenu->addSeparator();
+    // Remove data object
+    pAction = pMenu->addAction(QIcon(":/icons/delete.svg"), "Remove", this, &DataObjectLineEdit::reset);
     pAction->setShortcut(Qt::Key_Delete);
+    // Show the menu
+    pMenu->setEnabled(mpDataObject != nullptr);
     pMenu->exec(mapToGlobal(point));
     delete pMenu;
 }
 
 //! Erase the address of the data object
-void DataObjectLineEdit::resetDataObjectPointer()
+void DataObjectLineEdit::reset()
 {
     mpDataObject = nullptr;
     setText("");
-    emit dataObjectSelected(mpDataObject);
+    emit selected(mpDataObject);
+}
+
+//! Try to edit a data object through managers
+void DataObjectLineEdit::edit()
+{
+    if (mpDataObject)
+        emit editRequested(mpDataObject->id());
 }
 

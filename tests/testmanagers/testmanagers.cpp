@@ -48,6 +48,8 @@ void TestManagers::initTestCase()
 {
     mpProject = new Project("Test");
     mpSettings = new QSettings("Settings.ini", QSettings::IniFormat);
+    QGuiApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+    QGuiApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
     qApp->setStyle("Fusion");
     qApp->setStyleSheet(File::loadFileContent(":/styles/modern.qss"));
     QFontDatabase::addApplicationFont(":/fonts/SourceSansPro-Regular.ttf");
@@ -91,7 +93,7 @@ void TestManagers::testDataObjectsManager()
     // Selecting
     pManager->selectDataObject(3);
     pManager->apply();
-    pManager->hide();
+    mpManagersFactory->deleteManager(AbstractManager::ManagerType::kDataObjects);
 }
 
 //! Test how to create components of a rod

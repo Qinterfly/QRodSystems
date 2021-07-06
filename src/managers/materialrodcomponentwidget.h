@@ -9,6 +9,7 @@
 #define MATERIALRODCOMPONENTWIDGET_H
 
 #include <QWidget>
+#include "core/aliasdata.h"
 
 namespace QRS
 {
@@ -29,6 +30,7 @@ class MaterialRodComponentWidget : public QWidget
 
 signals:
     void modified();
+    void editDataObjectRequested(Core::DataIDType id);
 
 public:
     MaterialRodComponentWidget(Core::MaterialRodComponent& materialRodComponent, QString const& mimeType, QWidget* parent = nullptr);

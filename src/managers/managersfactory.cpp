@@ -51,7 +51,7 @@ bool ManagersFactory::createManager(AbstractManager::ManagerType type)
     {
         DataObjectsManager* pDataObjectManager = new DataObjectsManager(mProject.cloneDataObjects(), mProject.cloneHierarchyDataObjects(),
                                                                         mLastPath, mSettings, mpParent);
-        connect(pDataObjectManager, &DataObjectsManager::applied, &mProject, &Project::setDataObjects);
+        specifyConnections(pDataObjectManager);
         pManager = pDataObjectManager;
         break;
     }
@@ -60,10 +60,7 @@ bool ManagersFactory::createManager(AbstractManager::ManagerType type)
         RodComponentsManager* pRodComponentsManager = new RodComponentsManager(mProject.mDataObjects, mProject.mHierarchyDataObjects,
                                                                                mProject.cloneRodComponents(), mProject.cloneHierarchyRodComponents(),
                                                                                mLastPath, mSettings, mpParent);
-        connect(pRodComponentsManager, &RodComponentsManager::applied, &mProject, &Project::setRodComponents);
-        connect(&mProject, &Project::dataObjectsSubstituted, pRodComponentsManager, &RodComponentsManager::updateDataObjects);
-        connect(&mProject, &Project::projectHierarchyChanged, pRodComponentsManager, &RodComponentsManager::updateDataObjects);
-        connect(&mProject, &Project::propertiesDataObjectsChanged, pRodComponentsManager, &RodComponentsManager::updateDataObjects);
+        specifyConnections(pRodComponentsManager);
         pManager = pRodComponentsManager;
         break;
     }
@@ -104,4 +101,32 @@ AbstractManager* ManagersFactory::manager(AbstractManager::ManagerType type)
         return mManagers[type];
     else
         return nullptr;
+}
+
+//! Specify connections of rod components manager
+void ManagersFactory::specifyConnections(RodComponentsManager* pManager)
+{
+    connect(pManager, &RodComponentsManager::applied, &mProject, &Project::setRodComponents);
+    connect(&mProject, &Project::dataObjectsSubstituted,
+            pManager, &RodComponentsManager::resolveRodComponentsReferences, Qt::DirectConnection);
+    connect(&mProject, &Project::projectHierarchyChanged, pManager, &RodComponentsManager::updateDataObjects);
+    connect(&mProject, &Project::propertiesDataObjectsChanged, pManager, &RodComponentsManager::updateDataObjects);
+    // Enable interactions between data objects and rod components managers
+    connect(pManager, &RodComponentsManager::editDataObjectRequested, [this](DataIDType id)
+    {
+        DataObjectsManager* pDataObjectsManager = (DataObjectsManager*)manager(AbstractManager::ManagerType::kDataObjects);
+        if (!pDataObjectsManager)
+        {
+            createManager(AbstractManager::ManagerType::kDataObjects);
+            pDataObjectsManager = (DataObjectsManager*)manager(AbstractManager::ManagerType::kDataObjects);
+        }
+        pDataObjectsManager->setFocus();
+        pDataObjectsManager->selectDataObjectByID(id);
+    });
+}
+
+//! Specify connections of data objects manager
+void ManagersFactory::specifyConnections(DataObjectsManager* pManager)
+{
+    connect(pManager, &DataObjectsManager::applied, &mProject, &Project::setDataObjects);
 }

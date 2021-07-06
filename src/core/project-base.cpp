@@ -72,9 +72,9 @@ void Project::setDataObjects(DataObjects const& dataObjects, HierarchyTree const
         pRodComponent = item.second;
         pRodComponent->resolveReferences(mDataObjects);
     }
+    emit dataObjectsSubstituted();
     // Removing old data objects
     clearDataMap(copyDataObjects);
-    emit dataObjectsSubstituted();
 }
 
 //! Clone data objects

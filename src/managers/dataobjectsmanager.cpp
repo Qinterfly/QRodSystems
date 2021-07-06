@@ -244,6 +244,12 @@ void DataObjectsManager::selectDataObject(int iRow)
     mpTreeDataObjectsModel->selectItem(iRow);
 }
 
+//! Select a data object by identifier
+void DataObjectsManager::selectDataObjectByID(DataIDType id)
+{
+    mpTreeDataObjectsModel->selectItemByID(id);
+}
+
 //! Represent a selected data object according to its type
 void DataObjectsManager::representDataObject(DataIDType id)
 {

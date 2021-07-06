@@ -56,6 +56,7 @@ public:
                                 QString& lastPath, QSettings& settings, QWidget* parent = nullptr);
     ~DataObjectsManager();
     void selectDataObject(int iRow);
+    void selectDataObjectByID(Core::DataIDType id);
     Core::DataObjects const& getDataObjects() { return mDataObjects; };
 
 signals:

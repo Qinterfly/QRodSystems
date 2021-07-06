@@ -9,6 +9,7 @@
 #define USERSECTIONRODCOMPONENTWIDGET_H
 
 #include <QWidget>
+#include "aliasdata.h"
 
 namespace QRS
 {
@@ -32,6 +33,7 @@ public:
                                   QString const& mimeType, QWidget* parent = nullptr);
 signals:
     void modified();
+    void editDataObjectRequested(Core::DataIDType id);
 
 private:
     void createContent();

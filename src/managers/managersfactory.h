@@ -26,6 +26,9 @@ class Project;
 namespace Managers
 {
 
+class DataObjectsManager;
+class RodComponentsManager;
+
 //! Factory to create managers which utilize and modify project data
 class ManagersFactory : public QObject
 {
@@ -37,6 +40,10 @@ public:
     bool createManager(AbstractManager::ManagerType type);
     bool deleteManager(AbstractManager::ManagerType type);
     AbstractManager* manager(AbstractManager::ManagerType type);
+
+private:
+    void specifyConnections(DataObjectsManager* pManager);
+    void specifyConnections(RodComponentsManager* pManager);
 
 private:
     Core::Project& mProject;

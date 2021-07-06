@@ -69,15 +69,13 @@ void DataObjectsHierarchyModel::selectItem(int iRow)
 {
     if (iRow > invisibleRootItem()->rowCount() - 1)
         return;
-    DataObjectsHierarchyItem* pItem = (DataObjectsHierarchyItem*)invisibleRootItem()->child(iRow);
-    QModelIndex const& selectionIndex = pItem->index();
-    QTreeView* pView = (QTreeView*)parent();
-    pView->selectionModel()->select(selectionIndex, QItemSelectionModel::SelectionFlag::SelectCurrent);
-    AbstractDataObject const* pDataObject = pItem->mpDataObject;
-    if (pDataObject)
-        emit selected(pDataObject->id());
-    else
-        emit selectionCleared();
+    selectItem((DataObjectsHierarchyItem*)invisibleRootItem()->child(iRow));
+}
+
+//! Select an item by type and identifier
+void DataObjectsHierarchyModel::selectItemByID(DataIDType id)
+{
+    selectItem(findItemByID((DataObjectsHierarchyItem*)invisibleRootItem(), id));
 }
 
 //! Retrieve a selected data object
@@ -124,4 +122,38 @@ void DataObjectsHierarchyModel::removeSelectedItems()
     updateContent();
     emit hierarchyChanged();
     emit selectionCleared();
+}
+
+//! Find an item by identifier
+DataObjectsHierarchyItem* DataObjectsHierarchyModel::findItemByID(DataObjectsHierarchyItem* pItem, DataIDType const& id)
+{
+    DataObjectsHierarchyItem* pFoundItem = nullptr;
+    DataObjectsHierarchyItem* pChildItem;
+    int numChildren = pItem->rowCount();
+    for (int i = 0; i != numChildren; ++i)
+    {
+        pChildItem = (DataObjectsHierarchyItem*)pItem->child(i);
+        if (pChildItem->hasChildren())
+            pFoundItem = findItemByID(pChildItem, id);
+        if (pFoundItem)
+            return pFoundItem;
+        if (pChildItem->mpDataObject && pChildItem->mpDataObject->id() == id)
+            return pChildItem;
+    }
+    return pFoundItem;
+}
+
+//! Select a specified item
+void DataObjectsHierarchyModel::selectItem(DataObjectsHierarchyItem* pItem)
+{
+    if (!pItem)
+        return;
+    QModelIndex const& selectionIndex = pItem->index();
+    QTreeView* pView = (QTreeView*)parent();
+    pView->selectionModel()->select(selectionIndex, QItemSelectionModel::SelectionFlag::SelectCurrent);
+    AbstractDataObject const* pDataObject = pItem->mpDataObject;
+    if (pDataObject)
+        emit selected(pDataObject->id());
+    else
+        emit selectionCleared();
 }

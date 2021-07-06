@@ -9,6 +9,7 @@
 #define GEOMETRYRODCOMPONENTWIDGET_H
 
 #include <QWidget>
+#include "core/aliasdata.h"
 
 namespace QRS
 {
@@ -32,6 +33,7 @@ public:
 
 signals:
     void modified();
+    void editDataObjectRequested(Core::DataIDType id);
 
 private slots:
     void setRadiusVector(Core::AbstractDataObject const* pDataObject);

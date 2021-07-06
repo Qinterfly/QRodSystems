@@ -49,12 +49,14 @@ public:
 
 signals:
     void applied(Core::RodComponents const& rodComponents, Core::HierarchyTree const& hierarchyRodComponents);
+    void editDataObjectRequested(Core::DataIDType id);
 
 public slots:
     void apply() override;
     Core::AbstractRodComponent* addGeometry();
     Core::AbstractRodComponent* addSection(Core::AbstractSectionRodComponent::SectionType sectionType);
     Core::AbstractRodComponent* addMaterial();
+    void resolveRodComponentsReferences();
 
 private:
     // Content

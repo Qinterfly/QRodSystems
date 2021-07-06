@@ -209,6 +209,19 @@ AbstractRodComponent* RodComponentsManager::addMaterial()
     return pRodComponent;
 }
 
+//! Resolve references of rod components
+void RodComponentsManager::resolveRodComponentsReferences()
+{
+    AbstractRodComponent* pRodComponent;
+    for (auto& iter : mRodComponents)
+    {
+        pRodComponent = iter.second;
+        pRodComponent->resolveReferences(mDataObjects);
+    }
+    updateDataObjects();
+    mpTreeRodComponentsModel->retrieveSelectedItem();
+}
+
 //! Helper function to insert a rod component into the manager
 void RodComponentsManager::emplaceRodComponent(AbstractRodComponent* pRodComponent)
 {
@@ -234,6 +247,7 @@ void RodComponentsManager::representRodComponent(Core::DataIDType id)
         GeometryRodComponent* pGeometry = (GeometryRodComponent*)pRodComponent;
         GeometryRodComponentWidget* pGeometryWidget = new GeometryRodComponentWidget(*pGeometry, skDataObjectsMimeType, mpComponentDockWidget);
         connect(pGeometryWidget, &GeometryRodComponentWidget::modified, funModified);
+        connect(pGeometryWidget, &GeometryRodComponentWidget::editDataObjectRequested, this, &RodComponentsManager::editDataObjectRequested);
         mpComponentDockWidget->setWidget(pGeometryWidget);
         break;
     }
@@ -242,6 +256,7 @@ void RodComponentsManager::representRodComponent(Core::DataIDType id)
         UserSectionRodComponent* pSection = (UserSectionRodComponent*)pRodComponent;
         UserSectionRodComponentWidget* pSectionWidget = new UserSectionRodComponentWidget(*pSection, skDataObjectsMimeType, mpComponentDockWidget);
         connect(pSectionWidget, &UserSectionRodComponentWidget::modified, funModified);
+        connect(pSectionWidget, &UserSectionRodComponentWidget::editDataObjectRequested, this, &RodComponentsManager::editDataObjectRequested);
         mpComponentDockWidget->setWidget(pSectionWidget);
         break;
     }
@@ -250,6 +265,7 @@ void RodComponentsManager::representRodComponent(Core::DataIDType id)
         MaterialRodComponent* pMaterial = (MaterialRodComponent*)pRodComponent;
         MaterialRodComponentWidget* pMaterialWidget = new MaterialRodComponentWidget(*pMaterial, skDataObjectsMimeType, mpComponentDockWidget);
         connect(pMaterialWidget, &MaterialRodComponentWidget::modified, funModified);
+        connect(pMaterialWidget, &MaterialRodComponentWidget::editDataObjectRequested, this, &RodComponentsManager::editDataObjectRequested);
         mpComponentDockWidget->setWidget(pMaterialWidget);
         break;
     }

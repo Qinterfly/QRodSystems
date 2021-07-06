@@ -53,7 +53,8 @@ QWidget* MaterialRodComponentWidget::createModuliWidget()
                                    AbstractDataObject::ObjectType::kScalar, mkMimeType);
     setFun = [this](AbstractDataObject const * pData) { setProperty(pData, &MaterialRodComponent::setElasticModulus); };
     pLayout->addWidget(new QLabel(tr("Elastic: ")), 0, 0);
-    connect(pEdit, &DataObjectLineEdit::dataObjectSelected, setFun);
+    connect(pEdit, &DataObjectLineEdit::selected, setFun);
+    connect(pEdit, &DataObjectLineEdit::editRequested, this, &MaterialRodComponentWidget::editDataObjectRequested);
     pLayout->addWidget(pEdit, 0, 1);
     pLayout->addWidget(new QLabel(tr("(Pa)")), 0, 2);
     // Shear modulus
@@ -61,7 +62,8 @@ QWidget* MaterialRodComponentWidget::createModuliWidget()
                                    AbstractDataObject::ObjectType::kScalar, mkMimeType);
     setFun = [this](AbstractDataObject const * pData) { setProperty(pData, &MaterialRodComponent::setShearModulus); };
     pLayout->addWidget(new QLabel(tr("Shear: ")), 1, 0);
-    connect(pEdit, &DataObjectLineEdit::dataObjectSelected, setFun);
+    connect(pEdit, &DataObjectLineEdit::selected, setFun);
+    connect(pEdit, &DataObjectLineEdit::editRequested, this, &MaterialRodComponentWidget::editDataObjectRequested);
     pLayout->addWidget(pEdit, 1, 1);
     pLayout->addWidget(new QLabel(tr("(Pa)")), 1, 2);
     // Layout
@@ -80,7 +82,8 @@ QLayout* MaterialRodComponentWidget::createBaseLayout()
                                    AbstractDataObject::ObjectType::kScalar, mkMimeType);
     setFun = [this](AbstractDataObject const * pData) { setProperty(pData, &MaterialRodComponent::setDensity); };
     pLayout->addWidget(new QLabel(tr("Density: ")), 0, 0);
-    connect(pEdit, &DataObjectLineEdit::dataObjectSelected, setFun);
+    connect(pEdit, &DataObjectLineEdit::selected, setFun);
+    connect(pEdit, &DataObjectLineEdit::editRequested, this, &MaterialRodComponentWidget::editDataObjectRequested);
     pLayout->addWidget(pEdit, 0, 1);
     pLayout->addWidget(new QLabel(tr("(kg/m<sup>3</sup>)")), 0, 2);
     // Poisson's ratio
@@ -88,7 +91,8 @@ QLayout* MaterialRodComponentWidget::createBaseLayout()
                                    AbstractDataObject::ObjectType::kScalar, mkMimeType);
     setFun = [this](AbstractDataObject const * pData) { setProperty(pData, &MaterialRodComponent::setPoissonsRatio); };
     pLayout->addWidget(new QLabel(tr("Poisson's ratio: ")), 1, 0);
-    connect(pEdit, &DataObjectLineEdit::dataObjectSelected, setFun);
+    connect(pEdit, &DataObjectLineEdit::selected, setFun);
+    connect(pEdit, &DataObjectLineEdit::editRequested, this, &MaterialRodComponentWidget::editDataObjectRequested);
     pLayout->addWidget(pEdit, 1, 1);
     return pLayout;
 }

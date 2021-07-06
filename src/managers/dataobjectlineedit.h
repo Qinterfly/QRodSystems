@@ -27,16 +27,19 @@ public:
     ~DataObjectLineEdit() = default;
 
 signals:
-    void dataObjectSelected(Core::AbstractDataObject const* pDataObject);
+    void selected(Core::AbstractDataObject const* pDataObject);
+    void editRequested(Core::DataIDType id);
 
 private slots:
     void showContextMenu(const QPoint& point);
-    void resetDataObjectPointer();
+    void reset();
+    void edit();
 
 private:
     void dragEnterEvent(QDragEnterEvent* pEvent) override;
     void dropEvent(QDropEvent* pEvent) override;
     void keyPressEvent(QKeyEvent* pEvent) override;
+    void mouseDoubleClickEvent(QMouseEvent* pEvent) override;
 
 private:
     Core::AbstractDataObject const* mpDataObject;
