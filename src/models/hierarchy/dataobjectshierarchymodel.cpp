@@ -150,6 +150,14 @@ void DataObjectsHierarchyModel::selectItem(DataObjectsHierarchyItem* pItem)
         return;
     QModelIndex const& selectionIndex = pItem->index();
     QTreeView* pView = (QTreeView*)parent();
+    // Expand the branch which containes the item as a child
+    QModelIndex parentIndex = selectionIndex.parent();
+    while (parentIndex.isValid())
+    {
+        pView->setExpanded(parentIndex, true);
+        parentIndex = parentIndex.parent();
+    }
+    // Select the item
     pView->selectionModel()->select(selectionIndex, QItemSelectionModel::SelectionFlag::SelectCurrent);
     AbstractDataObject const* pDataObject = pItem->mpDataObject;
     if (pDataObject)
