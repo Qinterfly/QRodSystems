@@ -13,7 +13,6 @@
 #include <QCheckBox>
 #include "loadrodcomponentwidget.h"
 #include "dataobjectlineedit.h"
-#include "core/loadrodcomponent.h"
 #include "core/scalardataobject.h"
 #include "core/vectordataobject.h"
 
@@ -47,8 +46,9 @@ QLayout* LoadRodComponentWidget::createBaseLayout()
     DataObjectLineEdit* pEdit;
     std::function<void(AbstractDataObject const*)> setFun;
     // Load type
-    pLayout->addWidget(new QLabel(tr("Load type: ")), 0, 0);
-    pLayout->addLayout(createLoadTypeSubLayout(), 0, 1);
+    mpLoadRodUnits = new QLabel();
+    pLayout->addWidget(new QLabel(tr("Load type: ")), 0, 0, 1, 2);
+    pLayout->addLayout(createLoadTypeSubLayout(), 0, 1, 1, 2);
     // Direction vector
     pEdit = new DataObjectLineEdit(mLoadRodComponent.directionVector(), AbstractDataObject::ObjectType::kVector, mkMimeType);
     setFun = [this](AbstractDataObject const * pData) { setProperty<VectorDataObject>(pData, &LoadRodComponent::setDirectionVector); };
@@ -56,16 +56,17 @@ QLayout* LoadRodComponentWidget::createBaseLayout()
     connect(pEdit, &DataObjectLineEdit::selected, setFun);
     connect(pEdit, &DataObjectLineEdit::editRequested, this, &LoadRodComponentWidget::editDataObjectRequested);
     pLayout->addWidget(pEdit, 1, 1);
+    pLayout->addWidget(mpLoadRodUnits, 1, 2);
     // Load graph
     pEdit = new DataObjectLineEdit(mLoadRodComponent.loadGraph(), AbstractDataObject::ObjectType::kScalar, mkMimeType);
     setFun = [this](AbstractDataObject const * pData) { setProperty<ScalarDataObject>(pData, &LoadRodComponent::setLoadGraph); };
-    pLayout->addWidget(new QLabel(tr("Load graph: ")), 2, 0);
+    pLayout->addWidget(new QLabel(tr("Load graph: ")), 2, 0, 1, 2);
     connect(pEdit, &DataObjectLineEdit::selected, setFun);
     connect(pEdit, &DataObjectLineEdit::editRequested, this, &LoadRodComponentWidget::editDataObjectRequested);
-    pLayout->addWidget(pEdit, 2, 1);
+    pLayout->addWidget(pEdit, 2, 1, 1, 2);
     // Multiplier
     double const kMaxMultiplier = std::numeric_limits<float>::max();
-    pLayout->addWidget(new QLabel(tr("Multiplier: ")), 3, 0);
+    pLayout->addWidget(new QLabel(tr("Multiplier: ")), 3, 0, 1, 2);
     QDoubleSpinBox* pSpinBox = new QDoubleSpinBox();
     pSpinBox->setValue(mLoadRodComponent.multiplier());
     pSpinBox->setMaximum(kMaxMultiplier);
@@ -75,7 +76,7 @@ QLayout* LoadRodComponentWidget::createBaseLayout()
         mLoadRodComponent.setMultiplier(value);
         emit modified();
     });
-    pLayout->addWidget(pSpinBox, 3, 1);
+    pLayout->addWidget(pSpinBox, 3, 1, 1, 2);
     return pLayout;
 }
 
@@ -112,6 +113,7 @@ QLayout* LoadRodComponentWidget::createLoadTypeSubLayout()
     pLayout->addWidget(createLoadTypeComboBox());
     // Following state
     QCheckBox* pCheckBox = new QCheckBox("Following");
+    pCheckBox->setLayoutDirection(Qt::LayoutDirection::RightToLeft);
     pCheckBox->setChecked(mLoadRodComponent.isFollowing());
     connect(pCheckBox, &QCheckBox::toggled, [this](bool flag)
     {
@@ -119,6 +121,7 @@ QLayout* LoadRodComponentWidget::createLoadTypeSubLayout()
         emit modified();
     });
     pLayout->addWidget(pCheckBox);
+    pLayout->addItem(new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Minimum));
     return pLayout;
 }
 
@@ -170,10 +173,13 @@ QComboBox* LoadRodComponentWidget::createLoadTypeComboBox()
             break;
         }
     }
+    setLoadUnits(currentLoadType);
     // Specifying connections
     connect(pComboBox, QOverload<int>::of(&QComboBox::activated), [this, pComboBox](int index)
     {
-        mLoadRodComponent.setType((LoadRodComponent::LoadType)pComboBox->itemData(index).toInt());
+        LoadRodComponent::LoadType type = (LoadRodComponent::LoadType)pComboBox->itemData(index).toInt();
+        mLoadRodComponent.setType(type);
+        setLoadUnits(type);
         emit modified();
     });
     return pComboBox;
@@ -187,4 +193,53 @@ void LoadRodComponentWidget::setProperty(AbstractDataObject const* pDataObject, 
     emit modified();
 }
 
-
+//! Set load units to show
+void LoadRodComponentWidget::setLoadUnits(LoadRodComponent::LoadType type)
+{
+    QString units = "";
+    switch (type)
+    {
+    case LoadRodComponent::LoadType::kForcedDisplacements:
+        units = tr("(m)");
+        break;
+    case LoadRodComponent::LoadType::kForcedRotations:
+        units = tr("(rad)");
+        break;
+    case LoadRodComponent::LoadType::kPointForce:
+        units = tr("(N)");
+        break;
+    case LoadRodComponent::LoadType::kPointMoment:
+        units = tr("(N*m)");
+        break;
+    case LoadRodComponent::LoadType::kPointMass:
+        units = tr("(kg, m, m)");
+        break;
+    case LoadRodComponent::LoadType::kPointInertiaMoment:
+        units = tr("(kg*m<sup>4</sup>)");
+        break;
+    case LoadRodComponent::LoadType::kPointLinearDamper:
+        units = tr("(N/m*s)");
+        break;
+    case LoadRodComponent::LoadType::kPointRotationalDamper:
+        units = tr("(N*m*s)");
+        break;
+    case LoadRodComponent::LoadType::kDistributedForce:
+        units = tr("(N/m)");
+        break;
+    case LoadRodComponent::LoadType::kDistributedMoment:
+        units = tr("(N)");
+        break;
+    case LoadRodComponent::LoadType::kAerodynamicFlow:
+        units = tr("(m/s)");
+        break;
+    case LoadRodComponent::LoadType::kAcceleration:
+        units = tr("(m/s<sup>2</sup>)");
+        break;
+    case LoadRodComponent::LoadType::kInnerLiquidFlow:
+        units = tr("(m/s)");
+        break;
+    default:
+        break;
+    }
+    mpLoadRodUnits->setText(units);
+}

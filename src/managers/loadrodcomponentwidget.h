@@ -9,9 +9,11 @@
 #define LOADRODCOMPONENTWIDGET_H
 
 #include "abstractrodcomponentwidget.h"
+#include "core/loadrodcomponent.h"
 
 QT_BEGIN_NAMESPACE
 class QComboBox;
+class QLabel;
 QT_END_NAMESPACE
 
 namespace QRS
@@ -20,7 +22,6 @@ namespace QRS
 namespace Core
 {
 class AbstractDataObject;
-class LoadRodComponent;
 }
 
 namespace Managers
@@ -40,9 +41,11 @@ private:
     QComboBox* createLoadTypeComboBox();
     template<typename T>
     void setProperty(Core::AbstractDataObject const* pDataObject, auto setFun);
+    void setLoadUnits(Core::LoadRodComponent::LoadType type);
 
 private:
     Core::LoadRodComponent& mLoadRodComponent;
+    QLabel* mpLoadRodUnits;
 };
 
 }

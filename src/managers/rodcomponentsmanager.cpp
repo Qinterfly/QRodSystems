@@ -149,6 +149,7 @@ QLayout* RodComponentsManager::createDialogControls()
     QHBoxLayout* pLayout = new QHBoxLayout();
     pLayout->setContentsMargins(0, 0, 3, 5);
     QPushButton* pAcceptButton = new QPushButton(QIcon(":/icons/edit-ok.svg"), tr("Apply"));
+    pAcceptButton->setAutoDefault(false);
     connect(pAcceptButton, &QPushButton::clicked, this, &RodComponentsManager::apply);
     pLayout->addStretch();
     pLayout->addWidget(pAcceptButton);
