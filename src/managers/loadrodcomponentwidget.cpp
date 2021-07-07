@@ -30,6 +30,8 @@ LoadRodComponentWidget::LoadRodComponentWidget(Core::LoadRodComponent& loadRodCo
 void LoadRodComponentWidget::createContent()
 {
     QVBoxLayout* pMainLayout = new QVBoxLayout(this);
+    // Load type
+    pMainLayout->addLayout(createLoadTypeLayout());
     // Base
     pMainLayout->addLayout(createBaseLayout());
     // Time
@@ -45,28 +47,24 @@ QLayout* LoadRodComponentWidget::createBaseLayout()
     QGridLayout* pLayout = new QGridLayout();
     DataObjectLineEdit* pEdit;
     std::function<void(AbstractDataObject const*)> setFun;
-    // Load type
-    mpLoadRodUnits = new QLabel();
-    pLayout->addWidget(new QLabel(tr("Load type: ")), 0, 0, 1, 2);
-    pLayout->addLayout(createLoadTypeSubLayout(), 0, 1, 1, 2);
     // Direction vector
     pEdit = new DataObjectLineEdit(mLoadRodComponent.directionVector(), AbstractDataObject::ObjectType::kVector, mkMimeType);
     setFun = [this](AbstractDataObject const * pData) { setProperty<VectorDataObject>(pData, &LoadRodComponent::setDirectionVector); };
-    pLayout->addWidget(new QLabel(tr("Direction vector: ")), 1, 0);
+    pLayout->addWidget(new QLabel(tr("Direction vector: ")), 0, 0);
     connect(pEdit, &DataObjectLineEdit::selected, setFun);
     connect(pEdit, &DataObjectLineEdit::editRequested, this, &LoadRodComponentWidget::editDataObjectRequested);
-    pLayout->addWidget(pEdit, 1, 1);
-    pLayout->addWidget(mpLoadRodUnits, 1, 2);
-    // Load graph
-    pEdit = new DataObjectLineEdit(mLoadRodComponent.loadGraph(), AbstractDataObject::ObjectType::kScalar, mkMimeType);
-    setFun = [this](AbstractDataObject const * pData) { setProperty<ScalarDataObject>(pData, &LoadRodComponent::setLoadGraph); };
-    pLayout->addWidget(new QLabel(tr("Load graph: ")), 2, 0, 1, 2);
+    pLayout->addWidget(pEdit, 0, 1);
+    pLayout->addWidget(mpLoadRodUnits, 0, 2);
+    // Longitudinal function
+    pEdit = new DataObjectLineEdit(mLoadRodComponent.longitudinalFunction(), AbstractDataObject::ObjectType::kScalar, mkMimeType);
+    setFun = [this](AbstractDataObject const * pData) { setProperty<ScalarDataObject>(pData, &LoadRodComponent::setLongitudinalFunction); };
+    pLayout->addWidget(new QLabel(tr("Longitudinal function: ")), 1, 0);
     connect(pEdit, &DataObjectLineEdit::selected, setFun);
     connect(pEdit, &DataObjectLineEdit::editRequested, this, &LoadRodComponentWidget::editDataObjectRequested);
-    pLayout->addWidget(pEdit, 2, 1, 1, 2);
+    pLayout->addWidget(pEdit, 1, 1, 1, 2);
     // Multiplier
     double const kMaxMultiplier = std::numeric_limits<float>::max();
-    pLayout->addWidget(new QLabel(tr("Multiplier: ")), 3, 0, 1, 2);
+    pLayout->addWidget(new QLabel(tr("Multiplier: ")), 2, 0);
     QDoubleSpinBox* pSpinBox = new QDoubleSpinBox();
     pSpinBox->setValue(mLoadRodComponent.multiplier());
     pSpinBox->setMaximum(kMaxMultiplier);
@@ -76,7 +74,7 @@ QLayout* LoadRodComponentWidget::createBaseLayout()
         mLoadRodComponent.setMultiplier(value);
         emit modified();
     });
-    pLayout->addWidget(pSpinBox, 3, 1, 1, 2);
+    pLayout->addWidget(pSpinBox, 2, 1, 1, 2);
     return pLayout;
 }
 
@@ -105,11 +103,14 @@ QWidget* LoadRodComponentWidget::createTimeGroup()
     return pGroupBox;
 }
 
-//! Create a sublayout consisted of widgets to set a load type and following state
-QLayout* LoadRodComponentWidget::createLoadTypeSubLayout()
+//! Create a layout consisted of widgets to set a load type and following state
+QLayout* LoadRodComponentWidget::createLoadTypeLayout()
 {
     QHBoxLayout* pLayout = new QHBoxLayout();
     // Load type
+    mpLoadRodUnits = new QLabel();
+    pLayout->addWidget(new QLabel(tr("Load type: ")));
+    pLayout->addItem(new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Minimum));
     pLayout->addWidget(createLoadTypeComboBox());
     // Following state
     QCheckBox* pCheckBox = new QCheckBox("Following");
@@ -121,7 +122,6 @@ QLayout* LoadRodComponentWidget::createLoadTypeSubLayout()
         emit modified();
     });
     pLayout->addWidget(pCheckBox);
-    pLayout->addItem(new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Minimum));
     return pLayout;
 }
 

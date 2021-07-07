@@ -45,7 +45,7 @@ public:
     // Getters
     LoadType loadType() const { return mLoadType; }
     VectorDataObject const* directionVector() const { return mpDirectionVector; }
-    ScalarDataObject const* loadGraph() const { return mpLoadGraph; }
+    ScalarDataObject const* longitudinalFunction() const { return mpLongitudinalFunction; }
     ScalarDataObject const* timeCoefficient() const { return mpTimeCoefficient; }
     VectorDataObject const* timeRotationVector() const { return mpTimeRotationVector; }
     DataValueType multiplier() const { return mMultiplier; }
@@ -53,7 +53,7 @@ public:
     // Setters
     void setType(LoadType type) { mLoadType = type; }
     void setDirectionVector(VectorDataObject const* pDirectionVector) { mpDirectionVector = pDirectionVector; }
-    void setLoadGraph(ScalarDataObject const* pLoadGraph) { mpLoadGraph = pLoadGraph; }
+    void setLongitudinalFunction(ScalarDataObject const* pLongitudinalFunction) { mpLongitudinalFunction = pLongitudinalFunction; }
     void setTimeCoefficient(ScalarDataObject const* pTimeCoefficient) { mpTimeCoefficient = pTimeCoefficient; }
     void setTimeRotationVector(VectorDataObject const* pTimeRotationVector) { mpTimeRotationVector = pTimeRotationVector; }
     void setMultiplier(DataValueType value) { mMultiplier = value; }
@@ -63,7 +63,7 @@ private:
     static quint32 smNumInstances;
     LoadType mLoadType = kNone;
     QPointer<VectorDataObject const> mpDirectionVector;
-    QPointer<ScalarDataObject const> mpLoadGraph;
+    QPointer<ScalarDataObject const> mpLongitudinalFunction;
     QPointer<ScalarDataObject const> mpTimeCoefficient;
     QPointer<VectorDataObject const> mpTimeRotationVector;
     DataValueType mMultiplier = 1.0;

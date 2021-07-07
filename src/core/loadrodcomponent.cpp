@@ -32,7 +32,7 @@ AbstractRodComponent* LoadRodComponent::clone() const
     pLoad->mID = mID;
     pLoad->mLoadType = mLoadType;
     pLoad->mpDirectionVector = mpDirectionVector;
-    pLoad->mpLoadGraph = mpLoadGraph;
+    pLoad->mpLongitudinalFunction = mpLongitudinalFunction;
     pLoad->mpTimeCoefficient = mpTimeCoefficient;
     pLoad->mpTimeRotationVector = mpTimeRotationVector;
     pLoad->mMultiplier = mMultiplier;
@@ -49,7 +49,7 @@ void LoadRodComponent::serialize(QDataStream& stream) const
     stream << (DataIDType)mID;
     stream << mLoadType;
     writeDataObjectPointer(stream, mpDirectionVector);
-    writeDataObjectPointer(stream, mpLoadGraph);
+    writeDataObjectPointer(stream, mpLongitudinalFunction);
     writeDataObjectPointer(stream, mpTimeCoefficient);
     writeDataObjectPointer(stream, mpTimeRotationVector);
     stream << mMultiplier;
@@ -62,7 +62,7 @@ void LoadRodComponent::deserialize(QDataStream& stream, DataObjects const& dataO
     stream >> mID;
     stream >> mLoadType;
     mpDirectionVector = (VectorDataObject const*)readDataObjectPointer(stream, dataObjects);
-    mpLoadGraph = (ScalarDataObject const*)readDataObjectPointer(stream, dataObjects);
+    mpLongitudinalFunction = (ScalarDataObject const*)readDataObjectPointer(stream, dataObjects);
     mpTimeCoefficient = (ScalarDataObject const*)readDataObjectPointer(stream, dataObjects);
     mpTimeRotationVector = (VectorDataObject const*)readDataObjectPointer(stream, dataObjects);
     stream >> mMultiplier;
@@ -73,7 +73,7 @@ void LoadRodComponent::deserialize(QDataStream& stream, DataObjects const& dataO
 void LoadRodComponent::resolveReferences(DataObjects const& dataObjects)
 {
     mpDirectionVector = (VectorDataObject const*)substituteDataObject(dataObjects, mpDirectionVector);
-    mpLoadGraph = (ScalarDataObject const*)substituteDataObject(dataObjects, mpLoadGraph);
+    mpLongitudinalFunction = (ScalarDataObject const*)substituteDataObject(dataObjects, mpLongitudinalFunction);
     mpTimeCoefficient = (ScalarDataObject const*)substituteDataObject(dataObjects, mpTimeCoefficient);
     mpTimeRotationVector = (VectorDataObject const*)substituteDataObject(dataObjects, mpTimeRotationVector);
 }
