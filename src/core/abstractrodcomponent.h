@@ -25,7 +25,8 @@ public:
         kGeometry,
         kSection,
         kMaterial,
-        kLoad
+        kLoad,
+        kConstraint
     };
     AbstractRodComponent(ComponentType componentType, QString name);
     virtual ~AbstractRodComponent() = 0;

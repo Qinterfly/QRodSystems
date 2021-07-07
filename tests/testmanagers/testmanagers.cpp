@@ -18,6 +18,7 @@
 #include "core/usersectionrodcomponent.h"
 #include "core/materialrodcomponent.h"
 #include "core/loadrodcomponent.h"
+#include "core/constraintrodcomponent.h"
 #include "managers/managersfactory.h"
 #include "managers/dataobjectsmanager.h"
 #include "managers/rodcomponentsmanager.h"
@@ -129,8 +130,12 @@ void TestManagers::testRodComponentsManager()
     pLoad->setType(LoadRodComponent::LoadType::kPointForce);
     pLoad->setDirectionVector(pVector);
     QVERIFY(pLoad->isDataComplete());
+    // Adding a rod constraint
+    ConstraintRodComponent* pConstraint = (ConstraintRodComponent*)pManager->addConstraint();
+    pConstraint->addConstraint(ConstraintRodComponent::kDisplacement, ConstraintRodComponent::kX, ConstraintRodComponent::kLocal);
+    QVERIFY(pConstraint->isDataComplete());
     // Selecting
-    pManager->selectRodComponent(3);
+    pManager->selectRodComponent(4);
     pManager->apply();
 }
 

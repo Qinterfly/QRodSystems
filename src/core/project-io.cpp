@@ -21,6 +21,7 @@
 #include "usersectionrodcomponent.h"
 #include "materialrodcomponent.h"
 #include "loadrodcomponent.h"
+#include "constraintrodcomponent.h"
 #include "utilities.h"
 
 using namespace QRS::Core;
@@ -214,6 +215,9 @@ void readRodComponents(QDataStream& inputStream, DataObjects const& dataObjects,
             break;
         case (AbstractRodComponent::ComponentType::kLoad):
             pRodComponent = new LoadRodComponent(name);
+            break;
+        case (AbstractRodComponent::ComponentType::kConstraint):
+            pRodComponent = new ConstraintRodComponent(name);
             break;
         }
         pRodComponent->deserialize(inputStream, dataObjects);

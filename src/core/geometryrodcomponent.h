@@ -1,7 +1,7 @@
 /*!
  * \file
  * \author Pavel Lakiza
- * \date June 2021
+ * \date July 2021
  * \brief Declaration of the GeometryRodComponent class
  */
 
@@ -25,14 +25,16 @@ public:
     ~GeometryRodComponent();
     AbstractRodComponent* clone() const override;
     bool isDataComplete() const override;
-    void setRadiusVector(VectorDataObject const* pRadiusVector) { mpRadiusVector = pRadiusVector; }
-    void setRotationMatrix(MatrixDataObject const* pRotationMatrix) { mpRotationMatrix = pRotationMatrix; }
-    VectorDataObject const* radiusVector() const { return mpRadiusVector; }
-    MatrixDataObject const* rotationMatrix() const { return mpRotationMatrix; }
     static quint32 numberInstances() { return smNumInstances; }
     void serialize(QDataStream& stream) const override;
     void deserialize(QDataStream& stream, DataObjects const& dataObjects) override;
     void resolveReferences(DataObjects const& dataObjects) override;
+    // Getters
+    VectorDataObject const* radiusVector() const { return mpRadiusVector; }
+    MatrixDataObject const* rotationMatrix() const { return mpRotationMatrix; }
+    // Setters
+    void setRadiusVector(VectorDataObject const* pRadiusVector) { mpRadiusVector = pRadiusVector; }
+    void setRotationMatrix(MatrixDataObject const* pRotationMatrix) { mpRotationMatrix = pRotationMatrix; }
 
 private:
     static quint32 smNumInstances;

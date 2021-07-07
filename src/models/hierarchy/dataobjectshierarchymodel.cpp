@@ -157,7 +157,7 @@ void DataObjectsHierarchyModel::selectItem(DataObjectsHierarchyItem* pItem)
         pView->setExpanded(parentIndex, true);
         parentIndex = parentIndex.parent();
     }
-    // Select the item
+    // Process selection
     pView->selectionModel()->select(selectionIndex, QItemSelectionModel::SelectionFlag::SelectCurrent);
     AbstractDataObject const* pDataObject = pItem->mpDataObject;
     if (pDataObject)

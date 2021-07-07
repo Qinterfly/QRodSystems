@@ -56,6 +56,7 @@ public:
     AbstractRodComponent* addCrossSection(AbstractSectionRodComponent::SectionType sectionType);
     AbstractRodComponent* addMaterial();
     AbstractRodComponent* addLoad();
+    AbstractRodComponent* addConstraint();
     RodComponents cloneRodComponents() const;
     HierarchyTree cloneHierarchyRodComponents() const { return mHierarchyRodComponents.clone(); }
     // Getters and setters

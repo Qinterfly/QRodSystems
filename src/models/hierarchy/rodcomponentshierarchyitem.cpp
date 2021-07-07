@@ -96,6 +96,9 @@ QIcon getRodComponentIcon(AbstractRodComponent const* pRodComponent)
     case AbstractRodComponent::ComponentType::kLoad:
         icon = QIcon(":/icons/load.svg");
         break;
+    case AbstractRodComponent::ComponentType::kConstraint:
+        icon = QIcon(":/icons/clamp.svg");
+        break;
     }
     return icon;
 }

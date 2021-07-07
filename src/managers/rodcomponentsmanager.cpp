@@ -21,6 +21,7 @@
 #include "core/usersectionrodcomponent.h"
 #include "core/materialrodcomponent.h"
 #include "core/loadrodcomponent.h"
+#include "core/constraintrodcomponent.h"
 #include "managers/geometryrodcomponentwidget.h"
 #include "managers/usersectionrodcomponentwidget.h"
 #include "managers/materialrodcomponentwidget.h"
@@ -222,6 +223,16 @@ AbstractRodComponent* RodComponentsManager::addLoad()
     return pRodComponent;
 }
 
+//! Add a rod constraint
+AbstractRodComponent* RodComponentsManager::addConstraint()
+{
+    static QString const kBaseName = "Constraint ";
+    QString name = kBaseName + QString::number(ConstraintRodComponent::numberInstances() + 1);
+    AbstractRodComponent* pRodComponent = new ConstraintRodComponent(name);
+    emplaceRodComponent(pRodComponent);
+    return pRodComponent;
+}
+
 //! Resolve references of rod components
 void RodComponentsManager::resolveRodComponentsReferences()
 {
@@ -278,6 +289,11 @@ void RodComponentsManager::representRodComponent(Core::DataIDType id)
     {
         LoadRodComponent* pLoad = (LoadRodComponent*)pRodComponent;
         pRodComponentWidget = new LoadRodComponentWidget(*pLoad, skDataObjectsMimeType, mpComponentDockWidget);
+        break;
+    }
+    case AbstractRodComponent::ComponentType::kConstraint:
+    {
+        // TODO
         break;
     }
     }
@@ -347,7 +363,7 @@ QWidget* RodComponentsManager::makeSectionsToolBar()
 QWidget* RodComponentsManager::makeBoundaryConditionsToolBar()
 {
     QToolBar* pToolBar = new QToolBar();
-    pToolBar->addAction(QIcon(":/icons/clamp.svg"), tr("Constraint"));
+    pToolBar->addAction(QIcon(":/icons/clamp.svg"), tr("Constraint"), this, &RodComponentsManager::addConstraint);
     pToolBar->setIconSize(skToolBarIconSize);
     return addToolbarHeader(pToolBar, "Constraint");
 }

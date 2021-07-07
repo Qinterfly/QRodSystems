@@ -57,6 +57,7 @@ public slots:
     Core::AbstractRodComponent* addSection(Core::AbstractSectionRodComponent::SectionType sectionType);
     Core::AbstractRodComponent* addMaterial();
     Core::AbstractRodComponent* addLoad();
+    Core::AbstractRodComponent* addConstraint();
     void resolveRodComponentsReferences();
 
 private:

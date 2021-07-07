@@ -17,6 +17,7 @@
 #include "core/usersectionrodcomponent.h"
 #include "core/materialrodcomponent.h"
 #include "core/loadrodcomponent.h"
+#include "core/constraintrodcomponent.h"
 
 using namespace QRS::Core;
 
@@ -37,6 +38,7 @@ private slots:
     void createRodCrossSection();
     void createRodMaterial();
     void createRodLoad();
+    void createRodConstraint();
     void cleanupTestCase();
 
 private:
@@ -58,6 +60,7 @@ void TestCore::initTestCase()
     UserSectionRodComponent* pUserCrossSection;
     MaterialRodComponent* pMaterial;
     LoadRodComponent* pLoad;
+    ConstraintRodComponent* pConstraint;
     for (quint32 i = 0; i != numSets; ++i)
     {
         // Creating data objects
@@ -80,6 +83,10 @@ void TestCore::initTestCase()
         pLoad = (LoadRodComponent*)mpProject->addLoad();
         pLoad->setType(LoadRodComponent::LoadType::kAcceleration);
         pLoad->setDirectionVector(pVector);
+        // Creating constraints
+        pConstraint = (ConstraintRodComponent*)mpProject->addConstraint();
+        pConstraint->addConstraint(ConstraintRodComponent::kDisplacement, ConstraintRodComponent::kX, ConstraintRodComponent::kGlobal);
+        pConstraint->addConstraint(ConstraintRodComponent::kRotation, ConstraintRodComponent::kY, ConstraintRodComponent::kLocal);
     }
 }
 
@@ -250,6 +257,17 @@ void TestCore::createRodLoad()
     load.setDirectionVector(pDirectionVector);
     QVERIFY(load.isDataComplete());
     delete pDirectionVector;
+}
+
+//! Try creating a rod constraint
+void TestCore::createRodConstraint()
+{
+    ConstraintRodComponent constraint("Fix");
+    constraint.addConstraint(ConstraintRodComponent::kDisplacement, ConstraintRodComponent::kX, ConstraintRodComponent::kGlobal);
+    constraint.addConstraint(ConstraintRodComponent::kDisplacement, ConstraintRodComponent::kY, ConstraintRodComponent::kGlobal);
+    constraint.addConstraint(ConstraintRodComponent::kDisplacement, ConstraintRodComponent::kZ, ConstraintRodComponent::kGlobal);
+    QVERIFY(!constraint.addConstraint(ConstraintRodComponent::kDisplacement, ConstraintRodComponent::kZ, ConstraintRodComponent::kLocal));
+    QVERIFY(constraint.isDataComplete());
 }
 
 //! Cleanup

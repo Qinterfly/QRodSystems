@@ -6,6 +6,7 @@ HEADERS += \
     $$PWD/aliasdata.h \
     $$PWD/aliasdataset.h \
     $$PWD/array.h \
+    $$PWD/constraintrodcomponent.h \
     $$PWD/geometryrodcomponent.h \
     $$PWD/loadrodcomponent.h \
     $$PWD/materialrodcomponent.h \
@@ -24,6 +25,7 @@ SOURCES += \
     $$PWD/abstractrodcomponent.cpp \
     $$PWD/abstractsectionrodcomponent.cpp \
     $$PWD/array.cpp \
+    $$PWD/constraintrodcomponent.cpp \
     $$PWD/geometryrodcomponent.cpp \
     $$PWD/loadrodcomponent.cpp \
     $$PWD/materialrodcomponent.cpp \
