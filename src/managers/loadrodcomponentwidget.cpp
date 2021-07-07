@@ -130,9 +130,6 @@ QComboBox* LoadRodComponentWidget::createLoadTypeComboBox()
 {
     QComboBox* pComboBox = new QComboBox();
     pComboBox->setSizeAdjustPolicy(QComboBox::AdjustToContents);
-    // None
-    pComboBox->addItem("", LoadRodComponent::LoadType::kNone);
-    pComboBox->insertSeparator(pComboBox->count());
     // Forced displacements and rotations
     pComboBox->addItem(tr("Forced displacements"), LoadRodComponent::LoadType::kForcedDisplacements);
     pComboBox->addItem(tr("Forced rotations"), LoadRodComponent::LoadType::kForcedRotations);
