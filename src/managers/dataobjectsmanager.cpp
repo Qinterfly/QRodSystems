@@ -61,7 +61,7 @@ DataObjectsManager::DataObjectsManager(DataObjects&& dataObjects, HierarchyTree&
 
 DataObjectsManager::~DataObjectsManager()
 {
-    delete mpItemDelegate;
+    delete mpDataTable->itemDelegate();
     for (auto iter = mDataObjects.begin(); iter != mDataObjects.end(); ++iter)
         delete iter->second;
     mDataObjects.clear();
@@ -94,8 +94,8 @@ CDockWidget* DataObjectsManager::createDataTableWidget()
     mpDataTable->setHeaderHidden(false);
     pDockWidget->setWidget(mpDataTable);
     // Editor of table values
-    mpItemDelegate = new DoubleSpinBoxItemDelegate();
-    mpDataTable->setItemDelegate(mpItemDelegate);
+    DoubleSpinBoxItemDelegate* pItemDelegate = new DoubleSpinBoxItemDelegate();
+    mpDataTable->setItemDelegate(pItemDelegate);
     // Models
     mpBaseTableModel = new BaseTableModel(mpDataTable);
     mpMatrixTableModel = new MatrixTableModel(mpDataTable);

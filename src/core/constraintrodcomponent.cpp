@@ -75,17 +75,21 @@ void ConstraintRodComponent::deserialize(QDataStream& stream, DataObjects const&
     }
 }
 
-//! Check whether the constraint of the specified type already exists
-bool ConstraintRodComponent::isConstraintExist(ConstraintType type, ConstraintDirection direction)
+//! Check whether the constraint of the specified type is fully specified
+bool ConstraintRodComponent::isConstraintFullySet(ConstraintType type) const
 {
-    return mConstraints.contains(type) && mConstraints[type].contains(direction);
+    return mConstraints.contains(type) && mConstraints.size() == 3;
 }
 
-//! Add a constraint if it has not been added before
-bool ConstraintRodComponent::addConstraint(ConstraintType type, ConstraintDirection direction, ConstraintCoordinateSystem coordinateSystem)
+//! Check whether the constraint of the specified type and direction exists
+bool ConstraintRodComponent::isConstraintExist(ConstraintType type, ConstraintDirection direction) const
 {
-    if (isConstraintExist(type, direction))
-        return false;
-    mConstraints[type][direction] = coordinateSystem;
-    return true;
+    return mConstraints.contains(type) && mConstraints.at(type).contains(direction);
 }
+
+//! Set a constraint
+void ConstraintRodComponent::setConstraint(ConstraintType type, ConstraintDirection direction, ConstraintCoordinateSystem coordinateSystem)
+{
+    mConstraints[type][direction] = coordinateSystem;
+}
+

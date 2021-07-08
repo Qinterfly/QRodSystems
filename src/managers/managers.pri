@@ -3,6 +3,8 @@ INCLUDEPATH += $$PWD
 HEADERS += \
     $$PWD/abstractmanager.h \
     $$PWD/abstractrodcomponentwidget.h \
+    $$PWD/constraintitemdelegate.h \
+    $$PWD/constraintrodcomponentwidget.h \
     $$PWD/dataobjectlineedit.h \
     $$PWD/dataobjectsmanager.h \
     $$PWD/doublespinboxitemdelegate.h  \
@@ -16,6 +18,8 @@ HEADERS += \
 SOURCES += \
     $$PWD/abstractmanager.cpp \
     $$PWD/abstractrodcomponentwidget.cpp \
+    $$PWD/constraintitemdelegate.cpp \
+    $$PWD/constraintrodcomponentwidget.cpp \
     $$PWD/dataobjectlineedit.cpp \
     $$PWD/dataobjectsmanager.cpp \
     $$PWD/doublespinboxitemdelegate.cpp  \

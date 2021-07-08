@@ -85,8 +85,8 @@ void TestCore::initTestCase()
         pLoad->setDirectionVector(pVector);
         // Creating constraints
         pConstraint = (ConstraintRodComponent*)mpProject->addConstraint();
-        pConstraint->addConstraint(ConstraintRodComponent::kDisplacement, ConstraintRodComponent::kX, ConstraintRodComponent::kGlobal);
-        pConstraint->addConstraint(ConstraintRodComponent::kRotation, ConstraintRodComponent::kY, ConstraintRodComponent::kLocal);
+        pConstraint->setConstraint(ConstraintRodComponent::kDisplacement, ConstraintRodComponent::kX, ConstraintRodComponent::kGlobal);
+        pConstraint->setConstraint(ConstraintRodComponent::kRotation, ConstraintRodComponent::kY, ConstraintRodComponent::kLocal);
     }
 }
 
@@ -263,10 +263,9 @@ void TestCore::createRodLoad()
 void TestCore::createRodConstraint()
 {
     ConstraintRodComponent constraint("Fix");
-    constraint.addConstraint(ConstraintRodComponent::kDisplacement, ConstraintRodComponent::kX, ConstraintRodComponent::kGlobal);
-    constraint.addConstraint(ConstraintRodComponent::kDisplacement, ConstraintRodComponent::kY, ConstraintRodComponent::kGlobal);
-    constraint.addConstraint(ConstraintRodComponent::kDisplacement, ConstraintRodComponent::kZ, ConstraintRodComponent::kGlobal);
-    QVERIFY(!constraint.addConstraint(ConstraintRodComponent::kDisplacement, ConstraintRodComponent::kZ, ConstraintRodComponent::kLocal));
+    constraint.setConstraint(ConstraintRodComponent::kDisplacement, ConstraintRodComponent::kX, ConstraintRodComponent::kGlobal);
+    constraint.setConstraint(ConstraintRodComponent::kDisplacement, ConstraintRodComponent::kY, ConstraintRodComponent::kGlobal);
+    constraint.setConstraint(ConstraintRodComponent::kDisplacement, ConstraintRodComponent::kZ, ConstraintRodComponent::kGlobal);
     QVERIFY(constraint.isDataComplete());
 }
 

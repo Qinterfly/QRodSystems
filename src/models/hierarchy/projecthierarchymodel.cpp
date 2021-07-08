@@ -47,30 +47,28 @@ void ProjectHierarchyModel::clearContent()
 //! Check if an item selection is correct and if it is not -- correct it
 void ProjectHierarchyModel::validateItemSelection()
 {
+    QTreeView* pView = (QTreeView*) parent();
+    QItemSelectionModel* selectionModel = pView->selectionModel();
+    QSignalBlocker const signalBlocker(selectionModel);
+    QModelIndexList indices = selectionModel->selectedIndexes();
+    if (indices.isEmpty())
+        return;
+    AbstractHierarchyItem* pItem = (AbstractHierarchyItem*)itemFromIndex(indices[0]);
+    int mainType = pItem->type();
+    int numSelection = indices.size();
+    // Add the first item by default
+    QVector<AbstractHierarchyItem*> validatedItems;
+    validatedItems.push_back(pItem);
+    // Deselect the items which have types different to the main one
+    for (int i = 1; i != numSelection; ++i)
     {
-        QTreeView* pView = (QTreeView*) parent();
-        QItemSelectionModel* selectionModel = pView->selectionModel();
-        QSignalBlocker const signalBlocker(selectionModel);
-        QModelIndexList indices = selectionModel->selectedIndexes();
-        if (indices.isEmpty())
-            return;
-        AbstractHierarchyItem* pItem = (AbstractHierarchyItem*)itemFromIndex(indices[0]);
-        int mainType = pItem->type();
-        int numSelection = indices.size();
-        // Add the first item by default
-        QVector<AbstractHierarchyItem*> validatedItems;
-        validatedItems.push_back(pItem);
-        // Deselect the items which have types different to the main one
-        for (int i = 1; i != numSelection; ++i)
-        {
-            pItem = (AbstractHierarchyItem*)itemFromIndex(indices[i]);
-            if (pItem->type() == mainType)
-                validatedItems.push_back(pItem);
-            else
-                selectionModel->select(pItem->index(), QItemSelectionModel::SelectionFlag::Deselect);
-        }
-        emit selectionValidated(validatedItems);
+        pItem = (AbstractHierarchyItem*)itemFromIndex(indices[i]);
+        if (pItem->type() == mainType)
+            validatedItems.push_back(pItem);
+        else
+            selectionModel->select(pItem->index(), QItemSelectionModel::SelectionFlag::Deselect);
     }
+    emit selectionValidated(validatedItems);
 }
 
 //! Retrieve a representative of data objects

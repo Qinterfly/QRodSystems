@@ -43,8 +43,9 @@ public:
     void serialize(QDataStream& stream) const override;
     void deserialize(QDataStream& stream, DataObjects const& dataObjects) override;
     void resolveReferences(DataObjects const&) override {};
-    bool isConstraintExist(ConstraintType type, ConstraintDirection direction);
-    bool addConstraint(ConstraintType type, ConstraintDirection direction, ConstraintCoordinateSystem coordinateSystem);
+    bool isConstraintFullySet(ConstraintType type) const;
+    bool isConstraintExist(ConstraintType type, ConstraintDirection direction) const;
+    void setConstraint(ConstraintType type, ConstraintDirection direction, ConstraintCoordinateSystem coordinateSystem);
 
 private:
     static quint32 smNumInstances;

@@ -1,8 +1,8 @@
 /*!
  * \file
  * \author Pavel Lakiza
- * \date March 2021
- * \brief Implementation of the DoubleSpinBoxItemDelegate class
+ * \date July 2021
+ * \brief Definition of the DoubleSpinBoxItemDelegate class
  */
 
 #include <QDoubleSpinBox>
@@ -17,7 +17,8 @@ DoubleSpinBoxItemDelegate::DoubleSpinBoxItemDelegate(QObject* parent)
 }
 
 //! Create a double value editor
-QWidget* DoubleSpinBoxItemDelegate::createEditor(QWidget* parent, const QStyleOptionViewItem& /* option */, const QModelIndex& /* index */) const
+QWidget* DoubleSpinBoxItemDelegate::createEditor(QWidget* parent, const QStyleOptionViewItem& /* option */,
+                                                 const QModelIndex& /* index */) const
 {
     const short kNumDecimals = 15;
     QDoubleSpinBox* pEditor  = new QDoubleSpinBox(parent);
@@ -32,21 +33,22 @@ QWidget* DoubleSpinBoxItemDelegate::createEditor(QWidget* parent, const QStyleOp
 void DoubleSpinBoxItemDelegate::setEditorData(QWidget* pEditor, const QModelIndex& index) const
 {
     double value = index.model()->data(index, Qt::UserRole).toDouble();
-    QDoubleSpinBox* spinBox = static_cast<QDoubleSpinBox*>(pEditor);
-    spinBox->setValue(value);
+    QDoubleSpinBox* pSpinBox = static_cast<QDoubleSpinBox*>(pEditor);
+    pSpinBox->setValue(value);
 }
 
 //! Set data to a model
 void DoubleSpinBoxItemDelegate::setModelData(QWidget* pEditor, QAbstractItemModel* pModel, const QModelIndex& index) const
 {
-    QDoubleSpinBox *spinBox = static_cast<QDoubleSpinBox*>(pEditor);
-    spinBox->interpretText();
-    double value = spinBox->value();
+    QDoubleSpinBox* pSpinBox = static_cast<QDoubleSpinBox*>(pEditor);
+    pSpinBox->interpretText();
+    double value = pSpinBox->value();
     pModel->setData(index, value, Qt::UserRole);
 }
 
 //! Set a geometry to render
-void DoubleSpinBoxItemDelegate::updateEditorGeometry(QWidget* pEditor, const QStyleOptionViewItem& option, const QModelIndex &/* index */) const
+void DoubleSpinBoxItemDelegate::updateEditorGeometry(QWidget* pEditor, const QStyleOptionViewItem& option,
+                                                     const QModelIndex& /* index */) const
 {
     pEditor->setGeometry(option.rect);
 }

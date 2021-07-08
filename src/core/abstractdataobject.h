@@ -1,7 +1,7 @@
 /*!
  * \file
  * \author Pavel Lakiza
- * \date June 2021
+ * \date July 2021
  * \brief Declaration of the AbstractDataObject class
  */
 
@@ -11,7 +11,7 @@
 #include <QObject>
 #include <QString>
 #include <QDataStream>
-#include <unordered_map>
+#include <map>
 #include "array.h"
 #include "aliasdata.h"
 

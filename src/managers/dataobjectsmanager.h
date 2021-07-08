@@ -44,8 +44,6 @@ class DataObjectsHierarchyModel;
 namespace Managers
 {
 
-class DoubleSpinBoxItemDelegate;
-
 //! Manager to create objects of different types: scalars, vectors, matroces and surfaces
 class DataObjectsManager : public AbstractManager
 {
@@ -92,8 +90,6 @@ private:
     // Widgets
     QTreeView* mpTreeDataObjects;
     QTreeView* mpDataTable;
-    // Delegates
-    DoubleSpinBoxItemDelegate* mpItemDelegate = nullptr;
     // Data
     Core::DataObjects mDataObjects;
     Core::HierarchyTree mHierarchyDataObjects;

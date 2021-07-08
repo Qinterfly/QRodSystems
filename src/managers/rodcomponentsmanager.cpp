@@ -26,6 +26,7 @@
 #include "managers/usersectionrodcomponentwidget.h"
 #include "managers/materialrodcomponentwidget.h"
 #include "managers/loadrodcomponentwidget.h"
+#include "managers/constraintrodcomponentwidget.h"
 #include "models/hierarchy/dataobjectshierarchymodel.h"
 #include "models/hierarchy/rodcomponentshierarchymodel.h"
 
@@ -293,14 +294,15 @@ void RodComponentsManager::representRodComponent(Core::DataIDType id)
     }
     case AbstractRodComponent::ComponentType::kConstraint:
     {
-        // TODO
+        ConstraintRodComponent* pConstraint = (ConstraintRodComponent*)pRodComponent;
+        pRodComponentWidget = new ConstraintRodComponentWidget(*pConstraint, mpComponentDockWidget);
         break;
     }
     }
     if (pRodComponentWidget)
     {
-        connect(pRodComponentWidget, &GeometryRodComponentWidget::modified, funModified);
-        connect(pRodComponentWidget, &GeometryRodComponentWidget::editDataObjectRequested, this, &RodComponentsManager::editDataObjectRequested);
+        connect(pRodComponentWidget, &AbstractRodComponentWidget::modified, funModified);
+        connect(pRodComponentWidget, &AbstractRodComponentWidget::editDataObjectRequested, this, &RodComponentsManager::editDataObjectRequested);
         mpComponentDockWidget->setWidget(pRodComponentWidget);
     }
 }
