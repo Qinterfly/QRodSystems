@@ -49,31 +49,31 @@ QWidget* MechanicalRodComponentWidget::createStiffnessGroup()
     DataObjectLineEdit* pEdit;
     DataObjectSetFun setFun;
     // Tension
-    pLayout->addWidget(new QLabel(tr("Tension: ")), 0, 0);
     pEdit = new DataObjectLineEdit(mMechanicalRodComponent.tensionStiffness(), AbstractDataObject::ObjectType::kScalar, mkMimeType);
     setFun = [this](AbstractDataObject const * pData) { setProperty(pData, &MechanicalRodComponent::setTensionStiffness); };
     setDataObjectEditConnections(pEdit, setFun);
+    pLayout->addWidget(new QLabel(tr("Tension: ")), 0, 0);
     pLayout->addWidget(pEdit, 0, 1);
     pLayout->addWidget(new QLabel(tr("(N)")), 0, 2);
     // Torsional
-    pLayout->addWidget(new QLabel(tr("Torsional: ")), 1, 0);
     pEdit = new DataObjectLineEdit(mMechanicalRodComponent.torsionalStiffness(), AbstractDataObject::ObjectType::kScalar, mkMimeType);
     setFun = [this](AbstractDataObject const * pData) { setProperty(pData, &MechanicalRodComponent::setTorsionalStiffness); };
     setDataObjectEditConnections(pEdit, setFun);
+    pLayout->addWidget(new QLabel(tr("Torsional: ")), 1, 0);
     pLayout->addWidget(pEdit, 1, 1);
     pLayout->addWidget(new QLabel(tr("(N*m<sup>2</sup>)")), 1, 2);
     // Bending stiffness around X
-    pLayout->addWidget(new QLabel(tr("Bending X: ")), 2, 0);
     pEdit = new DataObjectLineEdit(mMechanicalRodComponent.bendingStiffnessX(), AbstractDataObject::ObjectType::kScalar, mkMimeType);
     setFun = [this](AbstractDataObject const * pData) { setProperty(pData, &MechanicalRodComponent::setBendingStiffnessX); };
     setDataObjectEditConnections(pEdit, setFun);
+    pLayout->addWidget(new QLabel(tr("Bending X: ")), 2, 0);
     pLayout->addWidget(pEdit, 2, 1);
     pLayout->addWidget(new QLabel(tr("(N*m<sup>2</sup>)")), 2, 2);
     // Bending stiffness around Y
-    pLayout->addWidget(new QLabel(tr("Bending Y: ")), 3, 0);
     pEdit = new DataObjectLineEdit(mMechanicalRodComponent.bendingStiffnessY(), AbstractDataObject::ObjectType::kScalar, mkMimeType);
     setFun = [this](AbstractDataObject const * pData) { setProperty(pData, &MechanicalRodComponent::setBendingStiffnessY); };
     setDataObjectEditConnections(pEdit, setFun);
+    pLayout->addWidget(new QLabel(tr("Bending Y: ")), 3, 0);
     pLayout->addWidget(pEdit, 3, 1);
     pLayout->addWidget(new QLabel(tr("(N*m<sup>2</sup>)")), 3, 2);
     pGroupBox->setLayout(pLayout);
@@ -88,31 +88,31 @@ QWidget* MechanicalRodComponentWidget::createMassGroup()
     DataObjectLineEdit* pEdit;
     DataObjectSetFun setFun;
     // Linear mass density
-    pLayout->addWidget(new QLabel(tr("Linear density: ")), 0, 0);
     pEdit = new DataObjectLineEdit(mMechanicalRodComponent.linearMassDensity(), AbstractDataObject::ObjectType::kScalar, mkMimeType);
     setFun = [this](AbstractDataObject const * pData) { setProperty(pData, &MechanicalRodComponent::setLinearMassDensity); };
     setDataObjectEditConnections(pEdit, setFun);
+    pLayout->addWidget(new QLabel(tr("Linear density: ")), 0, 0);
     pLayout->addWidget(pEdit, 0, 1);
     pLayout->addWidget(new QLabel(tr("(kg/m)")), 0, 2);
     // Inertia moment X
-    pLayout->addWidget(new QLabel(tr("Inertia moment X: ")), 1, 0);
     pEdit = new DataObjectLineEdit(mMechanicalRodComponent.inertiaMassMomentX(), AbstractDataObject::ObjectType::kScalar, mkMimeType);
     setFun = [this](AbstractDataObject const * pData) { setProperty(pData, &MechanicalRodComponent::setInertiaMassMomentX); };
     setDataObjectEditConnections(pEdit, setFun);
+    pLayout->addWidget(new QLabel(tr("Inertia moment X: ")), 1, 0);
     pLayout->addWidget(pEdit, 1, 1);
     pLayout->addWidget(new QLabel(tr("(kg*m<sup>4</sup>)")), 1, 2);
     // Inertia moment Y
-    pLayout->addWidget(new QLabel(tr("Inertia moment Y: ")), 2, 0);
     pEdit = new DataObjectLineEdit(mMechanicalRodComponent.inertiaMassMomentY(), AbstractDataObject::ObjectType::kScalar, mkMimeType);
     setFun = [this](AbstractDataObject const * pData) { setProperty(pData, &MechanicalRodComponent::setInertiaMassMomentY); };
     setDataObjectEditConnections(pEdit, setFun);
+    pLayout->addWidget(new QLabel(tr("Inertia moment Y: ")), 2, 0);
     pLayout->addWidget(pEdit, 2, 1);
     pLayout->addWidget(new QLabel(tr("(kg*m<sup>4</sup>)")), 2, 2);
     // Inertia moment Z
-    pLayout->addWidget(new QLabel(tr("Inertia moment Z: ")), 3, 0);
     pEdit = new DataObjectLineEdit(mMechanicalRodComponent.inertiaMassMomentZ(), AbstractDataObject::ObjectType::kScalar, mkMimeType);
     setFun = [this](AbstractDataObject const * pData) { setProperty(pData, &MechanicalRodComponent::setInertiaMassMomentZ); };
     setDataObjectEditConnections(pEdit, setFun);
+    pLayout->addWidget(new QLabel(tr("Inertia moment Z: ")), 3, 0);
     pLayout->addWidget(pEdit, 3, 1);
     pLayout->addWidget(new QLabel(tr("(kg*m<sup>4</sup>)")), 3, 2);
     pGroupBox->setLayout(pLayout);

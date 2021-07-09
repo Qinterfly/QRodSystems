@@ -30,34 +30,29 @@ void GeometryRodComponentWidget::createContent()
 {
     QGridLayout* pMainLayout = new QGridLayout(this);
     DataObjectLineEdit* pEdit;
+    DataObjectSetFun setFun;
     // Radius vector
     pEdit = new DataObjectLineEdit(mGeometryRodComponent.radiusVector(), AbstractDataObject::ObjectType::kVector, mkMimeType);
+    setFun = [this](AbstractDataObject const * pData) { setProperty<VectorDataObject>(pData, &GeometryRodComponent::setRadiusVector); };
+    setDataObjectEditConnections(pEdit, setFun);
     pMainLayout->addWidget(new QLabel(tr("Radius vector: ")), 0, 0);
-    connect(pEdit, &DataObjectLineEdit::selected, this, &GeometryRodComponentWidget::setRadiusVector);
-    connect(pEdit, &DataObjectLineEdit::editRequested, this, &GeometryRodComponentWidget::editDataObjectRequested);
     pMainLayout->addWidget(pEdit, 0, 1);
     pMainLayout->addWidget(new QLabel(tr("(m)")), 0, 2);
     // Rotation matrix
     pEdit = new DataObjectLineEdit(mGeometryRodComponent.rotationMatrix(), AbstractDataObject::ObjectType::kMatrix, mkMimeType);
+    setFun = [this](AbstractDataObject const * pData) { setProperty<MatrixDataObject>(pData, &GeometryRodComponent::setRotationMatrix); };
+    setDataObjectEditConnections(pEdit, setFun);
     pMainLayout->addWidget(new QLabel(tr("Rotation matrix: ")), 1, 0);
-    connect(pEdit, &DataObjectLineEdit::selected, this, &GeometryRodComponentWidget::setRotationMatrix);
-    connect(pEdit, &DataObjectLineEdit::editRequested, this, &GeometryRodComponentWidget::editDataObjectRequested);
     pMainLayout->addWidget(pEdit, 1, 1);
     // Spacer
     pMainLayout->addItem(new QSpacerItem(0, 0, QSizePolicy::Minimum, QSizePolicy::Expanding), 2, 0);
     setLayout(pMainLayout);
 }
 
-//! Set a radius vector
-void GeometryRodComponentWidget::setRadiusVector(Core::AbstractDataObject const* pDataObject)
+//! Set a property of a rod geometry
+template<typename T>
+void GeometryRodComponentWidget::setProperty(AbstractDataObject const* pDataObject, auto setFun)
 {
-    mGeometryRodComponent.setRadiusVector((VectorDataObject const*)pDataObject);
-    emit modified();
-}
-
-//! Set a rotation matrix
-void GeometryRodComponentWidget::setRotationMatrix(Core::AbstractDataObject const* pDataObject)
-{
-    mGeometryRodComponent.setRotationMatrix((MatrixDataObject const*)pDataObject);
+    (mGeometryRodComponent.*setFun)((T const*)pDataObject);
     emit modified();
 }

@@ -34,6 +34,8 @@ private slots:
 
 private:
     void createContent();
+    template<typename T>
+    void setProperty(Core::AbstractDataObject const* pDataObject, auto setFun);
 
 private:
     Core::GeometryRodComponent& mGeometryRodComponent;

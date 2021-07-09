@@ -46,25 +46,22 @@ QLayout* LoadRodComponentWidget::createBaseLayout()
 {
     QGridLayout* pLayout = new QGridLayout();
     DataObjectLineEdit* pEdit;
-    std::function<void(AbstractDataObject const*)> setFun;
+    DataObjectSetFun setFun;
     // Direction vector
     pEdit = new DataObjectLineEdit(mLoadRodComponent.directionVector(), AbstractDataObject::ObjectType::kVector, mkMimeType);
     setFun = [this](AbstractDataObject const * pData) { setProperty<VectorDataObject>(pData, &LoadRodComponent::setDirectionVector); };
+    setDataObjectEditConnections(pEdit, setFun);
     pLayout->addWidget(new QLabel(tr("Direction vector: ")), 0, 0);
-    connect(pEdit, &DataObjectLineEdit::selected, setFun);
-    connect(pEdit, &DataObjectLineEdit::editRequested, this, &LoadRodComponentWidget::editDataObjectRequested);
     pLayout->addWidget(pEdit, 0, 1);
     pLayout->addWidget(mpLoadRodUnits, 0, 2);
     // Longitudinal function
     pEdit = new DataObjectLineEdit(mLoadRodComponent.longitudinalFunction(), AbstractDataObject::ObjectType::kScalar, mkMimeType);
     setFun = [this](AbstractDataObject const * pData) { setProperty<ScalarDataObject>(pData, &LoadRodComponent::setLongitudinalFunction); };
+    setDataObjectEditConnections(pEdit, setFun);
     pLayout->addWidget(new QLabel(tr("Longitudinal function: ")), 1, 0);
-    connect(pEdit, &DataObjectLineEdit::selected, setFun);
-    connect(pEdit, &DataObjectLineEdit::editRequested, this, &LoadRodComponentWidget::editDataObjectRequested);
     pLayout->addWidget(pEdit, 1, 1, 1, 2);
     // Multiplier
     double const kMaxMultiplier = std::numeric_limits<float>::max();
-    pLayout->addWidget(new QLabel(tr("Multiplier: ")), 2, 0);
     QDoubleSpinBox* pSpinBox = new QDoubleSpinBox();
     pSpinBox->setValue(mLoadRodComponent.multiplier());
     pSpinBox->setMaximum(kMaxMultiplier);
@@ -74,6 +71,7 @@ QLayout* LoadRodComponentWidget::createBaseLayout()
         mLoadRodComponent.setMultiplier(value);
         emit modified();
     });
+    pLayout->addWidget(new QLabel(tr("Multiplier: ")), 2, 0);
     pLayout->addWidget(pSpinBox, 2, 1, 1, 2);
     return pLayout;
 }
@@ -84,20 +82,18 @@ QWidget* LoadRodComponentWidget::createTimeGroup()
     QGroupBox* pGroupBox = new QGroupBox(tr("Time dependency"));
     QGridLayout* pLayout = new QGridLayout();
     DataObjectLineEdit* pEdit;
-    std::function<void(AbstractDataObject const*)> setFun;
+    DataObjectSetFun setFun;
     // Coefficient
     pEdit = new DataObjectLineEdit(mLoadRodComponent.timeCoefficient(), AbstractDataObject::ObjectType::kScalar, mkMimeType);
     setFun = [this](AbstractDataObject const * pData) { setProperty<ScalarDataObject>(pData, &LoadRodComponent::setTimeCoefficient); };
+    setDataObjectEditConnections(pEdit, setFun);
     pLayout->addWidget(new QLabel(tr("Coefficient: ")), 0, 0);
-    connect(pEdit, &DataObjectLineEdit::selected, setFun);
-    connect(pEdit, &DataObjectLineEdit::editRequested, this, &LoadRodComponentWidget::editDataObjectRequested);
     pLayout->addWidget(pEdit, 0, 1);
     // Rotation vector
     pEdit = new DataObjectLineEdit(mLoadRodComponent.timeRotationVector(), AbstractDataObject::ObjectType::kVector, mkMimeType);
     setFun = [this](AbstractDataObject const * pData) { setProperty<VectorDataObject>(pData, &LoadRodComponent::setTimeRotationVector); };
+    setDataObjectEditConnections(pEdit, setFun);
     pLayout->addWidget(new QLabel(tr("Rotation vector: ")), 1, 0);
-    connect(pEdit, &DataObjectLineEdit::selected, setFun);
-    connect(pEdit, &DataObjectLineEdit::editRequested, this, &LoadRodComponentWidget::editDataObjectRequested);
     pLayout->addWidget(pEdit, 1, 1);
     pGroupBox->setLayout(pLayout);
     return pGroupBox;
