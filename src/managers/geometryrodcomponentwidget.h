@@ -28,10 +28,6 @@ class GeometryRodComponentWidget : public AbstractRodComponentWidget
 public:
     GeometryRodComponentWidget(Core::GeometryRodComponent& geometryRodComponent, QString const& mimeType, QWidget* parent = nullptr);
 
-private slots:
-    void setRadiusVector(Core::AbstractDataObject const* pDataObject);
-    void setRotationMatrix(Core::AbstractDataObject const* pDataObject);
-
 private:
     void createContent();
     template<typename T>
