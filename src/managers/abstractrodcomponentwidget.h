@@ -14,8 +14,17 @@
 namespace QRS
 {
 
+namespace Core
+{
+class AbstractDataObject;
+}
+
 namespace Managers
 {
+
+class DataObjectLineEdit;
+
+using DataObjectSetFun = std::function<void(Core::AbstractDataObject const*)>;
 
 //! Widget to construct rod components of different types
 class AbstractRodComponentWidget : public QWidget
@@ -29,6 +38,9 @@ public:
 signals:
     void modified();
     void editDataObjectRequested(Core::DataIDType id);
+
+protected:
+    void setDataObjectEditConnections(DataObjectLineEdit* pEdit, DataObjectSetFun& setFun);
 
 protected:
     QString const mkMimeType;

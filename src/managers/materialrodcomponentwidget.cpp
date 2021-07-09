@@ -30,7 +30,7 @@ void MaterialRodComponentWidget::createContent()
 {
     QVBoxLayout* pMainLayout = new QVBoxLayout(this);
     // Elastic and shear moduli
-    pMainLayout->addWidget(createModuliWidget());
+    pMainLayout->addWidget(createModuliGroup());
     // Density and Poisson's ratio
     pMainLayout->addLayout(createBaseLayout());
     // Spacer
@@ -39,7 +39,7 @@ void MaterialRodComponentWidget::createContent()
 }
 
 //! Create a group consisted of widgets to set physical moduli
-QWidget* MaterialRodComponentWidget::createModuliWidget()
+QWidget* MaterialRodComponentWidget::createModuliGroup()
 {
     QGroupBox* pGroupBox = new QGroupBox(tr("Moduli"));
     QGridLayout* pLayout = new QGridLayout();

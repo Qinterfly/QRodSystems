@@ -18,6 +18,7 @@
 #include "core/materialrodcomponent.h"
 #include "core/loadrodcomponent.h"
 #include "core/constraintrodcomponent.h"
+#include "core/mechanicalrodcomponent.h"
 
 using namespace QRS::Core;
 
@@ -34,11 +35,12 @@ private slots:
     void readProject();
     void createHierarchyTree();
     void reorganizeHierarchyTree();
-    void createRodGeometry();
-    void createRodCrossSection();
-    void createRodMaterial();
-    void createRodLoad();
-    void createRodConstraint();
+    void createGeometry();
+    void createCrossSection();
+    void createMaterial();
+    void createLoad();
+    void createConstraint();
+    void createMechaincalComponent();
     void cleanupTestCase();
 
 private:
@@ -61,6 +63,7 @@ void TestCore::initTestCase()
     MaterialRodComponent* pMaterial;
     LoadRodComponent* pLoad;
     ConstraintRodComponent* pConstraint;
+    MechanicalRodComponent* pMechanical;
     for (quint32 i = 0; i != numSets; ++i)
     {
         // Creating data objects
@@ -87,6 +90,10 @@ void TestCore::initTestCase()
         pConstraint = (ConstraintRodComponent*)mpProject->addConstraint();
         pConstraint->setConstraint(ConstraintRodComponent::kDisplacementX, ConstraintRodComponent::kGlobal);
         pConstraint->setConstraint(ConstraintRodComponent::kRotationY, ConstraintRodComponent::kLocal);
+        // Creating mechanical components
+        pMechanical = (MechanicalRodComponent*)mpProject->addMechanical();
+        pMechanical->setBendingStiffnessX(pScalar);
+        pMechanical->setBendingStiffnessY(pScalar);
     }
 }
 
@@ -211,7 +218,7 @@ void TestCore::reorganizeHierarchyTree()
 }
 
 //! Try creating a geometrical configuration of a rod
-void TestCore::createRodGeometry()
+void TestCore::createGeometry()
 {
     VectorDataObject* pRadiusVector = new VectorDataObject("Radius");
     MatrixDataObject* pRotationMatrix = new MatrixDataObject("Rotation");
@@ -225,7 +232,7 @@ void TestCore::createRodGeometry()
 }
 
 //! Try creating a cross section of a rod
-void TestCore::createRodCrossSection()
+void TestCore::createCrossSection()
 {
     ScalarDataObject* pArea = new ScalarDataObject("Area");
     UserSectionRodComponent section("User-defined cross section");
@@ -236,7 +243,7 @@ void TestCore::createRodCrossSection()
 }
 
 //! Try creating a material of a rod
-void TestCore::createRodMaterial()
+void TestCore::createMaterial()
 {
     ScalarDataObject* pElasticModulus = new ScalarDataObject("Elastic modulus");
     ScalarDataObject* pPoissonsRatio = new ScalarDataObject("Poisson's Ratio");
@@ -249,7 +256,7 @@ void TestCore::createRodMaterial()
 }
 
 //! Try creating a rod load
-void TestCore::createRodLoad()
+void TestCore::createLoad()
 {
     VectorDataObject* pDirectionVector = new VectorDataObject("Direction Vector");
     LoadRodComponent load("Load");
@@ -260,13 +267,24 @@ void TestCore::createRodLoad()
 }
 
 //! Try creating a rod constraint
-void TestCore::createRodConstraint()
+void TestCore::createConstraint()
 {
     ConstraintRodComponent constraint("Fix");
     constraint.setConstraint(ConstraintRodComponent::kDisplacementX, ConstraintRodComponent::kGlobal);
     constraint.setConstraint(ConstraintRodComponent::kDisplacementY, ConstraintRodComponent::kGlobal);
     constraint.setConstraint(ConstraintRodComponent::kDisplacementZ, ConstraintRodComponent::kGlobal);
     QVERIFY(constraint.isDataComplete());
+}
+
+//! Create a mechanical rod component
+void TestCore::createMechaincalComponent()
+{
+    ScalarDataObject* pUniversal = new ScalarDataObject("Universal");
+    MechanicalRodComponent mechanical("Mechanical");
+    mechanical.setTensionStiffness(pUniversal);
+    mechanical.setBendingStiffnessX(pUniversal);
+    QVERIFY(mechanical.isDataComplete());
+    delete pUniversal;
 }
 
 //! Cleanup

@@ -19,6 +19,7 @@
 #include "core/materialrodcomponent.h"
 #include "core/loadrodcomponent.h"
 #include "core/constraintrodcomponent.h"
+#include "core/mechanicalrodcomponent.h"
 #include "managers/managersfactory.h"
 #include "managers/dataobjectsmanager.h"
 #include "managers/rodcomponentsmanager.h"
@@ -135,8 +136,13 @@ void TestManagers::testRodComponentsManager()
     pConstraint->setConstraint(ConstraintRodComponent::kDisplacementX, ConstraintRodComponent::kLocal);
     pConstraint->setConstraint(ConstraintRodComponent::kDisplacementY, ConstraintRodComponent::kGlobal);
     QVERIFY(pConstraint->isDataComplete());
+    // Adding a mechanical rod component
+    MechanicalRodComponent* pMechanical = (MechanicalRodComponent*)pManager->addMechanical();
+    pMechanical->setBendingStiffnessX(pScalar);
+    pMechanical->setBendingStiffnessY(pScalar);
+    QVERIFY(pConstraint->isDataComplete());
     // Selecting
-    pManager->selectRodComponent(4);
+    pManager->selectRodComponent(5);
     pManager->apply();
 }
 

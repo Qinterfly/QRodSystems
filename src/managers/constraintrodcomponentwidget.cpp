@@ -216,14 +216,14 @@ QVariant ConstraintRodComponentWidget::getItemData(int iRow, int iColumn)
 void ConstraintRodComponentWidget::specifyConstraintNames()
 {
     // Setting displacement types
-    mTypeNames[ConstraintRodComponent::kDisplacementX] = "Displacement X";
-    mTypeNames[ConstraintRodComponent::kDisplacementY] = "Displacement Y";
-    mTypeNames[ConstraintRodComponent::kDisplacementZ] = "Displacement Z";
+    mTypeNames[ConstraintRodComponent::kDisplacementX] = tr("Displacement X");
+    mTypeNames[ConstraintRodComponent::kDisplacementY] = tr("Displacement Y");
+    mTypeNames[ConstraintRodComponent::kDisplacementZ] = tr("Displacement Z");
     // Setting rotation types
-    mTypeNames[ConstraintRodComponent::kRotationX] = "Rotation X";
-    mTypeNames[ConstraintRodComponent::kRotationY] = "Rotation Y";
-    mTypeNames[ConstraintRodComponent::kRotationZ] = "Rotation Z";
+    mTypeNames[ConstraintRodComponent::kRotationX] = tr("Rotation X");
+    mTypeNames[ConstraintRodComponent::kRotationY] = tr("Rotation Y");
+    mTypeNames[ConstraintRodComponent::kRotationZ] = tr("Rotation Z");
     // Setting coordinate systems
-    mCoordinateSystemNames[ConstraintRodComponent::kGlobal] = "Global";
-    mCoordinateSystemNames[ConstraintRodComponent::kLocal] = "Local";
+    mCoordinateSystemNames[ConstraintRodComponent::kGlobal] = tr("Global");
+    mCoordinateSystemNames[ConstraintRodComponent::kLocal] = tr("Local");
 }

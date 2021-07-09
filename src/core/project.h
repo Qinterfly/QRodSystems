@@ -57,6 +57,7 @@ public:
     AbstractRodComponent* addMaterial();
     AbstractRodComponent* addLoad();
     AbstractRodComponent* addConstraint();
+    AbstractRodComponent* addMechanical();
     RodComponents cloneRodComponents() const;
     HierarchyTree cloneHierarchyRodComponents() const { return mHierarchyRodComponents.clone(); }
     // Getters and setters

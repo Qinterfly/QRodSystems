@@ -26,9 +26,10 @@ public:
         kSection,
         kMaterial,
         kLoad,
-        kConstraint
+        kConstraint,
+        kMechanical
     };
-    AbstractRodComponent(ComponentType componentType, QString name);
+    AbstractRodComponent(ComponentType componentType, QString const& name);
     virtual ~AbstractRodComponent() = 0;
     virtual AbstractRodComponent* clone() const = 0;
     virtual bool isDataComplete() const = 0;

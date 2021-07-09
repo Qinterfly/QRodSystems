@@ -12,6 +12,7 @@ HEADERS += \
     $$PWD/loadrodcomponentwidget.h \
     $$PWD/managersfactory.h \
     $$PWD/materialrodcomponentwidget.h \
+    $$PWD/mechanicalrodcomponentwidget.h \
     $$PWD/rodcomponentsmanager.h \
     $$PWD/usersectionrodcomponentwidget.h
 
@@ -27,5 +28,6 @@ SOURCES += \
     $$PWD/loadrodcomponentwidget.cpp \
     $$PWD/managersfactory.cpp \
     $$PWD/materialrodcomponentwidget.cpp \
+    $$PWD/mechanicalrodcomponentwidget.cpp \
     $$PWD/rodcomponentsmanager.cpp \
     $$PWD/usersectionrodcomponentwidget.cpp

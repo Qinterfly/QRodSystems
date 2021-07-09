@@ -30,7 +30,7 @@ public:
 
 private:
     void createContent();
-    QWidget* createModuliWidget();
+    QWidget* createModuliGroup();
     QLayout* createBaseLayout();
     void setProperty(Core::AbstractDataObject const* pDataObject, auto setFun);
 

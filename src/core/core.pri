@@ -10,6 +10,7 @@ HEADERS += \
     $$PWD/geometryrodcomponent.h \
     $$PWD/loadrodcomponent.h \
     $$PWD/materialrodcomponent.h \
+    $$PWD/mechanicalrodcomponent.h \
     $$PWD/project.h \
     $$PWD/abstractdataobject.h \
     $$PWD/scalardataobject.h \
@@ -29,6 +30,7 @@ SOURCES += \
     $$PWD/geometryrodcomponent.cpp \
     $$PWD/loadrodcomponent.cpp \
     $$PWD/materialrodcomponent.cpp \
+    $$PWD/mechanicalrodcomponent.cpp \
     $$PWD/project-base.cpp \
     $$PWD/project-io.cpp \
     $$PWD/abstractdataobject.cpp \

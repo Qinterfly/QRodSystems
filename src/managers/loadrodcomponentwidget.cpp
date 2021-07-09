@@ -113,7 +113,7 @@ QLayout* LoadRodComponentWidget::createLoadTypeLayout()
     pLayout->addItem(new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Minimum));
     pLayout->addWidget(createLoadTypeComboBox());
     // Following state
-    QCheckBox* pCheckBox = new QCheckBox("Following");
+    QCheckBox* pCheckBox = new QCheckBox(tr("Following"));
     pCheckBox->setLayoutDirection(Qt::LayoutDirection::RightToLeft);
     pCheckBox->setChecked(mLoadRodComponent.isFollowing());
     connect(pCheckBox, &QCheckBox::toggled, [this](bool flag)

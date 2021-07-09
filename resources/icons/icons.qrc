@@ -106,5 +106,6 @@
         <file>rectangle.svg</file>
         <file>abstract-shape.svg</file>
         <file>check.svg</file>
+        <file>mechanical.svg</file>
     </qresource>
 </RCC>

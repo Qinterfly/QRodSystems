@@ -22,11 +22,13 @@
 #include "core/materialrodcomponent.h"
 #include "core/loadrodcomponent.h"
 #include "core/constraintrodcomponent.h"
+#include "core/mechanicalrodcomponent.h"
 #include "managers/geometryrodcomponentwidget.h"
 #include "managers/usersectionrodcomponentwidget.h"
 #include "managers/materialrodcomponentwidget.h"
 #include "managers/loadrodcomponentwidget.h"
 #include "managers/constraintrodcomponentwidget.h"
+#include "managers/mechanicalrodcomponentwidget.h"
 #include "models/hierarchy/dataobjectshierarchymodel.h"
 #include "models/hierarchy/rodcomponentshierarchymodel.h"
 
@@ -41,6 +43,7 @@ QSize const skToolBarIconSize = QSize(27, 27);
 QString const skDataObjectsMimeType = "rodcomponentsmanager/dataobjectshierarchy";
 
 QWidget* addToolbarHeader(QToolBar* pToolBar, QString const& name);
+AbstractRodComponentWidget* createRodComponentWidget(AbstractRodComponent* pRodComponent, ads::CDockWidget* pDockWidget);
 
 RodComponentsManager::RodComponentsManager(DataObjects& dataObjects, HierarchyTree& hieararchyDataObjects,
                                            RodComponents&& rodComponents, HierarchyTree&& hierarchyRodComponents,
@@ -234,6 +237,16 @@ AbstractRodComponent* RodComponentsManager::addConstraint()
     return pRodComponent;
 }
 
+//! Add a mechanical rod component
+AbstractRodComponent* RodComponentsManager::addMechanical()
+{
+    static QString const kBaseName = "Mechanical ";
+    QString name = kBaseName + QString::number(MechanicalRodComponent::numberInstances() + 1);
+    AbstractRodComponent* pRodComponent = new MechanicalRodComponent(name);
+    emplaceRodComponent(pRodComponent);
+    return pRodComponent;
+}
+
 //! Resolve references of rod components
 void RodComponentsManager::resolveRodComponentsReferences()
 {
@@ -265,40 +278,7 @@ void RodComponentsManager::representRodComponent(Core::DataIDType id)
         return;
     AbstractRodComponent* pRodComponent = mRodComponents[id];
     std::function<void()> funModified = [this]() { setWindowModified(true); };
-    AbstractRodComponentWidget* pRodComponentWidget = nullptr;
-    switch (pRodComponent->componentType())
-    {
-    case AbstractRodComponent::ComponentType::kGeometry:
-    {
-        GeometryRodComponent* pGeometry = (GeometryRodComponent*)pRodComponent;
-        pRodComponentWidget = new GeometryRodComponentWidget(*pGeometry, skDataObjectsMimeType, mpComponentDockWidget);
-        break;
-    }
-    case AbstractRodComponent::ComponentType::kSection:
-    {
-        UserSectionRodComponent* pSection = (UserSectionRodComponent*)pRodComponent;
-        pRodComponentWidget = new UserSectionRodComponentWidget(*pSection, skDataObjectsMimeType, mpComponentDockWidget);
-        break;
-    }
-    case AbstractRodComponent::ComponentType::kMaterial:
-    {
-        MaterialRodComponent* pMaterial = (MaterialRodComponent*)pRodComponent;
-        pRodComponentWidget = new MaterialRodComponentWidget(*pMaterial, skDataObjectsMimeType, mpComponentDockWidget);
-        break;
-    }
-    case AbstractRodComponent::ComponentType::kLoad:
-    {
-        LoadRodComponent* pLoad = (LoadRodComponent*)pRodComponent;
-        pRodComponentWidget = new LoadRodComponentWidget(*pLoad, skDataObjectsMimeType, mpComponentDockWidget);
-        break;
-    }
-    case AbstractRodComponent::ComponentType::kConstraint:
-    {
-        ConstraintRodComponent* pConstraint = (ConstraintRodComponent*)pRodComponent;
-        pRodComponentWidget = new ConstraintRodComponentWidget(*pConstraint, mpComponentDockWidget);
-        break;
-    }
-    }
+    AbstractRodComponentWidget* pRodComponentWidget = createRodComponentWidget(pRodComponent, mpComponentDockWidget);
     if (pRodComponentWidget)
     {
         connect(pRodComponentWidget, &AbstractRodComponentWidget::modified, funModified);
@@ -332,6 +312,9 @@ QToolBar* RodComponentsManager::createMainToolBar()
     pMainToolBar->addSeparator();
     // Material
     pMainToolBar->addWidget(makeMaterialToolBar());
+    pMainToolBar->addSeparator();
+    // Mechanical
+    pMainToolBar->addWidget(makeMechanicalToolBar());
     pMainToolBar->addSeparator();
     // Modify
     pMainToolBar->addWidget(makeModificationToolBar());
@@ -367,7 +350,7 @@ QWidget* RodComponentsManager::makeBoundaryConditionsToolBar()
     QToolBar* pToolBar = new QToolBar();
     pToolBar->addAction(QIcon(":/icons/clamp.svg"), tr("Constraint"), this, &RodComponentsManager::addConstraint);
     pToolBar->setIconSize(skToolBarIconSize);
-    return addToolbarHeader(pToolBar, "Constraint");
+    return addToolbarHeader(pToolBar, tr("Constraint"));
 }
 
 //! Create a toolbar to construct loading
@@ -376,7 +359,7 @@ QWidget* RodComponentsManager::makeLoadingToolBar()
     QToolBar* pToolBar = new QToolBar();
     pToolBar->addAction(QIcon(":/icons/load.svg"), tr("Load"), this, &RodComponentsManager::addLoad);
     pToolBar->setIconSize(skToolBarIconSize);
-    return addToolbarHeader(pToolBar, "Load");
+    return addToolbarHeader(pToolBar, tr("Load"));
 }
 
 //! Create a toolbar to construct materials
@@ -385,7 +368,16 @@ QWidget* RodComponentsManager::makeMaterialToolBar()
     QToolBar* pToolBar = new QToolBar();
     pToolBar->addAction(QIcon(":/icons/material.svg"), tr("Material"), this, &RodComponentsManager::addMaterial);
     pToolBar->setIconSize(skToolBarIconSize);
-    return addToolbarHeader(pToolBar, "Material");
+    return addToolbarHeader(pToolBar, tr("Material"));
+}
+
+//! Create a toolbar to construct mechanical components
+QWidget* RodComponentsManager::makeMechanicalToolBar()
+{
+    QToolBar* pToolBar = new QToolBar();
+    pToolBar->addAction(QIcon(":/icons/mechanical.svg"), tr("Mechanical"), this, &RodComponentsManager::addMechanical);
+    pToolBar->setIconSize(skToolBarIconSize);
+    return addToolbarHeader(pToolBar, tr("Mechanical"));
 }
 
 //! Create a toolbar to modify rod components
@@ -416,5 +408,51 @@ QWidget* addToolbarHeader(QToolBar* pToolBar, QString const& name)
     pLayout->addWidget(pLine, 1, 0);
     pLayout->addWidget(pToolBar, 2, 0, Qt::AlignCenter);
     pWidget->setLayout(pLayout);
+    return pWidget;
+}
+
+//! Create an appropriate constructor of a rod component
+AbstractRodComponentWidget* createRodComponentWidget(AbstractRodComponent* pRodComponent, ads::CDockWidget* pDockWidget)
+{
+    AbstractRodComponentWidget* pWidget = nullptr;
+    switch (pRodComponent->componentType())
+    {
+    case AbstractRodComponent::ComponentType::kGeometry:
+    {
+        GeometryRodComponent* pGeometry = (GeometryRodComponent*)pRodComponent;
+        pWidget = new GeometryRodComponentWidget(*pGeometry, skDataObjectsMimeType, pDockWidget);
+        break;
+    }
+    case AbstractRodComponent::ComponentType::kSection:
+    {
+        UserSectionRodComponent* pSection = (UserSectionRodComponent*)pRodComponent;
+        pWidget = new UserSectionRodComponentWidget(*pSection, skDataObjectsMimeType, pDockWidget);
+        break;
+    }
+    case AbstractRodComponent::ComponentType::kMaterial:
+    {
+        MaterialRodComponent* pMaterial = (MaterialRodComponent*)pRodComponent;
+        pWidget = new MaterialRodComponentWidget(*pMaterial, skDataObjectsMimeType, pDockWidget);
+        break;
+    }
+    case AbstractRodComponent::ComponentType::kLoad:
+    {
+        LoadRodComponent* pLoad = (LoadRodComponent*)pRodComponent;
+        pWidget = new LoadRodComponentWidget(*pLoad, skDataObjectsMimeType, pDockWidget);
+        break;
+    }
+    case AbstractRodComponent::ComponentType::kConstraint:
+    {
+        ConstraintRodComponent* pConstraint = (ConstraintRodComponent*)pRodComponent;
+        pWidget = new ConstraintRodComponentWidget(*pConstraint, pDockWidget);
+        break;
+    }
+    case AbstractRodComponent::ComponentType::kMechanical:
+    {
+        MechanicalRodComponent* pMechanical = (MechanicalRodComponent*)pRodComponent;
+        pWidget = new MechanicalRodComponentWidget(*pMechanical, skDataObjectsMimeType, pDockWidget);
+        break;
+    }
+    }
     return pWidget;
 }

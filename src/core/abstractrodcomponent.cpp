@@ -12,7 +12,7 @@ using namespace QRS::Core;
 
 DataIDType AbstractRodComponent::smMaxComponentID = 0;
 
-AbstractRodComponent::AbstractRodComponent(ComponentType componentType, QString name)
+AbstractRodComponent::AbstractRodComponent(ComponentType componentType, QString const& name)
     : mkComponentType(componentType)
     , mName(name)
 {

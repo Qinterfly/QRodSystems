@@ -58,6 +58,7 @@ public slots:
     Core::AbstractRodComponent* addMaterial();
     Core::AbstractRodComponent* addLoad();
     Core::AbstractRodComponent* addConstraint();
+    Core::AbstractRodComponent* addMechanical();
     void resolveRodComponentsReferences();
 
 private:
@@ -79,6 +80,7 @@ private:
     QWidget* makeBoundaryConditionsToolBar();
     QWidget* makeLoadingToolBar();
     QWidget* makeMaterialToolBar();
+    QWidget* makeMechanicalToolBar();
     QWidget* makeModificationToolBar();
 
 private:
