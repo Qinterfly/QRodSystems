@@ -9,24 +9,19 @@
 #define CONSTRAINTRODCOMPONENTWIDGET_H
 
 #include "abstractrodcomponentwidget.h"
+#include "constraintitemdelegate.h"
 
 QT_BEGIN_NAMESPACE
 class QTableWidget;
 class QTableWidgetItem;
+class QToolBar;
 QT_END_NAMESPACE
 
 namespace QRS
 {
 
-namespace Core
-{
-class ConstraintRodComponent;
-}
-
 namespace Managers
 {
-
-class ConstraintItemDelegate;
 
 //! Widget to consturct constraints of a rod
 class ConstraintRodComponentWidget : public AbstractRodComponentWidget
@@ -36,19 +31,28 @@ public:
     ~ConstraintRodComponentWidget();
 
 private:
+    // Creating
     void createContent();
-    void createTableConstraintWidget();
-    void setTableConstraintHeight();
-    void addTableConstraintRow();
-    int getItemData(int iRow, int iColumn);
+    QToolBar* createToolBar();
+    void createTableWidget();
+    // Interaction
+    void addRow();
+    void removeSelectedRows();
+    void representConstraintData();
+    // Helpers
+    void setTableHeight();
+    void specifyConstraintNames();
+    QVariant getItemData(int iRow, int iColumn);
 
 private slots:
-    void setConstraintData(QTableWidgetItem* pItem);
+    void setConstraintData(int iRow);
 
 private:
     Core::ConstraintRodComponent& mConstraintRodComponent;
     QTableWidget* mpTableConstraint;
     ConstraintItemDelegate* mpItemDelegate;
+    ConstraintTypeNames mTypeNames;
+    ConstraintCoordinateSystemNames mCoordinateSystemNames;
 };
 
 }

@@ -8,9 +8,9 @@
 #include <QVBoxLayout>
 #include <QTableWidget>
 #include <QHeaderView>
-#include <QComboBox>
+#include <QToolBar>
+#include <set>
 #include "constraintrodcomponentwidget.h"
-#include "constraintitemdelegate.h"
 #include "core/constraintrodcomponent.h"
 
 using namespace QRS::Core;
@@ -32,25 +32,49 @@ ConstraintRodComponentWidget::~ConstraintRodComponentWidget()
 void ConstraintRodComponentWidget::createContent()
 {
     QVBoxLayout* pMainLayout = new QVBoxLayout(this);
-    // Table
-    createTableConstraintWidget();
+    pMainLayout->setSpacing(0);
+    // Set how to convert types into names
+    specifyConstraintNames();
+    // Arranging widgets
+    createTableWidget();
+    pMainLayout->addWidget(createToolBar());
     pMainLayout->addWidget(mpTableConstraint);
     // Spacer
     pMainLayout->addItem(new QSpacerItem(0, 0, QSizePolicy::Minimum, QSizePolicy::Expanding));
     setLayout(pMainLayout);
 }
 
+//! Create a toolbar to add and remove constraints
+QToolBar* ConstraintRodComponentWidget::createToolBar()
+{
+    const int kIconSize = 22;
+    QToolBar* pToolBar = new QToolBar();
+    pToolBar->setIconSize(QSize(kIconSize, kIconSize));
+    pToolBar->setContentsMargins(0, 0, 0, 0);
+    // Actions
+    QAction* pAction;
+    pAction = pToolBar->addAction(QIcon(":/icons/table-row-add.svg"), tr("Add Row (A)"),
+                                  this, &ConstraintRodComponentWidget::addRow);
+    pAction->setShortcut(Qt::Key_A);
+    pAction = pToolBar->addAction(QIcon(":/icons/table-row-delete.svg"), tr("Remove Row (D)"),
+                                  this, &ConstraintRodComponentWidget::removeSelectedRows);
+    pAction->setShortcut(Qt::Key_D);
+    return pToolBar;
+}
+
 //! Create a table to construct constraints
-void ConstraintRodComponentWidget::createTableConstraintWidget()
+void ConstraintRodComponentWidget::createTableWidget()
 {
     mpTableConstraint = new QTableWidget();
     mpTableConstraint->setSizeAdjustPolicy(QAbstractItemView::AdjustToContents);
     mpTableConstraint->setSizePolicy(QSizePolicy::Policy::Expanding, QSizePolicy::Policy::Minimum);
     mpTableConstraint->setSortingEnabled(false);
-    mpTableConstraint->setColumnCount(3);
-    mpTableConstraint->setEditTriggers(QAbstractItemView::AllEditTriggers);
+    mpTableConstraint->setColumnCount(2);
     // Modifying the horizontal header
-    mpTableConstraint->setHorizontalHeaderLabels({tr("         Type         "), tr("Direction"), tr("Coordinate System")});
+    QString indent;
+    indent.fill(' ', 15);
+    QString typeName = indent + tr("Type") + indent;
+    mpTableConstraint->setHorizontalHeaderLabels({typeName, tr("Coordinate System")});
     QHeaderView* pHeader = mpTableConstraint->horizontalHeader();
     pHeader->setStretchLastSection(true);
     pHeader->setSectionResizeMode(QHeaderView::ResizeMode::ResizeToContents);
@@ -58,64 +82,148 @@ void ConstraintRodComponentWidget::createTableConstraintWidget()
     pHeader = mpTableConstraint->verticalHeader();
     pHeader->setSectionResizeMode(QHeaderView::ResizeMode::ResizeToContents);
     // Setting an item delegate
-    mpItemDelegate = new ConstraintItemDelegate(mConstraintRodComponent, mpTableConstraint);
+    mpItemDelegate = new ConstraintItemDelegate(mConstraintRodComponent, mTypeNames, mCoordinateSystemNames, mpTableConstraint);
     mpTableConstraint->setItemDelegate(mpItemDelegate);
-    // Specifying the height of the table
-    addTableConstraintRow();
-    setTableConstraintHeight();
+    // Representing existed data
+    representConstraintData();
+    if (mpTableConstraint->rowCount() == 0)
+        addRow();
     // Setting connections
-    connect(mpTableConstraint, &QTableWidget::itemChanged, this, &ConstraintRodComponentWidget::setConstraintData);
+    connect(mpItemDelegate, &ConstraintItemDelegate::typeCreated, this, &ConstraintRodComponentWidget::setConstraintData);
+    connect(mpItemDelegate, &ConstraintItemDelegate::typeChanged, [this](int iRow, ConstraintRodComponent::ConstraintType type)
+    {
+        mConstraintRodComponent.removeConstraint(type);
+        setConstraintData(iRow);
+    });
+    connect(mpItemDelegate, &ConstraintItemDelegate::coordinateSystemChanged, this, &ConstraintRodComponentWidget::setConstraintData);
 }
 
-//! Set the height of the table to be enough to represent all the rows
-void ConstraintRodComponentWidget::setTableConstraintHeight()
+//! Add a row at the end of the table
+void ConstraintRodComponentWidget::addRow()
 {
+    int iRow = mpTableConstraint->rowCount();
+    int numColumns = mpTableConstraint->columnCount();
+    // Checking if the previous row is fully set
+    if (iRow > 0)
+    {
+        bool isExit = false;
+        for (int j = 0; j != numColumns; ++j)
+            isExit = isExit || mpTableConstraint->item(iRow - 1, j)->data(Qt::DisplayRole).toString().isEmpty();
+        if (isExit)
+            return;
+    }
+    // Adding a row
+    mpTableConstraint->setRowCount(iRow + 1);
+    for (int j = 0; j != numColumns; ++j)
+        mpTableConstraint->setItem(iRow, j, new QTableWidgetItem());
+    // Setting the height of the table
+    setTableHeight();
+}
+
+//! Remove selected rows from the table
+void ConstraintRodComponentWidget::removeSelectedRows()
+{
+    QItemSelectionModel* pSelectionModel = mpTableConstraint->selectionModel();
+    QModelIndexList selectedIndices = pSelectionModel->selectedIndexes();
+    // Retrieve unique indices of rows
+    std::set<int> selectedRows;
+    for (QModelIndex const& index : selectedIndices)
+        selectedRows.insert(index.row());
+    if (selectedRows.empty())
+        return;
+    for (auto iter = selectedRows.rbegin(); iter != selectedRows.rend(); ++iter)
+    {
+        // Erasing constraints
+        int iRow = *iter;
+        QVariant data = getItemData(iRow, 0);
+        if (!data.isNull())
+        {
+            auto type = (ConstraintRodComponent::ConstraintType)data.toInt();
+            mConstraintRodComponent.removeConstraint(type);
+        }
+        // Removing rows
+        mpTableConstraint->removeRow(iRow);
+    }
+    setTableHeight();
+    emit modified();
+}
+
+//! Represent existing constraints
+void ConstraintRodComponentWidget::representConstraintData()
+{
+    int iRow = mpTableConstraint->rowCount();
+    auto const& constraints = mConstraintRodComponent.constraints();
+    QTableWidgetItem* pItem;
+    for (auto const& item : constraints)
+    {
+        addRow();
+        // Type
+        pItem = mpTableConstraint->item(iRow, 0);
+        auto type = item.first;
+        pItem->setData(Qt::UserRole, type);
+        pItem->setData(Qt::DisplayRole, mTypeNames[type]);
+        // Coordinate system
+        pItem = mpTableConstraint->item(iRow, 1);
+        auto coordinateSystem = item.second;
+        pItem->setData(Qt::UserRole, coordinateSystem);
+        pItem->setData(Qt::DisplayRole, mCoordinateSystemNames[coordinateSystem]);
+        ++iRow;
+    }
+}
+
+//! Change a constraint property
+void ConstraintRodComponentWidget::setConstraintData(int iRow)
+{
+    int numColumns = mpTableConstraint->columnCount();
+    std::vector<int> indData;
+    indData.resize(numColumns);
+    QVariant data;
+    // Retrieving selected indices
+    for (int j = 0; j != numColumns; ++j)
+    {
+        data = getItemData(iRow, j);
+        if (data.isNull())
+            return;
+        indData[j] = data.toInt();
+    }
+    // Type
+    auto type = (ConstraintRodComponent::ConstraintType)indData[0];
+    // Coordinate system
+    auto coordinateSystem = (ConstraintRodComponent::ConstraintCoordinateSystem)indData[1];
+    // Setting constraint data
+    mConstraintRodComponent.setConstraint(type, coordinateSystem);
+    emit modified();
+}
+
+//! Set the height of the table to be enough to represent all rows
+void ConstraintRodComponentWidget::setTableHeight()
+{
+    const int kExtend = 2;
     int numRows = mpTableConstraint->rowCount();
     int minHeight = mpTableConstraint->horizontalHeader()->height();
     for (int i = 0; i != numRows; ++i)
         minHeight += mpTableConstraint->rowHeight(i);
-    mpTableConstraint->setMaximumHeight(minHeight);
-}
-
-//! Add a row at the end of the table
-void ConstraintRodComponentWidget::addTableConstraintRow()
-{
-    const QSignalBlocker blocker(mpTableConstraint);
-    int iRow = mpTableConstraint->rowCount();
-    mpTableConstraint->setRowCount(iRow + 1);
-    for (int j = 0; j != 3; ++j)
-    {
-        QTableWidgetItem* pItem = new QTableWidgetItem();
-        if (j > 0)
-            pItem->setFlags(pItem->flags() & Qt::ItemIsEditable);
-        mpTableConstraint->setItem(iRow, j, pItem);
-    }
-}
-
-//! Change a constraint field
-void ConstraintRodComponentWidget::setConstraintData(QTableWidgetItem* pItem)
-{
-    int iRow = pItem->row();
-    int iColumn = pItem->column();
-    ConstraintRodComponent::ConstraintType type = (ConstraintRodComponent::ConstraintType)getItemData(iRow, iColumn);
-    if (iColumn != mpTableConstraint->columnCount() - 1)
-    {
-        QTableWidgetItem* pNextItem = mpTableConstraint->item(iRow, iColumn + 1);
-        {
-            const QSignalBlocker blocker(mpTableConstraint);
-            pNextItem->setFlags(pItem->flags());
-        }
-    }
-    else
-    {
-        ConstraintRodComponent::ConstraintDirection direction = (ConstraintRodComponent::ConstraintDirection)getItemData(iRow, 1);
-        ConstraintRodComponent::ConstraintCoordinateSystem coordSystem = (ConstraintRodComponent::ConstraintCoordinateSystem)getItemData(iRow, 2);
-        mConstraintRodComponent.setConstraint(type, direction, coordSystem);
-    }
+    mpTableConstraint->setMaximumHeight(minHeight + kExtend);
 }
 
 //! Retrieve item data
-int ConstraintRodComponentWidget::getItemData(int iRow, int iColumn)
+QVariant ConstraintRodComponentWidget::getItemData(int iRow, int iColumn)
 {
-    return mpTableConstraint->item(iRow, iColumn)->data(Qt::UserRole).toInt();
+    return mpTableConstraint->item(iRow, iColumn)->data(Qt::UserRole);
+}
+
+//! Specify names of constraints
+void ConstraintRodComponentWidget::specifyConstraintNames()
+{
+    // Setting displacement types
+    mTypeNames[ConstraintRodComponent::kDisplacementX] = "Displacement X";
+    mTypeNames[ConstraintRodComponent::kDisplacementY] = "Displacement Y";
+    mTypeNames[ConstraintRodComponent::kDisplacementZ] = "Displacement Z";
+    // Setting rotation types
+    mTypeNames[ConstraintRodComponent::kRotationX] = "Rotation X";
+    mTypeNames[ConstraintRodComponent::kRotationY] = "Rotation Y";
+    mTypeNames[ConstraintRodComponent::kRotationZ] = "Rotation Z";
+    // Setting coordinate systems
+    mCoordinateSystemNames[ConstraintRodComponent::kGlobal] = "Global";
+    mCoordinateSystemNames[ConstraintRodComponent::kLocal] = "Local";
 }

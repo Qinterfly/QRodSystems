@@ -6,27 +6,23 @@
  */
 
 #include <QComboBox>
-#include <QTableWidget>
-#include <map>
+#include <QLineEdit>
 #include "constraintitemdelegate.h"
 
 using namespace QRS::Managers;
 using namespace QRS::Core;
 
-ConstraintItemDelegate::ConstraintItemDelegate(ConstraintRodComponent const& constraintRodComponent, QObject* parent)
+static const short skType = 0;
+static const short skCoordinateSystem = 1;
+
+ConstraintItemDelegate::ConstraintItemDelegate(ConstraintRodComponent const& constraintRodComponent, ConstraintTypeNames const& types,
+                                               ConstraintCoordinateSystemNames const& coordinateSystems, QObject* parent)
     : QStyledItemDelegate(parent)
     , mConstraintRodComponent(constraintRodComponent)
+    , mTypes(types)
+    , mCoordinateSystems(coordinateSystems)
 {
-    // Setting types
-    mTypes[ConstraintRodComponent::kDisplacement] = "Displacement";
-    mTypes[ConstraintRodComponent::kRotation] = "Rotation";
-    // Setting directions
-    mDirections[ConstraintRodComponent::kX] = "X";
-    mDirections[ConstraintRodComponent::kY] = "Y";
-    mDirections[ConstraintRodComponent::kZ] = "Z";
-    // Setting directions
-    mCoordinateSystems[ConstraintRodComponent::kGlobal] = "Global";
-    mCoordinateSystems[ConstraintRodComponent::kLocal] = "Local";
+
 }
 
 //! Create a comboBox to choose items
@@ -36,27 +32,17 @@ QWidget* ConstraintItemDelegate::createEditor(QWidget* pCell, const QStyleOption
     QComboBox* pEditor  = new QComboBox(pCell);
     switch (index.column())
     {
-    case 0:
+    case skType:
         for (auto const& item : mTypes)
         {
-            if (!mConstraintRodComponent.isConstraintFullySet(item.first))
-                pEditor->addItem(item.second);
+            QString currentText = index.model()->data(index, Qt::DisplayRole).toString();
+            if (!mConstraintRodComponent.isConstraintExist(item.first) || !currentText.compare(item.second))
+                pEditor->addItem(item.second, item.first);
         }
         break;
-    case 1:
-    {
-        QTableWidget* pTable = (QTableWidget*)parent();
-        auto type = (ConstraintRodComponent::ConstraintType)pTable->item(index.row(), 0)->data(Qt::UserRole).toInt();
-        for (auto const& item : mDirections)
-        {
-            if (!mConstraintRodComponent.isConstraintExist(type, item.first))
-                pEditor->addItem(item.second);
-        }
-        break;
-    }
-    case 2:
-        pEditor->addItem("Global");
-        pEditor->addItem("Local");
+    case skCoordinateSystem:
+        for (auto const& item : mCoordinateSystems)
+            pEditor->addItem(item.second, item.first);
         break;
     }
     pEditor->setFrame(false);
@@ -76,8 +62,24 @@ void ConstraintItemDelegate::setModelData(QWidget* pEditor, QAbstractItemModel* 
 {
     QComboBox* pComboBox = static_cast<QComboBox*>(pEditor);
     QString text = pComboBox->currentText();
+    QVariant oldData = index.data(Qt::UserRole);
+    // Setting new data
     pModel->setData(index, text, Qt::DisplayRole);
-    pModel->setData(index, pComboBox->currentIndex(), Qt::UserRole);
+    pModel->setData(index, pComboBox->currentData(Qt::UserRole).toInt(), Qt::UserRole);
+    // Signaling old data
+    int iRow = index.row();
+    switch (index.column())
+    {
+    case skType:
+        if (oldData.isNull())
+            emit typeCreated(iRow);
+        else
+            emit typeChanged(iRow, (ConstraintRodComponent::ConstraintType)oldData.toInt());
+        break;
+    case skCoordinateSystem:
+        emit coordinateSystemChanged(iRow);
+        break;
+    }
 }
 
 //! Set a geometry to render

@@ -39,15 +39,9 @@ void ConstraintRodComponent::serialize(QDataStream& stream) const
     stream << (quint32)mkComponentType;
     stream << mName;
     stream << (DataIDType)mID;
-    stream << (quint32)mConstraints.size();                           // Number of constraints
-    for (auto const& itemType : mConstraints)
-    {
-        stream << itemType.first;                                     // Type of a constraint
-        DirectionConstraints const& mapDirections = itemType.second;
-        stream << (quint32)mapDirections.size();                      // Number of directions
-        for (auto const& itemDirection : mapDirections)
-            stream << itemDirection.first << itemDirection.second;    // Direction and coordinate system
-    }
+    stream << (quint32)mConstraints.size();  // Number of constraints
+    for (auto const& item : mConstraints)
+        stream << item.first << item.second; // Constraint type and coordinate system
 }
 
 //! Deserialize a constraint component
@@ -59,37 +53,31 @@ void ConstraintRodComponent::deserialize(QDataStream& stream, DataObjects const&
     for (quint32 iConstraint = 0; iConstraint != numConstraints; ++iConstraint)
     {
         ConstraintType type;
-        quint32 numDirections;
+        ConstraintCoordinateSystem coordinateSystem;
         stream >> type;
-        stream >> numDirections;
-        DirectionConstraints mapDirections;
-        for (quint32 iDirection = 0; iDirection != numDirections; ++iDirection)
-        {
-            ConstraintDirection direction;
-            ConstraintCoordinateSystem coordinateSystem;
-            stream >> direction;
-            stream >> coordinateSystem;
-            mapDirections.emplace(direction, coordinateSystem);
-        }
-        mConstraints.emplace(type, mapDirections);
+        stream >> coordinateSystem;
+        mConstraints.emplace(type, coordinateSystem);
     }
 }
 
-//! Check whether the constraint of the specified type is fully specified
-bool ConstraintRodComponent::isConstraintFullySet(ConstraintType type) const
+//! Check whether the constraint of the specified type exists
+bool ConstraintRodComponent::isConstraintExist(ConstraintType type) const
 {
-    return mConstraints.contains(type) && mConstraints.size() == 3;
-}
-
-//! Check whether the constraint of the specified type and direction exists
-bool ConstraintRodComponent::isConstraintExist(ConstraintType type, ConstraintDirection direction) const
-{
-    return mConstraints.contains(type) && mConstraints.at(type).contains(direction);
+    return mConstraints.contains(type);
 }
 
 //! Set a constraint
-void ConstraintRodComponent::setConstraint(ConstraintType type, ConstraintDirection direction, ConstraintCoordinateSystem coordinateSystem)
+void ConstraintRodComponent::setConstraint(ConstraintType type, ConstraintCoordinateSystem coordinateSystem)
 {
-    mConstraints[type][direction] = coordinateSystem;
+    mConstraints[type] = coordinateSystem;
+}
+
+//! Remove the constriant of a given type
+bool ConstraintRodComponent::removeConstraint(ConstraintType type)
+{
+    if (!mConstraints.contains(type))
+        return false;
+    mConstraints.erase(type);
+    return true;
 }
 

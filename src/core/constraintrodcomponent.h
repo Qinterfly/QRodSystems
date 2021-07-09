@@ -19,22 +19,15 @@ class ConstraintRodComponent : public AbstractRodComponent
 public:
     enum ConstraintType
     {
-        kDisplacement,
-        kRotation
-    };
-    enum ConstraintDirection
-    {
-        kX,
-        kY,
-        kZ
+        kDisplacementX, kDisplacementY, kDisplacementZ,
+        kRotationX, kRotationY, kRotationZ
     };
     enum ConstraintCoordinateSystem
     {
         kGlobal,
         kLocal
     };
-    using DirectionConstraints = std::unordered_map<ConstraintDirection, ConstraintCoordinateSystem>;
-    using Constraints = std::unordered_map<ConstraintType, DirectionConstraints>;
+    using Constraints = std::map<ConstraintType, ConstraintCoordinateSystem>;
     ConstraintRodComponent(QString const& name);
     ~ConstraintRodComponent();
     AbstractRodComponent* clone() const override;
@@ -43,9 +36,10 @@ public:
     void serialize(QDataStream& stream) const override;
     void deserialize(QDataStream& stream, DataObjects const& dataObjects) override;
     void resolveReferences(DataObjects const&) override {};
-    bool isConstraintFullySet(ConstraintType type) const;
-    bool isConstraintExist(ConstraintType type, ConstraintDirection direction) const;
-    void setConstraint(ConstraintType type, ConstraintDirection direction, ConstraintCoordinateSystem coordinateSystem);
+    bool isConstraintExist(ConstraintType type) const;
+    void setConstraint(ConstraintType type, ConstraintCoordinateSystem coordinateSystem);
+    bool removeConstraint(ConstraintType type);
+    Constraints const& constraints() const { return mConstraints; }
 
 private:
     static quint32 smNumInstances;

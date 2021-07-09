@@ -132,7 +132,8 @@ void TestManagers::testRodComponentsManager()
     QVERIFY(pLoad->isDataComplete());
     // Adding a rod constraint
     ConstraintRodComponent* pConstraint = (ConstraintRodComponent*)pManager->addConstraint();
-    pConstraint->setConstraint(ConstraintRodComponent::kDisplacement, ConstraintRodComponent::kX, ConstraintRodComponent::kLocal);
+    pConstraint->setConstraint(ConstraintRodComponent::kDisplacementX, ConstraintRodComponent::kLocal);
+    pConstraint->setConstraint(ConstraintRodComponent::kDisplacementY, ConstraintRodComponent::kGlobal);
     QVERIFY(pConstraint->isDataComplete());
     // Selecting
     pManager->selectRodComponent(4);
