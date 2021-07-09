@@ -6,7 +6,6 @@
  */
 
 #include <QComboBox>
-#include <QLineEdit>
 #include "constraintitemdelegate.h"
 
 using namespace QRS::Managers;
