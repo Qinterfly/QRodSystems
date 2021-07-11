@@ -1,14 +1,14 @@
 /*!
  * \file
  * \author Pavel Lakiza
- * \date May 2021
+ * \date July 2021
  * \brief Declaration of the DataObjectsPropertiesModel class
  */
 
 #ifndef DATAOBJECTSPROPERTIESMODEL_H
 #define DATAOBJECTSPROPERTIESMODEL_H
 
-#include <QStandardItemModel>
+#include "abstractpropertiesmodel.h"
 
 QT_BEGIN_NAMESPACE
 class QTableView;
@@ -20,48 +20,36 @@ namespace QRS
 namespace HierarchyModels
 {
 class AbstractHierarchyItem;
-class DataObjectsHierarchyItem;
 }
 
 namespace PropertiesModels
 {
 
 //! Model to represent properties of selected data objects
-class DataObjectsPropertiesModel : public QStandardItemModel
+class DataObjectsPropertiesModel : public AbstractPropertiesModel
 {
     Q_OBJECT
 
 public:
-    enum PropertyType
+    DataObjectsPropertiesModel(QTableView* pView, QVector<HierarchyModels::AbstractHierarchyItem*> items);
+
+protected slots:
+    void modifyProperty(QStandardItem* pChangedProperty) override;
+
+private:
+    enum PropertyDataObject
     {
         kName,
         kType,
         kNumberItems,
         kNumberEntities,
-        kID,
-        kNumberChildren
+        kID
     };
-
-    DataObjectsPropertiesModel(QTableView* pView, QVector<HierarchyModels::AbstractHierarchyItem*> items);
-
-signals:
-    void propertyChanged();
-
-private:
-    void setDirectoryAttributes();
     void setObjectAttributes();
-    QList<QStandardItem*> preparePropertyRow(PropertyType type, QString const& title, QVariant const& value, bool isValueEditable) const;
-
-private slots:
-    void modifyProperty(QStandardItem* pChangedProperty);
-
-private:
-    QVector<HierarchyModels::DataObjectsHierarchyItem*> mItems;
 };
 
 }
 
 }
-
 
 #endif // DATAOBJECTSPROPERTIESMODEL_H

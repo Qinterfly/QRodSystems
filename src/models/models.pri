@@ -8,6 +8,7 @@ HEADERS += \
     $$PWD/hierarchy/projecthierarchymodel.h \
     $$PWD/hierarchy/rodcomponentshierarchyitem.h \
     $$PWD/hierarchy/rodcomponentshierarchymodel.h \
+    $$PWD/properties/abstractpropertiesmodel.h \
     $$PWD/properties/dataobjectspropertiesmodel.h \
     $$PWD/table/matrixtablemodel.h \
     $$PWD/table/basetablemodel.h \
@@ -22,6 +23,7 @@ SOURCES += \
     $$PWD/hierarchy/projecthierarchymodel.cpp \
     $$PWD/hierarchy/rodcomponentshierarchyitem.cpp \
     $$PWD/hierarchy/rodcomponentshierarchymodel.cpp \
+    $$PWD/properties/abstractpropertiesmodel.cpp \
     $$PWD/properties/dataobjectspropertiesmodel.cpp \
     $$PWD/table/matrixtablemodel.cpp \
     $$PWD/table/basetablemodel.cpp \

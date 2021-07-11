@@ -1,7 +1,7 @@
 /*!
  * \file
  * \author Pavel Lakiza
- * \date May 2021
+ * \date July 2021
  * \brief Declaration of the AbstractHierarchyItem class
  */
 
@@ -19,6 +19,11 @@ class HierarchyNode;
 class HierarchyTree;
 }
 
+namespace PropertiesModels
+{
+class AbstractPropertiesModel;
+}
+
 namespace HierarchyModels
 {
 
@@ -26,6 +31,7 @@ namespace HierarchyModels
 class AbstractHierarchyItem : public QStandardItem
 {
     friend class AbstractHierarchyModel;
+    friend class PropertiesModels::AbstractPropertiesModel;
 
 public:
     enum ItemType
