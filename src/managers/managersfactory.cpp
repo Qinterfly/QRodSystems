@@ -5,8 +5,6 @@
  * \brief Definition of the ManagersFactory class
  */
 
-#include <QApplication>
-#include <QDesktopWidget>
 #include "managersfactory.h"
 #include "core/project.h"
 #include "managers/dataobjectsmanager.h"
@@ -88,7 +86,7 @@ bool ManagersFactory::deleteManager(AbstractManager::ManagerType type)
 //! Helper function to situate widgets at the center of their parent widgets
 void moveToCenter(QWidget* pWidget)
 {
-    const QRect screenGeometry = QApplication::desktop()->screenGeometry(pWidget->parentWidget());
+    const QRect screenGeometry = pWidget->parentWidget()->geometry();
     int x = (screenGeometry.width() - pWidget->width()) / 2;
     int y = (screenGeometry.height() - pWidget->height()) / 2;
     pWidget->move(x, y);

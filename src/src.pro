@@ -1,12 +1,12 @@
 LIB_PATH = $${PWD}/../lib
 ADS_PATH = $${LIB_PATH}/ADS
 
-QT  += core gui widgets
+QT  += core gui widgets opengl openglwidgets
 
 TARGET   = QRodSystems
 TEMPLATE = app
 
-CONFIG += c++20
+CONFIG += c++latest
 unix: QMAKE_CXXFLAGS += -std=c++20
 else: win32: QMAKE_CXXFLAGS += /std:c++latest
 QMAKE_CXXFLAGS += -Wno-deprecated-enum-enum-conversion

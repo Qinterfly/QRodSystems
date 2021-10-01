@@ -34,8 +34,10 @@ void RodComponentsHierarchyModel::updateContent()
     QStandardItem* pRootItem = invisibleRootItem();
     AbstractHierarchyItem* pHierarchyItem = new RodComponentsHierarchyItem(mRodComponents, mHierarchyRodComponents);
     int nRows = pHierarchyItem->rowCount();
+    QList<QStandardItem*> items(nRows);
     for (int i = 0; i != nRows; ++i)
-        pRootItem->appendRow(pHierarchyItem->takeChild(i));
+        items[i] = pHierarchyItem->takeChild(i);
+    pRootItem->appendRows(items);
     delete pHierarchyItem;
 }
 

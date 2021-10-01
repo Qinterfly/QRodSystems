@@ -51,8 +51,6 @@ void TestManagers::initTestCase()
 {
     mpProject = new Project("Test");
     mpSettings = new QSettings("Settings.ini", QSettings::IniFormat);
-    QGuiApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
-    QGuiApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
     qApp->setStyle("Fusion");
     qApp->setStyleSheet(File::loadFileContent(":/styles/modern.qss"));
     QFontDatabase::addApplicationFont(":/fonts/SourceSansPro-Regular.ttf");

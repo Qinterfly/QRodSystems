@@ -11,6 +11,7 @@
 #include <QMainWindow>
 #include "logwidget.h"
 #include "core/project.h"
+#include "models/hierarchy/abstracthierarchyitem.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui
@@ -38,7 +39,6 @@ class ManagersFactory;
 
 namespace HierarchyModels
 {
-class AbstractHierarchyItem;
 class ProjectHierarchyModel;
 }
 

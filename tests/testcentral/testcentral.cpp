@@ -41,8 +41,6 @@ void TestCentral::initTestCase()
     QCoreApplication::setOrganizationName(APP_AUTHOR);
     QCoreApplication::setApplicationName(APP_NAME);
     QCoreApplication::setApplicationVersion(APP_VERSION);
-    QGuiApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
-    QGuiApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
     qInstallMessageHandler(throwMessage);
     qApp->setStyle("Fusion");
     qApp->setStyleSheet(File::loadFileContent(":/styles/modern.qss"));

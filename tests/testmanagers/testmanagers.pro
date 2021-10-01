@@ -1,10 +1,10 @@
 LIB_PATH = $${PWD}/../../lib
 ADS_PATH = $${LIB_PATH}/ADS
 
-QT += testlib gui widgets
+QT += testlib gui widgets opengl openglwidgets
 CONFIG += qt warn_on depend_includepath testcase
 
-CONFIG += c++20
+CONFIG += c++latest
 unix: QMAKE_CXXFLAGS += -std=c++20
 else: win32: QMAKE_CXXFLAGS += /std:c++latest
 QMAKE_CXXFLAGS += -Wno-deprecated-enum-enum-conversion

@@ -6,7 +6,6 @@
  */
 
 #include <QOpenGLContext>
-#include <QOpenGLPaintDevice>
 #include <QPainter>
 #include "view3d.h"
 

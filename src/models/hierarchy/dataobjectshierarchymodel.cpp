@@ -34,8 +34,10 @@ void DataObjectsHierarchyModel::updateContent()
     QStandardItem* pRootItem = invisibleRootItem();
     AbstractHierarchyItem* pHierarchyItem = new DataObjectsHierarchyItem(mDataObjects, mHierarchyDataObjects);
     int nRows = pHierarchyItem->rowCount();
+    QList<QStandardItem*> items(nRows);
     for (int i = 0; i != nRows; ++i)
-        pRootItem->appendRow(pHierarchyItem->takeChild(i));
+        items[i] = pHierarchyItem->takeChild(i);
+    pRootItem->appendRows(items);
     delete pHierarchyItem;
 }
 

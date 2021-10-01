@@ -21,7 +21,6 @@ else {
 
 unix:!macx {
     LIBS += -L$${ADS_PATH} -lxcb
-    QT += x11extras
 }
 
 INCLUDEPATH += $${ADS_PATH}/src

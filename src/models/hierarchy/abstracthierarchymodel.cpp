@@ -8,6 +8,7 @@
 #include <QTreeView>
 #include <QMimeData>
 #include <unordered_map>
+#include <QIODevice>
 #include "abstracthierarchymodel.h"
 #include "core/hierarchynode.h"
 
