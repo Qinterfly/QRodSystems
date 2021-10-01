@@ -47,7 +47,7 @@ private:
     Project* mpProject;
     const QString mBasePath = "../../../../";
     const QString mExamplesPath = mBasePath + "examples";
-    const QString mImportPath = mBasePath + "preparation/Mathcad/dwds/Input";
+    const QString mImportPath = mBasePath + "preparation/dwds/input";
 };
 
 //! Initialize data

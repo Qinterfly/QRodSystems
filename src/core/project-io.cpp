@@ -44,7 +44,7 @@ bool Project::save(QString const& path, QString const& fileName)
     QString filePath = QFileInfo(path + QDir::separator() + fileName + skProjectExtension).absoluteFilePath();
     // Opening file to write
     QFile file(filePath);
-    if (!file.open(QIODevice::WriteOnly))
+    if (!file.open(QIODeviceBase::WriteOnly))
         return false;
     QDataStream out(&file);
     out.setVersion(QDataStream::Qt_DefaultCompiledVersion);
@@ -88,7 +88,7 @@ Project::Project(QString const& path, QString const& fileName)
     QString filePath = QFileInfo(path + QDir::separator() + fileName + skProjectExtension).absoluteFilePath();
     // Opening file to read
     QFile file(filePath);
-    if (!file.open(QIODevice::ReadOnly))
+    if (!file.open(QIODeviceBase::ReadOnly))
     {
         qInfo() << tr("Project cannot be read from the file: %1").arg(filePath);
         return;

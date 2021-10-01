@@ -8,7 +8,6 @@
 #include <QTreeView>
 #include <QMimeData>
 #include <unordered_map>
-#include <QIODevice>
 #include "abstracthierarchymodel.h"
 #include "core/hierarchynode.h"
 
@@ -52,8 +51,8 @@ QStringList AbstractHierarchyModel::mimeTypes() const
 QMimeData* AbstractHierarchyModel::mimeData(const QModelIndexList& indicies) const
 {
     QByteArray encodedData;
-    QDataStream stream(&encodedData, QIODevice::WriteOnly);
-    stream << indicies.count();
+    QDataStream stream(&encodedData, QIODeviceBase::WriteOnly);
+    stream << (qint32)indicies.count();
     for (QModelIndex const& index : indicies)
     {
         if (index.isValid())
@@ -76,7 +75,7 @@ bool AbstractHierarchyModel::dropMimeData(QMimeData const* pMimeData, Qt::DropAc
     if (action == Qt::IgnoreAction)
         return true;
     QByteArray encodedData = pMimeData->data(mkMimeType);
-    QDataStream stream(&encodedData, QIODevice::ReadOnly);
+    QDataStream stream(&encodedData, QIODeviceBase::ReadOnly);
     int numItems;
     stream >> numItems;
     bool isDroppedOnView = row != -1;

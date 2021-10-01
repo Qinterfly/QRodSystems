@@ -37,7 +37,7 @@ QPair<AbstractDataObject::ObjectType, QSharedPointer<QFile>> File::getDataObject
         return {type, nullptr};
     QString filePath = path + QDir::separator() + fileName;
     QSharedPointer<QFile> pFile(new QFile(filePath));
-    if (!pFile->open(QIODevice::ReadOnly))
+    if (!pFile->open(QIODeviceBase::ReadOnly))
     {
         qWarning() << QString("Data object cannot be read from the file: %1").arg(filePath);
         return {type, nullptr};;
