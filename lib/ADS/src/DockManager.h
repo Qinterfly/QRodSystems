@@ -147,6 +147,11 @@ protected:
 	 */
 	CDockFocusController* dockFocusController() const;
 
+    /**
+     * Restore floating widgets hidden by an earlier call to hideManagerAndFloatingWidgets.
+     */
+    void restoreHiddenFloatingWidgets();
+
 public:
 	using Super = CDockContainerWidget;
 
@@ -195,6 +200,7 @@ public:
         FloatingContainerForceQWidgetTitleBar = 0x1000000,//!< Linux only ! Forces all FloatingContainer to use a QWidget based title bar.
 														 //!< If neither this nor FloatingContainerForceNativeTitleBar is set (the default) native titlebars are used except on known bad systems.
 														 //! Users can overwrite this by setting the environment variable ADS_UseNativeTitle to "1" or "0".
+		MiddleMouseButtonClosesTab = 0x2000000, //! If the flag is set, the user can use the mouse middle button to close the tab under the mouse
 
         DefaultDockAreaButtons = DockAreaHasCloseButton
 							   | DockAreaHasUndockButton
@@ -526,6 +532,12 @@ public Q_SLOTS:
 	 */
 	void setDockWidgetFocused(CDockWidget* DockWidget);
 
+    /**
+     * hide CDockManager and all floating widgets (See Issue #380). Calling regular QWidget::hide()
+     * hides the CDockManager but not the floating widgets;
+     */
+    void hideManagerAndFloatingWidgets();
+
 Q_SIGNALS:
 	/**
 	 * This signal is emitted if the list of perspectives changed.
@@ -616,5 +628,7 @@ Q_SIGNALS:
     void focusedDockWidgetChanged(ads::CDockWidget* old, ads::CDockWidget* now);
 }; // class DockManager
 } // namespace ads
+
+Q_DECLARE_OPERATORS_FOR_FLAGS(ads::CDockManager::ConfigFlags)
 //-----------------------------------------------------------------------------
 #endif // DockManagerH

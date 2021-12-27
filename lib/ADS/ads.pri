@@ -1,21 +1,21 @@
 
-lessThan(QT_MAJOR_VERSION, 6) {
-    CONFIG(debug, debug|release) {
-        win32 {
-            LIBS += -L$${ADS_PATH} -lqtadvanceddockingd
-        }
-        else:mac {
-            LIBS += -L$${ADS_PATH} -lqtadvanceddocking_debug
-        }
-        else {
-            LIBS += -L$${ADS_PATH} -lqtadvanceddocking
-        }
+CONFIG(debug, debug|release){
+    win32 {
+    	versionAtLeast(QT_VERSION, 5.15.0) {
+    		LIBS += -L$${ADS_PATH} -lqtadvanceddocking
+    	}
+    	else {
+    		LIBS += -L$${ADS_PATH} -lqtadvanceddockingd
+    	}
+    }
+    else:mac {
+        LIBS += -L$${ADS_PATH} -lqtadvanceddocking_debug
     }
     else {
         LIBS += -L$${ADS_PATH} -lqtadvanceddocking
     }
 }
-else {
+else{
     LIBS += -L$${ADS_PATH} -lqtadvanceddocking
 }
 
