@@ -24,7 +24,7 @@ AbstractManager::AbstractManager(QString& lastPath, QSettings& settings,
     , mkType(type)
     , mkGroupName(groupName)
 {
-    mpDockManager = new CDockManager();
+    mpDockManager = new CDockManager(this);
     mpDockManager->setStyleSheet("");
 }
 

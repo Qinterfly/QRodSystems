@@ -46,6 +46,9 @@ class CDockContainerWidget;
 class CDockAreaWidget;
 class DockContainerWidgetPrivate;
 class CFloatingDockContainer;
+class CAutoHideTab;
+class CAutoHideDockContainer;
+class CAutoHideSideBar;
 
 /**
  * The QDockWidget class provides a widget that can be docked inside a
@@ -75,6 +78,8 @@ protected:
     friend class CDockWidgetTab;
     friend struct DockWidgetTabPrivate;
     friend struct DockAreaTitleBarPrivate;
+    friend class CAutoHideDockContainer;
+    friend CAutoHideSideBar;
 
     /**
      * Assigns the dock manager that manages this dock widget
@@ -156,7 +161,8 @@ public:
         DockWidgetForceCloseWithArea = 0x040, ///< dock widget will be closed when the dock area hosting it is closed
         NoTab = 0x080, ///< dock widget tab will never be shown if this flag is set
         DeleteContentOnClose = 0x100, ///< deletes only the contained widget on close, keeping the dock widget intact and in place. Attempts to rebuild the contents widget on show if there is a widget factory set.
-        DefaultDockWidgetFeatures = DockWidgetClosable | DockWidgetMovable | DockWidgetFloatable | DockWidgetFocusable,
+        DockWidgetPinnable = 0x200, ///< dock widget can be pinned and added to an auto hide dock container
+        DefaultDockWidgetFeatures = DockWidgetClosable | DockWidgetMovable | DockWidgetFloatable | DockWidgetFocusable | DockWidgetPinnable,
         AllDockWidgetFeatures = DefaultDockWidgetFeatures | DockWidgetDeleteOnClose | CustomCloseHandling,
         DockWidgetAlwaysCloseAndDelete = DockWidgetForceCloseWithArea | DockWidgetDeleteOnClose,
         NoDockWidgetFeatures = 0x000
@@ -202,12 +208,17 @@ public:
      * reimplements minimumSizeHint() function to return a very small minimum
      * size hint. If you would like to adhere the minimumSizeHint() from the
      * content widget, then set the minimumSizeHintMode() to
-     * MinimumSizeHintFromContent.
+     * MinimumSizeHintFromContent. If you would like to use the minimumSize()
+     * value of the content widget or the dock widget, then you can use the
+     * MinimumSizeHintFromDockWidgetMinimumSize or
+     * MinimumSizeHintFromContentMinimumSize modes.
      */
     enum eMinimumSizeHintMode
     {
     	MinimumSizeHintFromDockWidget,
-    	MinimumSizeHintFromContent
+    	MinimumSizeHintFromContent,
+    	MinimumSizeHintFromDockWidgetMinimumSize,
+    	MinimumSizeHintFromContentMinimumSize,
     };
 
 
@@ -332,10 +343,45 @@ public:
     CDockContainerWidget* dockContainer() const;
 
     /**
+     * This function return the floating DockContainer if is isFloating() is true
+     * and a nullptr if this dock widget is not floating.
+     */
+    CFloatingDockContainer* floatingDockContainer() const;
+
+    /**
      * Returns the dock area widget this dock widget belongs to or 0
      * if this dock widget has not been docked yet
      */
     CDockAreaWidget* dockAreaWidget() const;
+
+    /**
+     * Returns the side tab widget for this dock, if this dock widget is in
+     * a auto hide container. If it is not in a auto hide container, then this
+     * function returns a nullptr,
+     */
+    CAutoHideTab* sideTabWidget() const;
+
+    /**
+     * Assign a side tab widget if this dock widget is an auto hide container
+     */
+    void setSideTabWidget(CAutoHideTab* SideTab) const;
+
+    /**
+     * Returns true, if this dock widget is in an auto hide container
+     */
+    bool isAutoHide() const;
+
+    /**
+     * Returns the auto hide dock container of this dock widget
+     * or 0 if there is none
+     */
+    CAutoHideDockContainer* autoHideDockContainer() const;
+
+    /**
+     * Returns the auto hide side bar location or SideBarNone if, this is not
+     * an autohide dock widget
+     */
+    SideBarLocation autoHideLocation() const;
 
     /**
      * This property holds whether the dock widget is floating.
@@ -375,6 +421,11 @@ public:
      * \see eMinimumSizeHintMode for a detailed description
      */
     void setMinimumSizeHintMode(eMinimumSizeHintMode Mode);
+
+    /**
+     * Get the minimum size hint mode configured by setMinimumSizeHintMode
+     */
+    eMinimumSizeHintMode minimumSizeHintMode() const;
 
     /**
      * Returns true if the dock widget is set as central widget of it's dock manager
@@ -533,9 +584,18 @@ public Q_SLOTS:
     void deleteDockWidget();
 
     /**
-     * Closes the dock widget
+     * Closes the dock widget.
+     * The function forces closing of the dock widget even for CustomCloseHandling.
      */
     void closeDockWidget();
+
+    /**
+     * Request closing of the dock widget.
+     * For DockWidget with default close handling, the function does the same
+     * like clodeDockWidget() but if the flas CustomCloseHandling is set,
+     * the function only emits the closeRequested() signal.
+     */
+    void requestCloseDockWidget();
 
     /**
      * Shows the widget in full-screen mode.
@@ -556,6 +616,18 @@ public Q_SLOTS:
      * after it has been in full screen mode.
      */
     void showNormal();
+
+	/**
+	 * Sets the dock widget into auto hide mode if this feature is enabled
+	 * via CDockManager::setAutoHideFlags(CDockManager::AutoHideFeatureEnabled)
+	 */
+	void setAutoHide(bool Enable, SideBarLocation Location = SideBarNone, int TabIndex = -1);
+
+	/**
+	 * Switches the dock widget to auto hide mode or vice versa depending on its
+	 * current state.
+	 */
+	void toggleAutoHide(SideBarLocation Location = SideBarNone);
 
 
 Q_SIGNALS:

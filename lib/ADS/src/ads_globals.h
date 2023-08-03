@@ -38,7 +38,9 @@
 #include <QStyle>
 #include <QMouseEvent>
 
-#ifdef Q_OS_LINUX
+#include <iostream>
+
+#if defined(Q_OS_UNIX) && !defined(Q_OS_MACOS)
 #include <xcb/xcb.h>
 #endif
 
@@ -69,6 +71,7 @@ QT_FORWARD_DECLARE_CLASS(QSplitter)
 
 namespace ads
 {
+Q_NAMESPACE
 class CDockSplitter;
 
 enum DockWidgetArea
@@ -79,19 +82,32 @@ enum DockWidgetArea
 	TopDockWidgetArea = 0x04,
 	BottomDockWidgetArea = 0x08,
 	CenterDockWidgetArea = 0x10,
+	LeftAutoHideArea = 0x20,
+	RightAutoHideArea = 0x40,
+	TopAutoHideArea = 0x80,
+	BottomAutoHideArea = 0x100,
 
 	InvalidDockWidgetArea = NoDockWidgetArea,
 	OuterDockAreas = TopDockWidgetArea | LeftDockWidgetArea | RightDockWidgetArea | BottomDockWidgetArea,
+	AutoHideDockAreas = LeftAutoHideArea | RightAutoHideArea | TopAutoHideArea | BottomAutoHideArea,
 	AllDockAreas = OuterDockAreas | CenterDockWidgetArea
 };
 Q_DECLARE_FLAGS(DockWidgetAreas, DockWidgetArea)
+
+
+enum eTabIndex
+{
+	TabDefaultInsertIndex = -1,
+	TabInvalidIndex = -2
+};
 
 
 enum TitleBarButton
 {
 	TitleBarButtonTabsMenu,
 	TitleBarButtonUndock,
-	TitleBarButtonClose
+	TitleBarButtonClose,
+	TitleBarButtonAutoHide
 };
 
 /**
@@ -111,6 +127,7 @@ enum eDragState
 enum eIcon
 {
 	TabCloseIcon,      //!< TabCloseIcon
+	AutoHideIcon,      //!< AutoHideIcon
 	DockAreaMenuIcon,  //!< DockAreaMenuIcon
 	DockAreaUndockIcon,//!< DockAreaUndockIcon
 	DockAreaCloseIcon, //!< DockAreaCloseIcon
@@ -128,14 +145,30 @@ enum eBitwiseOperator
 };
 
 
+/**
+ * Each dock container supports 4 sidebars
+ */
+enum SideBarLocation
+{
+	SideBarTop,
+	SideBarLeft,
+	SideBarRight,
+	SideBarBottom,
+	SideBarNone
+};
+Q_ENUMS(SideBarLocation);
+
+
 namespace internal
 {
 static const bool RestoreTesting = true;
 static const bool Restore = false;
 static const char* const ClosedProperty = "close";
 static const char* const DirtyProperty = "dirty";
+extern const int FloatingWidgetDragStartEvent;
+extern const int DockedWidgetDragStartEvent;
 
-#ifdef Q_OS_LINUX
+#if defined(Q_OS_UNIX) && !defined(Q_OS_MACOS)
 // Utils to directly communicate with the X server
 /**
  * Get atom from cache or request it from the XServer.
@@ -173,6 +206,7 @@ void replaceSplitterWidget(QSplitter* Splitter, QWidget* From, QWidget* To);
  */
 void hideEmptyParentSplitters(CDockSplitter* FirstParentSplitter);
 
+
 /**
  * Convenience class for QPair to provide better naming than first and
  * second
@@ -190,6 +224,25 @@ public:
  * Returns the insertion parameters for the given dock area
  */
 CDockInsertParam dockAreaInsertParameters(DockWidgetArea Area);
+
+
+/**
+ * Returns the SieBarLocation for the AutoHide dock widget areas
+ */
+SideBarLocation toSideBarLocation(DockWidgetArea Area);
+
+
+/**
+ * Returns true for the top or bottom side bar ansd false for the
+ * left and right side bar
+ */
+bool isHorizontalSideBarLocation(SideBarLocation Location);
+
+
+/**
+ * Returns true, if the given dock area is a SideBar area
+ */
+bool isSideBarArea(DockWidgetArea Area);
 
 /**
  * Searches for the parent widget of the given type.
@@ -304,6 +357,11 @@ enum eRepolishChildOptions
  */
 void repolishStyle(QWidget* w, eRepolishChildOptions Options = RepolishIgnoreChildren);
 
+
+/**
+ * Returns the geometry of the given widget in global space
+ */
+QRect globalGeometry(QWidget* w);
 
 } // namespace internal
 } // namespace ads

@@ -8,6 +8,7 @@
 //============================================================================
 //                                   INCLUDES
 //============================================================================
+#include <AutoHideTab.h>
 #include "DockFocusController.h"
 
 #include <algorithm>
@@ -26,7 +27,7 @@
 #include "DockManager.h"
 #include "DockAreaTitleBar.h"
 
-#ifdef Q_OS_LINUX
+#if defined(Q_OS_UNIX) && !defined(Q_OS_MACOS)
 #include "linux/FloatingWidgetTitleBar.h"
 #endif
 
@@ -42,12 +43,13 @@ struct DockFocusControllerPrivate
 	CDockFocusController *_this;
 	QPointer<CDockWidget> FocusedDockWidget = nullptr;
 	QPointer<CDockAreaWidget> FocusedArea = nullptr;
-	CDockWidget* OldFocusedDockWidget = nullptr;
-#ifdef Q_OS_LINUX
+	QPointer<CDockWidget> OldFocusedDockWidget = nullptr;
+#if defined(Q_OS_UNIX) && !defined(Q_OS_MACOS)
      QPointer<CFloatingDockContainer> FloatingWidget = nullptr;
 #endif
 	CDockManager* DockManager;
     bool ForceFocusChangedSignal = false;
+    bool TabPressed = false;
 
 	/**
 	 * Private data constructor
@@ -83,7 +85,7 @@ static void updateDockAreaFocusStyle(CDockAreaWidget* DockArea, bool Focused)
 
 
 //===========================================================================
-#ifdef Q_OS_LINUX
+#if defined(Q_OS_UNIX) && !defined(Q_OS_MACOS)
 static void updateFloatingWidgetFocusStyle(CFloatingDockContainer* FloatingWidget, bool Focused)
 {
 	if (FloatingWidget->hasNativeTitleBar())
@@ -167,7 +169,7 @@ void DockFocusControllerPrivate::updateDockWidgetFocus(CDockWidget* DockWidget)
     }
 
 
-#ifdef Q_OS_LINUX
+#if defined(Q_OS_UNIX) && !defined(Q_OS_MACOS)
 	// This code is required for styling the floating widget titlebar for linux
 	// depending on the current focus state
 	if (FloatingWidget != NewFloatingWidget)
@@ -185,7 +187,7 @@ void DockFocusControllerPrivate::updateDockWidgetFocus(CDockWidget* DockWidget)
 	}
 #endif
 
-    if (old == DockWidget && !ForceFocusChangedSignal)
+	if (old == DockWidget && !ForceFocusChangedSignal)
     {
     	return;
     }
@@ -264,9 +266,11 @@ void CDockFocusController::onFocusWindowChanged(QWindow *focusWindow)
 //===========================================================================
 void CDockFocusController::onApplicationFocusChanged(QWidget* focusedOld, QWidget* focusedNow)
 {
-	Q_UNUSED(focusedOld);
+    Q_UNUSED(focusedOld);
 
-	if (d->DockManager->isRestoringState())
+    // Ignore focus changes if we are restoring state, or if user clicked
+    // a tab wich in turn caused the focus change
+	if (d->DockManager->isRestoringState() || d->TabPressed)
 	{
 		return;
 	}
@@ -284,7 +288,7 @@ void CDockFocusController::onApplicationFocusChanged(QWidget* focusedOld, QWidge
 		DockWidget = internal::findParent<CDockWidget*>(focusedNow);
 	}
 
-#ifdef Q_OS_LINUX
+#if defined(Q_OS_UNIX) && !defined(Q_OS_MACOS)
     if (!DockWidget)
 	{
 		return;
@@ -308,6 +312,14 @@ void CDockFocusController::setDockWidgetTabFocused(CDockWidgetTab* Tab)
 	{
 		d->updateDockWidgetFocus(DockWidget);
 	}
+}
+
+
+//===========================================================================
+void CDockFocusController::clearDockWidgetFocus(CDockWidget* dockWidget)
+{
+	dockWidget->clearFocus();
+	updateDockWidgetFocusStyle(dockWidget, false);
 }
 
 
@@ -409,6 +421,12 @@ CDockWidget* CDockFocusController::focusedDockWidget() const
 	return d->FocusedDockWidget.data();
 }
 
+
+//==========================================================================
+void CDockFocusController::setDockWidgetTabPressed(bool Value)
+{
+	d->TabPressed = Value;
+}
 } // namespace ads
 
 //---------------------------------------------------------------------------

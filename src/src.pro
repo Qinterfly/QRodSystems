@@ -7,9 +7,8 @@ TARGET   = QRodSystems
 TEMPLATE = app
 
 CONFIG += c++latest
-unix: QMAKE_CXXFLAGS += -std=c++20
-else: win32: QMAKE_CXXFLAGS += /std:c++latest
-QMAKE_CXXFLAGS += -Wno-deprecated-enum-enum-conversion
+QMAKE_CXXFLAGS += -std=c++20
+unix: QMAKE_CXXFLAGS += -Wno-deprecated-enum-enum-conversion
 
 include(core/core.pri)
 include(main/main.pri)

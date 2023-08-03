@@ -75,7 +75,7 @@ void RodComponentsManager::createContent()
 {
     // Components dock widget
     mpComponentDockWidget = createConstructorDockWidget();
-    mpDockManager->addDockWidget(ads::LeftDockWidgetArea, mpComponentDockWidget);
+    mpDockManager->addDockWidget(ads::CenterDockWidgetArea, mpComponentDockWidget);
     // Hierarchy of components
     CDockAreaWidget* pArea = mpDockManager->addDockWidget(ads::RightDockWidgetArea, createHierarchyRodComponentsWidget());
     // Hierarchy of data objects
@@ -145,6 +145,7 @@ ads::CDockWidget* RodComponentsManager::createConstructorDockWidget()
 {
     CDockWidget* pDockWidget = new CDockWidget("Component Constructor");
     pDockWidget->setFeature(CDockWidget::DockWidgetClosable, false);
+    pDockWidget->setWidget(new QWidget());
     return pDockWidget;
 }
 
